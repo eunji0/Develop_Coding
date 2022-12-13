@@ -1,20 +1,25 @@
 import React from "react";
 
 export default function Home() {
-    function User(name, height) {
-        this.name = name;
-        this.height = height;
-        this.showHeight=function(){
-            console.log(`키는 ${height}입니다.`)
-        }
+    
+    const user = {
+        name:'mike',
+        age: 30
     }
 
-    let user1 = new User('안나', 160);
-    let user2 = new User('라임', 158);
-    let user3 = new User('주원', 183);
+    const showName= Symbol('show name');
+    user[showName] = function () {
+        console.log(this.name)
+    }
 
-    console.log(user1, user2, user3);
-    user3.showHeight();
+    user[showName]();
+    
+    for(let key in user){
+        console.log(`His ${key} is ${user[key]}.`);
+    }
+
+
+
     return (
         <div></div>
     );
