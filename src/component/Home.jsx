@@ -2,17 +2,15 @@ import React from "react";
 
 export default function Home() {
     
-    function hasCola(str){
-        if(str.includes('콜라')){
-            console.log('금칙어가 있습니다.');
-        }
-        else {
-            console.log("통과");
-        }
+    let user = {
+        name: 'moke',
+        age: 20
     }
 
-    hasCola('사이다가 좋아');
-    hasCola('콜라가 좋아');
+    let userlist = ['mike', 'jane', 'tom'];
+
+    console.log(Array.isArray(user))
+    console.log(Array.isArray(userlist))
 
     return (
         <div></div>
