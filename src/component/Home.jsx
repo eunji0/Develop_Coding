@@ -2,15 +2,13 @@ import React from "react";
 
 export default function Home() {
     
-    let user = {
-        name: 'moke',
-        age: 20
-    }
+    let a =1;
+    let b=2;
+    
+    [a,b] = [b,a];
+    console.log(a);
+    console.log(b);
 
-    let userlist = ['mike', 'jane', 'tom'];
-
-    console.log(Array.isArray(user))
-    console.log(Array.isArray(userlist))
 
     return (
         <div></div>
