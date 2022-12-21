@@ -2,12 +2,15 @@ import React from "react";
 
 export default function Home() {
     
-    let a =1;
-    let b=2;
-    
-    [a,b] = [b,a];
-    console.log(a);
-    console.log(b);
+    let user = {name: 'mike'};
+    let info = {age:30};
+    let fe = ["JS", "React"];
+    let lang = ["Korean", "English"];
+
+    user ={
+        ...user, ...info, skills:[...fe, ...lang]
+    }
+    console.log(user);
 
 
     return (
