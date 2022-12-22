@@ -2,15 +2,14 @@ import React from "react";
 
 export default function Home() {
     
-    let user = {name: 'mike'};
-    let info = {age:30};
-    let fe = ["JS", "React"];
-    let lang = ["Korean", "English"];
+    let one;
+    one = 1;
 
-    user ={
-        ...user, ...info, skills:[...fe, ...lang]
+    function addOne(num) {
+        console.log(one + num);
     }
-    console.log(user);
+
+    addOne(5);
 
 
     return (
