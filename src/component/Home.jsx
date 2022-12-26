@@ -2,15 +2,16 @@ import React from "react";
 
 export default function Home() {
     
-    let one;
-    one = 1;
+    let num = 0;
 
-    function addOne(num) {
-        console.log(one + num);
+    function showTime(){
+        console.log(`안녕하세요, 접속하신지 ${num}초가 지났습니다. `);
+        if(num > 5){       
+            clearInterval(tId)
+        }
     }
 
-    addOne(5);
-
+    const tId = setInterval(showTime, 1000);
 
     return (
         <div></div>
