@@ -2,17 +2,25 @@ import React from "react";
 
 export default function Home() {
     
-    let num = 0;
 
-    function showTime(){
-        console.log(`안녕하세요, 접속하신지 ${num}초가 지났습니다. `);
-        if(num > 5){       
-            clearInterval(tId)
-        }
-    }
+    const user = {
+        name: 'mike',
+        showName: function (){
+            console.log(`hello, ${this.name}`);
+        },
+    };
 
-    const tId = setInterval(showTime, 1000);
+    user.showName(); //hello, mike
 
+    let fn =user.showName;
+
+    fn();//hello, 
+
+    fn.call(user);
+
+    let boundfn =fn.bind(user);
+    boundfn();
+;
     return (
         <div></div>
     );
