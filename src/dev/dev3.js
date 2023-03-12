@@ -16,7 +16,7 @@ function abc(str){
     let len=str.length;
     let mid=Math.floor(len/2);
 
-    for(let i=0; i<=mid; i++){
+    for(let i=0; i<mid; i++){
         if(str.charAt(i) !== str.charAt(len-1-i)){
             return false;
         }
