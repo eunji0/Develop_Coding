@@ -10,10 +10,9 @@ function isAnagram(strA, strB){
         return false;
     }
     return strA.split('').sort().join()===strB.split('').sort().join()
-
 }
 
-// console.log(isAnagram(stringA, stringB))
+console.log(isAnagram(stringA, stringB))
 
 
 // 1. for : 고전적인 for문
@@ -45,4 +44,4 @@ function isAnagram2(strA, strB){
 }
 
 
-console.log(isAnagram2(stringA, stringB))
+// console.log(isAnagram2(stringA, stringB))

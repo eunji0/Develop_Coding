@@ -10,7 +10,7 @@
 
 // console.log(mySet);
 
-const uniqueNums = [...new Set(nums)];
+// const uniqueNums = [...new Set(nums)];
 // console.log(uniqueNums);
 
 
@@ -41,4 +41,4 @@ function uniN(arr){
     return result;
 }
 
-console.log(uniN(nums));
+// console.log(uniN(nums));
