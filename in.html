@@ -1,40 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        /* ul strong {color: dodgerblue;}
-        div>strong{background-color: yellow;} */
-        #one{color: aqua;}
-        #one:hover{color: yellow;}
-        #two{color: red;}
-        #three{color: green;}
+        .n1{background-color: red; width: 300px; border: 1px solid #222; border-radius: 20px;}
+        .n2{background-color: yellow; width: 300px;}
+        .n3{background-color: green;width: 300px;}
+        .n4{background-color: blue;width: 300px;}
+        .name{font-size: 20px; font-weight: 600; color: white;}
+    
+        #n1_de{
+            text-decoration: underline;
+            font-size: 15px;
+            font-weight: 400;
+            color: blue;
+            font-style: italic;
+        }
+    
+        .title{
+            font-size: 18px;
+            color: rgb(255, 255, 255);
+            background-color: rgb(37, 36, 36);
+            font-weight: 600;
+            width: 100px;
+        }
+    
+        .numb{
+            font-size: 15px;
+            font-style: normal;
+        }
+    
+        .sex{
+            font-size: 12px;
+            font-weight: 400;
+        }
     </style>
 </head>
+
 <body>
-    <h3>Web Programming</h3>
-    <hr/>
-    <div>
-        <div>2학기 <strong>학습내용</strong></div>
+
+    MJU student List
+
+    <hr>
+    <div class="n1">
         <ul>
-            <li id="one">HTML5</li>
-            <li id="two"><strong>CSS</strong></li>
-            <li id="three">JavaScript</li>
+            <li id="n1_num"> <span class="title numb">학번</span> : 60111111 </li>
+            <li class="name"> <span class="title">이름</span> : 홍길동 </li>
+            <li id="n1_se"> <span class="title sex">성별</span> : 남 </li>
+            <li id="n1_de"> <span class="title">학과</span> : 정보통신공학과 </li>
         </ul>
-        <ul>
-            <li id="one">HTML5</li>
-            <li id="two"><strong>CSS</strong></li>
-            <li id="three">JavaScript</li>
-        </ul>
-        <ul>
-            <li id="one">HTML5</li>
-            <li id="two"><strong>CSS</strong></li>
-            <li id="three">JavaScript</li>
-        </ul>
-        <div>60점 이하는 F!</div>
     </div>
+    <hr>
+    <div class="n1">
+        <ul>
+            <li> <span class="title numb">학번</span> : 60111111 </li>
+            <li class="name"><span class="title">이름</span>: 유관순 </li>
+            <li> <span class="title sex">성별</span> : 여 </li>
+            <li id="n1_de"> <span class="title">학과</span> : 정보통신공학과 </li>
+        </ul>
+    </div>
+    <hr>
+    <div class="n2">
+        <ul>
+            <li> <span class="title numb">학번</span>: 60205555 </li>
+            <li class="name"> <span class="title">이름</span> : 박순희 </li>
+            <li> <span class="title sex">성별</span> : 여 </li>
+            <li> <span class="title">학과</span> : 컴퓨터공학과 </li>
+        </ul>
+    </div>
+    <hr>
+    <div class="n3">
+        <ul>
+            <li> <span class="title numb">학번</span> : 60205555 </li>
+            <li class="name"> <span class="title">이름</span> : 김영희 </li>
+            <li> <span class="title sex">성별</span> : 여 </li>
+            <li> <span class="title">학과</span>: 전자공학과 </li>
+        </ul>
+    </div>
+    <hr>
+    <div class="n4">
+        <ul>
+            <li> <span class="title numb">학번</span> : 60121212 </li>
+            <li class="name"> <span class="title">이름</span> : 이순신 </li>
+            <li> <span class="title sex">성별</span> : 남 </li>
+            <li> <span class="title">학과</span> : 산업공학과 </li>
+        </ul>
+    </div>
+
 </body>
+
 </html>

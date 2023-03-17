@@ -8,7 +8,7 @@ function abctive(str){
     return reverse === str
 }
 
-// console.log(abctive("abba"));
+console.log(abctive("abba"));
 // console.log(abctive('asd'));
 
 //#2Two Pointer 투포인터 활용
@@ -25,4 +25,4 @@ function abc(str){
 }
 
 console.log(abc('abs'));
-console.log(abc('abba'));
+// console.log(abc('abba'));
