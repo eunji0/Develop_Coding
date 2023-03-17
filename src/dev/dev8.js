@@ -28,3 +28,5 @@ function isEq(objA, objB){
 }
 
 console.log(isEq(obj1, obj2));
+
+
