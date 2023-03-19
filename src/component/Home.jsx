@@ -1,7 +1,4 @@
 import React from "react";
-$("p").click(function(){
-    $(this).hide();
-});
 
 export default function Home() {
     
