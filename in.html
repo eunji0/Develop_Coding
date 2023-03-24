@@ -23,6 +23,36 @@
 
 
     </script>
+    <script>
+        function calloperator(callback){
+            callback();
+        }
+        var add= function(){
+            var num1=Number(prompt("첫 번째 수를 입력하세요.","숫자"));
+            var num2=Number(prompt("두 번째 수를 입력하세요.",'숫자'));
+
+            var sum2=Number(num1+num2);
+            alert(sum2);
+
+        }
+
+        var mul=function() {
+            var num1=Number(prompt("첫 번째 수를 입력하세요.","숫자"));
+            var num2=Number(prompt("두 번째 수를 입력하세요.",'숫자'));
+            var mul = Number(num1 * num2);
+            alert(mul);
+        }
+
+        calloperator(add)
+        add();
+    </script>
+    <script>
+
+        var text1=prompt("첫 번째 문자열을 입력하세요.","문자");
+        var text2=prompt("두 번째 문자열을 입력하세요.","문자");
+        var output=text1.indexOf(text2);
+        alert(output);
+    </script>
     <style>
         .n1{background-color: red; width: 300px; border: 1px solid #222; border-radius: 20px;}
         .n2{background-color: yellow; width: 300px;}
