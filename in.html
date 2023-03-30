@@ -7,6 +7,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script>
+        function makeSquare(leftX=10, leftY=10, rightX=100, rightY=100){
+            var willReturn = {
+                //속성
+                a: leftX,
+                b: leftY,
+                c: rightX,
+                d: rightY,
+
+                //메서드
+                getArea: function(){
+                    return (this.c-this.a)*(this.d-this.b)
+                },
+                getLength: function(){
+                    return (this.c-this.a)*2+(this.d-this.b)*2
+                }
+                
+            };
+            return willReturn;
+        } 
+
+        alert(makeSquare(100,200,150,250));
+    </script>
+    <!-- abs(self.rightX - self.leftX) * abs(self.rightY - self.leftY) -->
+    <!-- <script>
 
         var sum=0;
         for(var i=1; i<=1000; i++){
@@ -47,7 +71,16 @@
         var text2=prompt("두 번째 문자열을 입력하세요.","문자");
         var output=text1.indexOf(text2);
         alert(output);
-    </script>
+    </script> -->
+
+    <!-- <script>
+        for(var i=0; i<3;i++){
+            setTimeout(function(){
+                alert(i);
+
+            }, 0);
+        }
+    </script> -->
     <style>
         .n1{background-color: red; width: 300px; border: 1px solid #222; border-radius: 20px;}
         .n2{background-color: yellow; width: 300px;}
