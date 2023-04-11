@@ -5,9 +5,9 @@
 //(대소문자와 빈글자는 무시한다고 가정)
 
 function cmap(s){
+    let charCount=0;
     let map = new Map();
-    let charCount = 0;
-    s = s.toLowerCase();
+    s=s.toLowerCase();
 
     for(let char of s){
         if(char === " "){
@@ -19,16 +19,15 @@ function cmap(s){
         }else{
             map.set(char, true);
         }
+
         charCount++;
     }
 
-    if(charCount %2 ===0){
+    if(charCount %2===0){
         return map.size === 0;
     }else{
-        return map.size === 1;
+        return map.size ===1;
     }
-
-
 }
 
 console.log(cmap("Tact Coa"));
