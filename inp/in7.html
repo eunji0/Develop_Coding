@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab7</title>
+    <style>
+        #redbox {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            background-color: red;
+        }
+        #bluebox {
+            width: 100px;
+            height: 100px;
+            right: 0px;
+            position: absolute;
+            border: 1px solid blue;
+        }
+    </style>
+</head>
+<body>
+    <div id ="redbox"></div>
+    <div id ="bluebox"></div>
+
+    <script>
+        setInterval(moveRedBox, 5);
+        setInterval(moveBlueBox, 5);
+
+        function moveRedBox() {
+            var redbox = document.getElementById("redbox");
+            var pos = redbox.getBoundingClientRect();
+            var x = pos.left + 1;
+            var y = pos.top + 1;
+            redbox.style.left = x + "px";
+            redbox.style.top = y + "px";
+        }
+
+        function moveBlueBox() {
+            var bluebox = document.getElementById("bluebox");
+            var pos = bluebox.getBoundingClientRect();
+            var x = pos.left - 1;
+            var y = pos.top + 1;
+            bluebox.style.left = x + "px";
+            bluebox.style.top = y + "px";
+        }
+    </script>
+</body>
+</html>
