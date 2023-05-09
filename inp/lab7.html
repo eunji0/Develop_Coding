@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    window.onload = function () {
+      // 문서 객체
+      var buttonA = document.getElementById('id1');
+      var buttonB = document.getElementById('id2');
+      var buttonC = document.getElementById('id3');
+      var buttonD = document.getElementById('id4');
+
+
+      // 랜덤한 색상 목록
+      const colors = ["red", "green", "blue", "purple", "orange"];
+
+      // 1번 클릭 시 랜덤한 색상으로 변경
+      function changeColor() {
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        buttonA.style.color = randomColor;
+      }
+
+      // 2번 클릭 시 내용을 변경
+      function changeContent() {
+        buttonB.textContent = "Javascript";
+      }
+
+      // 3번 클릭 시 깜빡이는 효과 적용
+      let intervalId;
+      let textArray = ["Hello", "World"];
+      function startBlinking() {
+        clearInterval(intervalId);
+        let currentIndex = 0;
+        // buttonC.textContent = "Hello";
+        intervalId = setInterval(function () {
+          buttonC.textContent = textArray[currentIndex];
+          currentIndex = (currentIndex + 1) % textArray.length;
+        }, 500);
+      }
+
+
+
+
+
+
+      // 4번 클릭 시 클릭 횟수 증가
+      let clickCount = 0;
+      function incrementCount() {
+        clickCount++;
+        count.textContent = clickCount;
+      }
+
+      // 이벤트
+      buttonA.onclick = function () {
+        document.getElementById("id1").addEventListener("click", changeColor);
+      };
+      buttonB.onclick = function () {
+        document.getElementById("id2").addEventListener("click", changeContent);
+      };
+      buttonC.onclick = function () {
+        document.getElementById("id3").addEventListener("click", startBlinking);
+      };
+      buttonD.onclick = function () {
+        document.getElementById("id4").addEventListener("click", incrementCount);
+      }
+    };
+  </script>
+  <style>
+    div {
+      font-size: 24px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="id1">Hello World</div>
+  <div id="id2">Hello World</div>
+    <div id="id3">Hello World</div>
+  <div id="id4">Hello World</div>
+  <div id="count">0</div>
+</body>
+
+</html>
