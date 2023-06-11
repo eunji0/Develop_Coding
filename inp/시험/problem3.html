@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+class Person {
+  constructor(name, age, tel) {
+    this.name = name;
+    this.age = age;
+    this.tel = tel;
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  set name(name) {
+    this._name = name;
+  }
+
+  get age() {
+    return this._age;
+  }
+
+  set age(age) {
+    this._age = age;
+  }
+
+  get tel() {
+    return this._tel;
+  }
+
+  set tel(tel) {
+    this._tel = tel;
+  }
+}
+
+class Student extends Person {
+  constructor(name, tel, age, sid) {
+    super(name, age, tel);
+    this.sid = sid;
+  }
+
+  get sid() {
+    return this._sid;
+  }
+
+  set sid(sid) {
+    this._sid = sid;
+  }
+
+  toString() {
+    return `Name: ${this.name}, Age: ${this.age}, Tel: ${this.tel}, SID: ${this.sid}`;
+  }
+}
+
+let out = "Original\n";
+
+const e1 = new Student("Scott", "0101234567", "21", "s20212222");
+out += e1.toString() + "\n";
+
+out += "Change Name\n";
+e1.name = "Bill";
+out += e1.toString() + "\n";
+
+out += "Change SID\n";
+e1.sid = "S20211234";
+out += e1.toString();
+
+console.log(out);
+
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
