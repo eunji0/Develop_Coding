@@ -31,3 +31,22 @@ function solution(n) {
   }
   return answer
 }
+
+//다항식 더하기
+function solution(p){
+  let a = p.split(' + ')
+  let answer= [];
+  let x = a.filter((v)=>v.includes('x')).map((v)=>parseInt(v.replace('x', ''))||1).reduce((a,c)=>a+c,0)
+  let b = a.filter((v)=>!v.includes('x')).reduce((a,c)=>a+parseInt(c),0)
+  if(x === 1) {
+    answer.push('x')
+  }else{
+    answer.push(`${x}x`)
+  }
+  if(b){
+    answer.push(b)
+  }
+  return answer.join(' + ')
+}
+
+solution("3x + 7 + x")
