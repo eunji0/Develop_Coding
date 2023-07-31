@@ -33,3 +33,9 @@ function solution(array, n) {
   
   return result
 }
+
+//잘라서 배열로 저장하기
+function solution(my_str, n) {
+  return my_str.match(new RegExp(`.{1,${n}}`, 'g'))
+}
+
