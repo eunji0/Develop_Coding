@@ -83,3 +83,8 @@ console.log(isNumberIncluded); // true
 function solution(spell, dic) {
   return dic.some((v)=>[...v].sort().toString() === [...spell].sort().toString()) ? 1 :2;
 }
+
+//문자열 밀기
+function solution(A, B) {
+  return (B+B).indexOf(A);
+}
