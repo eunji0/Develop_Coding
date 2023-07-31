@@ -79,4 +79,7 @@ const isNumberIncluded = numbers.some((number) => {
 
 console.log(isNumberIncluded); // true
 
-//
+//외계어 사전
+function solution(spell, dic) {
+  return dic.some((v)=>[...v].sort().toString() === [...spell].sort().toString()) ? 1 :2;
+}
