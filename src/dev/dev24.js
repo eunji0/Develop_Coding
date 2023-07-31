@@ -12,3 +12,10 @@ function solution(s) {
   }
   return result.reduce((a, c) => a+c, 0);
 }
+
+//등수 매기기
+function solution(score) {
+  let sum= score.map((v)=>v[0]+v[1])
+  let down = sum.slice().sort((a, b) => b-a);
+   return sum.map((v)=>down.indexOf(v)+1)
+}
