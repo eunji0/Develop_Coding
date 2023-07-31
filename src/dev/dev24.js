@@ -19,3 +19,15 @@ function solution(score) {
   let down = sum.slice().sort((a, b) => b-a);
    return sum.map((v)=>down.indexOf(v)+1)
 }
+
+//저주의 숫자 3
+function solution(n) {
+  let answer = 0 ;
+  for(let i = 0; i<n; i++){
+      answer+=1
+      while(answer%3===0 || answer.toString().split('').includes('3')){
+          answer+=1
+      }
+  }
+  return answer
+}
