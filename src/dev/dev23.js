@@ -39,3 +39,8 @@ function solution(my_str, n) {
   return my_str.match(new RegExp(`.{1,${n}}`, 'g'))
 }
 
+//진료순서 정하기
+function solution(emergency) {
+  let dm = emergency.slice().sort((a,b)=>b-a)
+  return emergency.map(v=>dm.indexOf(v)+1) 
+}
