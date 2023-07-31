@@ -50,3 +50,28 @@ function solution(p){
 }
 
 solution("3x + 7 + x")
+
+
+//set의 기능과 역할
+//중복된 값 제거하기
+const duplicates = [1, 2, 3, 2, 4, 1, 5];
+const uniqueSet1 = new Set(duplicates); // Set { 1, 2, 3, 4, 5 }
+
+//값 추가, 삭제하기
+const uniqueSet = new Set();
+uniqueSet.add(1);
+uniqueSet.add(2);
+uniqueSet.add(3);
+uniqueSet.add(2); // 이미 존재하는 값이므로 무시됨
+console.log(uniqueSet); // Set { 1, 2, 3 }
+
+//값의 존재 여부 확인하기
+const uniqueSet2 = new Set([1, 2, 3]);
+console.log(uniqueSet2.has(2)); // true
+console.log(uniqueSet2.has(4)); // false
+
+//Set의 크기 확인하기
+console.log(uniqueSet2.size); // 3
+//Set을 배열로 변환하기
+const arrayFromSet = Array.from(uniqueSet2); // [1, 2, 3]
+const arrayFromSet2 = [...uniqueSet2]; // [1, 2, 3]
