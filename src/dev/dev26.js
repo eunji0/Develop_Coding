@@ -10,3 +10,20 @@ for(let i=0; i<s.length; i++){
   }
 }
 console.log(s[index], s[index-1])
+
+//문자열 압축하기
+const ss='aaabbccccca'
+
+let result = ss[0]
+let count = 0;
+
+for(let str of ss){
+  console.log(result)
+  if(str == result.slice(-1)){
+    count +=1
+  }else{
+    result+=count +str
+    count=1
+  }
+}
+result+=count
