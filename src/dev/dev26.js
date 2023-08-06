@@ -27,3 +27,10 @@ for(let str of ss){
   }
 }
 result+=count
+
+//special sort
+function solution(value){
+  return [...value.filter(v=> v<0), ...value.filter(v=>v>0)]
+}
+
+solution([-1,-3,3,4])
