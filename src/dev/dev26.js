@@ -42,3 +42,14 @@ solution([-1,-3,3,4])
 let num = 20150111
 num.toString(33)
 console.log(parseInt('gwnae', '!'.charCodeAt()))
+
+//배열 형태 바꾸기
+//[a1, a2,a3...,an, b1,b2,...bn]을 [a1,b1,a2,b2...]형태로 바꾸시오
+//flat은 평평하게 만드는 것 배열을
+let list = ['a1', 'a2', 'a3', 'b1', 'b2', 'b3']
+const zip = (a, b) => a.map((v, i)=>[v, b[i]])
+zip([1,2,3], [10,20,30])
+
+let l1 = list.slice(0, list.length/2)
+let l2 = list.slice(list.length/2)
+zip(l1, l2).flat(2)
