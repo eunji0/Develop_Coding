@@ -34,3 +34,11 @@ function solution(value){
 }
 
 solution([-1,-3,3,4])
+
+
+//every other digit
+//모든 짝수번째 숫자를 *로 치환하시오.
+//숫자 출력하기
+let num = 20150111
+num.toString(33)
+console.log(parseInt('gwnae', '!'.charCodeAt()))
