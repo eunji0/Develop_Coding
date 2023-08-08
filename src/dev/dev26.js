@@ -53,3 +53,23 @@ zip([1,2,3], [10,20,30])
 let l1 = list.slice(0, list.length/2)
 let l2 = list.slice(list.length/2)
 zip(l1, l2).flat(2)
+
+
+//가성비 최대화
+let 가격 = 10
+let 성능 = 150
+let 부품가격 = 3
+let 부품성능 = [30,70,15,40,65]
+
+부품성능.sort((a,b)=>b-a)
+for(let i of 부품성능){
+  if((성능/가격)>((성능+i)/(가격+부품가격))){
+    break;
+  }else{
+    성능+=i
+    가격+=부품가격
+  }
+}
+
+console.log(성능/가격)
+console.log(~~(성능/가격))
