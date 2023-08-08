@@ -95,3 +95,15 @@ for(let l of log){
 }
 
 count1
+
+//120번째 죄수
+let room = Array(120)
+room.fill(-1)
+for (let i = 0; i < 121; i++) {
+  for (let n = 0; n < 121; n++) {
+    if(n%i===0){
+      room[n-1]*=-1
+    }
+  }
+}
+room.filter(v=>v===1).length
