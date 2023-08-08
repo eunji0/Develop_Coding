@@ -73,3 +73,25 @@ for(let i of 부품성능){
 
 console.log(성능/가격)
 console.log(~~(성능/가격))
+
+
+//그 시간 사무실에 몇명이 있었나?
+let t= '13:25:00'
+t=t.split(':').join('')
+let count1=0
+
+let logs = `09:12:23 11:14:35
+10:34:01 13:23:40
+10:34:31 11:20:10`
+
+let log=logs.split('\n')
+
+for(let l of log){
+  let 출근 = l.split(' ')[0].split(':').join('')
+  let 퇴근 = l.split(' ')[1].split(':').join('')
+  if(출근<=t && t<=퇴근){
+    count1+=1
+  }
+}
+
+count1
