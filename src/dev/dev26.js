@@ -107,3 +107,23 @@ for (let i = 0; i < 121; i++) {
   }
 }
 room.filter(v=>v===1).length
+
+
+//비슷한 단어 찾아내기
+function one(a, b){
+  while(a.length!=0 && b.length!=0){
+    if(a.slice(-1) == b.slice(-1)){
+      a= a.slice(0, -1)
+      b=b.slice(0,-1)
+    }else if(a[0]==b[0]){
+      a=a.slice(1)
+      b=b.slice(1)
+    }else{
+      break;
+    }
+  }
+  return a.length <=1 && b.length <=1
+}
+
+console.log(one("cat", "dog"))
+console.log(one("cat", "cats"))
