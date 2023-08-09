@@ -127,3 +127,25 @@ function one(a, b){
 
 console.log(one("cat", "dog"))
 console.log(one("cat", "cats"))
+
+
+//subdate
+//두 날짜의 차이 일수
+function sub(date){
+  const 년 = parseInt(date.slice(0,4))
+  const 월 = parseInt(date.slice(4,6))
+  const 일 = parseInt(date.slice(6))
+  
+  const 월별일 = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+  let 일수 = 년 * 365 +일
+  for(let i=0; i<월; i++){
+    일수+=월별일[i]
+  }
+  return 일수
+}
+
+function sol(a, b){
+  return Math.abs(sub(a)-sub(b))
+}
+
+sol('20070515', '20070501')
