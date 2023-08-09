@@ -149,3 +149,33 @@ function sol(a, b){
 }
 
 sol('20070515', '20070501')
+
+
+//happy number
+function happy(입력숫자){
+  let 더할숫자=[]
+  let 더한숫자=입력숫자
+  let 제곱의합리스트=[]
+  while(더한숫자 !=1){
+    for(let i of 더한숫자){
+      let sq = parseInt(i)**2
+      더할숫자.push(sq)
+    }
+    더한숫자=String(더할숫자.reduce((a,b)=>a+b, 0))
+    console.log(더할숫자, 더한숫자, 제곱의합리스트)
+    더할숫자=[]
+    if(더한숫자==입력숫자){
+      return false
+    }
+    for(let i of 제곱의합리스트){
+      if(i==더한숫자){
+        return false
+      }
+    }
+    제곱의합리스트.push(더한숫자)
+
+  }
+  return true
+}
+
+happy(String(7))
