@@ -179,3 +179,25 @@ function happy(입력숫자){
 }
 
 happy(String(7))
+
+
+//ugly number
+function ugly(n) {
+  let uglyN = [1]
+  for (let i = 0; i < n - 1; i++) {
+    let last = uglyN.slice(-1)
+
+    let temp = []
+    for (let i of uglyN) {
+      for (let j of [i * 2, i * 3, i * 5]) {
+        if (j > last) {
+          temp.push(j)
+        }
+      }
+    }
+    uglyN.push(Math.min(...temp))
+    console.log(uglyN)
+  }
+  return uglyN.slice(-1)
+}
+ugly(20)
