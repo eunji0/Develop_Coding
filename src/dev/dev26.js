@@ -201,3 +201,17 @@ function ugly(n) {
   return uglyN.slice(-1)
 }
 ugly(20)
+
+
+//two printers
+function print(a, b, page){
+  let time =1
+  while(true){
+    if(Math.floor(time/a)+Math.floor(time/b)>=page){
+      return time
+    }
+    time+=1
+  }
+}
+
+print(1, 1, 5)
