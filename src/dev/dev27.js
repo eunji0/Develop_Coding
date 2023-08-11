@@ -5,3 +5,10 @@ function solution(n1, n2){
 }
 
 solution(7, 2)
+
+//숫자 비교하기
+function solution(n1, n2){
+  return n1 === n2 ? 1 : -1
+}
+
+solution(7, 7)
