@@ -50,3 +50,16 @@ function solution(n, k){
 }
 
 solution(10,3)
+
+//짝수의 합
+function solution(n){
+  let result=0;
+  for(let i=0; i<=n; i++){
+    if(i%2===0){
+      result+=i
+    }
+  }
+  return result
+}
+
+solution(10)
