@@ -35,4 +35,18 @@ function solution(angle){
 
 solution(90)
 
-//
+//양꼬치
+function solution(n, k){
+  if(n>=10){
+    return 12000*n+2000*k-2000*n/10
+  }
+}
+
+function solution(n, k){
+  if(n>=10){
+    k-=~~(n/10)
+  }
+  return 12000*n+2000*k
+}
+
+solution(10,3)
