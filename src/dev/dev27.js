@@ -12,3 +12,10 @@ function solution(n1, n2){
 }
 
 solution(7, 7)
+
+//나이 출력
+function solution(age){
+  return 2022-age+1;
+}
+
+solution(40)
