@@ -63,3 +63,5 @@ function solution(n){
 }
 
 solution(10)
+
+//배열의 평균값
