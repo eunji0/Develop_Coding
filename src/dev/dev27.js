@@ -99,7 +99,21 @@ function solution(n){
 
 solution(7)
 
+//짝수 홀수 개수
+function solution(num_list){
+  let a=0;
+  let b=0;
+  for(i of num_list){
+    if(i%2==0){
+      a++
+    }else{
+      b++
+    }
+  }
+  return([a, b])
+}
 
+solution([1,2,3,4,5])
 
 
 //6, 
