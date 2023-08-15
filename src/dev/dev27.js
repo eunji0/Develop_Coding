@@ -130,4 +130,12 @@ function solution(my_string){
 
 solution("jaron")
 
-//6, 12
+//특정 문자 제거하기
+function solution(my_string, letter){
+  let reg = new RegExp(letter, 'g')
+  return my_string.replaceAll(reg, '')
+}
+
+solution("abcdef", "f")
+
+//6, 12, 13
