@@ -145,4 +145,21 @@ function solution(s1, s2){
 
 solution(["a", "b", "c"], ["asd", "b", "c"])
 
-//6, 12, 13
+//가위바위보
+function solution(rsp) {
+  let result = ''
+  for (let i of rsp) {
+    if (i == '0') {
+      result+='5'
+    } else if (i == '2') {
+      result+='0'
+    } else {
+      result+='2'
+    }
+  }
+  return result
+}
+
+solution('005')
+
+//6, 12, 13, 15
