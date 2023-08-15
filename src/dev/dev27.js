@@ -138,4 +138,11 @@ function solution(my_string, letter){
 
 solution("abcdef", "f")
 
+//배열의 유사도
+function solution(s1, s2){
+  return s1.filter((v)=> s2.includes(v)).length
+}
+
+solution(["a", "b", "c"], ["asd", "b", "c"])
+
 //6, 12, 13
