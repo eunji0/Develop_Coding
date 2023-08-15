@@ -69,3 +69,16 @@ function solution(numbers) {
   return numbers.reduce((a,c)=>a+c, 0)/numbers.length;
 }
 solution([1,2,3,4,5,6,7,8,9,10])
+
+//머쓱이보다 키큰 사람
+function solution(array, height) {
+  array.push(height);
+  let a = array.sort((a, b) => a-b)
+  return a.filter(v=> v>height).length
+}
+
+solution([149, 180, 192, 170], 167);
+
+
+
+//6, 
