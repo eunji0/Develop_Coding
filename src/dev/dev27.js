@@ -79,6 +79,12 @@ function solution(array, height) {
 
 solution([149, 180, 192, 170], 167);
 
+//중복된 숫자 개수
+function solution(array, n){
+  return array.filter(v=>v==n).length
+}
+
+solution([2,3,4,5], 1)
 
 
 //6, 
