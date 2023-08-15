@@ -65,3 +65,7 @@ function solution(n){
 solution(10)
 
 //배열의 평균값
+function solution(numbers) {
+  return numbers.reduce((a,c)=>a+c, 0)/numbers.length;
+}
+solution([1,2,3,4,5,6,7,8,9,10])
