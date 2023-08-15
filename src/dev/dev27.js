@@ -86,5 +86,20 @@ function solution(array, n){
 
 solution([2,3,4,5], 1)
 
+//피자 나눠 먹기
+function solution(n){
+  if(n<7){
+    return 1
+  }else if(n%7==0){
+    return n/7
+  }else{
+    return Math.floor(n/7+1)
+  }
+}
+
+solution(7)
+
+
+
 
 //6, 
