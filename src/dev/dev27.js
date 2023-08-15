@@ -162,4 +162,8 @@ function solution(rsp) {
 
 solution('005')
 
+
+//배열 회전시키기
+
+
 //6, 12, 13, 15
