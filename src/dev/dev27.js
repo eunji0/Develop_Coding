@@ -176,4 +176,11 @@ function solution(numbers, direction) {
 solution([1, 2, 3], "left");
 
 
-//6, 12, 13, 15
+//외계행성의 나이
+function solution(age){
+  return Array.from(age.toString()).map(v=>'abcdefghij'[v]).join('')
+}
+
+solution(23)
+
+//6, 12, 13, 15, 17
