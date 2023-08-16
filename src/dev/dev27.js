@@ -198,4 +198,14 @@ function solution(my_string){
 }
 solution('people')
 
-//6, 12, 13, 15, 17, 19
+
+//A로 B만들기
+function solution(before, after){
+  return before.split('').sort().join('') === after.split('').sort().join('') ? 1:0
+}
+
+solution("olleh", "hello")
+
+
+
+//6, 12, 13, 15, 17, 19, 20
