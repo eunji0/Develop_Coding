@@ -183,4 +183,12 @@ function solution(age){
 
 solution(23)
 
+
+//369게임
+function solution(order) {
+  return order.toString().split('').filter(v => v === '3' || v === '6' || v === '9').length;
+}
+
+solution(29423)
+
 //6, 12, 13, 15, 17
