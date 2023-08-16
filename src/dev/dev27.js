@@ -164,6 +164,16 @@ solution('005')
 
 
 //배열 회전시키기
+function solution(numbers, direction) {
+  if (direction == "right") {
+    numbers.unshift(numbers.pop());
+  }else{
+    numbers.push(numbers.shift())
+  }
+  return numbers;
+}
+
+solution([1, 2, 3], "left");
 
 
 //6, 12, 13, 15
