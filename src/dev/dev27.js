@@ -191,4 +191,11 @@ function solution(order) {
 
 solution(29423)
 
-//6, 12, 13, 15, 17
+
+//중복된 문자 제거
+function solution(my_string){
+  return [...new Set(my_string)].join('')
+}
+solution('people')
+
+//6, 12, 13, 15, 17, 19
