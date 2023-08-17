@@ -249,4 +249,12 @@ function solution(array, n){
 solution([3,10,28], 20)
 
 
-//6, 12, 13, 15, 17, 19, 20, 21, 22
+//한 번만 등장한 문자
+function solution(s){
+  return [...s].filter(c=>s.split(c).length==2).sort().join('')
+}
+
+solution("abdc")
+
+
+//6, 12, 13, 15, 17, 19, 20, 21, 22, 23, 
