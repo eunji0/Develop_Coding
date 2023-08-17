@@ -257,4 +257,15 @@ function solution(s){
 solution("abdc")
 
 
-//6, 12, 13, 15, 17, 19, 20, 21, 22, 23, 
+//잘라서 배열로 저장하기
+function solution(my_str, n){
+  let a =[];
+  for(let i=0; i<my_str.length; i+=n){
+    a.push(my_str.slice(i, i+n))
+  }
+  return a
+}
+
+solution("abcjkdhasdkl", 3)
+
+//6, 12, 13, 15, 17, 19, 20, 21, 22, 23, 24, 25
