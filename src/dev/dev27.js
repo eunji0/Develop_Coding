@@ -277,4 +277,37 @@ function solution(emergency){
 
 solution([2, 76, 24])
 
-//6, 12, 13, 15, 17, 19, 20, 21, 22, 23, 24, 25, 26
+
+//외계어 사전
+function solution(spell, dic){
+  return dic.some((v)=> [...v].sort().toString()===[...spell].sort().toString())? 1 : 2
+}
+
+solution(["z", "d", "x"], ["def", "dxz"])
+
+
+//문자열 밀기
+function solution(A, B){
+  return (B+B).indexOf(A)
+}
+
+solution("hello", "ohell")
+
+
+//컨트롤 제트
+function solution(s){
+  s=s.split(' ')
+  let result=[]
+  for(let i of s){
+    if(i === 'Z'){
+      result.pop()
+    }else{
+      result.push(+i)
+    }
+  }
+  return result.reduce((a, c)=>a+c, 0)
+}
+
+solution("1 2 Z 3")
+
+//6, 12, 13, 15, 17, 19, 20, 21, 22, 23, 24, 25, 26, 28, 29, 30
