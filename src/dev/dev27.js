@@ -220,4 +220,17 @@ function solution(n){
 
 solution(7)
 
-//6, 12, 13, 15, 17, 19, 20
+
+//k의 개수
+function solution(i, j, k){
+  let s=''
+  for(i; i<=j; i++){
+    s+=i
+  }
+  return s.split(k).length-1
+}
+
+solution(10, 50, 5)
+
+
+//6, 12, 13, 15, 17, 19, 20, 21, 22
