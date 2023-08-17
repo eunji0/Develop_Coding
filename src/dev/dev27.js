@@ -268,4 +268,13 @@ function solution(my_str, n){
 
 solution("abcjkdhasdkl", 3)
 
-//6, 12, 13, 15, 17, 19, 20, 21, 22, 23, 24, 25
+
+//진료순서 정하기
+function solution(emergency){
+  let result=emergency.slice().sort((a, b)=> b-a)
+  return emergency.map((i)=>result.indexOf(i)+1)
+}
+
+solution([2, 76, 24])
+
+//6, 12, 13, 15, 17, 19, 20, 21, 22, 23, 24, 25, 26
