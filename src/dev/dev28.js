@@ -47,4 +47,14 @@ function solution(age){
 
 solution(23)
 
-//17
+//중복된 문자 제거
+function solution(my_string){
+  return [...new Set(my_string)].join('')
+}
+
+solution("people")
+
+//
+
+
+//17, 19
