@@ -20,3 +20,21 @@ function solution(my_string, letter){
 }
 
 solution("abcdef", "f")
+
+//가위바위보
+function solution(rsp){
+  let a = rsp.split('')
+  let result=[]
+  for(let i of a){
+    if(i==="2"){
+      result.push("0")
+    }else if(i==="5"){
+      result.push("2")
+    }else{
+      result.push("5")
+    }
+  }
+  return result.join('')
+}
+
+solution("025")
