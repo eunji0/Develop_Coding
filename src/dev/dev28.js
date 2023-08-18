@@ -38,3 +38,13 @@ function solution(rsp){
 }
 
 solution("025")
+
+//외계행성의 나이
+function solution(age){
+  let chr="abcdefghij"
+  return Array.from(age.toString()).map(v=>chr[v]).join('')
+}
+
+solution(23)
+
+//17
