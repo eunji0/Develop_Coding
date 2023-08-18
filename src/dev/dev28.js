@@ -7,4 +7,16 @@ function solution(numbers){
 }
 solution([1,2,3,4,5,6,7,8,9,10])
 
-//
+//문자열 뒤집기
+function solution(my_string){
+  return my_string.split('').reverse().join('')
+}
+
+solution("jaron")
+
+//특정문자 제거하기
+function solution(my_string, letter){
+  return my_string.replaceAll(letter, "")
+}
+
+solution("abcdef", "f")
