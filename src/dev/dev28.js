@@ -161,3 +161,15 @@ function solution(s) {
 }
 
 //17, 19, 21, 22, 23, 24, 26, 29, 30
+
+//등수 매기기
+function solution(score) {
+  let sum= score.map((v)=>v[0]+v[1])
+  let down = sum.slice().sort((a, b) => b-a);
+   return sum.map((v)=>down.indexOf(v)+1)
+}
+
+solution([80, 70], [90, 50], [40, 70], [50, 80])
+
+
+//31
