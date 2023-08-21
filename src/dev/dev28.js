@@ -85,4 +85,19 @@ function solution(i, j, k){
 
 solution(1, 13, 1)
 
-//17, 19, 20
+//가까운 수
+function solution(array, n){
+  array.sort((a, b) => a-b)
+  let s =0;
+  for(let i=0; i<array.length; i++){
+    if(Math.abs(array[i]-n<s)){
+      s=array[i]
+    }
+  }
+
+  return s
+}
+
+solution([3,10,28], 20)
+
+//17, 19, 21, 22
