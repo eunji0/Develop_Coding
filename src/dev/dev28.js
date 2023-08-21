@@ -75,6 +75,14 @@ function solution(n){
 solution(7)
 
 //k의 개수
+function solution(i, j, k){
+  let s=''
+  for(i; i<=j; i++){
+    s+=i
+  }
+  return s.split(k).length-1
+}
 
+solution(1, 13, 1)
 
 //17, 19, 20
