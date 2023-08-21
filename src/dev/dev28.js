@@ -126,4 +126,18 @@ function solution(em){
 
 solution([3,72,25])
 
-//17, 19, 21, 22, 23, 24
+//외계어 사전
+function solution(spell, dic){
+  let a = spell.sort().join('')
+  for(let i=0; i<dic.length; i++){
+    if(a === dic[i].split("").sort().join('')){
+      return 1
+    }
+  }
+  return 2
+}
+
+solution(["z", "d", "x"], ["def", "dxz", "xdz"])
+
+
+//17, 19, 21, 22, 23, 24, 26
