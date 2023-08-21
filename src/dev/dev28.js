@@ -54,7 +54,27 @@ function solution(my_string){
 
 solution("people")
 
-//
+//A로 B 만들기
+function solution(before, after){
+  return before.split("").sort().join('') === after.split("").sort().join('') ? 1: 0
+}
+
+solution("olleh", "hello")
+
+//팩토리얼
+function solution(n){
+  let i=1;
+  let fac = 1
+  while(fac<=n){
+    i+=1
+    fac*=i
+  }
+  return i-1
+}
+
+solution(7)
+
+//k의 개수
 
 
-//17, 19
+//17, 19, 20
