@@ -146,6 +146,18 @@ function solution(A, B){
 
 solution("hello", "lohel")
 
+//컨트롤 제트
+function solution(s) {
+  s = s.split(' ')
+  let result = []
+  for(let i of s){
+      if(i === 'Z'){
+          result.pop()
+      }else{
+          result.push(+i)
+      }
+  }
+  return result.reduce((a, c) => a+c, 0);
+}
 
-
-//17, 19, 21, 22, 23, 24, 26, 29, 
+//17, 19, 21, 22, 23, 24, 26, 29, 30
