@@ -139,5 +139,13 @@ function solution(spell, dic){
 
 solution(["z", "d", "x"], ["def", "dxz", "xdz"])
 
+//문자열 밀기
+function solution(A, B){
+  return (B+B).indexOf(A)
+}
 
-//17, 19, 21, 22, 23, 24, 26
+solution("hello", "lohel")
+
+
+
+//17, 19, 21, 22, 23, 24, 26, 29, 
