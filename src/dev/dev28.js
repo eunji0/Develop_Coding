@@ -118,4 +118,12 @@ function solution(my_str, n){
 
 solution("asdasdads", 3)
 
+//진료순서 정하기
+function solution(em){
+  let re=em.slice().sort((a, b)=>b-a)
+  return em.map(v=>re.indexOf(v)+1)
+}
+
+solution([3,72,25])
+
 //17, 19, 21, 22, 23, 24
