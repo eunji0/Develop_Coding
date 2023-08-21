@@ -100,4 +100,22 @@ function solution(array, n){
 
 solution([3,10,28], 20)
 
-//17, 19, 21, 22
+//한 번만 등장한 문자
+function solution(s){
+  return [...s].filter(c=>s.split(c).length==2).sort().join('')
+}
+
+solution("abcdc")
+
+//잘라서 배열로 저장하기
+function solution(my_str, n){
+  let result=[]
+  for(let i=0; i < my_str.length; i+=n){
+    result.push(my_str.slice(i, i+n))
+  }
+  return result
+}
+
+solution("asdasdads", 3)
+
+//17, 19, 21, 22, 23, 24
