@@ -171,5 +171,18 @@ function solution(score) {
 
 solution([80, 70], [90, 50], [40, 70], [50, 80])
 
+//저주의 숫자
+function solution(n) {
+  let answer = 0 ;
+  for(let i = 0; i<n; i++){
+      answer+=1
+      while(answer%3===0 || answer.toString().split('').includes('3')){
+          answer+=1
+      }
+  }
+  return answer
+}
 
-//31
+solution(9)
+
+//31, 32
