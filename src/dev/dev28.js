@@ -185,4 +185,24 @@ function solution(n) {
 
 solution(9)
 
+//다항식 더하기
+function solution(p){
+  let a = p.split(' + ')
+  let x=a.filter(v=>v.includes('x')).map(v=>parseInt(v.replaceAll('x', ''))||1).reduce((a, c)=>a+c, 0);//x항
+  let b=a.filter(v=>!v.includes('x')).reduce((a, c)=> a+parseInt(c), 0);//상수항
+  let result=[];
+  if(x===1){
+    result.push('x')
+  }else{
+    result.push(`${x}x`)
+  }
+  if(b){
+    result.push(`${b}`)
+  }
+  return result.join(' + ')
+}
+
+solution("3x + 7 + x")
+
+
 //31, 32
