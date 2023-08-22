@@ -222,6 +222,14 @@ function solution(n){
   Array(10000).fill(0).map((v, i)=>i).toString().split('').filter(v=> v==='8').length
 }
 
+//거리가 짧은 점
+function solution(s){
+  let ss = s.slice(1)
+  return s.map((v, i)=>[v, ss[i]]).sort((a, b)=>(a[1]-a[0])-(b[1]-b[0]))[0]
+}
 
-//31, 32, 33, 35, 36
+solution([1,3,4,8,13,17,20])
+
+
+//31, 32, 33, 35, 36, 37
 //-34
