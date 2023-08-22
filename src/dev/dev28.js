@@ -217,5 +217,11 @@ function solution(lines){
 
 solution([[0,1], [2,5], [3,9]])
 
-//31, 32, 33
+//1부터 10000까지 8이라는 숫자
+function solution(n){
+  Array(10000).fill(0).map((v, i)=>i).toString().split('').filter(v=> v==='8').length
+}
+
+
+//31, 32, 33, 35, 36
 //-34
