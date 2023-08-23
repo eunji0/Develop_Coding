@@ -247,5 +247,12 @@ function solution(s){
 }
 solution("aaabbccccca")
 
+//special sort
+function solution(n){
+  return [...n.filter(v=> v<0), ...n.filter(v=>v>=0)]
+}
+
+solution([-1, 1, 3, -2, 2])
+
 //31, 32, 33, 35, 36, 37
 //-34
