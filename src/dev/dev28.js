@@ -257,5 +257,16 @@ solution([-1, 1, 3, -2, 2])
 //숫자 출력하기
 console.log(parseInt('gwnae', '!'.charCodeAt()))
 
+//배열 형태
+function solution(list){
+  const zip = (a, b) => a.map((v, i)=>[v, b[i]])
+  let l1 = list.slice(0, list.length/2)
+  let l2 = list.slice(list.length/2)
+
+  return zip(l1, l2).flat(2)
+}
+
+solution(["a1", "a2", "a3", "b1", "b2", "b3"])
+
 //31, 32, 33, 35, 36, 37, 38, 39
 //-34, -40
