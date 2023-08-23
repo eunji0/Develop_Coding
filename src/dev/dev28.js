@@ -230,6 +230,22 @@ function solution(s){
 
 solution([1,3,4,8,13,17,20])
 
+//문자열 압축하기
+function solution(s){
+  let result=s[0]
+  let count=0
+
+  for(let str of s){
+    if(str===result.slice(-1)){
+      count+=1
+    }else{
+      result+=count+str
+      count=1
+    }
+  }
+  return result+=count
+}
+solution("aaabbccccca")
 
 //31, 32, 33, 35, 36, 37
 //-34
