@@ -254,5 +254,8 @@ function solution(n){
 
 solution([-1, 1, 3, -2, 2])
 
-//31, 32, 33, 35, 36, 37
-//-34
+//숫자 출력하기
+console.log(parseInt('gwnae', '!'.charCodeAt()))
+
+//31, 32, 33, 35, 36, 37, 38, 39
+//-34, -40
