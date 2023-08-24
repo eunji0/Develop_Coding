@@ -67,3 +67,8 @@ function solution(n, control) {
 function solution(my_string, alp) {
   return my_string.replaceAll(alp, alp.toUpperCase())
 }
+
+//정수 부분
+function solution(flo) {
+  return Math.floor(flo)
+}
