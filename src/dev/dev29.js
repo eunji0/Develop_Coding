@@ -27,3 +27,11 @@ function solution(my_string, k) {
   return my_string.repeat(k)
 }
 
+//공배수
+function solution(number, n, m) {
+  if(number%m===0 && number%n===0){
+      return 1
+  }else{
+      return 0
+  }
+}
