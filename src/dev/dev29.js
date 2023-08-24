@@ -88,3 +88,29 @@ function solution(n) {
 function solution(s) {
   return +s
 }
+
+//문자열 내 p와 y의 개수
+function solution(s){
+  let a = s.toLowerCase()
+  return [...a].filter(v=> v==='p').length === [...a].filter(v=> v==='y').length ? true: false
+}
+
+//정수 제곱근 판별
+function solution(n) {
+  let x = Math.sqrt(n);
+  if (Number.isInteger(x)) {
+      return (x + 1) * (x + 1);
+  }
+  return -1;
+}
+
+//정수 내림차순으로 배치하기
+function solution(n) {
+  return +n.toString().split('').sort((a, b)=> b-a).join('')
+}
+
+//하샤드 수
+function solution(x) {
+  let a = x.toString().split('').map((i)=>+i).reduce((a, c)=>a+c, 0)
+  return x%a===0 ? true : false
+}
