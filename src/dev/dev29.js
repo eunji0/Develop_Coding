@@ -133,3 +133,22 @@ function solution(a, b) {
 function solution(a, b) {
   return (a+b) * (Math.abs(a-b)+1) / 2;
 }
+
+//콜라츠 추측
+function solution(num) {
+  let s = 0;
+  while (num != 1) {
+    if (s > 500) {
+      return -1
+    } else {
+      if (num % 2 === 0) {
+        s += 1
+        num = num / 2
+      } else {
+        s += 1
+        num = num * 3 + 1
+      }
+    }
+  }
+  return s
+}
