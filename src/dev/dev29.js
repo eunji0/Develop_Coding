@@ -40,3 +40,8 @@ function solution(number, n, m) {
 function solution(myString, pat){
   return [...myString].map(a=>a==='A'?'B':'A').join('').includes(pat)? 1:0
 }
+
+//정수 찾기
+function solution(num_list, n) {
+  return num_list.includes(n)? 1:0;
+}
