@@ -114,3 +114,22 @@ function solution(x) {
   let a = x.toString().split('').map((i)=>+i).reduce((a, c)=>a+c, 0)
   return x%a===0 ? true : false
 }
+
+//두 정수 사이의 합
+function solution(a, b) {
+  let result =0
+  if(a<b){
+  for(a; a<=b; a++){
+      result+=a
+  }
+  }else{
+      for(b; b<=a; b++){
+      result+=b
+  }
+  }
+  return result
+}
+
+function solution(a, b) {
+  return (a+b) * (Math.abs(a-b)+1) / 2;
+}
