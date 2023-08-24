@@ -45,3 +45,20 @@ function solution(myString, pat){
 function solution(num_list, n) {
   return num_list.includes(n)? 1:0;
 }
+
+//수 조작하기1
+function solution(n, control) {
+  let a = control.split('')
+  for(let i of a){
+      if(i==='w'){
+          n+=1
+      }else if(i==='s'){
+          n-=1
+      }else if(i==='d'){
+          n+=10
+      }else if(i==='a'){
+          n-=10
+      }
+  }
+  return n
+}
