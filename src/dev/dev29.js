@@ -8,3 +8,17 @@ function solution(my_string, target) {
   return my_string.includes(target)? 1:0;
 }
 
+//이어 붙인 수
+function solution(num_list) {
+  let a = []//홀수
+  let b=[]//짝수
+  for(let i of num_list){
+      if(i%2===0){
+          b.push(i)
+      }else{
+          a.push(i)
+      }
+  }
+  return +a.join('') + +b.join('')
+}
+
