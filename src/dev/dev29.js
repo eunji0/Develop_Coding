@@ -163,3 +163,12 @@ function solution(arr, divisor) {
   let a = arr.filter(v=>v%divisor===0)
   return a.length===0 ? [-1]:a.sort((a, b)=>a-b)
 }
+
+//음양 더하기
+function solution(absolutes, signs) {
+    let sum = 0;
+    for(let i=0; i<absolutes.length; i++){
+        sum+=signs[i] ? absolutes[i]: -absolutes[i]
+    }
+    return sum
+}
