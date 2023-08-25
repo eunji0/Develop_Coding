@@ -206,3 +206,8 @@ function solution(arr)
 {
     return arr.filter((a, c)=>a!=arr[c+1])
 }
+
+//3진법 뒤집기
+function solution(n) {
+  return parseInt(n.toString(3).split('').reverse().join(''), 3);
+}
