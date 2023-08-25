@@ -194,3 +194,9 @@ function solution(arr) {
     let a = arr.filter(v=>v!==min)
     return a
 }
+
+//가운데 글자 가져오기
+function solution(s) {
+    let m = Math.floor(s.length/2)
+    return s.length%2===0 ? s.slice(m - 1, m + 1) : s[m]
+}
