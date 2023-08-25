@@ -200,3 +200,9 @@ function solution(s) {
     let m = Math.floor(s.length/2)
     return s.length%2===0 ? s.slice(m - 1, m + 1) : s[m]
 }
+
+//같은 숫자는 싫어
+function solution(arr)
+{
+    return arr.filter((a, c)=>a!=arr[c+1])
+}
