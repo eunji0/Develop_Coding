@@ -172,3 +172,25 @@ function solution(absolutes, signs) {
     }
     return sum
 }
+
+//핸드폰 번호 가리기
+function solution(phone_number) {
+    let answer = '*'.repeat(phone_number.length - 4)+ phone_number.slice(-4);
+    return answer;
+}
+
+//없는 숫자 더하기
+function solution(numbers) {
+    return 45 - numbers.reduce((a, c)=> a+c, 0)
+}
+
+//제일 작은 수 제거하기
+function solution(arr) {
+    if(arr.length<=1){
+        return [-1]
+    }
+    
+    let min = Math.min(...arr)
+    let a = arr.filter(v=>v!==min)
+    return a
+}
