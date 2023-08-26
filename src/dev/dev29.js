@@ -218,3 +218,22 @@ function solution(s) {
     return p1.toUpperCase() + p2.toLowerCase();
   });
 }
+
+//예산
+function solution(d, budget) {
+    d.sort((a, b)=> a-b)
+    
+    let c=0;
+    let t=0;
+    
+    for(let i=0; i<d.length; i++){
+        if(t+d[i]<=budget){
+            t+=d[i]
+            c++
+        }else{
+            break;
+        }
+    }
+    
+    return c
+}
