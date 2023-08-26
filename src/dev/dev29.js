@@ -211,3 +211,10 @@ function solution(arr)
 function solution(n) {
   return parseInt(n.toString(3).split('').reverse().join(''), 3);
 }
+
+//이상한 문자 만들기
+function solution(s) {
+  return s.toUpperCase().replace(/(\w)(\w)/g, function(match, p1, p2) {
+    return p1.toUpperCase() + p2.toLowerCase();
+  });
+}
