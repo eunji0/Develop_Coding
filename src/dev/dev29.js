@@ -237,3 +237,16 @@ function solution(d, budget) {
     
     return c
 }
+
+//크기가 작은 부분 문자열
+function solution(t, p) {
+    var answer = 0;
+    let a =t.length;
+    let b= p.length;
+    for(let i=0; i<=a-b; i++){
+        if(t.slice(i, i+b)<=p){
+            answer++
+        }
+    }
+    return answer
+}
