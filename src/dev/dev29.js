@@ -250,3 +250,16 @@ function solution(t, p) {
     }
     return answer
 }
+
+//최소 직사각형
+function solution(sizes) {
+    let a = 0;
+    let b=0;
+    
+    for(let i of sizes){
+        const[w,h]=i
+        a=Math.max(a, Math.max(w, h))
+        b=Math.max(b, Math.min(w, h))
+    }
+    return a*b
+}
