@@ -276,3 +276,16 @@ function solution(s) {
 
   return Number(answer);
 }
+
+//k번째 수
+function solution(array, commands) {
+    var answer = [];
+    
+    for(let i=0; i<commands.length; i++){
+        const [start, end, k] = commands[i]
+        let a = array.slice(start-1, end)
+        let b=a.sort((a, b)=>a-b)
+        answer.push(b[k-1])
+    }
+    return answer
+}
