@@ -289,3 +289,5 @@ function solution(array, commands) {
     }
     return answer
 }
+
+//1차 비밀지도
