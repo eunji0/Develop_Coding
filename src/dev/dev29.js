@@ -291,3 +291,42 @@ function solution(array, commands) {
 }
 
 //1차 비밀지도
+function solution(n, arr1, arr2) {
+    const answer = [];
+
+    for (let i = 0; i < n; i++) {
+        // 두 개의 배열을 이진수 문자열로 변환하고, 길이를 n에 맞춥니다.
+        const row1 = decToBinary(arr1[i], n);
+        const row2 = decToBinary(arr2[i], n);
+
+        // 두 줄을 합쳐서 비밀지도의 한 줄을 만듭니다.
+        const decodedRow = decodeRow(row1, row2);
+
+        // 결과 배열에 추가합니다.
+        answer.push(decodedRow);
+    }
+
+    return answer;
+}
+
+// 정수를 이진수로 변환하는 함수
+function decToBinary(decimal, n) {
+    const binary = decimal.toString(2);
+    return binary.padStart(n, '0');
+}
+
+// 두 개의 이진수를 비교하여 비밀지도의 한 줄을 만드는 함수
+function decodeRow(row1, row2) {
+    let decodedRow = '';
+
+    for (let j = 0; j < row1.length; j++) {
+        if (row1[j] === '1' || row2[j] === '1') {
+            decodedRow += '#';
+        } else {
+            decodedRow += ' ';
+        }
+    }
+
+    return decodedRow;
+}
+
