@@ -386,3 +386,14 @@ function solution(num_list, n) {
 function solution(num, n) {
     return num%n===0?1:0
 }
+
+//푸드 파이트 대회
+function solution(food){
+  let answer=''
+
+  for(let i=1; i<food.length; i++){
+    answer+=String(i).repeat(Math.floor(food[i]/2))
+  }
+
+  return answer+'0'+[...answer].reverse().join('')
+}
