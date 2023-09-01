@@ -372,3 +372,13 @@ function solution(numbers) {
 
     return answer.sort((a, b) => a - b)
 }
+
+//n개 간격의 원소들
+function solution(num_list, n) {
+    const result = [];
+    for (let i = 0; i < num_list.length; i += n) {
+        result.push(num_list[i]);
+    }
+    return result;
+}
+
