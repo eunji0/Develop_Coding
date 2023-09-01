@@ -340,3 +340,20 @@ function solution(strings, n) {
         }
     })
 }
+
+//가장 가까운 같은 글자
+function solution(s) {
+    const result = new Array(s.length).fill(-1); // 결과 배열 초기화, 모두 -1로 채움
+    const positions = {};
+
+    for (let i = 0; i < s.length; i++) {
+        const char = s[i];
+        if (char in positions) {
+            const prevIndex = positions[char]; // 이전에 나온 위치
+            result[i] = i - prevIndex; // 현재 위치와 이전 위치의 차이를 저장
+        }
+        positions[char] = i; // 해당 문자의 위치를 업데이트
+    }
+
+    return result;
+}
