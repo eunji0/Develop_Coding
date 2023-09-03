@@ -484,3 +484,18 @@ function solution(nums) {
     let b= nums.length/2
     return Math.min(a.length, b)
 }
+
+//과일 장수
+function solution(k, m, score) {
+    let result=0
+    score.sort((a, b)=> b-a)
+    
+    for(let i=0; i<score.length; i+=m){
+     let a = score.slice(i, i+m).pop()
+     let b = score.slice(i,i+m).length
+        if(b===m){
+            result+=a*b
+        }
+    }
+    return result
+}
