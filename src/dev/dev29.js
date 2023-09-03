@@ -407,3 +407,25 @@ function solution(a, b, n) {
     }
     return change
 }
+
+//추억점수
+function solution(name, yearning, photo){
+  let s={}
+
+  for(let i=0; i<name.length; i++){
+    s[name[i]]=yearning[i]
+  }
+
+  let result=[]
+  for(let i=0;i<photo.length; i++){
+    let t=0
+    for(let j=0; j<photo[i].length; j++){
+      if(s[photo[i][j]] !== undefined){
+        t+=s[photo[i][j]]
+      }
+    }
+    result.push(t)
+  }
+
+  return result
+}
