@@ -1,3 +1,5 @@
+const { data } = require("jquery");
+
 //부분 문자열
 function solution(str1, str2) {
   return str2.includes(str1)? 1:0;
@@ -452,3 +454,10 @@ function solution(k, score){
 
 //[...result]는 배열 자체를 복사하고자 할 때 사용하며, (...result)는 배열의 요소를 개별 인자로 전달하고자 할 때 사용합니다.
 
+//2016년
+function solution(a, b){
+  const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+  const d1 =new Date(`2016-${a}-${b}`)
+  const d2 = d1.getDay()
+  return days[d2]
+}
