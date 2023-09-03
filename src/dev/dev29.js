@@ -477,3 +477,10 @@ function solution(cards1, cards2, goal){
 
   return "Yes"
 }
+
+//폰켓몬
+function solution(nums) {
+    let a = [...new Set(nums)]
+    let b= nums.length/2
+    return Math.min(a.length, b)
+}
