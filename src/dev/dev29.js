@@ -429,3 +429,26 @@ function solution(name, yearning, photo){
 
   return result
 }
+
+//명예의 전당
+function solution(k, score){
+  let result=[]//명예의 전당
+  let s= []//발표 점수
+
+  for(let i=0; i<score.length; i++){
+    if(result.length <k){
+      result.push(score[i])
+      s.push(Math.min(...result))
+    }else{
+      result.push(score[i])
+      result.sort((a, b) => a-b)
+      result.shift()
+      s.push(Math.min(...result))
+    }
+  }
+
+  return s
+}
+
+//[...result]는 배열 자체를 복사하고자 할 때 사용하며, (...result)는 배열의 요소를 개별 인자로 전달하고자 할 때 사용합니다.
+
