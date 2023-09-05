@@ -560,3 +560,28 @@ function solution(n, m, selection){
 
   return answer
 }
+
+//실패율
+function solution(N, stages) {
+    let l = []
+    
+    for(let stage=1; stage<=N; stage++){
+        let t = stages.filter(v=> v>=stage).length
+        let f = stages.filter(v=> v===stage).length
+        
+        let fr = t===0? 0:f/t
+        
+        l.push({stage, fr})
+    }
+    
+    l.sort((a, b)=>{
+        if(a.fr !== b.fr){
+            return b.fr-a.fr
+        }
+        else{
+            return a.stage-b.stage
+        }
+    })
+    
+    return l.map(v=>v.stage)
+}
