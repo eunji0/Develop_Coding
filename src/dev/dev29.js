@@ -544,3 +544,19 @@ function solution(n){
 
   return answer
 }
+
+//덧칠하기
+function solution(n, m, selection){
+  let answer=0;
+  let a = new Array(n).fill(true)
+  selection.forEach(i=>a[i-1]=false)
+
+  for(let i=0; i<a.length; i++){
+    if(!a[i]){
+      answer+=1
+      i+=m-1
+    }
+  }
+
+  return answer
+}
