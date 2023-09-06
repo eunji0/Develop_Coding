@@ -585,3 +585,25 @@ function solution(N, stages) {
     
     return l.map(v=>v.stage)
 }
+
+//기사단원의 무기
+function solution(number, limit, power) {
+  let a = 0
+
+  for(let i=1; i<=number; i++){
+    let count=0;
+
+    for(let j=1; j<=i/2; j++){
+      if(i%j===0){
+        count+=1
+      }
+    }
+
+    if(count+1 > limit){
+      a+=power
+    }else{
+      a+= count+1
+    }
+  }
+  return a
+}
