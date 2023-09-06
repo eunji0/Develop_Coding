@@ -588,22 +588,36 @@ function solution(N, stages) {
 
 //기사단원의 무기
 function solution(number, limit, power) {
-  let a = 0
+    let sum = 0;
 
-  for(let i=1; i<=number; i++){
-    let count=0;
+    for (let i = 1; i <= number; i++) {
+        let count = 0;
+        
+        for (let j = 1; j <= i / 2; j++) {
+            if (i % j === 0) {
+                count++;
+            }
+        }
 
-    for(let j=1; j<=i/2; j++){
-      if(i%j===0){
-        count+=1
-      }
+        if (count + 1 > limit) {
+            sum += power;
+        } else {
+            sum += count + 1;
+        }
     }
 
-    if(count+1 > limit){
-      a+=power
-    }else{
-      a+= count+1
-    }
-  }
-  return a
+    return sum;
+}
+
+//로또의 최고 순위와 최저 순위
+function solution(lottos, win_nums) {
+    var answer = [];
+    let count=win_nums.filter(v=>lottos.includes(v)).length//겹치는 수
+    let zero=lottos.filter(v=>v===0).length//0의 개수
+    console.log(count, zero)
+    let min = 7-count >= 6 ? 6 : 7-count;
+    let max = min-zero< 1 ? 1 : min-zero;
+    
+    answer = [max, min]
+    return answer;
 }
