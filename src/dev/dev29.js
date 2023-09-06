@@ -621,3 +621,27 @@ function solution(lottos, win_nums) {
     answer = [max, min]
     return answer;
 }
+
+//옹알이2
+function solution(babbling) {
+  let count = 0;
+  let r = ["aya", "ye", "woo", "ma"]
+
+  for(let i=0; i<babbling.length; i++){
+    let b = babbling[i]
+
+    for(let j=0; j<r.length; j++){
+      if(b.includes(r[j].repeat(2))){
+        break;
+      }
+
+      b=b.split(r[j]).join(' ')
+    }
+
+    if(b.split(' ').join('').length===0){
+      count+=1
+    }
+  }
+
+  return count
+}
