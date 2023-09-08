@@ -720,4 +720,20 @@ function solution(keymap, targets) {
   }
 
   return answer
+} 
+
+//둘만의 암호
+function solution(s, skip, index) {
+  let answer = '';
+  const alphabet = new Set('abcdefghijklmnopqrstuvwxyz');
+  [...skip].forEach(v => alphabet.delete(v))
+
+  const arr = [...alphabet]
+
+  for (let i of s) {
+    const a = arr.indexOf(i) + index
+    answer += arr[a % arr.length]
+  }
+
+  return answer
 }
