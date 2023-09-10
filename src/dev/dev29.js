@@ -885,3 +885,45 @@ const getDistance = (locatedNumber, target) => {
     Math.abs(targetPosition[1] - nowPosition[1])
   );
 };
+
+//공원 산책
+function solution(park, routes) {
+  const maxR=park.length-1
+  const maxC=park[0].length-1
+  
+  let setR=park.findIndex((v)=>v.includes('S'))
+  let setC = park[setR].indexOf('S')
+  
+  routes.forEach((j)=>{
+      const[d, n]=j.split(' ')
+      
+      let tempR=setR
+      let tempC=setC
+      let flag=true
+      
+      for(let i=0; i<Number(n); i++){
+           if (d === "E") tempC++;
+      else if (d === "W") tempC--;
+      else if (d === "S") tempR++;
+      else if (d === "N") tempR--;
+
+      if (
+        tempR > maxR ||
+        tempR < 0 ||
+        tempC > maxC ||
+        tempC < 0 ||
+        park[tempR][tempC] === "X"
+      ) {
+        flag = false;
+        break;
+      }
+    }
+
+    if (flag) {
+      setC = tempC;
+      setR = tempR;
+    }
+  });
+
+     return [setR, setC];
+}
