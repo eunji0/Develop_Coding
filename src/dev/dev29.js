@@ -764,3 +764,28 @@ function solution(id_list, report, k) {
 
   return answer
 }
+
+//체육복
+function solution(n, lost, reserve) {
+  let a = Array(n).fill(1)
+
+  lost.map((n)=>{
+    a[n-1]=0
+  })
+
+  reserve.map((m)=>{
+    a[m-1]+=1
+  })
+
+  for(let i=0; i<n;i++){
+    if(a[i]===0&&a[i-1]===2){
+      a[i]=1
+      a[i-1]=1
+    }
+    else if(a[i]===0&&a[i+1]===2){
+      a[i]=1
+      a[i+1]=1
+    }
+  }
+  return a.filter((v)=>v>0).length
+}
