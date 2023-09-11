@@ -17,3 +17,8 @@ function solution(n) {
 function solution(arr) {
   return arr.reduce((a, c)=>a+c, 0)/arr.length
 }
+
+//짝수와 홀수
+function solution(num) {
+  return num%2===0 ? "Even" : "Odd"
+}
