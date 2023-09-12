@@ -47,3 +47,10 @@ function solution(x, n) {
 function solution(n) {
     return n.toString().split('').reverse().map((v)=>v=+v)
 }
+
+//문자열 내 p와 y의 개수
+function solution(s){
+    let a= s.toLowerCase().split('p')
+    let b= s.toLowerCase().split('y')
+    return a.length===b.length ? true : false
+}
