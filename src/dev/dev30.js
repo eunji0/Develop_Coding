@@ -66,3 +66,8 @@ function solution(n) {
     let b=Math.floor(Math.sqrt(n))
     return a===b ? (a+1)*(a+1) : -1
 }
+
+//정수 내림차순으로 배치하기
+function solution(n) {
+    return +(n.toString().split('').sort((a, c)=>c-a).join(''))
+}
