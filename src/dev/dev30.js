@@ -54,3 +54,8 @@ function solution(s){
     let b= s.toLowerCase().split('y')
     return a.length===b.length ? true : false
 }
+
+//문자열을 정수로 바꾸기
+function solution(s) {
+    return +s
+}
