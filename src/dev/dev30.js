@@ -59,3 +59,10 @@ function solution(s){
 function solution(s) {
     return +s
 }
+
+//정수 제곱근 판별
+function solution(n) {
+    let a= Math.sqrt(n)
+    let b=Math.floor(Math.sqrt(n))
+    return a===b ? (a+1)*(a+1) : -1
+}
