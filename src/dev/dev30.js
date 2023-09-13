@@ -107,3 +107,9 @@ function solution(num) {
 function solution(seoul) {
     return `김서방은 ${seoul.indexOf("Kim")}에 있다`
 }
+
+//나누어 떨어지는 숫자 배열
+function solution(arr, divisor) {
+    let s = arr.filter(v=>v%divisor===0)
+    return s.length < 1 ? [-1] : s.sort((a, b)=>a-b)
+}
