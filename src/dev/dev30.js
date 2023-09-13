@@ -81,3 +81,14 @@ function solution(x) {
      }
     return x%sum===0 ? true:false
 }
+
+//두 정수 사이의 합
+function solution(a, b) {
+    let s = a>b ? b : a
+    let ss = a>b ? a : b
+    let n = 0
+    for(let i=s; i<=ss; i++){
+        n+=i
+    }
+    return n
+}
