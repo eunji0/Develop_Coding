@@ -162,3 +162,24 @@ function solution(n) {
 function solution(a, b) {
     return a.reduce((ac, _, i)=>ac+a[i]*b[i], 0)
 }
+
+//약수의 개수와 덧셈
+function solution(left, right) {
+    let count=0;
+    let s =0
+    for(let i=left; i<=right; i++){
+        for(let j=1; j<=i; j++){
+            if(i%j===0){
+                count++
+            }
+        }
+        if(count%2===0){
+            s+=i
+        }else{
+            s-=i
+        }
+        count=0
+    }
+    
+    return s
+}
