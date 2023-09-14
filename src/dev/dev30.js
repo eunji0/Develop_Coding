@@ -157,3 +157,8 @@ function solution(n) {
     }
     return answer;
 }
+
+//내적
+function solution(a, b) {
+    return a.reduce((ac, _, i)=>ac+a[i]*b[i], 0)
+}
