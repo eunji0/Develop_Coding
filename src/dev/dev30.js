@@ -144,3 +144,16 @@ function solution(s) {
     let a = Math.floor(s.length/2)
     return s.length%2===0 ? s.slice(a-1, a+1) :s.slice(a, a+1) 
 }
+
+//수박수
+function solution(n) {
+    var answer = '';
+    for(let i=0; i<n; i++){
+        if(i%2===0){
+            answer+='수'
+        }else{
+            answer+='박'
+        }
+    }
+    return answer;
+}
