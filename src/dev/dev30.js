@@ -122,3 +122,8 @@ function solution(absolutes, signs) {
     }
     return s
 }
+
+//핸드폰 번호 가리기
+function solution (n) {
+    return '*'.repeat(n.length-4)+n.slice(-4)
+}
