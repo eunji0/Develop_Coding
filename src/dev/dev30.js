@@ -139,3 +139,8 @@ function solution(arr) {
     return arr.length===1 ? [-1]:arr.filter(v=>v!=min)
 }
 
+//가운데 글자 가져오기
+function solution(s) {
+    let a = Math.floor(s.length/2)
+    return s.length%2===0 ? s.slice(a-1, a+1) :s.slice(a, a+1) 
+}
