@@ -197,3 +197,20 @@ function solution(price, money, count) {
     }
     return s-money > 0? s-money:0
 }
+
+//문자열 다루기 기본
+function solution(s) {
+    const num = '0123456789';
+
+    if (s.length !== 4 && s.length !== 6) {
+        return false;
+    }
+
+    for (let i = 0; i < s.length; i++) {
+        if (!num.includes(s[i])) {
+            return false;
+        }
+    }
+
+    return true;
+}
