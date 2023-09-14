@@ -183,3 +183,17 @@ function solution(left, right) {
     
     return s
 }
+
+//문자열 내림차순으로 배치하기
+function solution(s) {
+    return s.split('').sort().reverse().join('')
+}
+
+//부족한 금액 계산하기
+function solution(price, money, count) {
+    let s = 0
+    for(let i=1; i<=count; i++){
+        s+=price*i
+    }
+    return s-money > 0? s-money:0
+}
