@@ -133,3 +133,9 @@ function solution(numbers) {
     return 45-numbers.reduce((a, c)=>a+c, 0)
 }
 
+//제일 작은 수 제거하기
+function solution(arr) {
+    const min = Math.min(...arr)
+    return arr.length===1 ? [-1]:arr.filter(v=>v!=min)
+}
+
