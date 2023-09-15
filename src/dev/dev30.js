@@ -227,3 +227,10 @@ function solution(arr1, arr2) {
     }
     return answer
 }
+
+//최대공약수와 최소공배수
+function solution(n, m) {
+    var r;
+    for(var nm=n*m; r=n%m; n=m, m=r){}
+    return [m, nm/m]
+}
