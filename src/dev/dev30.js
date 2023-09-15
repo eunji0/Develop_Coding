@@ -239,3 +239,8 @@ function solution(n, m) {
 function solution(arr){
     return arr.filter((v, i)=>v!==arr[i+1])
 }
+
+//3진법
+function solution(n) {
+    return parseInt(n.toString(3).split('').reverse().join(''),3)
+}
