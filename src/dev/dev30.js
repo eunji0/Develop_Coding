@@ -234,3 +234,8 @@ function solution(n, m) {
     for(var nm=n*m; r=n%m; n=m, m=r){}
     return [m, nm/m]
 }
+
+//같은 숫자는 싫어
+function solution(arr){
+    return arr.filter((v, i)=>v!==arr[i+1])
+}
