@@ -251,3 +251,21 @@ function solution(d, budget) {
         return a+((budget-=c)>=0)
     }, 0)
 }
+
+//이상한 문자 만들기
+function solution(s) {
+    let ss= s.toLowerCase().split(' ')
+    let answer=[]
+    for(let i=0; i<ss.length; i++){
+        let t=''
+        for(let j=0; j<ss[i].length; j++){
+            if(j%2===0){
+                t+=ss[i][j].toUpperCase()
+            }else{
+                t+=ss[i][j]
+            }
+        }
+        answer.push(t)
+    }
+    return answer.join(' ')
+}
