@@ -244,3 +244,10 @@ function solution(arr){
 function solution(n) {
     return parseInt(n.toString(3).split('').reverse().join(''),3)
 }
+
+//예산
+function solution(d, budget) {
+    return d.sort((a, b) => a-b).reduce((a, c)=>{
+        return a+((budget-=c)>=0)
+    }, 0)
+}
