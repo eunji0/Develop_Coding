@@ -299,3 +299,19 @@ function solution(number) {
     combination([], 0);
     return result;
 }
+
+//최소 직사각형
+function solution(sizes){
+    let a =0;
+    let b=0;
+
+    for(const[w,h] of sizes){
+        const max = Math.max(w, h)
+        const min = Math.min(w, h)
+
+        a=Math.max(a, max)
+        b=Math.max(b, min)
+    }
+
+    return a*b
+}
