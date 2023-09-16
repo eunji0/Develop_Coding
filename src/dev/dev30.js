@@ -315,3 +315,9 @@ function solution(sizes){
 
     return a*b
 }
+
+//시저암호
+function solution(s, n) {
+    var chars = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXY                          "
+    return s.split('').map(v=>chars[chars.indexOf(v)+n]).join('')
+}
