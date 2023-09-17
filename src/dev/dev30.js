@@ -364,3 +364,8 @@ function solution(n, arr1, arr2) {
     }
     return s
 }
+
+//문자열 내 마음대로 정렬하기
+function solution(strings, n) {
+    return strings.sort((a, b)=>a[n]===b[n]? a.localeCompare(b) : a[n].localeCompare(b[n]))
+}
