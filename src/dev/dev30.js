@@ -344,3 +344,23 @@ function solution(s) {
    
    return +s
 }
+
+//1차 비밀지도
+function solution(n, arr1, arr2) {
+    let s=[]
+    let a1 = arr1.map(v=>v.toString(2).padStart(n, '0'))
+    let a2 = arr2.map(v=>v.toString(2).padStart(n, '0'))
+
+    for(let i=0; i<a1.length; i++){
+        let a=''
+        for(let j=0; j<a1[i].length; j++){
+            if(a1[i][j]==='1'||a2[i][j]==='1'){
+                a+='#'
+            }else{
+                a+=' '
+            }
+        }
+        s.push(a)
+    }
+    return s
+}
