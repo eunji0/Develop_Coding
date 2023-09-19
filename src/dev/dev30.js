@@ -440,3 +440,22 @@ function solution(name, yearning, photo) {
     
     return photo.map(value=>value.map(v=>obj[v]? obj[v] : 0).reduce((a, c)=>a+c, 0))
 }
+
+//명예의 전당1
+function solution(k, score) {
+    var answer = [];//k담
+    let a = []//발표점수
+    for(let i of score){
+        if(answer.length<k){
+            answer.push(i)
+            answer.sort((a, b)=>a-b)
+            a.push(answer[0])
+        }else{
+            answer.push(i)
+            answer.sort((a, b)=>a-b)
+            answer.shift()
+            a.push(answer[0])
+        }
+    }
+    return a;
+}
