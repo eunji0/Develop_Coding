@@ -379,3 +379,20 @@ function solution(array, commands) {
     }
     return answer;
 }
+
+//가장 가까운 글자
+function solution(s) {
+    let answer=[]
+    let a=''
+    let ss=s.split('')
+    for(let i=0; i<ss.length; i++){
+        if(a.includes(ss[i])){
+            answer.push(a.split('').reverse().indexOf(ss[i])+1)
+            a+=ss[i]
+        }else{
+            a+=ss[i]
+            answer.push(-1)
+        }
+    }
+    return answer
+}
