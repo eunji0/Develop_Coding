@@ -413,3 +413,10 @@ function solution(numbers) {
 }
 
 //푸드 파이트 대회
+function solution(food) {
+    let a = ''
+    for(let i=1; i<food.length; i++){
+        a+=i.toString().repeat(Math.floor(food[i]/2))
+    }
+    return a+'0'+a.split('').reverse().join('')
+}
