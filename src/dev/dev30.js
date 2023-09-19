@@ -430,3 +430,13 @@ function solution(a, b, n){
     }
     return answer
 }
+
+//추억 점수
+function solution(name, yearning, photo) {
+    let obj = {};
+    for(let i=0; i<name.length; i++){
+        obj[name[i]]=yearning[i]
+    }
+    
+    return photo.map(value=>value.map(v=>obj[v]? obj[v] : 0).reduce((a, c)=>a+c, 0))
+}
