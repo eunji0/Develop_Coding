@@ -420,3 +420,13 @@ function solution(food) {
     }
     return a+'0'+a.split('').reverse().join('')
 }
+
+//콜라문제
+function solution(a, b, n){
+    let answer=0
+    while(n>=a){
+        answer+=Math.floor(n/a)*b
+        n=Math.floor(n/a)*b+n%a
+    }
+    return answer
+}
