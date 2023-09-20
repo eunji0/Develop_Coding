@@ -557,3 +557,20 @@ function solution(nums){
     }
     return c
 }
+
+
+//소수 찾기
+function solution(n) {
+    let a = new Array(n+1).fill(true)
+    a[0]=a[1]=false
+    
+    for(let i=2; i*i<=n; i++){
+        if(a){
+            for(let j=i*i; j<=n; j+=i){
+                a[j]=false
+            }
+        }
+    }
+    
+    return a.filter(v=>v).length
+}
