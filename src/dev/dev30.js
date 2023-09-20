@@ -474,3 +474,9 @@ function solution(cards1, cards2, goal) {
     }
     return 'Yes'
 }
+
+//2016년
+function solution(a, b) {
+    var t = new Date(2016, a-1, b)
+    return t.toString().slice(0,3).toUpperCase();
+}
