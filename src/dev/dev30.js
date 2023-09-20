@@ -488,3 +488,16 @@ function solution(nums) {
     let a = [...new Set(nums)]
     return a.length >= n ? n : a.length;
 }
+
+//과일 장수
+function solution(k, m, score) {
+    var answer = 0;
+    score.sort((a, b)=>b-a)
+    for(let i=0; i<score.length; i+=m){
+        let a= score.slice(i, i+m)
+        if(a.length===m){
+            answer+=a.slice(-1)*a.length
+        }
+    }
+    return answer
+}
