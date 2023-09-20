@@ -574,3 +574,16 @@ function solution(n) {
     
     return a.filter(v=>v).length
 }
+
+//덧칠하기
+function solution(n, m, section) {
+    var answer = 0;
+    var p=0
+    for(s of section){
+        if(p<s){
+            answer++
+            p=s+m-1
+        }
+    }
+    return answer;
+}
