@@ -480,3 +480,11 @@ function solution(a, b) {
     var t = new Date(2016, a-1, b)
     return t.toString().slice(0,3).toUpperCase();
 }
+
+//폰켓몬
+function solution(nums) {
+    var answer = 0;
+    let n = nums.length/2
+    let a = [...new Set(nums)]
+    return a.length >= n ? n : a.length;
+}
