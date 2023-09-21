@@ -612,3 +612,21 @@ function solution(number, limit, power) {
     
     return s
 }
+
+//실패율
+function solution(N, stages) {
+    let a = new Array(N).fill(0)
+    let b=stages.length
+    for(let i=1; i<=N; i++){
+        a[i-1]=stages.filter(v=>v===i).length/b
+        b-=stages.filter(v=>v===i).length
+    }
+    let aa = a.map((v, i)=>({v, i}))
+    aa.sort((a, b)=>b.v-a.v)
+    aa.sort((a, b)=>{
+        if(a.v===b.v){
+            a.i-b.i
+        }
+    })
+    return aa.map(i=>i.i+1);
+}
