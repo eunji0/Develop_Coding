@@ -649,3 +649,24 @@ function solution(dartResult) {
 
     return darts.reduce((a, b) => a + b);
 }
+
+//로또의 최고 순위와 최저 순위
+function solution(lottos, win_nums) {
+    var answer = [0,0];//최고, 최저순위
+    lottos.sort((a, b)=>a-b)
+    win_nums.sort((a, b)=>a-b)
+    let s =0
+    let o = lottos.filter(v=>v===0).length
+    for(let i=0; i<lottos.length; i++){
+        if(win_nums.includes(lottos[i])){
+            s++
+        }
+    }
+    answer[0]=s+o
+    answer[1]=s
+    if(7-answer[0]>6) answer[0]=6
+    else answer[0]=7-answer[0]
+    if(7-answer[1]>6) answer[1]=6
+    else answer[1]=7-answer[1]
+    return answer
+}
