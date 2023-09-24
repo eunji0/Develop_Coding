@@ -712,3 +712,26 @@ function solution(n, lost, reserve) {
     }
     return answer.filter(v=>v>0).length
 }
+
+//완주하지 못한 선수
+function solution(participant, completion) {
+    let p={}
+
+    for(const name of participant){
+        p[name]=(p[name]||0)+1
+    }
+
+    for(const name of completion){
+        if(p[name]>0){
+            p[name]-=1
+        }else{
+            return name
+        }
+    }
+
+    for(const name in p){
+        if(p[name]>0){
+            return name
+        }
+    }
+}
