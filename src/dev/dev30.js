@@ -690,3 +690,25 @@ function solution(X, Y) {
     if(+result===0) return '0'
     return [...result].map(v=>+v).sort((a, b) => b-a).join('')
 }
+
+//체육복
+function solution(n, lost, reserve) {
+    var answer = new Array(n).fill(1);
+    lost.forEach(v=>{
+        answer[v-1]-=1
+    })
+    reserve.forEach(v=>{
+        answer[v-1]+=1
+    })
+
+    for(let i=0; i<answer.length; i++){
+        if(answer[i]===0 && answer[i-1]>1){
+            answer[i]+=1
+            answer[i-1]-=1
+        }else if(answer[i]===0 && answer[i+1]>1){
+            answer[i]+=1
+            answer[i+1]-=1
+        }
+    }
+    return answer.filter(v=>v>0).length
+}
