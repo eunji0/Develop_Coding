@@ -735,3 +735,27 @@ function solution(participant, completion) {
         }
     }
 }
+
+//문자열 나누기
+function solution(s) {
+    let stack=[]
+    let count=0
+
+    for(let i=0; i<s.length; i++){
+        stack.push(s[i])
+
+        const same=stack.filter(v=>v===stack[0]).length
+        const nosame=stack.filter(v=>v!=stack[0]).length
+
+        if(same===nosame){
+            count+=1
+            stack=[]
+        }
+    }
+
+    if(stack.length != 0){
+        count+=1
+    }
+
+    return count
+}
