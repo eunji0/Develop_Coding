@@ -759,3 +759,5 @@ function solution(s) {
 
     return count
 }
+
+//대충 만든 자판
