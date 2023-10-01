@@ -761,3 +761,11 @@ function solution(s) {
 }
 
 //대충 만든 자판
+function solution(keymap, targets) {
+    targets.forEach(v=>{
+        let a = v.split('')
+        for(let i=0; i<a.length; i++){
+            console.log(a[i])
+        }
+    })
+}
