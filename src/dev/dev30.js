@@ -762,10 +762,23 @@ function solution(s) {
 
 //대충 만든 자판
 function solution(keymap, targets) {
-    targets.forEach(v=>{
-        let a = v.split('')
-        for(let i=0; i<a.length; i++){
-            console.log(a[i])
+    let answer=[]
+    let map = new Map()
+    
+    for(let key of keymap){
+        for(let i=0; i<key.length; i++){
+            if(!map.has(key[i]) || i+1<map.get(key[i])) map.set(key[i], i+1)
         }
-    })
+    }
+    
+    for(let target of targets){
+        let c=0;
+        for(let i=0; i<target.length; i++){
+            c+=map.get(target[i])
+        }
+        
+        answer.push(c||-1)
+    }
+    
+    return answer
 }
