@@ -830,3 +830,52 @@ function solution(board, moves) {
 
     return answer
 }
+
+//키패드 누르기
+function solution(numbers, hand) {
+    let lh = '*'; // 왼손의 초기 위치
+    let rh = '#'; // 오른손의 초기 위치
+    let result = '';
+
+    const keypad = {
+        1: [0, 0], 2: [0, 1], 3: [0, 2],
+        4: [1, 0], 5: [1, 1], 6: [1, 2],
+        7: [2, 0], 8: [2, 1], 9: [2, 2],
+        '*': [3, 0], 0: [3, 1], '#': [3, 2],
+    };
+
+    for (let i = 0; i < numbers.length; i++) {
+        const num = numbers[i];
+        const [lx, ly] = keypad[lh];
+        const [rx, ry] = keypad[rh];
+        const [nx, ny] = keypad[num];
+
+        const leftDistance = Math.abs(lx - nx) + Math.abs(ly - ny);
+        const rightDistance = Math.abs(rx - nx) + Math.abs(ry - ny);
+
+        if (num === 1 || num === 4 || num === 7) {
+            result += 'L';
+            lh = num;
+        } else if (num === 3 || num === 6 || num === 9) {
+            result += 'R';
+            rh = num;
+        } else {
+            if (leftDistance < rightDistance) {
+                result += 'L';
+                lh = num;
+            } else if (leftDistance > rightDistance) {
+                result += 'R';
+                rh = num;
+            } else {
+                if (hand === 'right') {
+                    result += 'R';
+                    rh = num;
+                } else {
+                    result += 'L';
+                    lh = num;
+                }
+            }
+        }
+    }
+    return result;
+}
