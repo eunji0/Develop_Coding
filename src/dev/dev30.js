@@ -994,3 +994,27 @@ function solution(wallpaper) {
 
   return [Y[0], X[0], Y[Y.length - 1] + 1, X[X.length - 1] + 1];
 }
+
+//개인정보 수집 유효기간
+function solution(today, terms, privacies) {
+    var answer = [];
+    
+    const e = new Date(today)
+    
+    let a = new Map()
+    terms.forEach(v=>{
+        let [d, n] = v.split(' ')
+        a[d]=+n
+    })
+    
+    privacies.forEach((v, i)=>{
+        let [d, n] = v.split(' ')
+        
+        let ch = new Date(d)
+        
+        ch.setMonth(ch.getMonth()+a[n])
+        
+        if(ch<=e) answer.push(i+1)
+    })
+    return answer;
+}
