@@ -1040,3 +1040,33 @@ function solution(ingredient) {
     
     return c
 }
+
+
+//성격유형 검사하기
+function solution(survey, choices) {
+    var answer = '';
+    const types = { R: 0, T: 0, C: 0, F: 0, J: 0, M: 0, A: 0, N: 0 };
+    
+    for(let i=0; i<choices.length; i++){
+        const result = Math.abs(choices[i]-4)
+        const [l, r] = survey[i].split('')
+        if(choices[i]<4){
+            types[l]+=result
+        }else if(choices[i]>4){
+            types[r]+=result
+        }
+    }
+    const type = Object.keys(types)
+    
+    for(let i=0; i<type.length; i+=2){
+        const l = types[type[i]]
+        const r = types[type[i+1]]
+        
+        if(l>=r){
+            answer+=type[i]
+        }else{
+            answer+=type[i+1]
+        }
+    }
+    return answer;
+}
