@@ -1115,3 +1115,9 @@ function solution(new_id) {
 // .replace(/\.$/, ""): 문자열의 끝에 위치한 마침표(.)를 제거합니다.
 
 // 마지막으로, 변환된 문자열의 길이를 len 변수에 저장한 후, 길이가 2보다 작으면 마지막 문자를 3번 반복하여 길이를 3으로 만듭니다.
+
+//최댓값과 최솟값
+function solution(s) {
+    let ss = s.split(' ')
+    return  Math.min(...ss)+' '+Math.max(...ss);
+}
