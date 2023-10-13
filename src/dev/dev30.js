@@ -1121,3 +1121,15 @@ function solution(s) {
     let ss = s.split(' ')
     return  Math.min(...ss)+' '+Math.max(...ss);
 }
+
+//JadenCase 문자열 만들기
+function solution(s){
+    let ss= s.split(' ')
+    let q=ss.map((word)=>{
+        if(word.length===0){
+            return '';
+        }
+        return word[0].toUpperCase()+word.slice(1).toLowerCase()
+    })
+    return q.join(' ')
+}
