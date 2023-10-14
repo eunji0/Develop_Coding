@@ -1133,3 +1133,10 @@ function solution(s){
     })
     return q.join(' ')
 }
+
+//최솟값 만들기
+function solution(A,B){
+    let a = A.sort((a, b)=> a-b);
+    let b= B.sort((a, b)=>b-a);
+    return a.reduce((a, c, i)=> a+c*b[i], 0)
+}
