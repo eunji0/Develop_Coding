@@ -1140,3 +1140,16 @@ function solution(A,B){
     let b= B.sort((a, b)=>b-a);
     return a.reduce((a, c, i)=> a+c*b[i], 0)
 }
+
+//올바른 괄호
+function solution(s){ 
+    let cnt = 0;
+
+    for (let i=0; i<s.length; i++) {
+        s[i] === "(" ? cnt += 1 : cnt +=  -1 
+        if (cnt < 0) {
+            break;
+        }
+    }
+    return cnt === 0 ? true : false
+}
