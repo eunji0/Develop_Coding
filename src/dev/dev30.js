@@ -1188,3 +1188,17 @@ function solution(s) {
         if(n.toString(2).split('1').length === oneNum) return n;
     }
 }
+
+//피보나치 수
+function solution(n) {
+    let a = new Array(n.length).fill(0);
+    
+    a[0] = 0;
+    a[1] = 1;
+    
+    for(let i=2; i<=n; i++){
+        a[i] = (a[i-1]+a[i-2])%1234567
+    }
+    
+    return a[n];
+}
