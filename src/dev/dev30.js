@@ -1258,3 +1258,11 @@ function solution(n, words) {
   
     return answer;
   }
+
+  //마지막 두 원소
+  function solution(num_list) {
+    let a = [...num_list].reverse();
+    let b = a[0] > a[1] ? a[0]-a[1] : a[0]*2;
+    num_list.push(b);
+    return num_list;
+}
