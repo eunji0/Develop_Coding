@@ -22,3 +22,25 @@ function getGcd(a, b) {
 function solution2(arr) {
   return arr.reduce((a, b) => (a * b) / getGcd(a, b));
 }
+
+//귤고르기
+function solution3(k, t) {
+  const obj = {};
+
+  t.forEach((n) => {
+    obj[n] = ++obj[n] || 1;
+  });
+
+  let kinds = Object.values(obj).sort((a, b) => b - a);
+
+  let answer = 0;
+  let sum = 0;
+
+  for (let num of kinds) {
+    ++answer;
+    sum += num;
+
+    if (sum >= k) break;
+  }
+  return answer;
+}
