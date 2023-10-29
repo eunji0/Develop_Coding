@@ -12,3 +12,13 @@ const fibonacci = (n) => {
 
   return dp[n];
 };
+
+//n개의 최소공배수
+function getGcd(a, b) {
+  if (b === 0) return a;
+  return getGcd(b, a % b);
+}
+
+function solution2(arr) {
+  return arr.reduce((a, b) => (a * b) / getGcd(a, b));
+}
