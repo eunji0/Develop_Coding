@@ -44,3 +44,14 @@ function solution3(k, t) {
   }
   return answer;
 }
+
+//글자 이어붙여 문자열 만들기
+function solution4(my_string, index_list) {
+  let result = '';
+  
+  index_list.forEach(v=>{
+      result+=my_string[v]
+  })
+  
+  return result
+}
