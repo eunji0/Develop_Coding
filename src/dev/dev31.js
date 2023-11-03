@@ -47,11 +47,20 @@ function solution3(k, t) {
 
 //글자 이어붙여 문자열 만들기
 function solution4(my_string, index_list) {
-  let result = '';
-  
-  index_list.forEach(v=>{
-      result+=my_string[v]
-  })
-  
-  return result
+  let result = "";
+
+  index_list.forEach((v) => {
+    result += my_string[v];
+  });
+
+  return result;
+}
+
+//조건에 맞게 수열 변환하기 1
+function solution5(arr) {
+  return arr.map((a) => {
+    if (a >= 50 && a % 2 === 0) return Math.floor(a / 2);
+    if (a < 50 && a % 2 === 1) return a * 2;
+    return a;
+  });
 }
