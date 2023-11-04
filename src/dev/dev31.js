@@ -64,3 +64,8 @@ function solution5(arr) {
     return a;
   });
 }
+
+//문자열 정수의 합
+function solution6(num_str) {
+  return num_str.split('').map(v=> Number(v)).reduce((a, c)=>a+c, 0);
+}
