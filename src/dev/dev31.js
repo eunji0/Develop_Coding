@@ -69,3 +69,8 @@ function solution5(arr) {
 function solution6(num_str) {
   return num_str.split('').map(v=> Number(v)).reduce((a, c)=>a+c, 0);
 }
+
+//뒤에서 5등 뒤로
+function solution(num_list) {
+    return num_list.sort((a, b)=>a-b).splice(5);
+}
