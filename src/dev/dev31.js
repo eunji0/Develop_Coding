@@ -71,6 +71,11 @@ function solution6(num_str) {
 }
 
 //뒤에서 5등 뒤로
-function solution(num_list) {
+function solution7(num_list) {
     return num_list.sort((a, b)=>a-b).splice(5);
+}
+
+//0떼기
+function solution8(n_str) {
+    return  String(Number(n_str))
 }
