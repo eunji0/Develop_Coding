@@ -79,3 +79,8 @@ function solution7(num_list) {
 function solution8(n_str) {
     return  String(Number(n_str))
 }
+
+//카운트업
+function solution9(start_num, end_num) {
+  return Array.from({ length: end_num - start_num + 1 }, (_, index) => start_num + index);
+}
