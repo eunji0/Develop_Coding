@@ -67,20 +67,32 @@ function solution5(arr) {
 
 //문자열 정수의 합
 function solution6(num_str) {
-  return num_str.split('').map(v=> Number(v)).reduce((a, c)=>a+c, 0);
+  return num_str
+    .split("")
+    .map((v) => Number(v))
+    .reduce((a, c) => a + c, 0);
 }
 
 //뒤에서 5등 뒤로
 function solution7(num_list) {
-    return num_list.sort((a, b)=>a-b).splice(5);
+  return num_list.sort((a, b) => a - b).splice(5);
 }
 
 //0떼기
 function solution8(n_str) {
-    return  String(Number(n_str))
+  return String(Number(n_str));
 }
 
 //카운트업
 function solution9(start_num, end_num) {
-  return Array.from({ length: end_num - start_num + 1 }, (_, index) => start_num + index);
+  return Array.from(
+    { length: end_num - start_num + 1 },
+    (_, index) => start_num + index
+  );
+}
+
+//배열 만들기1
+function solution10(n, k) {
+  const result = Array.from({ length: n / k }, (_, index) => (index + 1) * k);
+  return result;
 }
