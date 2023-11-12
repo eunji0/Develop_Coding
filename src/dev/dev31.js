@@ -96,3 +96,13 @@ function solution10(n, k) {
   const result = Array.from({ length: n / k }, (_, index) => (index + 1) * k);
   return result;
 }
+
+// 홀짝에 따라 다른 값 반환하기
+function solution(n) {
+    const isOdd = n % 2 !== 0;
+
+    return Array.from({ length: n }, (_, index) => index + 1)
+        .reduce((result, value) => {
+            return result + (isOdd ? (value % 2 !== 0 ? value : 0) : (value % 2 === 0 ? value * value : 0));
+        }, 0);
+}
