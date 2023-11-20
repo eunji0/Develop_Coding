@@ -35,3 +35,23 @@ const readline = require("readline");
 })();
 
 
+function solution(genres, plays) {
+  const grouped = genres.reduce((acc, genre, index) => {
+    acc[genre] = (acc[genre] || 0) + plays[index];
+    return acc;
+  }, {});
+
+  console.log(grouped);
+
+  const result = genres.map((genre, index) => ({
+    genre,
+    index: index,
+    play: plays[index],
+  }));
+
+  console.log(result);
+
+  if (grouped.classic > grouped.pop) {
+    console.log();
+  }
+}
