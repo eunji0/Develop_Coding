@@ -106,3 +106,43 @@ function solution(n) {
             return result + (isOdd ? (value % 2 !== 0 ? value : 0) : (value % 2 === 0 ? value * value : 0));
         }, 0);
 }
+
+//해시-베스트앨범
+function solution(genres, plays) {
+  const grouped = genres.reduce((acc, genre, index) => {
+    acc[genre] = (acc[genre] || 0) + plays[index];
+    return acc;
+  }, {});
+
+  const songs = genres.map((genre, index) => ({
+    genre,
+    index,
+    play: plays[index],
+  }));
+
+  songs.sort((a, b) => {
+    if (a.genre !== b.genre) {
+      return grouped[b.genre] - grouped[a.genre];
+    }
+    if (a.play !== b.play) {
+      return b.play - a.play;
+    }
+    return a.index - b.index;
+  });
+
+  const result = {};
+    
+    console.log(songs)
+  return songs.reduce((acc, song) => {
+    if (!result[song.genre]) {
+      result[song.genre] = 0;
+    }
+    if (result[song.genre] < 2) {
+      acc.push(song.index);
+      result[song.genre]++;
+    }
+      // console.log(result)
+      // console.log(acc)
+    return acc;
+  }, []);
+}

@@ -34,7 +34,6 @@ const readline = require("readline");
   process.exit();
 })();
 
-
 function solution(genres, plays) {
   const grouped = genres.reduce((acc, genre, index) => {
     acc[genre] = (acc[genre] || 0) + plays[index];
