@@ -98,17 +98,28 @@ function solution10(n, k) {
 }
 
 // 홀짝에 따라 다른 값 반환하기
-function solution(n) {
-    const isOdd = n % 2 !== 0;
+function solution11(n) {
+  const isOdd = n % 2 !== 0;
 
-    return Array.from({ length: n }, (_, index) => index + 1)
-        .reduce((result, value) => {
-            return result + (isOdd ? (value % 2 !== 0 ? value : 0) : (value % 2 === 0 ? value * value : 0));
-        }, 0);
+  return Array.from({ length: n }, (_, index) => index + 1).reduce(
+    (result, value) => {
+      return (
+        result +
+        (isOdd
+          ? value % 2 !== 0
+            ? value
+            : 0
+          : value % 2 === 0
+          ? value * value
+          : 0)
+      );
+    },
+    0
+  );
 }
 
 //해시-베스트앨범
-function solution(genres, plays) {
+function solution12(genres, plays) {
   const grouped = genres.reduce((acc, genre, index) => {
     acc[genre] = (acc[genre] || 0) + plays[index];
     return acc;
@@ -131,8 +142,8 @@ function solution(genres, plays) {
   });
 
   const result = {};
-    
-    console.log(songs)
+
+  console.log(songs);
   return songs.reduce((acc, song) => {
     if (!result[song.genre]) {
       result[song.genre] = 0;
@@ -141,29 +152,63 @@ function solution(genres, plays) {
       acc.push(song.index);
       result[song.genre]++;
     }
-      // console.log(result)
-      // console.log(acc)
+    // console.log(result)
+    // console.log(acc)
     return acc;
   }, []);
 }
 
 //프로세스
-function solution(priorities, location) {
+function solution13(priorities, location) {
   let count = 0; // 처리된 프로세스 수
-    let maxPriority = Math.max(...priorities); // 최대 우선순위
-      
-    while (true) {
-      const currentProcess = priorities.shift(); // 대기중인 프로세스를 큐에서 꺼냄
-  
-        console.log(currentProcess);
-      if (currentProcess === maxPriority) {
-        count++; // 프로세스 실행
-        if (location === 0) return count; // 찾고자 하는 프로세스일 경우 결과 반환
-        maxPriority = Math.max(...priorities); // 최대 우선순위 갱신
-      } else {
-        priorities.push(currentProcess); // 큐에 다시 넣음
+  let maxPriority = Math.max(...priorities); // 최대 우선순위
+
+  while (true) {
+    const currentProcess = priorities.shift(); // 대기중인 프로세스를 큐에서 꺼냄
+
+    console.log(currentProcess);
+    if (currentProcess === maxPriority) {
+      count++; // 프로세스 실행
+      if (location === 0) return count; // 찾고자 하는 프로세스일 경우 결과 반환
+      maxPriority = Math.max(...priorities); // 최대 우선순위 갱신
+    } else {
+      priorities.push(currentProcess); // 큐에 다시 넣음
+    }
+
+    location = location === 0 ? priorities.length - 1 : location - 1; // 위치 조정
+  }
+}
+
+//dfs 피로도
+function solution(k, dungeons) {
+  // 정답을 담을 배열
+  let answer = [];
+  // 방문 여부를 저장하는 배열
+  let visited = Array(dungeons.length).fill(false);
+
+  // 깊이 우선 탐색 함수
+  function dfs(count, k) {
+    // 탐험한 던전 수를 answer 배열에 추가
+    answer.push(count);
+
+    // 모든 던전에 대해 반복
+    for (let i = 0; i < dungeons.length; i++) {
+      let current = dungeons[i];
+      // 피로도가 최소 필요 피로도보다 크거나 같고 아직 방문하지 않은 던전인 경우
+      if (k >= current[0] && !visited[i]) {
+        // 해당 던전을 방문했음을 표시
+        visited[i] = true;
+        // 깊이 우선 탐색 호출 (던전 수 증가, 남은 피로도 감소)
+        dfs(count + 1, k - current[1]);
+        // 백트래킹: 해당 던전을 빠져나왔으므로 방문 여부를 다시 false로 설정
+        visited[i] = false;
       }
-   
-      location = location === 0 ? priorities.length - 1 : location - 1; // 위치 조정
     }
   }
+
+  // 초기값으로 깊이 우선 탐색 호출 (던전 수 0, 현재 피로도 k)
+  dfs(0, k);
+
+  // 탐험할 수 있는 최대 던전 수 반환
+  return Math.max(...answer);
+}
