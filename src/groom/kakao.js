@@ -37,6 +37,7 @@
 // }
 
 // // 예시 사용
+
 // const coin = 4;
 // const cards = [3, 6, 7, 2, 1, 10, 5, 9, 8, 12, 11, 4];
 // console.log(solution(coin, cards));
