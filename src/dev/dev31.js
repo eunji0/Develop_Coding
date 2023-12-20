@@ -212,3 +212,25 @@ function solution(k, dungeons) {
   // 탐험할 수 있는 최대 던전 수 반환
   return Math.max(...answer);
 }
+
+//영어 끝말잇기
+function solution(n, words) {
+  let answer = [0, 0];
+
+  for(let i=0; i<words.length; i++){
+      let word = words[i]
+      let a = i%n+1
+      let turn =Math.ceil((i+1)/n)
+      
+     if(i>0){
+         let last = words[i-1].split('').pop();
+         
+         if(i > words.indexOf(word) || words[i][0] !== last){
+             answer = [a, turn];
+             break;
+         }
+     }
+  }
+
+  return answer;
+}
