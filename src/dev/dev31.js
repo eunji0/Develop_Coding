@@ -254,3 +254,37 @@ function solution(k, tangerine) {
   }
   return answer;
 }
+
+//피로도
+function solution(k, dungeons) {
+  // 정답을 담을 배열
+  let answer = [];
+  // 방문 여부를 저장하는 배열
+  let visited = Array(dungeons.length).fill(false);
+
+  // 깊이 우선 탐색 함수
+  function dfs(count, k) {
+    // 탐험한 던전 수를 answer 배열에 추가
+    answer.push(count);
+
+    // 모든 던전에 대해 반복
+    for (let i = 0; i < dungeons.length; i++) {
+      let current = dungeons[i];
+      // 피로도가 최소 필요 피로도보다 크거나 같고 아직 방문하지 않은 던전인 경우
+      if (k >= current[0] && !visited[i]) {
+        // 해당 던전을 방문했음을 표시
+        visited[i] = true;
+        // 깊이 우선 탐색 호출 (던전 수 증가, 남은 피로도 감소)
+        dfs(count + 1, k - current[1]);
+        // 백트래킹: 해당 던전을 빠져나왔으므로 방문 여부를 다시 false로 설정
+        visited[i] = false;
+      }
+    }
+  }
+
+  // 초기값으로 깊이 우선 탐색 호출 (던전 수 0, 현재 피로도 k)
+  dfs(0, k);
+
+  // 탐험할 수 있는 최대 던전 수 반환
+  return Math.max(...answer);
+}
