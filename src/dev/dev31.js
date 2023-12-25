@@ -110,8 +110,8 @@ function solution11(n) {
             ? value
             : 0
           : value % 2 === 0
-          ? value * value
-          : 0)
+            ? value * value
+            : 0)
       );
     },
     0
@@ -217,19 +217,19 @@ function solution(k, dungeons) {
 function solution(n, words) {
   let answer = [0, 0];
 
-  for(let i=0; i<words.length; i++){
-      let word = words[i]
-      let a = i%n+1
-      let turn =Math.ceil((i+1)/n)
-      
-     if(i>0){
-         let last = words[i-1].split('').pop();
-         
-         if(i > words.indexOf(word) || words[i][0] !== last){
-             answer = [a, turn];
-             break;
-         }
-     }
+  for (let i = 0; i < words.length; i++) {
+    let word = words[i];
+    let a = (i % n) + 1;
+    let turn = Math.ceil((i + 1) / n);
+
+    if (i > 0) {
+      let last = words[i - 1].split("").pop();
+
+      if (i > words.indexOf(word) || words[i][0] !== last) {
+        answer = [a, turn];
+        break;
+      }
+    }
   }
 
   return answer;
@@ -237,20 +237,20 @@ function solution(n, words) {
 
 //귤고르기
 function solution(k, tangerine) {
-  const obj = {}
-  tangerine.forEach(n=>{
-      obj[n]=++obj[n]||1
-  })
-  
-  const kinds = Object.values(obj).sort((a, b)=>b-a);
-  let answer=0;
-  let sum=0;
-  
-  for(let num of kinds){
-      ++answer;
-      sum+=num;
-      
-      if(sum>=k) break;
+  const obj = {};
+  tangerine.forEach((n) => {
+    obj[n] = ++obj[n] || 1;
+  });
+
+  const kinds = Object.values(obj).sort((a, b) => b - a);
+  let answer = 0;
+  let sum = 0;
+
+  for (let num of kinds) {
+    ++answer;
+    sum += num;
+
+    if (sum >= k) break;
   }
   return answer;
 }
@@ -288,3 +288,22 @@ function solution(k, dungeons) {
   // 탐험할 수 있는 최대 던전 수 반환
   return Math.max(...answer);
 }
+
+//모음 사전
+function solution(word) {
+  const result = [];
+  const str = "";
+  for (let i = 1; i <= 5; i++) dfs(str, i, result);
+  return result.sort().indexOf(word) + 1;
+}
+
+const dfs = (word, length, result) => {
+  const vowels = [..."AEIOU"];
+  if (length === word.length) {
+    result.push(word);
+    return;
+  }
+  vowels.forEach((vowel) => {
+    dfs(word + vowel, length, result);
+  });
+};
