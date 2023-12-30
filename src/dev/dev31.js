@@ -550,3 +550,41 @@ function solution(maps) {
   // BFS를 마쳤는데 목표 지점에 도달하지 못했으면 -1 반환
   return -1;
 }
+
+//단어 변환
+function solution(begin, target, words) {
+    if(!words.includes(target)) return 0;
+    let temp=[];
+    let que=[];
+    let visited = new Set();
+    let answer =0;
+    
+    que.push(begin);
+    
+    while(que.length){
+        const word = que.shift();
+        visited.add(word);
+        
+        if(word===target) return answer;
+        
+        for(let i=0; i<word.length; i++){
+            let letter = wordSlice(word, i);
+            let match = words.filter(v=> !visited.has(v) && wordSlice(v, i)===letter)
+            temp.push(...match)
+        }
+        
+        if(que.length<1){
+            answer++;
+            que.push(...temp)
+            temp=[]
+        }
+    }
+    
+    function wordSlice(word, i){
+        let a = word.split('')
+        a.splice(i, 1);
+        return a.join('')
+    }
+    
+    return answer
+}
