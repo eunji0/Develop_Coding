@@ -515,76 +515,131 @@ function solution(maps) {
   const goalY = yLen - 1;
   // 목표 지점의 가로 좌표
   const goalX = xLen - 1;
-  
+
   // 이동 방향을 나타내는 배열
   const dy = [0, 0, 1, -1];
   const dx = [-1, 1, 0, 0];
-  
+
   // BFS를 위한 큐 초기화
   const queue = [];
   // 시작 지점을 큐에 추가 [세로 좌표, 가로 좌표, 이동 횟수]
   queue.push([0, 0, 1]);
-  
+
   // BFS 시작
-  while(queue.length) {
-      // 큐에서 현재 위치와 이동 횟수를 가져옴
-      const [curY, curX, move] = queue.shift();
-      
-      // 목표 지점에 도달했으면 이동 횟수 반환
-      if(curY === goalY && curX === goalX) return move;
-      
-      // 네 방향으로 이동
-      for(let i = 0; i < 4; i++) {
-          const ny = curY + dy[i];
-          const nx = curX + dx[i];
-          
-          // 맵 범위 내에 있고 벽이 아닌 경우
-          if(ny >= 0 && ny < yLen && nx >= 0 && nx < xLen && maps[ny][nx] === 1) {
-              // 다음 위치를 큐에 추가하고 해당 위치의 값을 0으로 변경 (방문 표시)
-              queue.push([ny, nx, move + 1]);
-              maps[ny][nx] = 0;
-          }
+  while (queue.length) {
+    // 큐에서 현재 위치와 이동 횟수를 가져옴
+    const [curY, curX, move] = queue.shift();
+
+    // 목표 지점에 도달했으면 이동 횟수 반환
+    if (curY === goalY && curX === goalX) return move;
+
+    // 네 방향으로 이동
+    for (let i = 0; i < 4; i++) {
+      const ny = curY + dy[i];
+      const nx = curX + dx[i];
+
+      // 맵 범위 내에 있고 벽이 아닌 경우
+      if (ny >= 0 && ny < yLen && nx >= 0 && nx < xLen && maps[ny][nx] === 1) {
+        // 다음 위치를 큐에 추가하고 해당 위치의 값을 0으로 변경 (방문 표시)
+        queue.push([ny, nx, move + 1]);
+        maps[ny][nx] = 0;
       }
+    }
   }
-  
+
   // BFS를 마쳤는데 목표 지점에 도달하지 못했으면 -1 반환
   return -1;
 }
 
 //단어 변환
 function solution(begin, target, words) {
-    if(!words.includes(target)) return 0;
-    let temp=[];
-    let que=[];
-    let visited = new Set();
-    let answer =0;
-    
-    que.push(begin);
-    
-    while(que.length){
-        const word = que.shift();
-        visited.add(word);
-        
-        if(word===target) return answer;
-        
-        for(let i=0; i<word.length; i++){
-            let letter = wordSlice(word, i);
-            let match = words.filter(v=> !visited.has(v) && wordSlice(v, i)===letter)
-            temp.push(...match)
-        }
-        
-        if(que.length<1){
-            answer++;
-            que.push(...temp)
-            temp=[]
-        }
+  if (!words.includes(target)) return 0;
+  let temp = [];
+  let que = [];
+  let visited = new Set();
+  let answer = 0;
+
+  que.push(begin);
+
+  while (que.length) {
+    const word = que.shift();
+    visited.add(word);
+
+    if (word === target) return answer;
+
+    for (let i = 0; i < word.length; i++) {
+      let letter = wordSlice(word, i);
+      let match = words.filter(
+        (v) => !visited.has(v) && wordSlice(v, i) === letter
+      );
+      temp.push(...match);
     }
-    
-    function wordSlice(word, i){
-        let a = word.split('')
-        a.splice(i, 1);
-        return a.join('')
+
+    if (que.length < 1) {
+      answer++;
+      que.push(...temp);
+      temp = [];
     }
-    
-    return answer
+  }
+
+  function wordSlice(word, i) {
+    let a = word.split("");
+    a.splice(i, 1);
+    return a.join("");
+  }
+
+  return answer;
+}
+
+//여행 경로
+function solution(tickets) {
+  let answer = [];
+  let correctCount = tickets.length;
+
+  let withICN = [];
+  let withoutICN = [];
+
+  for (let i = 0; i < tickets.length; i++) {
+    if (tickets[i][0] === "ICN") withICN.push(tickets[i]);
+    else withoutICN.push(tickets[i]);
+  }
+
+  // 항상 ICN으로 시작하기 때문에 ICN을 기준으로 tickets을 정렬함
+  tickets = [...withICN.sort(), ...withoutICN.sort()];
+
+  function bfs(i) {
+    let visited = [];
+    let queue = [];
+
+    queue.push([tickets[i][1], [tickets[i][0]]]);
+    visited.push([i]);
+
+    while (queue.length) {
+      let current = queue.shift();
+      let checkVisited = visited.shift();
+
+      // 현재 저장된 값이 tickets의 길이와 같을 때
+      // 모든 여행경로를 돌고 마지막 공항에 도착한 경우
+      if (current[1].length === correctCount) {
+        // 해당 경우가 존재하면 값을 반환함
+        return (answer = [...current[1], current[0]]);
+      }
+
+      tickets.forEach((ticket, index) => {
+        if (checkVisited.includes(index)) return;
+        if (ticket[0] === current[0]) {
+          queue.push([ticket[1], [...current[1], ticket[0]]]);
+          visited.push([...checkVisited, index]);
+        }
+      });
+    }
+  }
+
+  // BFS를 활용하여 모든 경우의 수를 탐색함
+  for (let i = 0; i < tickets.length; i++) {
+    if (answer.length) {
+      return answer;
+    }
+    bfs(i);
+  }
 }
