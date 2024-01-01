@@ -643,3 +643,41 @@ function solution(tickets) {
     bfs(i);
   }
 }
+
+//단어변환
+function solution(begin, target, words) {
+    if(!words.includes(target)) return 0;
+    let temp=[];
+    let que=[];
+    let visited = new Set();
+    let answer =0;
+    
+    que.push(begin);
+    
+    while(que.length){
+        const word = que.shift();
+        visited.add(word);
+        
+        if(word===target) return answer;
+        
+        for(let i=0; i<word.length; i++){
+            let letter = wordSlice(word, i);
+            let match = words.filter(v=> !visited.has(v) && wordSlice(v, i)===letter)
+            temp.push(...match)
+        }
+        
+        if(que.length<1){
+            answer++;
+            que.push(...temp)
+            temp=[]
+        }
+    }
+    
+    function wordSlice(word, i){
+        let a = word.split('')
+        a.splice(i, 1);
+        return a.join('')
+    }
+    
+    return answer
+}
