@@ -67,27 +67,32 @@ function solution2(maps) {
 }
 
 //네트워크
-function solution(n, computers) {
-  let answer = 0;
-  const length = computers.length;
-  const visited = Array.from({ length: n }, () => false);
+function solution3(n, computers) {
+  let answer = 0; // 네트워크의 개수를 카운트할 변수
+  const length = computers.length; // 컴퓨터의 개수
+  const visited = Array.from({ length: n }, () => false); // 방문 여부를 기록할 배열
 
+  // 깊이 우선 탐색(DFS) 함수 정의
   function dfs(index) {
-    visited[index] = true;
+    visited[index] = true; // 현재 컴퓨터를 방문 처리
 
+    // 현재 컴퓨터와 연결된 다른 컴퓨터들을 확인
     for (let i = 0; i < length; i++) {
+      // 연결되어 있고 아직 방문하지 않은 컴퓨터라면
       if (computers[index][i] && !visited[i]) {
-        dfs(i);
+        dfs(i); // 해당 컴퓨터로 DFS 수행
       }
     }
   }
 
+  // 모든 컴퓨터에 대해 반복
   for (let i = 0; i < length; i++) {
     if (!visited[i]) {
-      dfs(i);
-      answer++;
+      // 아직 방문하지 않은 컴퓨터라면
+      dfs(i); // DFS 수행
+      answer++; // 네트워크의 개수 증가
     }
   }
 
-  return answer;
+  return answer; // 최종적인 네트워크의 개수 반환
 }
