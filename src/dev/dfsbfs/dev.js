@@ -96,3 +96,59 @@ function solution3(n, computers) {
 
   return answer; // 최종적인 네트워크의 개수 반환
 }
+
+//단어변환
+function solution4(begin, target, words) {
+  // target이 words에 없으면 변환할 수 없으므로 0을 반환
+  if (!words.includes(target)) return 0;
+
+  // 현재 변환된 단어를 저장하는 배열
+  let temp = [];
+  // BFS를 위한 큐
+  let que = [];
+  // 방문한 단어를 저장하는 Set
+  let visited = new Set();
+  // 최종 변환에 필요한 단계 수
+  let answer = 0;
+
+  // 시작 단어를 큐에 추가
+  que.push(begin);
+
+  while (que.length) {
+    // 큐에서 단어를 꺼냄
+    const word = que.shift();
+    // 방문한 단어로 표시
+    visited.add(word);
+
+    // 목표 단어에 도달하면 단계 수를 반환
+    if (word === target) return answer;
+
+    // 단어의 각 문자를 하나씩 비교하여 변환 가능한 단어를 찾음
+    for (let i = 0; i < word.length; i++) {
+      let letter = wordSlice(word, i);
+      // 변환 가능한 단어들을 필터링하여 temp 배열에 추가
+      let match = words.filter(
+        (v) => !visited.has(v) && wordSlice(v, i) === letter
+      );
+      temp.push(...match);
+    }
+
+    // 현재 큐에서 처리한 단어가 모두 끝나면(한 단계가 끝나면) answer 증가
+    if (que.length < 1) {
+      answer++;
+      // temp에 있는 단어들을 큐에 추가하고 temp 초기화
+      que.push(...temp);
+      temp = [];
+    }
+  }
+
+  // 목표 단어에 도달하지 못하면 0 반환
+  return 0;
+}
+
+// 단어의 i번째 문자를 제외한 나머지 부분을 반환하는 함수
+function wordSlice(word, i) {
+  let a = word.split("");
+  a.splice(i, 1);
+  return a.join("");
+}
