@@ -152,3 +152,50 @@ function wordSlice(word, i) {
   a.splice(i, 1);
   return a.join("");
 }
+
+//여행경로
+//이해 안됨
+//한 번더 리팩 필요
+function solution5(tickets) {
+  var paths = [];
+
+  // 출발지를 key로, 도착지를 value로 가지는 맵 생성
+  const ticketPath = tickets.reduce((prev, ticket) => {
+    prev.set(
+      ticket[0],
+      prev.get(ticket[0]) ? [...prev.get(ticket[0]), ticket[1]] : [ticket[1]]
+    );
+    return prev;
+  }, new Map());
+
+  // DFS를 이용하여 모든 경로를 탐색
+  getTravel(ticketPath, "ICN");
+
+  function getTravel(pathMap, path, count = 1) {
+    // 현재 경로에서 마지막 공항 코드를 추출
+    const curAirport = path.substring(path.length - 3);
+
+    // 모든 도시를 방문했을 때
+    if (count === tickets.length + 1) {
+      paths.push(path); // paths 배열에 현재 경로를 추가
+      return;
+    }
+
+    // 현재 공항에서 갈 수 있는 도시들에 대해 반복
+    for (let i = 0; i < (pathMap.get(curAirport) || []).length; i++) {
+      const curPath = pathMap.get(curAirport); // 현재 공항에서 갈 수 있는 도시들의 배열
+      const airport = curPath.shift(); // 배열에서 도시 하나를 꺼내옴
+
+      // 다음 경로로 DFS 수행
+      getTravel(pathMap, path + "," + airport, count + 1);
+
+      // DFS 수행이 끝난 후, 꺼내온 도시를 다시 도시 배열에 추가
+      curPath.push(airport);
+      // 업데이트된 도시 배열을 다시 맵에 저장
+      pathMap.set(curAirport, curPath);
+    }
+  }
+
+  paths.sort(); // 알파벳 순으로 정렬
+  return paths[0].split(","); // 가장 빠른 경로를 배열로 반환
+}
