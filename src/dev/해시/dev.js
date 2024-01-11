@@ -23,3 +23,10 @@ function solution(participant, completion) {
 
   return participant[participant.length - 1];
 }
+
+//폰켓몬
+function solution2(nums) {
+  let a = nums.length / 2;
+  let b = Array.from(new Set(nums)).length;
+  return a < b ? a : b;
+}
