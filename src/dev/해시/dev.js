@@ -54,3 +54,45 @@ function solution4(clothes) {
 
   return Array.from(a.values()).reduce((a, c) => a * (c + 1), 1) - 1;
 }
+
+//베스트앨범
+function solution5ㅛ(genres, plays) {
+  const grouped = genres.reduce((acc, genre, index) => {
+    acc[genre] = (acc[genre] || 0) + plays[index];
+    return acc;
+  }, {});
+  console.log(grouped);
+
+  const songs = genres.map((genre, index) => ({
+    genre,
+    index,
+    play: plays[index],
+  }));
+  console.log(songs);
+
+  songs.sort((a, b) => {
+    if (a.genre !== b.genre) {
+      return grouped[b.genre] - grouped[a.genre];
+    }
+    if (a.play !== b.play) {
+      return b.play - a.play;
+    }
+    return a.index - b.index;
+  });
+
+  // 최종 결과를 저장할 객체
+  const result = {};
+  // 최종 결과 배열을 반환
+  return songs.reduce((acc, song) => {
+    // 만약 해당 장르가 아직 result에 등록되지 않았다면
+    if (!result[song.genre]) {
+      result[song.genre] = 0; // 해당 장르의 선택된 노래 수를 초기화
+    }
+    // 해당 장르에서 이미 2곡을 선택하지 않았다면
+    if (result[song.genre] < 2) {
+      acc.push(song.index); // 결과 배열에 현재 노래의 인덱스를 추가
+      result[song.genre]++; // 해당 장르의 선택된 노래 수 증가
+    }
+    return acc; // 결과 배열 반환
+  }, []);
+}
