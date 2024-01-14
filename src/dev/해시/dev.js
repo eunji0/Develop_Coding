@@ -51,6 +51,6 @@ function solution4(clothes) {
     let [q, w] = v;
     a.set(w, (a.get(w) || 0) + 1);
   });
-  console.log();
+
   return Array.from(a.values()).reduce((a, c) => a * (c + 1), 1) - 1;
 }
