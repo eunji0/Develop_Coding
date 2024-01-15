@@ -56,7 +56,7 @@ function solution4(clothes) {
 }
 
 //베스트앨범
-function solution5ㅛ(genres, plays) {
+function solution5(genres, plays) {
   const grouped = genres.reduce((acc, genre, index) => {
     acc[genre] = (acc[genre] || 0) + plays[index];
     return acc;
