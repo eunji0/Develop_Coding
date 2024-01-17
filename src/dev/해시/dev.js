@@ -195,3 +195,16 @@ function solution(wallpaper) {
 
   return [y[0], x[0], y[y.length - 1] + 1, x[x.length - 1] + 1];
 }
+
+//덧칠하기
+function solution(n, m, section) {
+  var answer = 0;
+  var p = 0;
+  for (s of section) {
+    if (p < s) {
+      answer++;
+      p = s + m - 1;
+    }
+  }
+  return answer;
+}
