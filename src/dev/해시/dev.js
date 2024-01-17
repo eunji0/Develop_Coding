@@ -245,3 +245,25 @@ function solution(cards1, cards2, goal) {
   }
   return "Yes";
 }
+
+//둘만의 암호
+function solution(s, skip, index) {
+  let result = "";
+  s = s.split("");
+  skip = skip.split("");
+  let a = "abcdefghijklmnopqrstuvwxyz".split("");
+
+  a.forEach((v, i) => {
+    if (skip.includes(v)) {
+      a[i] = "";
+    }
+  });
+
+  a = a.join("").split("");
+  console.log(a);
+
+  for (let i = 0; i < s.length; i++) {
+    result += a[+(a.findIndex((v) => v === s[i]) + index) % a.length];
+  }
+  return result;
+}
