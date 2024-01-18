@@ -291,3 +291,15 @@ function solution(today, terms, privacies) {
   });
   return answer;
 }
+
+//크기가 작은 부분 문자열
+function solution(t, p) {
+  var answer = 0;
+  for (let i = 0; i < t.length; i++) {
+    let tt = t.slice(i, i + p.length);
+    if (tt.length === p.length && +tt <= +p) {
+      answer++;
+    }
+  }
+  return answer;
+}
