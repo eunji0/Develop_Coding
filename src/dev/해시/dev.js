@@ -303,3 +303,23 @@ function solution(t, p) {
   }
   return answer;
 }
+
+//가장 가까운 같은 글자
+function solution(s) {
+  let stack = [];
+  let ans = [];
+
+  [...s].forEach((str) => {
+    if (!stack.includes(str)) {
+      ans.push(-1);
+    }
+
+    if (stack.includes(str)) {
+      ans.push(stack.length - stack.lastIndexOf(str));
+    }
+
+    stack.push(str);
+  });
+
+  return ans;
+}
