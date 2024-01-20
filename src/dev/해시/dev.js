@@ -347,3 +347,22 @@ function solution(s) {
 
   return count;
 }
+
+//명예의 전당
+function solution(k, score) {
+  var kk = [];
+  let result = [];
+
+  score.forEach((v) => {
+    if (kk.length < k) {
+      kk.push(v);
+      kk.sort((a, b) => a - b);
+    } else {
+      kk.push(v);
+      kk.sort((a, b) => a - b);
+      kk.shift();
+    }
+    result.push(kk[0]);
+  });
+  return result;
+}
