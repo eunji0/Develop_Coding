@@ -366,3 +366,27 @@ function solution(k, score) {
   });
   return result;
 }
+
+//기사단원의 무기
+function solution(number, limit, power) {
+  let s = 0;
+  for (let i = 1; i <= number; i++) {
+    let d = 0;
+    for (let j = 1; j * j <= i; j++) {
+      if (i % j === 0) {
+        d++;
+        if (j * j !== i) {
+          d++;
+        }
+      }
+    }
+
+    if (d > limit) {
+      s += power;
+    } else {
+      s += d;
+    }
+  }
+
+  return s;
+}
