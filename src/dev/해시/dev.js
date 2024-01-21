@@ -405,3 +405,13 @@ function solution(k, m, score) {
   }
   return answer;
 }
+
+//푸드 파이트 대회
+function solution(food) {
+  var answer = "";
+  for (let i = 1; i < food.length; i++) {
+    let a = Math.floor(food[i] / 2);
+    answer += i.toString().repeat(a);
+  }
+  return answer + "0" + answer.split("").reverse().join("");
+}
