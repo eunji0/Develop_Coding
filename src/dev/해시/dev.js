@@ -390,3 +390,18 @@ function solution(number, limit, power) {
 
   return s;
 }
+
+//과일 장수
+function solution(k, m, score) {
+  var answer = 0;
+  score.sort((a, b) => b - a);
+
+  for (let i = 0; i < score.length; i += m) {
+    let a = score.slice(i, i + m);
+
+    if (a.length === m) {
+      answer += a.pop() * m;
+    }
+  }
+  return answer;
+}
