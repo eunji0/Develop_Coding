@@ -484,3 +484,26 @@ function solution(number) {
   combination([], 0);
   return result;
 }
+
+//숫자짝꿍
+function solution(X, Y) {
+  var result = "";
+  let num = {};
+
+  for (const char of X) {
+    num[char] = (num[char] || 0) + 1;
+  }
+
+  for (const char of Y) {
+    if (!num[char]) continue;
+    result += char;
+    num[char]--;
+  }
+
+  if (result === "") return "-1";
+  if (+result === 0) return "0";
+  return [...result]
+    .map((v) => +v)
+    .sort((a, b) => b - a)
+    .join("");
+}
