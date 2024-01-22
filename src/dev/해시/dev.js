@@ -415,3 +415,25 @@ function solution(food) {
   }
   return answer + "0" + answer.split("").reverse().join("");
 }
+
+//햄버거 만들기
+function solution(ingredient) {
+  let st = [];
+  let c = 0;
+
+  ingredient.forEach((v) => {
+    st.push(v);
+    if (st.length >= 4) {
+      const s = st.slice(-4).join("");
+      if (s === "1231") {
+        st.pop();
+        st.pop();
+        st.pop();
+        st.pop();
+        c++;
+      }
+    }
+  });
+
+  return c;
+}
