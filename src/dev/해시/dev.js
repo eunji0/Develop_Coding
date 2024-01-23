@@ -561,3 +561,17 @@ function solution(n) {
     }
   }
 }
+
+//최소직사각형
+function solution(sizes) {
+  let w = [];
+  let y = [];
+  for (let i = 0; i < sizes.length; i++) {
+    let a = Math.max(sizes[i][0], sizes[i][1]);
+    let b = Math.min(sizes[i][0], sizes[i][1]);
+
+    w.push(a);
+    y.push(b);
+  }
+  return Math.max(...w) * Math.max(...y);
+}
