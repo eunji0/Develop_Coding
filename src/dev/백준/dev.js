@@ -35,11 +35,30 @@
 // }
 
 //10988
-let fs = require("fs");
-const input = String(fs.readFileSync("input.txt")).trim();
+// let fs = require("fs");
+// const input = String(fs.readFileSync("input.txt")).trim();
 
-if (input === input.split("").reverse().join("")) {
-  console.log(1);
+// if (input === input.split("").reverse().join("")) {
+//   console.log(1);
+// } else {
+//   console.log(0);
+// }
+
+//1157
+let fs = require("fs");
+const input = String(fs.readFileSync("input.txt")).trim().toUpperCase();
+
+let max = {};
+
+input.split("").forEach((v) => {
+  max[v] = (max[v] || 0) + 1;
+});
+
+const maxCount = Math.max(...Object.values(max));
+const maxChars = Object.keys(max).filter((char) => max[char] === maxCount);
+
+if (maxChars.length > 1) {
+  console.log("?");
 } else {
-  console.log(0);
+  console.log(maxChars.toString());
 }
