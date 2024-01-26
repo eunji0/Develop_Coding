@@ -19,17 +19,27 @@
 // console.log(result.join(" "));
 
 //2444
+// let fs = require("fs");
+// const N = Number(fs.readFileSync("input.txt"));
+
+// for (let i = 1; i < N; i++) {
+//   let blank = " ".repeat(N - i);
+//   let stars = "*".repeat(i + (i - 1));
+//   console.log(blank + stars);
+// }
+
+// for (let j = N; j > 0; j--) {
+//   let blank = " ".repeat(N - j);
+//   let stars = "*".repeat(j + (j - 1));
+//   console.log(blank + stars);
+// }
+
+//10988
 let fs = require("fs");
-const N = Number(fs.readFileSync("input.txt"));
+const input = String(fs.readFileSync("input.txt")).trim();
 
-for (let i = 1; i < N; i++) {
-  let blank = " ".repeat(N - i);
-  let stars = "*".repeat(i + (i - 1));
-  console.log(blank + stars);
-}
-
-for (let j = N; j > 0; j--) {
-  let blank = " ".repeat(N - j);
-  let stars = "*".repeat(j + (j - 1));
-  console.log(blank + stars);
+if (input === input.split("").reverse().join("")) {
+  console.log(1);
+} else {
+  console.log(0);
 }
