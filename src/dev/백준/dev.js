@@ -45,20 +45,36 @@
 // }
 
 //1157
+// let fs = require("fs");
+// const input = String(fs.readFileSync("input.txt")).trim().toUpperCase();
+
+// let max = {};
+
+// input.split("").forEach((v) => {
+//   max[v] = (max[v] || 0) + 1;
+// });
+
+// const maxCount = Math.max(...Object.values(max));
+// const maxChars = Object.keys(max).filter((char) => max[char] === maxCount);
+
+// if (maxChars.length > 1) {
+//   console.log("?");
+// } else {
+//   console.log(maxChars.toString());
+// }
+
+//2941
 let fs = require("fs");
-const input = String(fs.readFileSync("input.txt")).trim().toUpperCase();
+const input = String(fs.readFileSync("input.txt")).trim();
 
-let max = {};
+let croatia = ["c=", "c-", "dz=", "d-", "lj", "nj", "s=", "z="];
 
-input.split("").forEach((v) => {
-  max[v] = (max[v] || 0) + 1;
-});
+function solution(input) {
+  for (let alphabet of croatia) {
+    input = input.split(alphabet).join("Q");
+  }
 
-const maxCount = Math.max(...Object.values(max));
-const maxChars = Object.keys(max).filter((char) => max[char] === maxCount);
-
-if (maxChars.length > 1) {
-  console.log("?");
-} else {
-  console.log(maxChars.toString());
+  return input.length;
 }
+
+console.log(solution(input));
