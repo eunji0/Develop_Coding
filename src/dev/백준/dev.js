@@ -80,33 +80,61 @@
 // console.log(solution(input));
 
 //1316
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().trim();
+// const arr = input.split("\n");
+
+// const n = parseInt(arr[0]);
+// let countGroupWord = 0;
+
+// for (let i = 1; i <= n; i++) {
+//   const word = arr[i];
+//   const letter = [];
+//   let isGroupWord = true;
+
+//   for (let j = 0; j < word.length; j++) {
+//     if (letter.indexOf(word[j]) === -1) {
+//       letter.push(word[j]);
+//     } else {
+//       if (letter.indexOf(word[j]) !== letter.length - 1) {
+//         isGroupWord = false;
+//         break;
+//       }
+//     }
+//   }
+
+//   if (isGroupWord) {
+//     countGroupWord += 1;
+//   }
+// }
+
+// console.log(countGroupWord);
+
+//25206
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 const input = fs.readFileSync(file).toString().trim();
 const arr = input.split("\n");
 
-const n = parseInt(arr[0]);
-let countGroupWord = 0;
+let k = {};
+const a = ["A+", "A0", "B+", "B0", "C+", "C0", "D+", "D0", "F"];
+const b = [4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0, 0.0];
 
-for (let i = 1; i <= n; i++) {
-  const word = arr[i];
-  const letter = [];
-  let isGroupWord = true;
+a.forEach((v, i) => {
+  k[v] = b[i];
+});
 
-  for (let j = 0; j < word.length; j++) {
-    if (letter.indexOf(word[j]) === -1) {
-      letter.push(word[j]);
-    } else {
-      if (letter.indexOf(word[j]) !== letter.length - 1) {
-        isGroupWord = false;
-        break;
-      }
-    }
-  }
+let ss = 0;
+let aa = 0;
 
-  if (isGroupWord) {
-    countGroupWord += 1;
+for (let i = 0; i < arr.length; i++) {
+  let [name, score, level] = arr[i].split(" ").map((v) => v.trim());
+
+  if (level !== "P") {
+    ss += Number(score) * k[level];
+    aa += Number(score);
   }
 }
 
-console.log(countGroupWord);
+console.log((ss / aa).toFixed(6));
