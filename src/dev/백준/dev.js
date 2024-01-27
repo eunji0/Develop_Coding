@@ -64,17 +64,49 @@
 // }
 
 //2941
-let fs = require("fs");
-const input = String(fs.readFileSync("input.txt")).trim();
+// let fs = require("fs");
+// const input = String(fs.readFileSync("input.txt")).trim();
 
-let croatia = ["c=", "c-", "dz=", "d-", "lj", "nj", "s=", "z="];
+// let croatia = ["c=", "c-", "dz=", "d-", "lj", "nj", "s=", "z="];
 
-function solution(input) {
-  for (let alphabet of croatia) {
-    input = input.split(alphabet).join("Q");
+// function solution(input) {
+//   for (let alphabet of croatia) {
+//     input = input.split(alphabet).join("Q");
+//   }
+
+//   return input.length;
+// }
+
+// console.log(solution(input));
+
+//1316
+const fs = require("fs");
+const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+const input = fs.readFileSync(file).toString().trim();
+const arr = input.split("\n");
+
+const n = parseInt(arr[0]);
+let countGroupWord = 0;
+
+for (let i = 1; i <= n; i++) {
+  const word = arr[i];
+  const letter = [];
+  let isGroupWord = true;
+
+  for (let j = 0; j < word.length; j++) {
+    if (letter.indexOf(word[j]) === -1) {
+      letter.push(word[j]);
+    } else {
+      if (letter.indexOf(word[j]) !== letter.length - 1) {
+        isGroupWord = false;
+        break;
+      }
+    }
   }
 
-  return input.length;
+  if (isGroupWord) {
+    countGroupWord += 1;
+  }
 }
 
-console.log(solution(input));
+console.log(countGroupWord);
