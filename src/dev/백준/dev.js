@@ -112,29 +112,50 @@
 // console.log(countGroupWord);
 
 //25206
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().trim();
+// const arr = input.split("\n");
+
+// let k = {};
+// const a = ["A+", "A0", "B+", "B0", "C+", "C0", "D+", "D0", "F"];
+// const b = [4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0, 0.0];
+
+// a.forEach((v, i) => {
+//   k[v] = b[i];
+// });
+
+// let ss = 0;
+// let aa = 0;
+
+// for (let i = 0; i < arr.length; i++) {
+//   let [name, score, level] = arr[i].split(" ").map((v) => v.trim());
+
+//   if (level !== "P") {
+//     ss += Number(score) * k[level];
+//     aa += Number(score);
+//   }
+// }
+
+// console.log((ss / aa).toFixed(6));
+
+//2738
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 const input = fs.readFileSync(file).toString().trim();
 const arr = input.split("\n");
 
-let k = {};
-const a = ["A+", "A0", "B+", "B0", "C+", "C0", "D+", "D0", "F"];
-const b = [4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0, 0.0];
+const [q, w] = arr[0].split(" ").map((v) => +v);
 
-a.forEach((v, i) => {
-  k[v] = b[i];
-});
+for (let i = 1; i <= q; i++) {
+  const a = arr[i].split(" ").map((v) => +v);
+  const b = arr[i + q].split(" ").map((v) => +v);
 
-let ss = 0;
-let aa = 0;
+  const t = [];
 
-for (let i = 0; i < arr.length; i++) {
-  let [name, score, level] = arr[i].split(" ").map((v) => v.trim());
+  a.forEach((v, i) => {
+    t.push(v + b[i]);
+  });
 
-  if (level !== "P") {
-    ss += Number(score) * k[level];
-    aa += Number(score);
-  }
+  console.log(t.join(" "));
 }
-
-console.log((ss / aa).toFixed(6));
