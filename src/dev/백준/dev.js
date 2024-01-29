@@ -206,21 +206,40 @@
 // console.log(result);
 
 //2563
-const fs = require("fs");
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().trim().split("\n");
+
+// let ans = 0;
+// let arr = Array.from(Array(100), () => Array(100).fill(0));
+// for (let t = 1; t <= Number(input[0]); t++) {
+//   const tmp = input[t].split(" ").map((i) => parseInt(i));
+
+//   let x = tmp[0];
+//   let y = tmp[1];
+//   for (let i = x; i < x + 10; i++) {
+//     for (let j = y; j < y + 10; j++) {
+//       if (++arr[i][j] === 1) ans++;
+//     }
+//   }
+// }
+// console.log(ans);
+
+//2745
+var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs.readFileSync(file).toString().trim().split("\n");
+var inputs = fs.readFileSync(file).toString().split(" ");
+var char = inputs[0].split("").reverse();
+var base = Number(inputs[1]);
+var result = 0;
 
-let ans = 0;
-let arr = Array.from(Array(100), () => Array(100).fill(0));
-for (let t = 1; t <= Number(input[0]); t++) {
-  const tmp = input[t].split(" ").map((i) => parseInt(i));
-
-  let x = tmp[0];
-  let y = tmp[1];
-  for (let i = x; i < x + 10; i++) {
-    for (let j = y; j < y + 10; j++) {
-      if (++arr[i][j] === 1) ans++;
-    }
+for (var i = 0; i < char.length; i++) {
+  if (char[i] >= "A" && char[i] <= "Z") {
+    char[i] = char[i].charCodeAt(0) - 55;
+    result += char[i] * Math.pow(base, i);
+  } else {
+    char[i] = Number(char[i]);
+    result += char[i] * Math.pow(base, i);
   }
 }
-console.log(ans);
+console.log(result);
