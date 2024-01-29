@@ -183,24 +183,44 @@
 // console.log(a.map((v) => v + 1).join(" "));
 
 //10798
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().trim().split("\n");
+
+// let maxL = 0;
+// let result = "";
+
+// for (let i = 0; i < input.length; i++) {
+//   if (maxL < input[i].length) {
+//     maxL = input[i].length;
+//   }
+// }
+
+// for (let i = 0; i < maxL; i++) {
+//   for (let j = 0; j < input.length; j++) {
+//     if (input[j][i] === undefined) continue;
+//     else result += input[j][i];
+//   }
+// }
+
+// console.log(result);
+
+//2563
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 const input = fs.readFileSync(file).toString().trim().split("\n");
 
-let maxL = 0;
-let result = "";
+let ans = 0;
+let arr = Array.from(Array(100), () => Array(100).fill(0));
+for (let t = 1; t <= Number(input[0]); t++) {
+  const tmp = input[t].split(" ").map((i) => parseInt(i));
 
-for (let i = 0; i < input.length; i++) {
-  if (maxL < input[i].length) {
-    maxL = input[i].length;
+  let x = tmp[0];
+  let y = tmp[1];
+  for (let i = x; i < x + 10; i++) {
+    for (let j = y; j < y + 10; j++) {
+      if (++arr[i][j] === 1) ans++;
+    }
   }
 }
-
-for (let i = 0; i < maxL; i++) {
-  for (let j = 0; j < input.length; j++) {
-    if (input[j][i] === undefined) continue;
-    else result += input[j][i];
-  }
-}
-
-console.log(result);
+console.log(ans);
