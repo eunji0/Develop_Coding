@@ -226,20 +226,27 @@
 // console.log(ans);
 
 //2745
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var inputs = fs.readFileSync(file).toString().split(" ");
+// var char = inputs[0].split("").reverse();
+// var base = Number(inputs[1]);
+// var result = 0;
+
+// for (var i = 0; i < char.length; i++) {
+//   if (char[i] >= "A" && char[i] <= "Z") {
+//     char[i] = char[i].charCodeAt(0) - 55;
+//     result += char[i] * Math.pow(base, i);
+//   } else {
+//     char[i] = Number(char[i]);
+//     result += char[i] * Math.pow(base, i);
+//   }
+// }
+// console.log(result);
+
+//11005
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 var inputs = fs.readFileSync(file).toString().split(" ");
-var char = inputs[0].split("").reverse();
-var base = Number(inputs[1]);
-var result = 0;
 
-for (var i = 0; i < char.length; i++) {
-  if (char[i] >= "A" && char[i] <= "Z") {
-    char[i] = char[i].charCodeAt(0) - 55;
-    result += char[i] * Math.pow(base, i);
-  } else {
-    char[i] = Number(char[i]);
-    result += char[i] * Math.pow(base, i);
-  }
-}
-console.log(result);
+console.log(Number(inputs[0]).toString(Number(inputs[1])).toUpperCase());
