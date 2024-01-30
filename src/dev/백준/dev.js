@@ -448,19 +448,27 @@
 // }
 
 //11653
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = Number(fs.readFileSync(file));
+
+// let answer = [];
+
+// for (let i = 2; i <= input; i++) {
+//   while (input % i === 0) {
+//     input /= i;
+//     answer.push(i);
+//   }
+
+//   if (input === 1) break;
+// }
+
+// answer.forEach((v) => console.log(v));
+
+//27323
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-var input = Number(fs.readFileSync(file));
+var input = fs.readFileSync(file).toString().split("\n");
+let [m, n] = input.map((v) => +v);
 
-let answer = [];
-
-for (let i = 2; i <= input; i++) {
-  while (input % i === 0) {
-    input /= i;
-    answer.push(i);
-  }
-
-  if (input === 1) break;
-}
-
-answer.forEach((v) => console.log(v));
+console.log(m * n);
