@@ -334,18 +334,34 @@
 // console.log(result);
 
 //5086
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs.readFileSync(file).toString().trim().split("\n");
+
+// function aa(a, b) {
+//   if (a > b && a % b === 0) return "multiple";
+//   if (a < b && b % a === 0) return "factor";
+//   if (a === b) return "";
+//   return "neither";
+// }
+
+// for (let i = 0; i < input.length; i++) {
+//   let [a, b] = input[i].split(" ").map((v) => +v);
+//   console.log(aa(a, b));
+// }
+
+//2501
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-var input = fs.readFileSync(file).toString().trim().split("\n");
+var input = fs.readFileSync(file).toString().trim();
+let [a, b] = input.split(" ");
 
-function aa(a, b) {
-  if (a > b && a % b === 0) return "multiple";
-  if (a < b && b % a === 0) return "factor";
-  if (a === b) return "";
-  return "neither";
+let s = [1];
+
+for (let i = 2; i <= a; i++) {
+  if (a % i === 0) {
+    s.push(i);
+  }
 }
 
-for (let i = 0; i < input.length; i++) {
-  let [a, b] = input[i].split(" ").map((v) => +v);
-  console.log(aa(a, b));
-}
+console.log(s[b - 1] === undefined ? 0 : s[b - 1]);
