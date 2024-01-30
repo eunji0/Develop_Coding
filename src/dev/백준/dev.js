@@ -245,8 +245,33 @@
 // console.log(result);
 
 //11005
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var inputs = fs.readFileSync(file).toString().split(" ");
+
+// console.log(Number(inputs[0]).toString(Number(inputs[1])).toUpperCase());
+
+//2720
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-var inputs = fs.readFileSync(file).toString().split(" ");
+var input = fs
+  .readFileSync(file)
+  .toString()
+  .split("\n")
+  .map((v) => +v);
 
-console.log(Number(inputs[0]).toString(Number(inputs[1])).toUpperCase());
+for (let i = 1; i < input.length; i++) {
+  console.log(solution(input[i]));
+}
+
+function solution(change) {
+  let count = [0, 0, 0, 0];
+  const coins = [25, 10, 5, 1];
+
+  for (let i = 0; i < coins.length; i++) {
+    count[i] += Math.floor(change / coins[i]);
+    change %= coins[i];
+  }
+
+  return count.join(" ");
+}
