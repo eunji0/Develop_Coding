@@ -474,10 +474,25 @@
 // console.log(m * n);
 
 //1085
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs.readFileSync(file).toString();
+// let [a, b, c, d] = input.split(" ").map((v) => +v);
+
+// let s = [a, b, Math.abs(c - a), Math.abs(d - b)];
+// console.log(Math.min(...s));
+
+//14215
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 var input = fs.readFileSync(file).toString();
-let [a, b, c, d] = input.split(" ").map((v) => +v);
+let [a, b, c] = input
+  .split(" ")
+  .map((v) => +v)
+  .sort((a, b) => a - b);
 
-let s = [a, b, Math.abs(c - a), Math.abs(d - b)];
-console.log(Math.min(...s));
+if (a + b > c) {
+  console.log(a + b + c);
+} else {
+  console.log(2 * (a + b) - 1);
+}
