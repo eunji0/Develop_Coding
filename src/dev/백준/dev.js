@@ -277,12 +277,27 @@
 // }
 
 //2903
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs.readFileSync(file).toString().trim();
+
+// let dot = 2;
+// for (let i = 0; i < +input; i++) {
+//   dot += Math.pow(2, i);
+// }
+// console.log(Math.pow(dot, 2));
+
+//61
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 var input = fs.readFileSync(file).toString().trim();
 
-let dot = 2;
-for (let i = 0; i < +input; i++) {
-  dot += Math.pow(2, i);
+let range = 1;
+let block = 1;
+
+while (block < +input) {
+  block += 6 * range;
+  range++;
 }
-console.log(Math.pow(dot, 2));
+
+console.log(range);
