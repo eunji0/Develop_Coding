@@ -288,16 +288,38 @@
 // console.log(Math.pow(dot, 2));
 
 //61
-var fs = require("fs");
-const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-var input = fs.readFileSync(file).toString().trim();
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs.readFileSync(file).toString().trim();
 
-let range = 1;
-let block = 1;
+// let range = 1;
+// let block = 1;
 
-while (block < +input) {
-  block += 6 * range;
-  range++;
-}
+// while (block < +input) {
+//   block += 6 * range;
+//   range++;
+// }
 
-console.log(range);
+// console.log(range);
+
+//1193
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs.readFileSync(file).toString().trim();
+
+// const solution = (input) => {
+//   const sum = (n) => (n * (n + 1)) / 2;
+//   let i = 1;
+
+//   while (sum(i) < input) {
+//     i++;
+//   }
+
+//   let a = input - sum(i - 1);
+
+//   return (i + 1) % 2 === 1
+//     ? [a, i + 1 - a].join("/")
+//     : [i + 1 - a, a].join("/");
+// };
+
+// console.log(solution(input));
