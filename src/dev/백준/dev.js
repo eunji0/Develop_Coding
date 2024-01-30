@@ -325,10 +325,27 @@
 // console.log(solution(input));
 
 //2869
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs.readFileSync(file).toString().trim();
+// let [a, b, h] = input.split(" ");
+
+// let result = Math.ceil((h - b) / (a - b));
+// console.log(result);
+
+//5086
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-var input = fs.readFileSync(file).toString().trim();
-let [a, b, h] = input.split(" ");
+var input = fs.readFileSync(file).toString().trim().split("\n");
 
-let result = Math.ceil((h - b) / (a - b));
-console.log(result);
+function aa(a, b) {
+  if (a > b && a % b === 0) return "multiple";
+  if (a < b && b % a === 0) return "factor";
+  if (a === b) return "";
+  return "neither";
+}
+
+for (let i = 0; i < input.length; i++) {
+  let [a, b] = input[i].split(" ").map((v) => +v);
+  console.log(aa(a, b));
+}
