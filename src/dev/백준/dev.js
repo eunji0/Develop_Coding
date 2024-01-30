@@ -418,31 +418,49 @@
 // console.log(result);
 
 //2581
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs.readFileSync(file).toString().trim().split("\n");
+
+// let m = +input[0];
+// let n = +input[1];
+// let a = [];
+
+// for (let i = m; i <= n; i++) {
+//   let s = [];
+
+//   for (let j = 2; j <= i; j++) {
+//     if (i % j === 0) {
+//       s.push(j);
+//     }
+//   }
+
+//   if (s.length === 1) {
+//     a.push(+s);
+//   }
+// }
+
+// if (a.length > 0) {
+//   console.log(a.reduce((a, c) => a + c, 0));
+//   console.log(a[0]);
+// } else {
+//   console.log("-1");
+// }
+
+//11653
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-var input = fs.readFileSync(file).toString().trim().split("\n");
+var input = Number(fs.readFileSync(file));
 
-let m = +input[0];
-let n = +input[1];
-let a = [];
+let answer = [];
 
-for (let i = m; i <= n; i++) {
-  let s = [];
-
-  for (let j = 2; j <= i; j++) {
-    if (i % j === 0) {
-      s.push(j);
-    }
+for (let i = 2; i <= input; i++) {
+  while (input % i === 0) {
+    input /= i;
+    answer.push(i);
   }
 
-  if (s.length === 1) {
-    a.push(+s);
-  }
+  if (input === 1) break;
 }
 
-if (a.length > 0) {
-  console.log(a.reduce((a, c) => a + c, 0));
-  console.log(a[0]);
-} else {
-  console.log("-1");
-}
+answer.forEach((v) => console.log(v));
