@@ -367,27 +367,52 @@
 // console.log(s[b - 1] === undefined ? 0 : s[b - 1]);
 
 //9506
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs.readFileSync(file).toString().trim().split("\n");
+
+// for (let i = 0; i < input.length; i++) {
+//   let a = Number(input[i]);
+//   if (a !== -1) {
+//     let s = [1];
+
+//     for (let i = 2; i < a; i++) {
+//       if (a % i === 0) {
+//         s.push(i);
+//       }
+//     }
+
+//     let sum = s.reduce((a, c) => a + c, 0);
+
+//     if (sum === a) {
+//       console.log(a + " = " + s.join(" + "));
+//     } else {
+//       console.log(a + " is NOT perfect.");
+//     }
+//   }
+// }
+
+//1978
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 var input = fs.readFileSync(file).toString().trim().split("\n");
 
-for (let i = 0; i < input.length; i++) {
-  let a = Number(input[i]);
-  if (a !== -1) {
-    let s = [1];
+let n = +input[0];
+let a = input[1].split(" ").map((v) => +v);
+let result = 0;
 
-    for (let i = 2; i < a; i++) {
-      if (a % i === 0) {
-        s.push(i);
-      }
-    }
+for (let i = 0; i < n; i++) {
+  let b = [];
 
-    let sum = s.reduce((a, c) => a + c, 0);
-
-    if (sum === a) {
-      console.log(a + " = " + s.join(" + "));
-    } else {
-      console.log(a + " is NOT perfect.");
+  for (let j = 2; j <= a[i]; j++) {
+    if (a[i] % j === 0) {
+      b.push(j);
     }
   }
+
+  if (b.length === 1) {
+    result++;
+  }
 }
+
+console.log(result);
