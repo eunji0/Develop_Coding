@@ -466,9 +466,18 @@
 // answer.forEach((v) => console.log(v));
 
 //27323
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs.readFileSync(file).toString().split("\n");
+// let [m, n] = input.map((v) => +v);
+
+// console.log(m * n);
+
+//1085
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-var input = fs.readFileSync(file).toString().split("\n");
-let [m, n] = input.map((v) => +v);
+var input = fs.readFileSync(file).toString();
+let [a, b, c, d] = input.split(" ").map((v) => +v);
 
-console.log(m * n);
+let s = [a, b, Math.abs(c - a), Math.abs(d - b)];
+console.log(Math.min(...s));
