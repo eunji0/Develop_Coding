@@ -351,17 +351,43 @@
 // }
 
 //2501
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs.readFileSync(file).toString().trim();
+// let [a, b] = input.split(" ");
+
+// let s = [1];
+
+// for (let i = 2; i <= a; i++) {
+//   if (a % i === 0) {
+//     s.push(i);
+//   }
+// }
+
+// console.log(s[b - 1] === undefined ? 0 : s[b - 1]);
+
+//9506
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-var input = fs.readFileSync(file).toString().trim();
-let [a, b] = input.split(" ");
+var input = fs.readFileSync(file).toString().trim().split("\n");
 
-let s = [1];
+for (let i = 0; i < input.length; i++) {
+  let a = Number(input[i]);
+  if (a !== -1) {
+    let s = [1];
 
-for (let i = 2; i <= a; i++) {
-  if (a % i === 0) {
-    s.push(i);
+    for (let i = 2; i < a; i++) {
+      if (a % i === 0) {
+        s.push(i);
+      }
+    }
+
+    let sum = s.reduce((a, c) => a + c, 0);
+
+    if (sum === a) {
+      console.log(a + " = " + s.join(" + "));
+    } else {
+      console.log(a + " is NOT perfect.");
+    }
   }
 }
-
-console.log(s[b - 1] === undefined ? 0 : s[b - 1]);
