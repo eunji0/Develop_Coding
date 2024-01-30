@@ -483,16 +483,43 @@
 // console.log(Math.min(...s));
 
 //14215
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs.readFileSync(file).toString();
+// let [a, b, c] = input
+//   .split(" ")
+//   .map((v) => +v)
+//   .sort((a, b) => a - b);
+
+// if (a + b > c) {
+//   console.log(a + b + c);
+// } else {
+//   console.log(2 * (a + b) - 1);
+// }
+
+//2798
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-var input = fs.readFileSync(file).toString();
-let [a, b, c] = input
+var input = fs.readFileSync(file).toString().trim().split("\n");
+let [n, m] = input[0]
+  .trim()
   .split(" ")
-  .map((v) => +v)
-  .sort((a, b) => a - b);
+  .map((v) => +v);
 
-if (a + b > c) {
-  console.log(a + b + c);
-} else {
-  console.log(2 * (a + b) - 1);
+let sum = 0;
+let max = 0;
+
+input[1] = input[1].split(" ").map((v) => +v);
+
+for (let i = 0; i < n - 2; i++) {
+  for (let j = i + 1; j < n - 1; j++) {
+    for (let k = j + 1; k < n; k++) {
+      sum = input[1][i] + input[1][j] + input[1][k];
+      if (sum <= m && sum > max) {
+        max = sum;
+      }
+    }
+  }
 }
+
+console.log(max);
