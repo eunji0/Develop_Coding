@@ -498,28 +498,52 @@
 // }
 
 //2798
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs.readFileSync(file).toString().trim().split("\n");
+// let [n, m] = input[0]
+//   .trim()
+//   .split(" ")
+//   .map((v) => +v);
+
+// let sum = 0;
+// let max = 0;
+
+// input[1] = input[1].split(" ").map((v) => +v);
+
+// for (let i = 0; i < n - 2; i++) {
+//   for (let j = i + 1; j < n - 1; j++) {
+//     for (let k = j + 1; k < n; k++) {
+//       sum = input[1][i] + input[1][j] + input[1][k];
+//       if (sum <= m && sum > max) {
+//         max = sum;
+//       }
+//     }
+//   }
+// }
+
+// console.log(max);
+
+//2231
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-var input = fs.readFileSync(file).toString().trim().split("\n");
-let [n, m] = input[0]
-  .trim()
-  .split(" ")
-  .map((v) => +v);
+var input = Number(fs.readFileSync(file).toString().trim());
 
-let sum = 0;
-let max = 0;
+let mm = 0;
 
-input[1] = input[1].split(" ").map((v) => +v);
+for (let i = 0; i <= input; i++) {
+  let s = 0;
+  const b = i.toString().split("");
+  for (let j = 0; j < b.length; j++) {
+    s += +b[j];
+  }
 
-for (let i = 0; i < n - 2; i++) {
-  for (let j = i + 1; j < n - 1; j++) {
-    for (let k = j + 1; k < n; k++) {
-      sum = input[1][i] + input[1][j] + input[1][k];
-      if (sum <= m && sum > max) {
-        max = sum;
-      }
-    }
+  s += i;
+
+  if (s === input) {
+    mm = i;
+    break;
   }
 }
 
-console.log(max);
+console.log(mm);
