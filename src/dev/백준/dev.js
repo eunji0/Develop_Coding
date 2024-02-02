@@ -525,25 +525,44 @@
 // console.log(max);
 
 //2231
-var fs = require("fs");
-const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-var input = Number(fs.readFileSync(file).toString().trim());
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = Number(fs.readFileSync(file).toString().trim());
 
-let mm = 0;
+// let mm = 0;
 
-for (let i = 0; i <= input; i++) {
-  let s = 0;
-  const b = i.toString().split("");
-  for (let j = 0; j < b.length; j++) {
-    s += +b[j];
-  }
+// for (let i = 0; i <= input; i++) {
+//   let s = 0;
+//   const b = i.toString().split("");
+//   for (let j = 0; j < b.length; j++) {
+//     s += +b[j];
+//   }
 
-  s += i;
+//   s += i;
 
-  if (s === input) {
-    mm = i;
-    break;
-  }
-}
+//   if (s === input) {
+//     mm = i;
+//     break;
+//   }
+// }
 
-console.log(mm);
+// console.log(mm);
+
+//19532
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// var input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split(" ")
+//   .map((v) => +v);
+
+// const [a, b, c, d, e, f] = input;
+
+// for (let x = -999; x < 1000; x++) {
+//   for (let y = -999; y < 1000; y++) {
+//     if (a * x + b * y === c && d * x + e * y === f) {
+//       console.log(`${x} ${y}`);
+//     }
+//   }
+// }
