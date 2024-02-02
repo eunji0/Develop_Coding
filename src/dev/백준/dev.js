@@ -566,3 +566,42 @@
 //     }
 //   }
 // }
+
+//1018-체스판 다시 칠하기
+var fs = require("fs");
+const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+let input = fs.readFileSync(file).toString().trim().split("\n");
+
+function solution(A) {
+  let [size, ...arr] = A;
+  let [row, col] = size.split(" ");
+  arr = arr.map((item) => item.trim("\r").split(""));
+
+  const answer = [];
+  const line = ["WBWBWBWB", "BWBWBWBW"];
+
+  // i = x 축 -8
+  // j = y 축 -8
+  for (let i = 0; i <= row - 8; i++) {
+    for (let j = 0; j <= col - 8; j++) {
+      //2가지의 경우를 위해 z for문을 이용하였습니다 white로 시작할 경우 black으로 시작할 경우
+      for (let z = 0; z < 2; z++) {
+        let count = 0;
+        // 8*8 정사각형의 틀을 도는 for 문 입니다.
+        for (let x = 0; x < 8; x++) {
+          for (let y = 0; y < 8; y++) {
+            const current = arr[i + x][j + y]; //current는 모든 각 글자를 비교하여 모든 경우의 8*8을 유추합니다
+            if (current !== line[(x + z) % 2][y]) {
+              //line의 올바른 줄과 비교하여 틀린 것이 있다면 count를 셉니다
+              count++;
+            }
+          }
+        }
+        answer.push(count); //count의 개수를 배열에 넣습니다
+      }
+    }
+  }
+  console.log(Math.min(...answer)); // 모든 경우의 count 개수를 얻었다면 min으로 최솟값을 구해줍니다.
+}
+
+solution(input);
