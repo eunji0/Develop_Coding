@@ -607,14 +607,34 @@
 // solution(input);
 
 //1436
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const n = +fs.readFileSync(file).toString();
+
+// let num = 666;
+// let count = 1;
+// while (count !== n) {
+//   num++;
+//   if (String(num).includes("666")) count++;
+// }
+// console.log(num);
+
+//2839
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const n = +fs.readFileSync(file).toString();
+const n = Number(fs.readFileSync(file).toString());
 
-let num = 666;
-let count = 1;
-while (count !== n) {
-  num++;
-  if (String(num).includes("666")) count++;
+function solution(n) {
+  let c = 0;
+  while (n > 0) {
+    if (n % 5 === 0) {
+      n -= 5;
+    } else {
+      n -= 3;
+    }
+    c += 1;
+  }
+  return n === 0 ? c : -1;
 }
-console.log(num);
+
+console.log(solution(n));
