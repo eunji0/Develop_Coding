@@ -640,17 +640,46 @@
 // console.log(solution(n));
 
 //2750-수 정렬하기
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().trim().split("\n");
+
+// let a = [];
+// for (let i = 1; i < input.length; i++) {
+//   a.push(input[i]);
+// }
+
+// a.sort((a, b) => a - b);
+
+// a.forEach((v) => {
+//   console.log(v);
+// });
+
+//2587-대표값2
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .trim()
+//   .split("\n")
+//   .map((v) => +v);
+
+// input.sort((a, b) => a - b);
+
+// console.log(input.reduce((a, c) => a + c, 0) / input.length);
+// console.log(input[Math.floor(input.length / 2)]);
+
+//25305-커트라인
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 const input = fs.readFileSync(file).toString().trim().split("\n");
 
-let a = [];
-for (let i = 1; i < input.length; i++) {
-  a.push(input[i]);
-}
+const [n, k] = input[0].split(" ").map((v) => +v);
 
-a.sort((a, b) => a - b);
+let a = input[1]
+  .split(" ")
+  .map((v) => +v)
+  .sort((a, b) => b - a);
 
-a.forEach((v) => {
-  console.log(v);
-});
+console.log(a[k - 1]);
