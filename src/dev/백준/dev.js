@@ -671,15 +671,27 @@
 // console.log(input[Math.floor(input.length / 2)]);
 
 //25305-커트라인
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().trim().split("\n");
+
+// const [n, k] = input[0].split(" ").map((v) => +v);
+
+// let a = input[1]
+//   .split(" ")
+//   .map((v) => +v)
+//   .sort((a, b) => b - a);
+
+// console.log(a[k - 1]);
+
+//2751-수 정렬하기2
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs.readFileSync(file).toString().trim().split("\n");
+const input = fs.readFileSync(file).toString().split("\n").slice(1);
 
-const [n, k] = input[0].split(" ").map((v) => +v);
-
-let a = input[1]
-  .split(" ")
-  .map((v) => +v)
-  .sort((a, b) => b - a);
-
-console.log(a[k - 1]);
+console.log(
+  input
+    .map((v) => +v)
+    .sort((a, b) => a - b)
+    .join("\n")
+);
