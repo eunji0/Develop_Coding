@@ -742,3 +742,25 @@
 // };
 
 // console.log(solution(input));
+
+//11651-좌표정렬하기2
+const fs = require("fs");
+const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+const input = fs
+  .readFileSync(file)
+  .toString()
+  .trim()
+  .split("\n")
+  .slice(1)
+  .map((el) => el.split(" ").map(Number));
+
+const solution = (input) => {
+  return input
+    .sort((a, b) => {
+      return a[1] === b[1] ? a[0] - b[0] : a[1] - b[1];
+    })
+    .map((el) => el.join(" "))
+    .join("\n");
+};
+
+console.log(solution(input));
