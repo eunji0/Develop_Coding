@@ -766,15 +766,24 @@
 // console.log(solution(input));
 
 //1181-단어 정렬
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().trim().split("\n").slice(1);
+
+// const solution = (input) => {
+//   input = [...new Set(input)];
+//   return input
+//     .sort((a, b) => a.length - b.length || a.localeCompare(b))
+//     .join("\n");
+// };
+
+// console.log(solution(input));
+
+//10814-나이순 정렬
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 const input = fs.readFileSync(file).toString().trim().split("\n").slice(1);
 
-const solution = (input) => {
-  input = [...new Set(input)];
-  return input
-    .sort((a, b) => a.length - b.length || a.localeCompare(b))
-    .join("\n");
-};
+input.sort((a, b) => parseFloat(a) - parseFloat(b));
 
-console.log(solution(input));
+console.log(input.join("\n"));
