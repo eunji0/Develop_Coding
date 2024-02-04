@@ -709,14 +709,36 @@
 // );
 
 //1427-소트인사이드
-var fs = require("fs");
-const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs
-  .readFileSync(file)
-  .toString()
-  .trim()
-  .split("")
-  .map((v) => +v)
-  .sort((a, b) => b - a)
-  .join("");
-console.log(input);
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .trim()
+//   .split("")
+//   .map((v) => +v)
+//   .sort((a, b) => b - a)
+//   .join("");
+// console.log(input);
+
+//11650-좌표정렬하기
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .trim()
+//   .split("\n")
+//   .slice(1)
+//   .map((el) => el.split(" ").map(Number));
+
+// const solution = (input) => {
+//   return input
+//     .sort((a, b) => {
+//       return a[0] === b[0] ? a[1] - b[1] : a[0] - b[0];
+//     })
+//     .map((el) => el.join(" "))
+//     .join("\n");
+// };
+
+// console.log(solution(input));
