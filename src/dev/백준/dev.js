@@ -619,22 +619,38 @@
 // }
 // console.log(num);
 
-//2839
+//2839-설탕배달
+// var fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const n = Number(fs.readFileSync(file).toString());
+
+// function solution(n) {
+//   let c = 0;
+//   while (n > 0) {
+//     if (n % 5 === 0) {
+//       n -= 5;
+//     } else {
+//       n -= 3;
+//     }
+//     c += 1;
+//   }
+//   return n === 0 ? c : -1;
+// }
+
+// console.log(solution(n));
+
+//2750-수 정렬하기
 var fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const n = Number(fs.readFileSync(file).toString());
+const input = fs.readFileSync(file).toString().trim().split("\n");
 
-function solution(n) {
-  let c = 0;
-  while (n > 0) {
-    if (n % 5 === 0) {
-      n -= 5;
-    } else {
-      n -= 3;
-    }
-    c += 1;
-  }
-  return n === 0 ? c : -1;
+let a = [];
+for (let i = 1; i < input.length; i++) {
+  a.push(input[i]);
 }
 
-console.log(solution(n));
+a.sort((a, b) => a - b);
+
+a.forEach((v) => {
+  console.log(v);
+});
