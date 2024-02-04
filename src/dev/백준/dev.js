@@ -780,10 +780,34 @@
 // console.log(solution(input));
 
 //10814-나이순 정렬
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().trim().split("\n").slice(1);
+
+// input.sort((a, b) => parseFloat(a) - parseFloat(b));
+
+// console.log(input.join("\n"));
+
+//18870-좌표 압축
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs.readFileSync(file).toString().trim().split("\n").slice(1);
+const input = fs
+  .readFileSync(file)
+  .toString()
+  .split("\n")
+  .slice(1)
+  .toString()
+  .split(" ")
+  .map((v) => +v);
+console.log(input);
+let a = {};
+let b = [...new Set(input)].sort((a, b) => a - b);
+b.map((v, i) => {
+  a[v] = i;
+});
+let r = "";
+for (let i = 0; i < input.length; i++) {
+  r += a[input[i]] + " ";
+}
 
-input.sort((a, b) => parseFloat(a) - parseFloat(b));
-
-console.log(input.join("\n"));
+console.log(r);
