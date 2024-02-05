@@ -791,23 +791,21 @@
 //18870-좌표 압축
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs
-  .readFileSync(file)
-  .toString()
-  .split("\n")
-  .slice(1)
-  .toString()
-  .split(" ")
-  .map((v) => +v);
-console.log(input);
-let a = {};
-let b = [...new Set(input)].sort((a, b) => a - b);
-b.map((v, i) => {
-  a[v] = i;
+let input = fs.readFileSync(file).toString().trim().split("\n");
+let N = Number(input.shift());
+let arr = input[0].split(" ").map((x) => +x);
+
+let set = new Set(arr);
+let uniq = [...set].sort((a, b) => a - b);
+
+let dic = {};
+uniq.forEach((e, index) => {
+  dic[e] = index;
 });
-let r = "";
-for (let i = 0; i < input.length; i++) {
-  r += a[input[i]] + " ";
+
+let answer = "";
+for (let i = 0; i < arr.length; i++) {
+  answer += dic[arr[i]] + " ";
 }
 
-console.log(r);
+console.log(answer);
