@@ -789,23 +789,49 @@
 // console.log(input.join("\n"));
 
 //18870-좌표 압축
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// let input = fs.readFileSync(file).toString().trim().split("\n");
+// let N = Number(input.shift());
+// let arr = input[0].split(" ").map((x) => +x);
+
+// let set = new Set(arr);
+// let uniq = [...set].sort((a, b) => a - b);
+
+// let dic = {};
+// uniq.forEach((e, index) => {
+//   dic[e] = index;
+// });
+
+// let answer = "";
+// for (let i = 0; i < arr.length; i++) {
+//   answer += dic[arr[i]] + " ";
+// }
+
+// console.log(answer);
+
+//10815-숫자카드
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-let input = fs.readFileSync(file).toString().trim().split("\n");
-let N = Number(input.shift());
-let arr = input[0].split(" ").map((x) => +x);
+let input = fs
+  .readFileSync(file)
+  .toString()
+  .trim()
+  .split("\n")
+  .map((v) => v.trim());
 
-let set = new Set(arr);
-let uniq = [...set].sort((a, b) => a - b);
+let r = "";
 
-let dic = {};
-uniq.forEach((e, index) => {
-  dic[e] = index;
+let a = new Set(input[1].split(" ").map((v) => +v));
+let b = input[3].split(" ").map((v) => +v);
+
+b.forEach((v) => {
+  if (a.has(v)) {
+    r += 1;
+  } else {
+    r += 0;
+  }
+  r += " ";
 });
 
-let answer = "";
-for (let i = 0; i < arr.length; i++) {
-  answer += dic[arr[i]] + " ";
-}
-
-console.log(answer);
+console.log(r);
