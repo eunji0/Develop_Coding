@@ -811,27 +811,49 @@
 // console.log(answer);
 
 //10815-숫자카드
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// let input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .trim()
+//   .split("\n")
+//   .map((v) => v.trim());
+
+// let r = "";
+
+// let a = new Set(input[1].split(" ").map((v) => +v));
+// let b = input[3].split(" ").map((v) => +v);
+
+// b.forEach((v) => {
+//   if (a.has(v)) {
+//     r += 1;
+//   } else {
+//     r += 0;
+//   }
+//   r += " ";
+// });
+
+// console.log(r);
+
+//14425-문자열집합
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 let input = fs
   .readFileSync(file)
   .toString()
-  .trim()
   .split("\n")
   .map((v) => v.trim());
 
-let r = "";
+let [n, m] = input[0].split(" ").map((v) => +v);
+let count = 0;
 
-let a = new Set(input[1].split(" ").map((v) => +v));
-let b = input[3].split(" ").map((v) => +v);
+const aSet = new Set(input.slice(1, 1 + n));
 
-b.forEach((v) => {
-  if (a.has(v)) {
-    r += 1;
-  } else {
-    r += 0;
+for (let i = 1 + n; i <= m + n; i++) {
+  if (aSet.has(input[i])) {
+    count += 1;
   }
-  r += " ";
-});
+}
 
-console.log(r);
+console.log(count);
