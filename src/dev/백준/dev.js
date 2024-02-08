@@ -837,6 +837,28 @@
 // console.log(r);
 
 //14425-문자열집합
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// let input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
+
+// let [n, m] = input[0].split(" ").map((v) => +v);
+// let count = 0;
+
+// const aSet = new Set(input.slice(1, 1 + n));
+
+// for (let i = 1 + n; i <= m + n; i++) {
+//   if (aSet.has(input[i])) {
+//     count += 1;
+//   }
+// }
+
+// console.log(count);
+
+//7785-회사에 있는 사람
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 let input = fs
@@ -845,15 +867,19 @@ let input = fs
   .split("\n")
   .map((v) => v.trim());
 
-let [n, m] = input[0].split(" ").map((v) => +v);
-let count = 0;
+let n = +input[0];
+const s = new Set();
 
-const aSet = new Set(input.slice(1, 1 + n));
+const ss = input.slice(1);
 
-for (let i = 1 + n; i <= m + n; i++) {
-  if (aSet.has(input[i])) {
-    count += 1;
+for (let i = 0; i < n; i++) {
+  const [n, m] = ss[i].split(" ");
+
+  if (m === "enter") {
+    s.add(n);
+  } else {
+    s.delete(n);
   }
 }
 
-console.log(count);
+console.log(Array.from(s).sort().reverse().join("\n"));
