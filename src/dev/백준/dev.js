@@ -885,6 +885,29 @@
 // console.log(Array.from(s).sort().reverse().join("\n"));
 
 //1620-나는야 포켓몬 마스터 이다솜
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// let input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
+
+// const [n, m] = input[0].split(" ").map(Number);
+// const arr = input.slice(1, n + 1);
+
+// const indexMap = {};
+// arr.forEach((value, index) => {
+//   indexMap[value] = index + 1;
+// });
+
+// const answer = input
+//   .slice(n + 1)
+//   .map((v) => (Number.isNaN(+v) ? indexMap[v] : arr[+v - 1]));
+
+// console.log(answer.join("\n"));
+
+//10816-숫자카드2
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 let input = fs
@@ -893,16 +916,20 @@ let input = fs
   .split("\n")
   .map((v) => v.trim());
 
-const [n, m] = input[0].split(" ").map(Number);
-const arr = input.slice(1, n + 1);
+let result = "";
+let arr = input[1].split(" ").map((v) => +v);
+let arr2 = input[3].split(" ").map((v) => +v);
+let countMap = {};
 
-const indexMap = {};
-arr.forEach((value, index) => {
-  indexMap[value] = index + 1;
+arr.forEach((num) => {
+  countMap[num] = (countMap[num] || 0) + 1;
 });
 
-const answer = input
-  .slice(n + 1)
-  .map((v) => (Number.isNaN(+v) ? indexMap[v] : arr[+v - 1]));
+arr2.forEach((v, index) => {
+  result += countMap[v] || 0;
+  if (index < arr2.length - 1) {
+    result += " ";
+  }
+});
 
-console.log(answer.join("\n"));
+console.log(result);
