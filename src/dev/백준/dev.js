@@ -935,6 +935,43 @@
 // console.log(result);
 
 //1764-듣보잡
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// let input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
+
+// const [n, m] = input[0].split(" ").map((v) => +v);
+
+// let a = input.slice(1, n + 1);
+// let b = input.slice(n + 1);
+
+// let c = {};
+
+// a.forEach((v) => {
+//   c[v] = (c[v] || 0) + 1;
+// });
+
+// b.forEach((v) => {
+//   c[v] = (c[v] || 0) + 1;
+// });
+
+// let count = 0;
+// let names = [];
+
+// for (const key in c) {
+//   if (c[key] === 2) {
+//     count++;
+//     names.push(key);
+//   }
+// }
+
+// console.log(count);
+// console.log(names.sort().join("\n"));
+
+//1269-대칭차집합
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 let input = fs
@@ -943,10 +980,8 @@ let input = fs
   .split("\n")
   .map((v) => v.trim());
 
-const [n, m] = input[0].split(" ").map((v) => +v);
-
-let a = input.slice(1, n + 1);
-let b = input.slice(n + 1);
+const a = input[1].split(" ").map((v) => +v);
+const b = input[2].split(" ").map((v) => +v);
 
 let c = {};
 
@@ -959,14 +994,11 @@ b.forEach((v) => {
 });
 
 let count = 0;
-let names = [];
 
 for (const key in c) {
-  if (c[key] === 2) {
+  if (c[key] === 1) {
     count++;
-    names.push(key);
   }
 }
 
 console.log(count);
-console.log(names.sort().join("\n"));
