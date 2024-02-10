@@ -972,33 +972,46 @@
 // console.log(names.sort().join("\n"));
 
 //1269-대칭차집합
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// let input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
+
+// const a = input[1].split(" ").map((v) => +v);
+// const b = input[2].split(" ").map((v) => +v);
+
+// let c = {};
+
+// a.forEach((v) => {
+//   c[v] = (c[v] || 0) + 1;
+// });
+
+// b.forEach((v) => {
+//   c[v] = (c[v] || 0) + 1;
+// });
+
+// let count = 0;
+
+// for (const key in c) {
+//   if (c[key] === 1) {
+//     count++;
+//   }
+// }
+
+// console.log(count);
+
+//11478-서로 다른 부분 문자열의 개수
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-let input = fs
-  .readFileSync(file)
-  .toString()
-  .split("\n")
-  .map((v) => v.trim());
+const input = fs.readFileSync(file).toString().trim();
 
-const a = input[1].split(" ").map((v) => +v);
-const b = input[2].split(" ").map((v) => +v);
-
-let c = {};
-
-a.forEach((v) => {
-  c[v] = (c[v] || 0) + 1;
-});
-
-b.forEach((v) => {
-  c[v] = (c[v] || 0) + 1;
-});
-
-let count = 0;
-
-for (const key in c) {
-  if (c[key] === 1) {
-    count++;
+let result = [];
+for (let i = 1; i <= input.length; i++) {
+  for (let j = 0; j <= input.length - i; j++) {
+    result.push(input.slice(j, j + i));
   }
 }
-
-console.log(count);
+console.log(new Set(result).size);
