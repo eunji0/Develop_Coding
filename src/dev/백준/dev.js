@@ -908,6 +908,33 @@
 // console.log(answer.join("\n"));
 
 //10816-숫자카드2
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// let input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
+
+// let result = "";
+// let arr = input[1].split(" ").map((v) => +v);
+// let arr2 = input[3].split(" ").map((v) => +v);
+// let countMap = {};
+
+// arr.forEach((num) => {
+//   countMap[num] = (countMap[num] || 0) + 1;
+// });
+
+// arr2.forEach((v, index) => {
+//   result += countMap[v] || 0;
+//   if (index < arr2.length - 1) {
+//     result += " ";
+//   }
+// });
+
+// console.log(result);
+
+//1764-듣보잡
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 let input = fs
@@ -916,20 +943,30 @@ let input = fs
   .split("\n")
   .map((v) => v.trim());
 
-let result = "";
-let arr = input[1].split(" ").map((v) => +v);
-let arr2 = input[3].split(" ").map((v) => +v);
-let countMap = {};
+const [n, m] = input[0].split(" ").map((v) => +v);
 
-arr.forEach((num) => {
-  countMap[num] = (countMap[num] || 0) + 1;
+let a = input.slice(1, n + 1);
+let b = input.slice(n + 1);
+
+let c = {};
+
+a.forEach((v) => {
+  c[v] = (c[v] || 0) + 1;
 });
 
-arr2.forEach((v, index) => {
-  result += countMap[v] || 0;
-  if (index < arr2.length - 1) {
-    result += " ";
+b.forEach((v) => {
+  c[v] = (c[v] || 0) + 1;
+});
+
+let count = 0;
+let names = [];
+
+for (const key in c) {
+  if (c[key] === 2) {
+    count++;
+    names.push(key);
   }
-});
+}
 
-console.log(result);
+console.log(count);
+console.log(names.sort().join("\n"));
