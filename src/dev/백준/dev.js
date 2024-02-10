@@ -859,6 +859,32 @@
 // console.log(count);
 
 //7785-회사에 있는 사람
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// let input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
+
+// let n = +input[0];
+// const s = new Set();
+
+// const ss = input.slice(1);
+
+// for (let i = 0; i < n; i++) {
+//   const [n, m] = ss[i].split(" ");
+
+//   if (m === "enter") {
+//     s.add(n);
+//   } else {
+//     s.delete(n);
+//   }
+// }
+
+// console.log(Array.from(s).sort().reverse().join("\n"));
+
+//1620-나는야 포켓몬 마스터 이다솜
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 let input = fs
@@ -867,19 +893,16 @@ let input = fs
   .split("\n")
   .map((v) => v.trim());
 
-let n = +input[0];
-const s = new Set();
+const [n, m] = input[0].split(" ").map(Number);
+const arr = input.slice(1, n + 1);
 
-const ss = input.slice(1);
+const indexMap = {};
+arr.forEach((value, index) => {
+  indexMap[value] = index + 1;
+});
 
-for (let i = 0; i < n; i++) {
-  const [n, m] = ss[i].split(" ");
+const answer = input
+  .slice(n + 1)
+  .map((v) => (Number.isNaN(+v) ? indexMap[v] : arr[+v - 1]));
 
-  if (m === "enter") {
-    s.add(n);
-  } else {
-    s.delete(n);
-  }
-}
-
-console.log(Array.from(s).sort().reverse().join("\n"));
+console.log(answer.join("\n"));
