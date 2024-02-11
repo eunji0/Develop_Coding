@@ -1004,14 +1004,39 @@
 // console.log(count);
 
 //11478-서로 다른 부분 문자열의 개수
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().split('\n').map(v=>v.trim());
+
+// let r = '';
+// for(let i=1; i<+input[0]; i++){
+//   let [a,b]=input[i].split(' ').map(v=>+v);
+//   if(a===1 ||b===1){
+//     r+=a*b;
+//   }else{
+
+//   }
+// }
+
+//1934-최소공배수
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs.readFileSync(file).toString().trim();
+const input = fs.readFileSync(file).toString().split("\n");
 
-let result = [];
-for (let i = 1; i <= input.length; i++) {
-  for (let j = 0; j <= input.length - i; j++) {
-    result.push(input.slice(j, j + i));
-  }
+input.shift();
+
+function lcm(a, b) {
+  return (a * b) / gcd(a, b);
 }
-console.log(new Set(result).size);
+
+function gcd(a, b) {
+  while (b != 0) {
+    [a, b] = [b, a % b];
+  }
+  return a;
+}
+
+for (i = 0; i < input.length; i++) {
+  const [a, b] = input[i].split(" ");
+  console.log(lcm(a, b));
+}
