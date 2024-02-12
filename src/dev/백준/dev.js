@@ -1019,24 +1019,34 @@
 // }
 
 //1934-최소공배수
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().split("\n");
+
+// input.shift();
+
+// function lcm(a, b) {
+//   return (a * b) / gcd(a, b);
+// }
+
+// function gcd(a, b) {
+//   while (b != 0) {
+//     [a, b] = [b, a % b];
+//   }
+//   return a;
+// }
+
+// for (let i = 0; i < input.length; i++) {
+//   const [a, b] = input[i].split(" ");
+//   console.log(lcm(a, b));
+// }
+
+//13241-최소공배수
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs.readFileSync(file).toString().split("\n");
+const input = fs.readFileSync(file).toString();
 
-input.shift();
-
-function lcm(a, b) {
-  return (a * b) / gcd(a, b);
-}
-
-function gcd(a, b) {
-  while (b != 0) {
-    [a, b] = [b, a % b];
-  }
-  return a;
-}
-
-for (i = 0; i < input.length; i++) {
-  const [a, b] = input[i].split(" ");
-  console.log(lcm(a, b));
-}
+const [A, B] = input.split(" ").map((v) => +v);
+const gcd = (a, b) => (a % b === 0 ? b : gcd(b, a % b));
+const lcm = Math.floor((A * B) / gcd(A, B));
+console.log(lcm);
