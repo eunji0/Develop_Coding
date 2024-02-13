@@ -1042,11 +1042,39 @@
 // }
 
 //13241-최소공배수
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString();
+
+// const [A, B] = input.split(" ").map((v) => +v);
+// const gcd = (a, b) => (a % b === 0 ? b : gcd(b, a % b));
+// const lcm = Math.floor((A * B) / gcd(A, B));
+// console.log(lcm);
+
+//1735-분수합
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs.readFileSync(file).toString();
+const input = fs
+  .readFileSync(file)
+  .toString()
+  .split("\n")
+  .map((v) => v.trim());
 
-const [A, B] = input.split(" ").map((v) => +v);
-const gcd = (a, b) => (a % b === 0 ? b : gcd(b, a % b));
-const lcm = Math.floor((A * B) / gcd(A, B));
-console.log(lcm);
+function gcd(a, b) {
+  while (b !== 0) {
+    [a, b] = [b, a % b];
+  }
+  return a;
+}
+
+const [a1, b1] = input[0].split(" ").map(Number);
+const [a2, b2] = input[1].split(" ").map(Number);
+
+// 분모 계산
+const denominator = b1 * b2;
+// 분자 계산
+const numerator = a1 * (denominator / b1) + a2 * (denominator / b2);
+// 최대공약수 계산
+const gcdValue = gcd(numerator, denominator);
+
+console.log(`${numerator / gcdValue} ${denominator / gcdValue}`);
