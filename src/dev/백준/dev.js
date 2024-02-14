@@ -1052,29 +1052,63 @@
 // console.log(lcm);
 
 //1735-분수합
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
+
+// function gcd(a, b) {
+//   while (b !== 0) {
+//     [a, b] = [b, a % b];
+//   }
+//   return a;
+// }
+
+// const [a1, b1] = input[0].split(" ").map(Number);
+// const [a2, b2] = input[1].split(" ").map(Number);
+
+// // 분모 계산
+// const denominator = b1 * b2;
+// // 분자 계산
+// const numerator = a1 * (denominator / b1) + a2 * (denominator / b2);
+// // 최대공약수 계산
+// const gcdValue = gcd(numerator, denominator);
+
+// console.log(`${numerator / gcdValue} ${denominator / gcdValue}`);
+
+//2485-가로수
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 const input = fs
   .readFileSync(file)
   .toString()
   .split("\n")
-  .map((v) => v.trim());
+  .map((v) => +v);
 
-function gcd(a, b) {
-  while (b !== 0) {
-    [a, b] = [b, a % b];
-  }
-  return a;
+input.shift();
+let arr = [];
+let ans = 0;
+
+for (let i = 0; i < input.length - 1; i++) {
+  const dist = input[i + 1] - input[i];
+  arr.push(dist);
 }
 
-const [a1, b1] = input[0].split(" ").map(Number);
-const [a2, b2] = input[1].split(" ").map(Number);
+function getGCD(num1, num2) {
+  return num2 > 0 ? getGCD(num2, num1 % num2) : num1;
+}
 
-// 분모 계산
-const denominator = b1 * b2;
-// 분자 계산
-const numerator = a1 * (denominator / b1) + a2 * (denominator / b2);
-// 최대공약수 계산
-const gcdValue = gcd(numerator, denominator);
+let num = 0;
 
-console.log(`${numerator / gcdValue} ${denominator / gcdValue}`);
+for (let i = 0; i < arr.length; i++) {
+  num = getGCD(num, arr[i]);
+}
+
+arr.forEach((v) => {
+  if (v > num) ans += v / num - 1;
+});
+
+console.log(ans);
