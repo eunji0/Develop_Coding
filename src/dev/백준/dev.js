@@ -1080,35 +1080,62 @@
 // console.log(`${numerator / gcdValue} ${denominator / gcdValue}`);
 
 //2485-가로수
-const fs = require("fs");
-const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs
-  .readFileSync(file)
-  .toString()
-  .split("\n")
-  .map((v) => +v);
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split("\n")
+//   .map((v) => +v);
 
-input.shift();
-let arr = [];
-let ans = 0;
+// input.shift();
+// let arr = [];
+// let ans = 0;
 
-for (let i = 0; i < input.length - 1; i++) {
-  const dist = input[i + 1] - input[i];
-  arr.push(dist);
-}
+// for (let i = 0; i < input.length - 1; i++) {
+//   const dist = input[i + 1] - input[i];
+//   arr.push(dist);
+// }
 
-function getGCD(num1, num2) {
-  return num2 > 0 ? getGCD(num2, num1 % num2) : num1;
-}
+// function getGCD(num1, num2) {
+//   return num2 > 0 ? getGCD(num2, num1 % num2) : num1;
+// }
 
-let num = 0;
+// let num = 0;
 
-for (let i = 0; i < arr.length; i++) {
-  num = getGCD(num, arr[i]);
-}
+// for (let i = 0; i < arr.length; i++) {
+//   num = getGCD(num, arr[i]);
+// }
 
-arr.forEach((v) => {
-  if (v > num) ans += v / num - 1;
-});
+// arr.forEach((v) => {
+//   if (v > num) ans += v / num - 1;
+// });
 
-console.log(ans);
+// console.log(ans);
+
+// 4134-다음 소수
+// let input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n')
+// input.shift();
+// let arr = input.map(Number);
+// let answer = [];
+
+// function isPrime(n){
+//   if(n<2){
+//     return false;
+//   }
+//   for(let i = 2; i<= Math.sqrt(n); i++){
+//     if(n%i===0) return false;
+//   }
+//   return true;
+// }
+
+// while(arr.length != 0){
+//   if(isPrime(arr[0])){
+//     answer.push(arr[0]);
+//     arr.shift();
+//   }else{
+//     arr[0]++;
+//   }
+// }
+
+// console.log(answer.join('\n'));
