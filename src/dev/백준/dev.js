@@ -1167,38 +1167,88 @@
 // console.log(result.join("\n"));
 
 //4948-베르트랑 공준
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().split("\n").map(Number);
+
+// function isPrime(n) {
+//   if (n < 2) {
+//     return false;
+//   }
+//   for (let i = 2; i * i <= n; i++) {
+//     if (n % i === 0) {
+//       return false;
+//     }
+//   }
+//   return true;
+// }
+
+// let result = [];
+// let idx = 0;
+
+// while (true) {
+//   const n = input[idx++];
+//   if (n === 0) {
+//     break;
+//   }
+
+//   let count = 0;
+//   for (let i = n + 1; i <= n * 2; i++) {
+//     if (isPrime(i)) {
+//       count++;
+//     }
+//   }
+//   result.push(count);
+// }
+
+// console.log(result.join("\n"));
+
+//17103-골드바흐 파티션
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs.readFileSync(file).toString().split("\n").map(Number);
+let input = fs.readFileSync(file).toString().trim().split("\n");
 
-function isPrime(n) {
-  if (n < 2) {
-    return false;
-  }
-  for (let i = 2; i * i <= n; i++) {
-    if (n % i === 0) {
-      return false;
+// 첫 번째 줄은 테스트 케이스의 개수이므로 제거
+input.shift();
+
+// 문자열 배열을 숫자 배열로 변환
+let number = input.map(Number);
+
+// 결과를 저장할 배열
+let answer = [];
+
+// 입력된 숫자 중 최댓값 찾기
+let maxNum = Math.max(...number);
+
+// 에라토스테네스의 체를 구현한 배열 생성
+let sieve = Array.from({ length: maxNum + 1 }, () => true);
+
+// 0과 1은 소수가 아니므로 false로 설정
+sieve[0] = false;
+sieve[1] = false;
+
+// 에라토스테네스의 체 알고리즘을 활용하여 소수 판별
+for (let i = 2; i <= Math.sqrt(maxNum); i++) {
+  if (sieve[i]) {
+    for (let j = 2; j <= maxNum / i; j++) {
+      // 현재 소수의 배수들은 소수가 아님
+      sieve[i * j] = false;
     }
   }
-  return true;
 }
 
-let result = [];
-let idx = 0;
-
-while (true) {
-  const n = input[idx++];
-  if (n === 0) {
-    break;
-  }
-
+// 각 테스트 케이스에 대해 골드바흐 파티션의 개수 계산
+for (let x of number) {
   let count = 0;
-  for (let i = n + 1; i <= n * 2; i++) {
-    if (isPrime(i)) {
+  for (let i = 2; i <= x / 2; i++) {
+    // i와 (x-i)가 모두 소수인 경우를 찾아 개수 세기
+    if (sieve[i] && sieve[x - i]) {
       count++;
     }
   }
-  result.push(count);
+  // 결과 배열에 추가
+  answer.push(count);
 }
 
-console.log(result.join("\n"));
+// 결과 출력
+console.log(answer.join("\n"));
