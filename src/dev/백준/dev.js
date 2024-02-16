@@ -1139,3 +1139,29 @@
 // }
 
 // console.log(answer.join('\n'));
+
+//1929-소수구하기
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString();
+
+// const [a, b] = input.split(" ").map(Number);
+// let result = [];
+
+// function isPrime(n) {
+//   if (n < 2) {
+//     return false;
+//   }
+//   for (let i = 2; i <= Math.sqrt(n); i++) {
+//     if (n % i === 0) return false;
+//   }
+//   return true;
+// }
+
+// for (let i = a; i <= b; i++) {
+//   if (isPrime(i)) {
+//     result.push(i);
+//   }
+// }
+
+// console.log(result.join("\n"));
