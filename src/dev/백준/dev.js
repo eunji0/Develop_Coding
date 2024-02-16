@@ -1165,3 +1165,40 @@
 // }
 
 // console.log(result.join("\n"));
+
+//4948-베르트랑 공준
+const fs = require("fs");
+const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+const input = fs.readFileSync(file).toString().split("\n").map(Number);
+
+function isPrime(n) {
+  if (n < 2) {
+    return false;
+  }
+  for (let i = 2; i * i <= n; i++) {
+    if (n % i === 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
+let result = [];
+let idx = 0;
+
+while (true) {
+  const n = input[idx++];
+  if (n === 0) {
+    break;
+  }
+
+  let count = 0;
+  for (let i = n + 1; i <= n * 2; i++) {
+    if (isPrime(i)) {
+      count++;
+    }
+  }
+  result.push(count);
+}
+
+console.log(result.join("\n"));
