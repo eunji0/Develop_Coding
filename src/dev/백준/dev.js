@@ -1254,13 +1254,50 @@
 // console.log(answer.join("\n"));
 
 //13909-창문 닫기
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString();
+// const n = Number(input);
+
+// let r = 0;
+// for (let i = 1; i * i <= n; i++) {
+//   r++;
+// }
+// console.log(r);
+
+//28278-스택2
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs.readFileSync(file).toString();
-const n = Number(input);
+const input = fs
+  .readFileSync(file)
+  .toString()
+  .split("\n")
+  .map((v) => v.trim());
 
-let r = 0;
-for (let i = 1; i * i <= n; i++) {
-  r++;
-}
-console.log(r);
+let stack = [];
+let result = [];
+
+input.shift();
+
+input.forEach((v) => {
+  if (v.length > 1) {
+    let [a, b] = v.split(" ").map((c) => +c);
+    stack.push(b);
+  } else {
+    v = Number(v);
+    if (v === 4) {
+      result.push(stack.length === 0 ? 1 : 0);
+    }
+    if (v === 2) {
+      result.push(stack.length === 0 ? -1 : stack.pop());
+    }
+    if (v === 3) {
+      result.push(stack.length);
+    }
+    if (v === 5) {
+      result.push(stack.length === 0 ? -1 : stack.at(-1));
+    }
+  }
+});
+
+console.log(result.join("\n"));
