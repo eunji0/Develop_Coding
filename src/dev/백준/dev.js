@@ -1324,3 +1324,27 @@
 
 // const answer = stack.reduce((acc, cur) => acc + cur, 0);
 // console.log(answer);
+
+//9012-괄호
+const fs = require("fs");
+const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+const input = fs
+  .readFileSync(file)
+  .toString()
+  .split("\n")
+  .map((v) => v.trim());
+const len = input.shift();
+const result = [];
+
+for (let i = 0; i < len; i++) {
+  let c = 0;
+  for (let s of input[i]) {
+    c += s === "(" ? 1 : -1;
+
+    if (c < 0) break;
+  }
+
+  result.push(c === 0 ? "YES" : "NO");
+}
+
+console.log(result.join("\n"));
