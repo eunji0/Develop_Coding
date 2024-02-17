@@ -1350,33 +1350,66 @@
 // console.log(result.join("\n"));
 
 //4949-균형잡힌 세상
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().split("\n");
+
+// for (let text of input) {
+//   const stack = [];
+//   let isCompare = true;
+//   if (text === ".") break;
+//   for (let i = 0; i < text.length; i++) {
+//     if (text[i] === "[" || text[i] === "(") {
+//       stack.push(text[i]);
+//     } else if (text[i] === "]") {
+//       if (stack[stack.length - 1] === "[") {
+//         stack.pop();
+//       } else {
+//         isCompare = false;
+//         break;
+//       }
+//     } else if (text[i] === ")") {
+//       if (stack[stack.length - 1] === "(") {
+//         stack.pop();
+//       } else {
+//         isCompare = false;
+//         break;
+//       }
+//     } else if (text[i] === ".") break;
+//   }
+//   if (stack.length > 0 || !isCompare) console.log("no");
+//   else console.log("yes");
+// }
+
+//12789-도키도키 간식드리미
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
 const input = fs.readFileSync(file).toString().split("\n");
+const line = input[1].split(" ").map(Number);
+const stack = [];
+let cur = 1;
+let i = 0;
 
-for (let text of input) {
-  const stack = [];
-  let isCompare = true;
-  if (text === ".") break;
-  for (let i = 0; i < text.length; i++) {
-    if (text[i] === "[" || text[i] === "(") {
-      stack.push(text[i]);
-    } else if (text[i] === "]") {
-      if (stack[stack.length - 1] === "[") {
-        stack.pop();
-      } else {
-        isCompare = false;
-        break;
-      }
-    } else if (text[i] === ")") {
-      if (stack[stack.length - 1] === "(") {
-        stack.pop();
-      } else {
-        isCompare = false;
-        break;
-      }
-    } else if (text[i] === ".") break;
+while (i < +input[0]) {
+  if (line[i] === cur) {
+    cur++;
+    i++;
+  } else {
+    if (stack.length > 0 && stack.at(-1) === cur) {
+      stack.pop();
+      cur++;
+    } else {
+      stack.push(line[i]);
+      i++;
+    }
   }
-  if (stack.length > 0 || !isCompare) console.log("no");
-  else console.log("yes");
 }
+
+for (let s = stack.length - 1; s >= 0; s--) {
+  if (stack[s] === cur) {
+    stack.pop();
+    cur++;
+  }
+}
+
+console.log(stack.length > 0 ? "Sad" : "Nice");
