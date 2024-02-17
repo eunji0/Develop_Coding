@@ -1266,38 +1266,61 @@
 // console.log(r);
 
 //28278-스택2
-const fs = require("fs");
-const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs
-  .readFileSync(file)
-  .toString()
-  .split("\n")
-  .map((v) => v.trim());
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
 
-let stack = [];
-let result = [];
+// let stack = [];
+// let result = [];
 
-input.shift();
+// input.shift();
 
-input.forEach((v) => {
-  if (v.length > 1) {
-    let [a, b] = v.split(" ").map((c) => +c);
-    stack.push(b);
-  } else {
-    v = Number(v);
-    if (v === 4) {
-      result.push(stack.length === 0 ? 1 : 0);
-    }
-    if (v === 2) {
-      result.push(stack.length === 0 ? -1 : stack.pop());
-    }
-    if (v === 3) {
-      result.push(stack.length);
-    }
-    if (v === 5) {
-      result.push(stack.length === 0 ? -1 : stack.at(-1));
-    }
-  }
-});
+// input.forEach((v) => {
+//   if (v.length > 1) {
+//     let [a, b] = v.split(" ").map((c) => +c);
+//     stack.push(b);
+//   } else {
+//     v = Number(v);
+//     if (v === 4) {
+//       result.push(stack.length === 0 ? 1 : 0);
+//     }
+//     if (v === 2) {
+//       result.push(stack.length === 0 ? -1 : stack.pop());
+//     }
+//     if (v === 3) {
+//       result.push(stack.length);
+//     }
+//     if (v === 5) {
+//       result.push(stack.length === 0 ? -1 : stack.at(-1));
+//     }
+//   }
+// });
 
-console.log(result.join("\n"));
+// console.log(result.join("\n"));
+
+//10773-제로
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().trim().split("\n");
+
+// const K = Number(input[0]);
+// const commands = input.slice(1).map(Number);
+
+// let stack = [];
+
+// for (let i = 0; i < K; i++) {
+//   const command = commands[i];
+
+//   if (command !== 0) {
+//     stack.push(command);
+//   } else {
+//     stack.pop();
+//   }
+// }
+
+// const answer = stack.reduce((acc, cur) => acc + cur, 0);
+// console.log(answer);
