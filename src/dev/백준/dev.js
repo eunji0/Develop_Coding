@@ -1326,25 +1326,57 @@
 // console.log(answer);
 
 //9012-괄호
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
+// const len = input.shift();
+// const result = [];
+
+// for (let i = 0; i < len; i++) {
+//   let c = 0;
+//   for (let s of input[i]) {
+//     c += s === "(" ? 1 : -1;
+
+//     if (c < 0) break;
+//   }
+
+//   result.push(c === 0 ? "YES" : "NO");
+// }
+
+// console.log(result.join("\n"));
+
+//4949-균형잡힌 세상
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs
-  .readFileSync(file)
-  .toString()
-  .split("\n")
-  .map((v) => v.trim());
-const len = input.shift();
-const result = [];
+const input = fs.readFileSync(file).toString().split("\n");
 
-for (let i = 0; i < len; i++) {
-  let c = 0;
-  for (let s of input[i]) {
-    c += s === "(" ? 1 : -1;
-
-    if (c < 0) break;
+for (let text of input) {
+  const stack = [];
+  let isCompare = true;
+  if (text === ".") break;
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === "[" || text[i] === "(") {
+      stack.push(text[i]);
+    } else if (text[i] === "]") {
+      if (stack[stack.length - 1] === "[") {
+        stack.pop();
+      } else {
+        isCompare = false;
+        break;
+      }
+    } else if (text[i] === ")") {
+      if (stack[stack.length - 1] === "(") {
+        stack.pop();
+      } else {
+        isCompare = false;
+        break;
+      }
+    } else if (text[i] === ".") break;
   }
-
-  result.push(c === 0 ? "YES" : "NO");
+  if (stack.length > 0 || !isCompare) console.log("no");
+  else console.log("yes");
 }
-
-console.log(result.join("\n"));
