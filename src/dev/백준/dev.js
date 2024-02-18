@@ -1382,34 +1382,112 @@
 // }
 
 //12789-도키도키 간식드리미
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().split("\n");
+// const line = input[1].split(" ").map(Number);
+// const stack = [];
+// let cur = 1;
+// let i = 0;
+
+// while (i < +input[0]) {
+//   if (line[i] === cur) {
+//     cur++;
+//     i++;
+//   } else {
+//     if (stack.length > 0 && stack.at(-1) === cur) {
+//       stack.pop();
+//       cur++;
+//     } else {
+//       stack.push(line[i]);
+//       i++;
+//     }
+//   }
+// }
+
+// for (let s = stack.length - 1; s >= 0; s--) {
+//   if (stack[s] === cur) {
+//     stack.pop();
+//     cur++;
+//   }
+// }
+
+// console.log(stack.length > 0 ? "Sad" : "Nice");
+
+//18258-큐2
+class Queue {
+  constructor() {
+    this.data = [];
+    this.front = 0;
+    this.rear = -1;
+  }
+
+  push(value) {
+    this.data[++this.rear] = value;
+  }
+
+  pop() {
+    if (!this.isEmpty()) {
+      return this.data[this.front++];
+    }
+    return -1;
+  }
+
+  isEmpty() {
+    return this.front > this.rear;
+  }
+
+  size() {
+    return this.rear - this.front + 1;
+  }
+
+  getFront() {
+    if (!this.isEmpty()) {
+      return this.data[this.front];
+    }
+    return -1;
+  }
+
+  getRear() {
+    if (!this.isEmpty()) {
+      return this.data[this.rear];
+    }
+    return -1;
+  }
+}
+
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs.readFileSync(file).toString().split("\n");
-const line = input[1].split(" ").map(Number);
-const stack = [];
-let cur = 1;
-let i = 0;
+const input = fs
+  .readFileSync(file)
+  .toString()
+  .split("\n")
+  .map((v) => v.trim());
 
-while (i < +input[0]) {
-  if (line[i] === cur) {
-    cur++;
-    i++;
-  } else {
-    if (stack.length > 0 && stack.at(-1) === cur) {
-      stack.pop();
-      cur++;
-    } else {
-      stack.push(line[i]);
-      i++;
-    }
+input.shift();
+let queue = new Queue();
+let result = [];
+
+for (let i = 0; i < input.length; i++) {
+  if (input[i].startsWith("push")) {
+    let [a, b] = input[i].split(" ");
+    queue.push(+b);
+  }
+  if (input[i] === "front") {
+    result.push(queue.getFront());
+  }
+  if (input[i] === "back") {
+    result.push(queue.getRear());
+  }
+  if (input[i] === "pop") {
+    result.push(queue.pop());
+  }
+  if (input[i] === "size") {
+    result.push(queue.size());
+  }
+  if (input[i] === "empty") {
+    result.push(queue.isEmpty() ? 1 : 0);
   }
 }
 
-for (let s = stack.length - 1; s >= 0; s--) {
-  if (stack[s] === cur) {
-    stack.pop();
-    cur++;
-  }
-}
-
-console.log(stack.length > 0 ? "Sad" : "Nice");
+console.log(result.join("\n"));
