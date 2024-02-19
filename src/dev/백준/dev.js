@@ -1415,79 +1415,165 @@
 // console.log(stack.length > 0 ? "Sad" : "Nice");
 
 //18258-큐2
-class Queue {
+// Queue 클래스 정의
+// class Queue {
+//   constructor() {
+//     this.data = []; // 큐를 저장할 배열
+//     this.front = 0; // 큐의 앞 부분 인덱스
+//     this.rear = -1; // 큐의 뒷 부분 인덱스
+//   }
+
+//   // 큐에 원소 추가
+//   push(value) {
+//     this.data[++this.rear] = value; // rear를 증가시킨 뒤 해당 위치에 값을 추가
+//   }
+
+//   // 큐에서 원소 제거 및 반환
+//   pop() {
+//     if (!this.isEmpty()) {
+//       return this.data[this.front++]; // front를 증가시킨 뒤 해당 위치의 값을 반환
+//     }
+//     return -1;
+//   }
+
+//   // 큐가 비어있는지 확인
+//   isEmpty() {
+//     return this.front > this.rear; // front가 rear보다 크면 큐는 비어있음
+//   }
+
+//   // 큐의 크기 반환
+//   size() {
+//     return this.rear - this.front + 1; // rear와 front의 차이에 1을 더하여 큐의 크기 반환
+//   }
+
+//   // 큐의 가장 앞에 있는 원소 반환
+//   getFront() {
+//     if (!this.isEmpty()) {
+//       return this.data[this.front]; // front에 위치한 값을 반환
+//     }
+//     return -1;
+//   }
+
+//   // 큐의 가장 뒤에 있는 원소 반환
+//   getRear() {
+//     if (!this.isEmpty()) {
+//       return this.data[this.rear]; // rear에 위치한 값을 반환
+//     }
+//     return -1;
+//   }
+// }
+
+// 입력 처리
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
+
+// input.shift(); // 첫 번째 줄은 큐의 연산 횟수이므로 무시
+
+// let queue = new Queue(); // Queue 클래스 인스턴스 생성
+// let result = []; // 결과를 저장할 배열
+
+// // 입력된 연산 수행
+// for (let i = 0; i < input.length; i++) {
+//   if (input[i].startsWith("push")) {
+//     let [a, b] = input[i].split(" ");
+//     queue.push(+b); // 숫자로 변환하여 큐에 원소 추가
+//   }
+//   if (input[i] === "front") {
+//     result.push(queue.getFront()); // 큐의 가장 앞에 있는 원소를 결과 배열에 추가
+//   }
+//   if (input[i] === "back") {
+//     result.push(queue.getRear()); // 큐의 가장 뒤에 있는 원소를 결과 배열에 추가
+//   }
+//   if (input[i] === "pop") {
+//     result.push(queue.pop()); // 큐에서 원소를 제거하고 결과 배열에 추가
+//   }
+//   if (input[i] === "size") {
+//     result.push(queue.size()); // 큐의 크기를 결과 배열에 추가
+//   }
+//   if (input[i] === "empty") {
+//     result.push(queue.isEmpty() ? 1 : 0); // 큐가 비어있는지 여부를 결과 배열에 추가
+//   }
+// }
+
+// console.log(result.join("\n")); // 결과 배열을 개행 문자로 구분하여 출력
+
+//2164-카드 2
+const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+const input = require("fs").readFileSync(filePath).toString();
+
+const N = Number(input);
+
+// 노드 클래스 정의
+class Node {
+  constructor(val) {
+    this.val = val; // 현재 노드의 값
+    this.next = null; // 다음 노드를 가리키는 포인터
+    this.prev = null; // 이전 노드를 가리키는 포인터
+  }
+}
+
+// 연결 리스트 클래스 정의
+class LinkedList {
   constructor() {
-    this.data = [];
-    this.front = 0;
-    this.rear = -1;
+    this.head = null; // 맨 처음 노드를 가리키는 포인터
+    this.tail = null; // 맨 마지막 노드를 가리키는 포인터
+    this.length = 0; // 연결 리스트의 길이
   }
 
-  push(value) {
-    this.data[++this.rear] = value;
-  }
+  // 연결 리스트에 노드 추가
+  push(val) {
+    const newNode = new Node(val);
 
-  pop() {
-    if (!this.isEmpty()) {
-      return this.data[this.front++];
+    if (!this.head) {
+      this.head = newNode;
+    } else {
+      this.tail.next = newNode;
+      newNode.prev = this.tail;
     }
-    return -1;
+
+    this.tail = newNode;
+    this.length++;
+
+    return newNode;
   }
 
-  isEmpty() {
-    return this.front > this.rear;
+  // 연결 리스트의 맨 처음 노드 값 반환
+  getHead() {
+    return this.head.val;
   }
 
-  size() {
-    return this.rear - this.front + 1;
-  }
-
-  getFront() {
-    if (!this.isEmpty()) {
-      return this.data[this.front];
+  // 연결 리스트의 맨 처음 노드를 제거
+  removeHead() {
+    this.head = this.head.next;
+    if (this.head) {
+      this.head.prev = null;
     }
-    return -1;
+    this.length--;
   }
 
-  getRear() {
-    if (!this.isEmpty()) {
-      return this.data[this.rear];
-    }
-    return -1;
+  // 연결 리스트의 길이 반환
+  getLength() {
+    return this.length;
   }
 }
 
-const fs = require("fs");
-const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs
-  .readFileSync(file)
-  .toString()
-  .split("\n")
-  .map((v) => v.trim());
-
-input.shift();
-let queue = new Queue();
-let result = [];
-
-for (let i = 0; i < input.length; i++) {
-  if (input[i].startsWith("push")) {
-    let [a, b] = input[i].split(" ");
-    queue.push(+b);
-  }
-  if (input[i] === "front") {
-    result.push(queue.getFront());
-  }
-  if (input[i] === "back") {
-    result.push(queue.getRear());
-  }
-  if (input[i] === "pop") {
-    result.push(queue.pop());
-  }
-  if (input[i] === "size") {
-    result.push(queue.size());
-  }
-  if (input[i] === "empty") {
-    result.push(queue.isEmpty() ? 1 : 0);
-  }
+// 초기 카드 덱 생성
+const cards = new LinkedList();
+for (let i = 1; i <= N; i++) {
+  cards.push(i);
 }
 
-console.log(result.join("\n"));
+// 마지막 카드를 찾을 때까지 반복
+while (cards.getLength() !== 1) {
+  cards.removeHead(); // 맨 앞 노드를 제거
+  cards.push(cards.getHead()); // 맨 앞 노드를 맨 뒤로 이동
+  cards.removeHead(); // 다시 맨 앞 노드를 제거
+}
+
+// 결과 출력
+console.log(cards.getHead());
