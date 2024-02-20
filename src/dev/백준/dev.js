@@ -1503,77 +1503,97 @@
 // console.log(result.join("\n")); // 결과 배열을 개행 문자로 구분하여 출력
 
 //2164-카드 2
-const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs").readFileSync(filePath).toString();
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString();
 
-const N = Number(input);
+// const N = Number(input);
 
-// 노드 클래스 정의
-class Node {
-  constructor(val) {
-    this.val = val; // 현재 노드의 값
-    this.next = null; // 다음 노드를 가리키는 포인터
-    this.prev = null; // 이전 노드를 가리키는 포인터
-  }
+// // 노드 클래스 정의
+// class Node {
+//   constructor(val) {
+//     this.val = val; // 현재 노드의 값
+//     this.next = null; // 다음 노드를 가리키는 포인터
+//     this.prev = null; // 이전 노드를 가리키는 포인터
+//   }
+// }
+
+// // 연결 리스트 클래스 정의
+// class LinkedList {
+//   constructor() {
+//     this.head = null; // 맨 처음 노드를 가리키는 포인터
+//     this.tail = null; // 맨 마지막 노드를 가리키는 포인터
+//     this.length = 0; // 연결 리스트의 길이
+//   }
+
+//   // 연결 리스트에 노드 추가
+//   push(val) {
+//     const newNode = new Node(val);
+
+//     if (!this.head) {
+//       this.head = newNode;
+//     } else {
+//       this.tail.next = newNode;
+//       newNode.prev = this.tail;
+//     }
+
+//     this.tail = newNode;
+//     this.length++;
+
+//     return newNode;
+//   }
+
+//   // 연결 리스트의 맨 처음 노드 값 반환
+//   getHead() {
+//     return this.head.val;
+//   }
+
+//   // 연결 리스트의 맨 처음 노드를 제거
+//   removeHead() {
+//     this.head = this.head.next;
+//     if (this.head) {
+//       this.head.prev = null;
+//     }
+//     this.length--;
+//   }
+
+//   // 연결 리스트의 길이 반환
+//   getLength() {
+//     return this.length;
+//   }
+// }
+
+// // 초기 카드 덱 생성
+// const cards = new LinkedList();
+// for (let i = 1; i <= N; i++) {
+//   cards.push(i);
+// }
+
+// // 마지막 카드를 찾을 때까지 반복
+// while (cards.getLength() !== 1) {
+//   cards.removeHead(); // 맨 앞 노드를 제거
+//   cards.push(cards.getHead()); // 맨 앞 노드를 맨 뒤로 이동
+//   cards.removeHead(); // 다시 맨 앞 노드를 제거
+// }
+
+// // 결과 출력
+// console.log(cards.getHead());
+
+//3009-네번째 점
+const fs = require("fs");
+const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+const input = fs.readFileSync(file).toString().split("\n");
+let arrayX = [];
+let arrayY = [];
+let x;
+let y;
+for (let i = 0; i < 3; i++) {
+  arrayX.push(Number(input[i].split(" ")[0]));
+  arrayY.push(Number(input[i].split(" ")[1]));
 }
+arrayX = arrayX.sort();
+arrayY = arrayY.sort();
 
-// 연결 리스트 클래스 정의
-class LinkedList {
-  constructor() {
-    this.head = null; // 맨 처음 노드를 가리키는 포인터
-    this.tail = null; // 맨 마지막 노드를 가리키는 포인터
-    this.length = 0; // 연결 리스트의 길이
-  }
+x = arrayX[1] === arrayX[0] ? arrayX[2] : arrayX[0];
+y = arrayY[1] === arrayY[0] ? arrayY[2] : arrayY[0];
 
-  // 연결 리스트에 노드 추가
-  push(val) {
-    const newNode = new Node(val);
-
-    if (!this.head) {
-      this.head = newNode;
-    } else {
-      this.tail.next = newNode;
-      newNode.prev = this.tail;
-    }
-
-    this.tail = newNode;
-    this.length++;
-
-    return newNode;
-  }
-
-  // 연결 리스트의 맨 처음 노드 값 반환
-  getHead() {
-    return this.head.val;
-  }
-
-  // 연결 리스트의 맨 처음 노드를 제거
-  removeHead() {
-    this.head = this.head.next;
-    if (this.head) {
-      this.head.prev = null;
-    }
-    this.length--;
-  }
-
-  // 연결 리스트의 길이 반환
-  getLength() {
-    return this.length;
-  }
-}
-
-// 초기 카드 덱 생성
-const cards = new LinkedList();
-for (let i = 1; i <= N; i++) {
-  cards.push(i);
-}
-
-// 마지막 카드를 찾을 때까지 반복
-while (cards.getLength() !== 1) {
-  cards.removeHead(); // 맨 앞 노드를 제거
-  cards.push(cards.getHead()); // 맨 앞 노드를 맨 뒤로 이동
-  cards.removeHead(); // 다시 맨 앞 노드를 제거
-}
-
-// 결과 출력
-console.log(cards.getHead());
+console.log(`${x} ${y}`);
