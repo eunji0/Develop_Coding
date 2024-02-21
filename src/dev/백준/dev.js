@@ -1579,21 +1579,103 @@
 // console.log(cards.getHead());
 
 //3009-네번째 점
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs.readFileSync(file).toString().split("\n");
+// let arrayX = [];
+// let arrayY = [];
+// let x;
+// let y;
+// for (let i = 0; i < 3; i++) {
+//   arrayX.push(Number(input[i].split(" ")[0]));
+//   arrayY.push(Number(input[i].split(" ")[1]));
+// }
+// arrayX = arrayX.sort();
+// arrayY = arrayY.sort();
+
+// x = arrayX[1] === arrayX[0] ? arrayX[2] : arrayX[0];
+// y = arrayY[1] === arrayY[0] ? arrayY[2] : arrayY[0];
+
+// console.log(`${x} ${y}`);
+
+//18258-큐2
+class Queue {
+  constructor() {
+    this.data = [];
+    this.front = 0;
+    this.rear = -1;
+  }
+
+  push(value) {
+    return (this.data[++this.rear] = value);
+  }
+
+  isEmpty() {
+    return this.front > this.rear;
+  }
+
+  pop() {
+    if (!this.isEmpty()) {
+      return this.data[this.front++];
+    }
+    return -1;
+  }
+
+  size() {
+    return this.rear - this.front + 1;
+  }
+
+  getFront() {
+    if (!this.isEmpty()) {
+      return this.data[this.front];
+    }
+    return -1;
+  }
+
+  getRear() {
+    if (!this.isEmpty()) {
+      return this.data[this.rear];
+    }
+    return -1;
+  }
+}
+
+// 입력 처리
 const fs = require("fs");
 const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs.readFileSync(file).toString().split("\n");
-let arrayX = [];
-let arrayY = [];
-let x;
-let y;
-for (let i = 0; i < 3; i++) {
-  arrayX.push(Number(input[i].split(" ")[0]));
-  arrayY.push(Number(input[i].split(" ")[1]));
+const input = fs
+  .readFileSync(file)
+  .toString()
+  .split("\n")
+  .map((v) => v.trim());
+
+input.shift();
+
+let que = new Queue();
+let result = [];
+
+for (let i = 0; i < input.length; i++) {
+  if (input[i].startsWith("push")) {
+    let [a, b] = input[i].split(" ");
+    que.push(+b);
+  }
+
+  if (input[i] === "front") {
+    result.push(que.getFront());
+  }
+
+  if (input[i] === "back") {
+    result.push(que.getRear());
+  }
+  if (input[i] === "size") {
+    result.push(que.size());
+  }
+  if (input[i] === "empty") {
+    result.push(que.isEmpty() ? 1 : 0);
+  }
+  if (input[i] === "pop") {
+    result.push(que.pop());
+  }
 }
-arrayX = arrayX.sort();
-arrayY = arrayY.sort();
 
-x = arrayX[1] === arrayX[0] ? arrayX[2] : arrayX[0];
-y = arrayY[1] === arrayY[0] ? arrayY[2] : arrayY[0];
-
-console.log(`${x} ${y}`);
+console.log(result.join("\n"));
