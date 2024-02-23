@@ -1681,65 +1681,143 @@
 // console.log(result.join("\n"));
 
 //2164-카드 2
-const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs").readFileSync(filePath).toString();
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString();
 
-const N = Number(input);
+// const N = Number(input);
+
+// class Node {
+//   constructor(val) {
+//     this.val = val;
+//     this.prev = null;
+//     this.next = null;
+//   }
+// }
+
+// class LinkedList {
+//   constructor(val) {
+//     this.head = null;
+//     this.tail = null;
+//     this._size = 0;
+//   }
+
+//   add(val) {
+//     const newNode = new Node(val);
+//     if (!this.head) {
+//       this.head = newNode;
+//     } else {
+//       this.tail.next = newNode;
+//       newNode.prev = this.tail;
+//     }
+
+//     this.tail = newNode;
+//     this._size++;
+//     return newNode;
+//   }
+
+//   getHead() {
+//     return this.head.val;
+//   }
+
+//   getSize() {
+//     return this._size;
+//   }
+
+//   removeHead() {
+//     this.head = this.head.next;
+//     this.head.prev = null;
+//     this._size--;
+//   }
+// }
+
+// const node = new LinkedList();
+
+// for (let i = 1; i <= N; i++) {
+//   node.add(i);
+// }
+
+// while (node.getSize() !== 1) {
+//   node.removeHead();
+//   node.add(node.getHead());
+//   node.removeHead();
+// }
+
+// console.log(node.getHead());
+
+//11866-요세푸스 문제 0
+const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+const input = require("fs").readFileSync(filePath).toString().trim();
+
+const [N, K] = input.split(" ").map(Number);
 
 class Node {
-  constructor(val) {
-    this.val = val;
-    this.prev = null;
+  constructor(value) {
+    this.value = value;
     this.next = null;
+    this.prev = null;
   }
 }
 
 class LinkedList {
-  constructor(val) {
+  constructor() {
     this.head = null;
     this.tail = null;
     this._size = 0;
   }
 
-  add(val) {
-    const newNode = new Node(val);
-    if (!this.head) {
-      this.head = newNode;
-    } else {
+  add(value) {
+    const newNode = new Node(value);
+
+    if (!this.head) this.head = newNode;
+    else {
       this.tail.next = newNode;
       newNode.prev = this.tail;
     }
 
     this.tail = newNode;
     this._size++;
+
     return newNode;
   }
 
   getHead() {
-    return this.head.val;
+    return this.head.value;
+  }
+
+  removeHead() {
+    this.head = this.head.next;
+    if (this.head) {
+      this.head.prev = null;
+    }
+    this._size--;
   }
 
   getSize() {
     return this._size;
   }
+}
 
-  removeHead() {
-    this.head = this.head.next;
-    this.head.prev = null;
-    this._size--;
+const josephusPermutation = (N, K) => {
+  const node = new LinkedList();
+
+  for (let i = 1; i <= N; i++) {
+    node.add(i);
   }
-}
 
-const node = new LinkedList();
+  let result = [];
 
-for (let i = 1; i <= N; i++) {
-  node.add(i);
-}
+  while (node._size !== 0) {
+    for (let i = 0; i < K - 1; i++) {
+      node.add(node.getHead());
+      node.removeHead();
+    }
 
-while (node.getSize() !== 1) {
-  node.removeHead();
-  node.add(node.getHead());
-  node.removeHead();
-}
+    result.push(node.getHead());
+    node.removeHead();
+  }
 
-console.log(node.getHead());
+  return result;
+};
+
+const permutation = josephusPermutation(N, K);
+console.log(`<${permutation.join(", ")}>`);
