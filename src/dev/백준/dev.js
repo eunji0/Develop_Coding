@@ -1599,83 +1599,147 @@
 // console.log(`${x} ${y}`);
 
 //18258-큐2
-class Queue {
-  constructor() {
-    this.data = [];
-    this.front = 0;
-    this.rear = -1;
-  }
+// class Queue {
+//   constructor() {
+//     this.data = [];
+//     this.front = 0;
+//     this.rear = -1;
+//   }
 
-  push(value) {
-    return (this.data[++this.rear] = value);
-  }
+//   push(value) {
+//     return (this.data[++this.rear] = value);
+//   }
 
-  isEmpty() {
-    return this.front > this.rear;
-  }
+//   isEmpty() {
+//     return this.front > this.rear;
+//   }
 
-  pop() {
-    if (!this.isEmpty()) {
-      return this.data[this.front++];
-    }
-    return -1;
-  }
+//   pop() {
+//     if (!this.isEmpty()) {
+//       return this.data[this.front++];
+//     }
+//     return -1;
+//   }
 
-  size() {
-    return this.rear - this.front + 1;
-  }
+//   size() {
+//     return this.rear - this.front + 1;
+//   }
 
-  getFront() {
-    if (!this.isEmpty()) {
-      return this.data[this.front];
-    }
-    return -1;
-  }
+//   getFront() {
+//     if (!this.isEmpty()) {
+//       return this.data[this.front];
+//     }
+//     return -1;
+//   }
 
-  getRear() {
-    if (!this.isEmpty()) {
-      return this.data[this.rear];
-    }
-    return -1;
+//   getRear() {
+//     if (!this.isEmpty()) {
+//       return this.data[this.rear];
+//     }
+//     return -1;
+//   }
+// }
+
+// // 입력 처리
+// const fs = require("fs");
+// const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = fs
+//   .readFileSync(file)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
+
+// input.shift();
+
+// let que = new Queue();
+// let result = [];
+
+// for (let i = 0; i < input.length; i++) {
+//   if (input[i].startsWith("push")) {
+//     let [a, b] = input[i].split(" ");
+//     que.push(+b);
+//   }
+
+//   if (input[i] === "front") {
+//     result.push(que.getFront());
+//   }
+
+//   if (input[i] === "back") {
+//     result.push(que.getRear());
+//   }
+//   if (input[i] === "size") {
+//     result.push(que.size());
+//   }
+//   if (input[i] === "empty") {
+//     result.push(que.isEmpty() ? 1 : 0);
+//   }
+//   if (input[i] === "pop") {
+//     result.push(que.pop());
+//   }
+// }
+
+// console.log(result.join("\n"));
+
+//2164-카드 2
+const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+const input = require("fs").readFileSync(filePath).toString();
+
+const N = Number(input);
+
+class Node {
+  constructor(val) {
+    this.val = val;
+    this.prev = null;
+    this.next = null;
   }
 }
 
-// 입력 처리
-const fs = require("fs");
-const file = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = fs
-  .readFileSync(file)
-  .toString()
-  .split("\n")
-  .map((v) => v.trim());
-
-input.shift();
-
-let que = new Queue();
-let result = [];
-
-for (let i = 0; i < input.length; i++) {
-  if (input[i].startsWith("push")) {
-    let [a, b] = input[i].split(" ");
-    que.push(+b);
+class LinkedList {
+  constructor(val) {
+    this.head = null;
+    this.tail = null;
+    this._size = 0;
   }
 
-  if (input[i] === "front") {
-    result.push(que.getFront());
+  add(val) {
+    const newNode = new Node(val);
+    if (!this.head) {
+      this.head = newNode;
+    } else {
+      this.tail.next = newNode;
+      newNode.prev = this.tail;
+    }
+
+    this.tail = newNode;
+    this._size++;
+    return newNode;
   }
 
-  if (input[i] === "back") {
-    result.push(que.getRear());
+  getHead() {
+    return this.head.val;
   }
-  if (input[i] === "size") {
-    result.push(que.size());
+
+  getSize() {
+    return this._size;
   }
-  if (input[i] === "empty") {
-    result.push(que.isEmpty() ? 1 : 0);
-  }
-  if (input[i] === "pop") {
-    result.push(que.pop());
+
+  removeHead() {
+    this.head = this.head.next;
+    this.head.prev = null;
+    this._size--;
   }
 }
 
-console.log(result.join("\n"));
+const node = new LinkedList();
+
+for (let i = 1; i <= N; i++) {
+  node.add(i);
+}
+
+while (node.getSize() !== 1) {
+  node.removeHead();
+  node.add(node.getHead());
+  node.removeHead();
+}
+
+console.log(node.getHead());
