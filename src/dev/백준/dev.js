@@ -1823,125 +1823,207 @@
 // console.log(`<${permutation.join(", ")}>`);
 
 //28279-덱2
-const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .split("\n")
-  .map((v) => v.trim());
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
 
+// class Node {
+//   constructor(val) {
+//     this.value = val;
+//     this.next = null;
+//     this.prev = null;
+//   }
+// }
+
+// class Deque {
+//   constructor(val) {
+//     this.head = null;
+//     this.tail = null;
+//     this.size = 0;
+//   }
+
+//   insert(val, type) {
+//     const curNode = new Node(val);
+//     if (!this.size) {
+//       if (!this.head) this.head = curNode;
+//       if (!this.tail) this.tail = curNode;
+//     } else {
+//       if (type === "front") {
+//         this.head.prev = curNode;
+//         curNode.next = this.head;
+//         this.head = curNode;
+//       } else if (type === "back") {
+//         this.tail.next = curNode;
+//         curNode.prev = this.tail;
+//         this.tail = curNode;
+//       }
+//     }
+
+//     this.size += 1;
+//   }
+
+//   frontExtract() {
+//     if (!this.head) return -1;
+//     const curVal = this.head.value;
+//     this.head = this.head.next;
+//     if (!this.head) this.tail = undefined;
+//     else {
+//       this.head.prev = undefined;
+//     }
+//     this.size -= 1;
+//     return curVal;
+//   }
+
+//   backExtract() {
+//     if (!this.tail) return -1;
+//     const curVal = this.tail.value;
+//     this.tail = this.tail.prev;
+//     if (!this.tail) this.head = undefined;
+//     else {
+//       this.tail.next = undefined;
+//     }
+//     this.size -= 1;
+//     return curVal;
+//   }
+
+//   length() {
+//     return this.size;
+//   }
+
+//   isEmpty() {
+//     return !this.size ? 1 : 0;
+//   }
+
+//   printFront() {
+//     if (!this.head) return -1;
+//     return this.head.value;
+//   }
+
+//   printBack() {
+//     if (!this.tail) return -1;
+//     return this.tail.value;
+//   }
+// }
+
+// const deque = new Deque();
+// const result = [];
+// input.shift();
+
+// input.forEach((command) => {
+//   const [type, val] = command.split(" ");
+//   switch (type) {
+//     case "1":
+//       deque.insert(Number(val), "front");
+//       break;
+//     case "2":
+//       deque.insert(Number(val), "back");
+//       break;
+//     case "3":
+//       result.push(deque.frontExtract());
+//       break;
+//     case "4":
+//       result.push(deque.backExtract());
+//       break;
+//     case "5":
+//       result.push(deque.length());
+//       break;
+//     case "6":
+//       result.push(deque.isEmpty());
+//       break;
+//     case "7":
+//       result.push(deque.printFront());
+//       break;
+//     case "8":
+//       result.push(deque.printBack());
+//       break;
+//     default:
+//       break;
+//   }
+// });
+
+// console.log(result.join("\n"));
+
+//24511-queuestack
+const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 class Node {
-  constructor(val) {
-    this.value = val;
-    this.next = null;
+  constructor(value) {
+    this.value = value;
     this.prev = null;
+    this.next = null;
   }
 }
 
 class Deque {
-  constructor(val) {
-    this.head = null;
-    this.tail = null;
+  constructor() {
+    this.left = null;
+    this.right = null;
     this.size = 0;
   }
 
-  insert(val, type) {
+  leftInsert(val) {
     const curNode = new Node(val);
-    if (!this.size) {
-      if (!this.head) this.head = curNode;
-      if (!this.tail) this.tail = curNode;
-    } else {
-      if (type === "front") {
-        this.head.prev = curNode;
-        curNode.next = this.head;
-        this.head = curNode;
-      } else if (type === "back") {
-        this.tail.next = curNode;
-        curNode.prev = this.tail;
-        this.tail = curNode;
-      }
-    }
-
     this.size += 1;
-  }
-
-  frontExtract() {
-    if (!this.head) return -1;
-    const curVal = this.head.value;
-    this.head = this.head.next;
-    if (!this.head) this.tail = undefined;
-    else {
-      this.head.prev = undefined;
+    if (!this.left || !this.right) {
+      this.left = curNode;
+      this.right = curNode;
+    } else {
+      curNode.next = this.left;
+      this.left.prev = curNode;
+      this.left = curNode;
     }
-    this.size -= 1;
-    return curVal;
   }
-
-  backExtract() {
-    if (!this.tail) return -1;
-    const curVal = this.tail.value;
-    this.tail = this.tail.prev;
-    if (!this.tail) this.head = undefined;
-    else {
-      this.tail.next = undefined;
+  rightInsert(val) {
+    const curNode = new Node(val);
+    this.size += 1;
+    if (!this.left || !this.right) {
+      this.left = curNode;
+      this.right = curNode;
+    } else {
+      curNode.prev = this.right;
+      this.right.next = curNode;
+      this.right = curNode;
     }
+  }
+  leftExtract() {
+    if (!this.left) return;
+    const popedVal = this.left.value;
     this.size -= 1;
-    return curVal;
-  }
-
-  length() {
-    return this.size;
-  }
-
-  isEmpty() {
-    return !this.size ? 1 : 0;
-  }
-
-  printFront() {
-    if (!this.head) return -1;
-    return this.head.value;
-  }
-
-  printBack() {
-    if (!this.tail) return -1;
-    return this.tail.value;
+    if (this.left.next) {
+      this.left = this.left.next;
+      this.left.prev = null;
+    } else {
+      this.left = null;
+      this.right = null;
+    }
+    return popedVal;
   }
 }
 
-const deque = new Deque();
-const result = [];
-input.shift();
+const input = require("fs")
+  .readFileSync(filePath)
+  .toString()
+  .trim()
+  .split("\n");
 
-input.forEach((command) => {
-  const [type, val] = command.split(" ");
-  switch (type) {
-    case "1":
-      deque.insert(Number(val), "front");
-      break;
-    case "2":
-      deque.insert(Number(val), "back");
-      break;
-    case "3":
-      result.push(deque.frontExtract());
-      break;
-    case "4":
-      result.push(deque.backExtract());
-      break;
-    case "5":
-      result.push(deque.length());
-      break;
-    case "6":
-      result.push(deque.isEmpty());
-      break;
-    case "7":
-      result.push(deque.printFront());
-      break;
-    case "8":
-      result.push(deque.printBack());
-      break;
-    default:
-      break;
-  }
-});
+let deq = new Deque();
+const C = input.pop().split(" ");
+const cLen = input.pop();
+const B = input.pop().split(" ");
+const A = input.pop().split(" ");
+const abLen = input.pop();
 
-console.log(result.join("\n"));
+let result = [];
+
+for (let i = 0; i < abLen; i++) {
+  if (A[i] === "0") deq.leftInsert(B[i]);
+}
+
+for (let i = 0; i < cLen; i++) {
+  deq.rightInsert(C[i]);
+  result.push(deq.leftExtract());
+}
+
+console.log(result.join(" "));
