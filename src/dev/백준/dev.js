@@ -1947,83 +1947,90 @@
 // console.log(result.join("\n"));
 
 //24511-queuestack
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// class Node {
+//   constructor(value) {
+//     this.value = value;
+//     this.prev = null;
+//     this.next = null;
+//   }
+// }
+
+// class Deque {
+//   constructor() {
+//     this.left = null;
+//     this.right = null;
+//     this.size = 0;
+//   }
+
+//   leftInsert(val) {
+//     const curNode = new Node(val);
+//     this.size += 1;
+//     if (!this.left || !this.right) {
+//       this.left = curNode;
+//       this.right = curNode;
+//     } else {
+//       curNode.next = this.left;
+//       this.left.prev = curNode;
+//       this.left = curNode;
+//     }
+//   }
+//   rightInsert(val) {
+//     const curNode = new Node(val);
+//     this.size += 1;
+//     if (!this.left || !this.right) {
+//       this.left = curNode;
+//       this.right = curNode;
+//     } else {
+//       curNode.prev = this.right;
+//       this.right.next = curNode;
+//       this.right = curNode;
+//     }
+//   }
+//   leftExtract() {
+//     if (!this.left) return;
+//     const popedVal = this.left.value;
+//     this.size -= 1;
+//     if (this.left.next) {
+//       this.left = this.left.next;
+//       this.left.prev = null;
+//     } else {
+//       this.left = null;
+//       this.right = null;
+//     }
+//     return popedVal;
+//   }
+// }
+
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// let deq = new Deque();
+// const C = input.pop().split(" ");
+// const cLen = input.pop();
+// const B = input.pop().split(" ");
+// const A = input.pop().split(" ");
+// const abLen = input.pop();
+
+// let result = [];
+
+// for (let i = 0; i < abLen; i++) {
+//   if (A[i] === "0") deq.leftInsert(B[i]);
+// }
+
+// for (let i = 0; i < cLen; i++) {
+//   deq.rightInsert(C[i]);
+//   result.push(deq.leftExtract());
+// }
+
+// console.log(result.join(" "));
+
+//15439-베라의 패션
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-class Node {
-  constructor(value) {
-    this.value = value;
-    this.prev = null;
-    this.next = null;
-  }
-}
+const input = require("fs").readFileSync(filePath).toString().trim();
 
-class Deque {
-  constructor() {
-    this.left = null;
-    this.right = null;
-    this.size = 0;
-  }
-
-  leftInsert(val) {
-    const curNode = new Node(val);
-    this.size += 1;
-    if (!this.left || !this.right) {
-      this.left = curNode;
-      this.right = curNode;
-    } else {
-      curNode.next = this.left;
-      this.left.prev = curNode;
-      this.left = curNode;
-    }
-  }
-  rightInsert(val) {
-    const curNode = new Node(val);
-    this.size += 1;
-    if (!this.left || !this.right) {
-      this.left = curNode;
-      this.right = curNode;
-    } else {
-      curNode.prev = this.right;
-      this.right.next = curNode;
-      this.right = curNode;
-    }
-  }
-  leftExtract() {
-    if (!this.left) return;
-    const popedVal = this.left.value;
-    this.size -= 1;
-    if (this.left.next) {
-      this.left = this.left.next;
-      this.left.prev = null;
-    } else {
-      this.left = null;
-      this.right = null;
-    }
-    return popedVal;
-  }
-}
-
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .trim()
-  .split("\n");
-
-let deq = new Deque();
-const C = input.pop().split(" ");
-const cLen = input.pop();
-const B = input.pop().split(" ");
-const A = input.pop().split(" ");
-const abLen = input.pop();
-
-let result = [];
-
-for (let i = 0; i < abLen; i++) {
-  if (A[i] === "0") deq.leftInsert(B[i]);
-}
-
-for (let i = 0; i < cLen; i++) {
-  deq.rightInsert(C[i]);
-  result.push(deq.leftExtract());
-}
-
-console.log(result.join(" "));
+const n = +input;
+console.log(n * (n - 1));
