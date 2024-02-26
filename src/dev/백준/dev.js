@@ -2029,8 +2029,15 @@
 // console.log(result.join(" "));
 
 //15439-베라의 패션
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString().trim();
+
+// const n = +input;
+// console.log(n * (n - 1));
+
+//24723-녹색거탑
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs").readFileSync(filePath).toString().trim();
 
 const n = +input;
-console.log(n * (n - 1));
+console.log(2 ** n);
