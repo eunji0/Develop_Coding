@@ -2063,10 +2063,32 @@
 // console.log(factorial(n));
 
 //11050-이항계수
-const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs").readFileSync(filePath).toString().trim();
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString().trim();
 
-const [n, r] = input.split(" ").map(Number);
+// const [n, r] = input.split(" ").map(Number);
+
+// const factorial = (m) => {
+//   if (m === 0) {
+//     return 1;
+//   }
+
+//   if (m < 2) {
+//     return m;
+//   }
+
+//   return factorial(m - 1) * m;
+// };
+
+// console.log(factorial(n) / (factorial(r) * factorial(n - r)));
+
+//1010-다리 놓기
+const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+const input = require("fs")
+  .readFileSync(filePath)
+  .toString()
+  .trim()
+  .split("\n");
 
 const factorial = (m) => {
   if (m === 0) {
@@ -2080,4 +2102,7 @@ const factorial = (m) => {
   return factorial(m - 1) * m;
 };
 
-console.log(factorial(n) / (factorial(r) * factorial(n - r)));
+for (let i = 1; i <= +input[0]; i++) {
+  const [n, r] = input[i].split(" ").map(Number);
+  console.log(Math.round(factorial(r) / (factorial(n) * factorial(r - n))));
+}
