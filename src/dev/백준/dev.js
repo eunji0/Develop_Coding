@@ -2043,21 +2043,41 @@
 // console.log(2 ** n);
 
 //10872-팩토리얼
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString().trim();
+
+// const n = +input;
+
+// const factorial = (n) => {
+//   if (n === 0) {
+//     return 1;
+//   }
+
+//   if (n < 2) {
+//     return n;
+//   }
+
+//   return factorial(n - 1) * n;
+// };
+
+// console.log(factorial(n));
+
+//11050-이항계수
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs").readFileSync(filePath).toString().trim();
 
-const n = +input;
+const [n, r] = input.split(" ").map(Number);
 
-const factorial = (n) => {
-  if (n === 0) {
+const factorial = (m) => {
+  if (m === 0) {
     return 1;
   }
 
-  if (n < 2) {
-    return n;
+  if (m < 2) {
+    return m;
   }
 
-  return factorial(n - 1) * n;
+  return factorial(m - 1) * m;
 };
 
-console.log(factorial(n));
+console.log(factorial(n) / (factorial(r) * factorial(n - r)));
