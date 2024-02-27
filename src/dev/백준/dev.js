@@ -2036,8 +2036,28 @@
 // console.log(n * (n - 1));
 
 //24723-녹색거탑
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString().trim();
+
+// const n = +input;
+// console.log(2 ** n);
+
+//10872-팩토리얼
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs").readFileSync(filePath).toString().trim();
 
 const n = +input;
-console.log(2 ** n);
+
+const factorial = (n) => {
+  if (n === 0) {
+    return 1;
+  }
+
+  if (n < 2) {
+    return n;
+  }
+
+  return factorial(n - 1) * n;
+};
+
+console.log(factorial(n));
