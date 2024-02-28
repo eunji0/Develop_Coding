@@ -2083,6 +2083,31 @@
 // console.log(factorial(n) / (factorial(r) * factorial(n - r)));
 
 //1010-다리 놓기
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const factorial = (m) => {
+//   if (m === 0) {
+//     return 1;
+//   }
+
+//   if (m < 2) {
+//     return m;
+//   }
+
+//   return factorial(m - 1) * m;
+// };
+
+// for (let i = 1; i <= +input[0]; i++) {
+//   const [n, r] = input[i].split(" ").map(Number);
+//   console.log(Math.round(factorial(r) / (factorial(n) * factorial(r - n))));
+// }
+
+//1037-약수
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
@@ -2090,19 +2115,9 @@ const input = require("fs")
   .trim()
   .split("\n");
 
-const factorial = (m) => {
-  if (m === 0) {
-    return 1;
-  }
+let a = input[1].split(" ").sort((a, b) => a - b);
 
-  if (m < 2) {
-    return m;
-  }
+let max = Math.max(...a);
+let min = Math.min(...a);
 
-  return factorial(m - 1) * m;
-};
-
-for (let i = 1; i <= +input[0]; i++) {
-  const [n, r] = input[i].split(" ").map(Number);
-  console.log(Math.round(factorial(r) / (factorial(n) * factorial(r - n))));
-}
+console.log(a.length >= 2 ? max * min : min * min);
