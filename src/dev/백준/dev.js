@@ -2108,16 +2108,41 @@
 // }
 
 //1037-약수
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// let a = input[1].split(" ").sort((a, b) => a - b);
+
+// let max = Math.max(...a);
+// let min = Math.min(...a);
+
+// console.log(a.length >= 2 ? max * min : min * min);
+
+//25192-인사성 밝은 곰곰이
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
   .toString()
   .trim()
-  .split("\n");
+  .split("\n")
+  .map((v) => v.trim());
 
-let a = input[1].split(" ").sort((a, b) => a - b);
+let userDict = new Set();
+let result = 0;
+for (let i = 0; i < input.length; i++) {
+  if (i === 0) continue;
+  const curCommand = input[i];
+  if (curCommand === "ENTER") {
+    userDict = {};
+    continue;
+  }
+  if (curCommand in userDict) continue;
+  userDict[curCommand] = 1;
+  result++;
+}
 
-let max = Math.max(...a);
-let min = Math.min(...a);
-
-console.log(a.length >= 2 ? max * min : min * min);
+console.log(result);
