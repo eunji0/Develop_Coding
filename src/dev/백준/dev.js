@@ -2123,6 +2123,31 @@
 // console.log(a.length >= 2 ? max * min : min * min);
 
 //25192-인사성 밝은 곰곰이
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n")
+//   .map((v) => v.trim());
+
+// let u = {};
+// let result = 0;
+
+// for (let i = 1; i < input.length; i++) {
+//   if (input[i] === "ENTER") {
+//     u = {};
+//     continue;
+//   }
+
+//   if (input[i] in u) continue;
+//   u[input[i]] = 1;
+//   result += 1;
+// }
+
+// console.log(result);
+
+//26069-붙임성 좋은 총총이
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
@@ -2131,18 +2156,14 @@ const input = require("fs")
   .split("\n")
   .map((v) => v.trim());
 
-let u = {};
-let result = 0;
+let a = new Set();
 
 for (let i = 1; i < input.length; i++) {
-  if (input[i] === "ENTER") {
-    u = {};
-    continue;
+  let [q, w] = input[i].split(" ");
+  if (q === "ChongChong" || w === "ChongChong" || a.has(q) || a.has(w)) {
+    a.add(q);
+    a.add(w);
   }
-
-  if (input[i] in u) continue;
-  u[input[i]] = 1;
-  result += 1;
 }
 
-console.log(result);
+console.log(a.size);
