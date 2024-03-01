@@ -2131,18 +2131,18 @@ const input = require("fs")
   .split("\n")
   .map((v) => v.trim());
 
-let userDict = new Set();
+let u = {};
 let result = 0;
-for (let i = 0; i < input.length; i++) {
-  if (i === 0) continue;
-  const curCommand = input[i];
-  if (curCommand === "ENTER") {
-    userDict = {};
+
+for (let i = 1; i < input.length; i++) {
+  if (input[i] === "ENTER") {
+    u = {};
     continue;
   }
-  if (curCommand in userDict) continue;
-  userDict[curCommand] = 1;
-  result++;
+
+  if (input[i] in u) continue;
+  u[input[i]] = 1;
+  result += 1;
 }
 
 console.log(result);
