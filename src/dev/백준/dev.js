@@ -2221,36 +2221,47 @@
 // console.log(range);
 
 //20920-영단어암기는 어려워
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .split("\n")
+//   .map((v) => v.trim());
+
+// let [N, M] = input[0].split(" ").map(Number);
+
+// input.shift();
+
+// let map = new Map();
+
+// for (let i = 0; i < input.length; i++) {
+//   if (input[i].length >= M) map.set(input[i], (map.get(input[i]) || 0) + 1);
+// }
+
+// map = [...map]
+//   .sort((a, b) => {
+//     if (a[1] === b[1]) {
+//       if (a[0].length === b[0].length) {
+//         return a[0] < b[0] ? -1 : 1;
+//       } else {
+//         return b[0].length - a[0].length;
+//       }
+//     } else {
+//       return b[1] - a[1];
+//     }
+//   })
+//   .map((v) => v[0])
+//   .join("\n");
+
+// console.log(map);
+
+//27433-팩토리얼2
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .split("\n")
-  .map((v) => v.trim());
+const input = require("fs").readFileSync(filePath).toString();
+let a = 1;
 
-let [N, M] = input[0].split(" ").map(Number);
-
-input.shift();
-
-let map = new Map();
-
-for (let i = 0; i < input.length; i++) {
-  if (input[i].length >= M) map.set(input[i], (map.get(input[i]) || 0) + 1);
+for (let i = +input; i > 1; i--) {
+  a *= i;
 }
 
-map = [...map]
-  .sort((a, b) => {
-    if (a[1] === b[1]) {
-      if (a[0].length === b[0].length) {
-        return a[0] < b[0] ? -1 : 1;
-      } else {
-        return b[0].length - a[0].length;
-      }
-    } else {
-      return b[1] - a[1];
-    }
-  })
-  .map((v) => v[0])
-  .join("\n");
-
-console.log(map);
+console.log(a);
