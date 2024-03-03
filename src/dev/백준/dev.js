@@ -2256,12 +2256,59 @@
 // console.log(map);
 
 //27433-팩토리얼2
-const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs").readFileSync(filePath).toString();
-let a = 1;
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString();
+// let a = 1;
 
-for (let i = +input; i > 1; i--) {
-  a *= i;
+// for (let i = +input; i > 1; i--) {
+//   a *= i;
+// }
+
+// console.log(a);
+
+//10870-피보나치 수 5
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString();
+
+// const f = (n) => {
+//   if (n === 0) return 0;
+//   else if (n === 1) return 1;
+//   else return f(n - 1) + f(n - 2);
+// };
+
+// console.log(f(+input));
+
+//25501-재귀의 귀재
+const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+const input = require("fs")
+  .readFileSync(filePath)
+  .toString()
+  .trim()
+  .split("\n");
+let callCount = 0;
+
+// 재귀 함수
+function recursion(s, l, r) {
+  if (l === 0) callCount = 0; // 처음 호출될 때, 호출 횟수 초기화
+  callCount++; // 함수가 호출될 때마다 호출 횟수 증가
+
+  if (l >= r) return 1; // 문자열이 비어있거나 한 글자인 경우, 팰린드롬으로 간주
+  else if (s[l] !== s[r])
+    return 0; // 현재 비교하는 두 문자가 다른 경우, 팰린드롬이 아님
+  else return recursion(s, l + 1, r - 1); // 현재 비교하는 두 문자가 같은 경우, 재귀 호출
 }
 
-console.log(a);
+// 주어진 문자열이 팰린드롬인지 여부와 재귀 호출 횟수를 반환하는 함수
+function isPalindrome(s) {
+  return recursion(s, 0, s.length - 1);
+}
+
+input.shift(); // 첫 번째 줄은 테스트 케이스의 개수이므로 제거
+
+// 각 테스트 케이스에 대해 결과를 계산
+const result = input.map((a, i) => {
+  return `${isPalindrome(a)} ${callCount}`;
+});
+
+// 결과 출력
+console.log(result.join("\n"));
