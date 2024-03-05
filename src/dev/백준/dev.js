@@ -2314,30 +2314,64 @@
 // console.log(result.join("\n"));
 
 //4779-칸토어 집합
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .split("\n")
+//   .map(Number);
+
+// // 칸토어 집합을 생성하는 함수
+// function cantore(n) {
+//   // n이 0이면 "-"을 반환하고 종료
+//   if (n === 0) {
+//       return "-";
+//   }
+
+//   // 현재 레벨의 칸토어 집합을 생성
+//   const dash = '-'.repeat(3 ** n);
+//   const splitedArr = [];
+
+//   // 칸토어 집합을 3등분하고 재귀적으로 각 부분을 생성
+//   for (let i = 0; i <= dash.length - dash.length / 3; i += dash.length / 3) {
+//       splitedArr.push(cantore(n - 1));
+//   }
+
+//   // 가운데 부분을 공백으로 변환
+//   splitedArr[1] = splitedArr[1].split("-").join(" ");
+
+//   // 현재 레벨의 칸토어 집합을 조합하여 반환
+//   return splitedArr.join("");
+// }
+
+// // 입력을 받아 각각에 대해 칸토어 집합을 생성하고 결과를 출력
+// const result = input.map(cantore);
+
+// console.log(result.join("\n"));
+
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .split("\n")
-  .map(Number);
+const input = require("fs").readFileSync(filePath).toString().split("\n");
 
-function cantore(n) {
-  if (n === 0) {
-    return "-";
+let [a, price] = input[0].split(" ").map(Number);
+
+let count = 0;
+
+input.shift();
+
+const coins = input.map(Number).sort((a, b) => b - a);
+
+for (let i = 0; i < coins.length; i++) {
+  if (price < coins[i]) {
+    continue;
+  } else {
+    const value = Math.floor(price / coins[i]);
+    price -= value * coins[i];
+    count += value;
+
+    if (price === 0) {
+      break;
+    }
   }
-
-  const dash = "-".repeat(3 ** n);
-  const splitedArr = [];
-
-  for (let i = 0; i <= dash.length - dash.length / 3; i += dash.length / 3) {
-    splitedArr.push(cantore(n - 1));
-  }
-
-  splitedArr[1] = splitedArr[1].split("-").join(" ");
-
-  return splitedArr.join("");
 }
 
-const result = input.map(cantore);
-
-console.log(result.join("\n"));
+console.log(count);
