@@ -2349,29 +2349,62 @@
 
 // console.log(result.join("\n"));
 
+//11047-동전 0
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString().split("\n");
+
+// let [a, price] = input[0].split(" ").map(Number);
+
+// let count = 0;
+
+// input.shift();
+
+// const coins = input.map(Number).sort((a, b) => b - a);
+
+// for (let i = 0; i < coins.length; i++) {
+//   if (price < coins[i]) {
+//     continue;
+//   } else {
+//     const value = Math.floor(price / coins[i]);
+//     price -= value * coins[i];
+//     count += value;
+
+//     if (price === 0) {
+//       break;
+//     }
+//   }
+// }
+
+// console.log(count);
+
+//1931-회의실 배정
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs").readFileSync(filePath).toString().split("\n");
+const input = require("fs")
+  .readFileSync(filePath)
+  .toString()
+  .trim()
+  .split("\n");
 
-let [a, price] = input[0].split(" ").map(Number);
+const [n, ...arr] = input;
 
-let count = 0;
-
-input.shift();
-
-const coins = input.map(Number).sort((a, b) => b - a);
-
-for (let i = 0; i < coins.length; i++) {
-  if (price < coins[i]) {
-    continue;
-  } else {
-    const value = Math.floor(price / coins[i]);
-    price -= value * coins[i];
-    count += value;
-
-    if (price === 0) {
-      break;
+const t = arr
+  .map((v) => [...v.split(" ").map(Number)])
+  .sort((a, b) => {
+    if (a[1] === b[1]) {
+      return a[0] - b[0]; // 종료 시간이 같으면 시작 시간으로 정렬
+    } else {
+      return a[1] - b[1];
     }
-  }
-}
+  });
 
-console.log(count);
+let e = 0;
+let r = 0;
+
+t.forEach((tt) => {
+  if (tt[0] >= e) {
+    r++;
+    e = tt[1];
+  }
+});
+
+console.log(r);
