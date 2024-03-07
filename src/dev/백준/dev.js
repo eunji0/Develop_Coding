@@ -2410,24 +2410,39 @@
 // console.log(r);
 
 //11399-ATM
-// 입력 파일을 읽어와 줄바꿈을 기준으로 나눠 배열로 저장
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const arr = input[1]
+//   .split(" ")
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// let t = 0;
+// let s = 0;
+// for (let i = 0; i < arr.length; i++) {
+//   t += s + arr[i];
+//   s += arr[i];
+// }
+
+// console.log(t);
+
+//1541-잃어버린 괄호
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .trim()
-  .split("\n");
+const input = require("fs").readFileSync(filePath).toString().trim();
 
-const arr = input[1]
-  .split(" ")
-  .map(Number)
-  .sort((a, b) => a - b);
-
-let t = 0;
-let s = 0;
-for (let i = 0; i < arr.length; i++) {
-  t += s + arr[i];
-  s += arr[i];
+function sol(input) {
+  const n = input.split("-").map((v) =>
+    v
+      .split("+")
+      .map(Number)
+      .reduce((a, c) => a + c, 0)
+  );
+  return 2 * n[0] - n.reduce((a, c) => a + c, 0);
 }
 
-console.log(t);
+console.log(sol(input));
