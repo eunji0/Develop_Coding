@@ -2378,6 +2378,39 @@
 // console.log(count);
 
 //1931-회의실 배정
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const [n, ...arr] = input;
+
+// const t = arr
+//   .map((v) => [...v.split(" ").map(Number)])
+//   .sort((a, b) => {
+//     if (a[1] === b[1]) {
+//       return a[0] - b[0]; // 종료 시간이 같으면 시작 시간으로 정렬
+//     } else {
+//       return a[1] - b[1];
+//     }
+//   });
+
+// let e = 0;
+// let r = 0;
+
+// t.forEach((tt) => {
+//   if (tt[0] >= e) {
+//     r++;
+//     e = tt[1];
+//   }
+// });
+
+// console.log(r);
+
+//11399-ATM
+// 입력 파일을 읽어와 줄바꿈을 기준으로 나눠 배열로 저장
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
@@ -2385,26 +2418,16 @@ const input = require("fs")
   .trim()
   .split("\n");
 
-const [n, ...arr] = input;
+const arr = input[1]
+  .split(" ")
+  .map(Number)
+  .sort((a, b) => a - b);
 
-const t = arr
-  .map((v) => [...v.split(" ").map(Number)])
-  .sort((a, b) => {
-    if (a[1] === b[1]) {
-      return a[0] - b[0]; // 종료 시간이 같으면 시작 시간으로 정렬
-    } else {
-      return a[1] - b[1];
-    }
-  });
+let t = 0;
+let s = 0;
+for (let i = 0; i < arr.length; i++) {
+  t += s + arr[i];
+  s += arr[i];
+}
 
-let e = 0;
-let r = 0;
-
-t.forEach((tt) => {
-  if (tt[0] >= e) {
-    r++;
-    e = tt[1];
-  }
-});
-
-console.log(r);
+console.log(t);
