@@ -2661,23 +2661,44 @@ const e = require("express");
 // console.log(time === 0 ? a.join(" ") : "-1");
 
 //2864-5와 6의 차이
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString().trim();
+
+// function convertNumber(str, from, to) {
+//   return str
+//     .split("")
+//     .map((v) => (v === from ? to : v))
+//     .join("");
+// }
+
+// const numbers = input.split(" ");
+// let min = 0;
+// let max = 0;
+
+// for (let i = 0; i < numbers.length; i++) {
+//   min += +convertNumber(numbers[i], "6", "5");
+//   max += +convertNumber(numbers[i], "5", "6");
+// }
+
+// console.log(min, max);
+
+//16435-스네이크버드
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs").readFileSync(filePath).toString().trim();
+const input = require("fs")
+  .readFileSync(filePath)
+  .toString()
+  .trim()
+  .split("\n");
 
-function convertNumber(str, from, to) {
-  return str
-    .split("")
-    .map((v) => (v === from ? to : v))
-    .join("");
-}
+let [n, l] = input[0].split(" ").map(Number);
+const arr = input[1]
+  .split(" ")
+  .map(Number)
+  .sort((a, b) => a - b);
 
-const numbers = input.split(" ");
-let min = 0;
-let max = 0;
-
-for (let i = 0; i < numbers.length; i++) {
-  min += +convertNumber(numbers[i], "6", "5");
-  max += +convertNumber(numbers[i], "5", "6");
-}
-
-console.log(min, max);
+arr.forEach((v) => {
+  if (v <= l) {
+    l += 1;
+  }
+});
+console.log(l);
