@@ -2470,3 +2470,30 @@
 // console.log(String(cost));
 
 //그리디 문제 다시 풀기
+//11047-동전0
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString().split("\n");
+
+// let [a, price] = input[0].split(" ").map(Number);
+
+// let count = 0;
+
+// input.shift();
+
+// const coins = input.map(Number).sort((a, b) => b - a);
+
+// for (let i = 0; i < coins.length; i++) {
+//   if (price < coins[i]) {
+//     continue;
+//   } else {
+//     const value = Math.floor(price / coins[i]);
+//     price -= value * coins[i];
+//     count += value;
+
+//     if (price === 0) {
+//       break;
+//     }
+//   }
+// }
+
+// console.log(count);
