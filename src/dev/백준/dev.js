@@ -2683,6 +2683,27 @@ const e = require("express");
 // console.log(min, max);
 
 //16435-스네이크버드
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// let [n, l] = input[0].split(" ").map(Number);
+// const arr = input[1]
+//   .split(" ")
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// arr.forEach((v) => {
+//   if (v <= l) {
+//     l += 1;
+//   }
+// });
+// console.log(l);
+
+//9237-이장님초대
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
@@ -2690,15 +2711,14 @@ const input = require("fs")
   .trim()
   .split("\n");
 
-let [n, l] = input[0].split(" ").map(Number);
-const arr = input[1]
+const t = input[1]
   .split(" ")
   .map(Number)
-  .sort((a, b) => a - b);
+  .sort((a, b) => b - a);
+let day = 0;
 
-arr.forEach((v) => {
-  if (v <= l) {
-    l += 1;
-  }
-});
-console.log(l);
+for (let i = 0; i < t.length; i++) {
+  day = Math.max(day, t[i] + i + 1);
+}
+
+console.log((day += 1));
