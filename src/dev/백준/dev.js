@@ -6,6 +6,8 @@
 // console.log("      |");
 // console.log("      |");
 
+const e = require("express");
+
 //3003
 // let fs = require("fs");
 // let input = fs
@@ -2610,25 +2612,72 @@
 // console.log(s);
 
 //5585-거스름돈
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString().trim();
+
+// let price = 1000 - +input;
+
+// let arr = [500, 100, 50, 10, 5, 1];
+
+// let count = 0;
+// for (let i = 0; i < arr.length; i++) {
+//   if (price < arr[i]) {
+//     continue;
+//   } else {
+//     let value = Math.floor(price / arr[i]);
+//     count += value;
+//     price -= value * arr[i];
+//     if (price === 0) {
+//       break;
+//     }
+//   }
+// }
+
+// console.log(count);
+
+//10162-전자레인지
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString().trim();
+
+// let time = +input;
+// const t = [300, 60, 10];
+
+// let a = new Array(t.length).fill(0);
+
+// for (let i = 0; i < a.length; i++) {
+//   if (time < t[i]) {
+//     continue;
+//   } else {
+//     let val = Math.floor(time / t[i]);
+//     time -= val * t[i];
+//     a[i] += val;
+
+//     if (time === 0) {
+//       break;
+//     }
+//   }
+// }
+
+// console.log(time === 0 ? a.join(" ") : "-1");
+
+//2864-5와 6의 차이
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs").readFileSync(filePath).toString().trim();
 
-let price = 1000 - +input;
-
-let arr = [500, 100, 50, 10, 5, 1];
-
-let count = 0;
-for (let i = 0; i < arr.length; i++) {
-  if (price < arr[i]) {
-    continue;
-  } else {
-    let value = Math.floor(price / arr[i]);
-    count += value;
-    price -= value * arr[i];
-    if (price === 0) {
-      break;
-    }
-  }
+function convertNumber(str, from, to) {
+  return str
+    .split("")
+    .map((v) => (v === from ? to : v))
+    .join("");
 }
 
-console.log(count);
+const numbers = input.split(" ");
+let min = 0;
+let max = 0;
+
+for (let i = 0; i < numbers.length; i++) {
+  min += +convertNumber(numbers[i], "6", "5");
+  max += +convertNumber(numbers[i], "5", "6");
+}
+
+console.log(min, max);
