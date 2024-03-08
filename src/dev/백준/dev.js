@@ -2565,6 +2565,27 @@
 // console.log(i[0] * 2 - i.reduce((a, c) => a + c, 0));
 
 //13305-주유소
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const n = +input[0];
+// const dis = input[1].split(" ").map((v) => BigInt(v));
+// const price = input[2].split(" ").map((v) => BigInt(v));
+
+// let s = 0n;
+// let cur = price[0];
+// for (let i = 0; i < n - 1; i++) {
+//   s += cur * dis[i];
+//   if (cur > price[i + 1]) cur = price[i + 1];
+// }
+
+// console.log(String(s));
+
+//1026-보물
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
@@ -2572,15 +2593,18 @@ const input = require("fs")
   .trim()
   .split("\n");
 
-const n = +input[0];
-const dis = input[1].split(" ").map((v) => BigInt(v));
-const price = input[2].split(" ").map((v) => BigInt(v));
+const a = input[1]
+  .split(" ")
+  .map(Number)
+  .sort((a, b) => a - b);
+const b = input[2]
+  .split(" ")
+  .map(Number)
+  .sort((a, b) => b - a);
 
-let s = 0n;
-let cur = price[0];
-for (let i = 0; i < n - 1; i++) {
-  s += cur * dis[i];
-  if (cur > price[i + 1]) cur = price[i + 1];
+let s = 0;
+for (let i = 0; i < +input[0]; i++) {
+  s += a[i] * b[i];
 }
 
-console.log(String(s));
+console.log(s);
