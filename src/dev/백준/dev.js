@@ -2586,25 +2586,49 @@
 // console.log(String(s));
 
 //1026-보물
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const a = input[1]
+//   .split(" ")
+//   .map(Number)
+//   .sort((a, b) => a - b);
+// const b = input[2]
+//   .split(" ")
+//   .map(Number)
+//   .sort((a, b) => b - a);
+
+// let s = 0;
+// for (let i = 0; i < +input[0]; i++) {
+//   s += a[i] * b[i];
+// }
+
+// console.log(s);
+
+//5585-거스름돈
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .trim()
-  .split("\n");
+const input = require("fs").readFileSync(filePath).toString().trim();
 
-const a = input[1]
-  .split(" ")
-  .map(Number)
-  .sort((a, b) => a - b);
-const b = input[2]
-  .split(" ")
-  .map(Number)
-  .sort((a, b) => b - a);
+let price = 1000 - +input;
 
-let s = 0;
-for (let i = 0; i < +input[0]; i++) {
-  s += a[i] * b[i];
+let arr = [500, 100, 50, 10, 5, 1];
+
+let count = 0;
+for (let i = 0; i < arr.length; i++) {
+  if (price < arr[i]) {
+    continue;
+  } else {
+    let value = Math.floor(price / arr[i]);
+    count += value;
+    price -= value * arr[i];
+    if (price === 0) {
+      break;
+    }
+  }
 }
 
-console.log(s);
+console.log(count);
