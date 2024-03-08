@@ -2468,3 +2468,5 @@
 // }
 
 // console.log(String(cost));
+
+//그리디 문제 다시 풀기
