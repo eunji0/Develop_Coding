@@ -2432,17 +2432,39 @@
 // console.log(t);
 
 //1541-잃어버린 괄호
-const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs").readFileSync(filePath).toString().trim();
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString().trim();
 
-function sol(input) {
-  const n = input.split("-").map((v) =>
-    v
-      .split("+")
-      .map(Number)
-      .reduce((a, c) => a + c, 0)
-  );
-  return 2 * n[0] - n.reduce((a, c) => a + c, 0);
-}
+// function sol(input) {
+//   const n = input.split("-").map((v) =>
+//     v
+//       .split("+")
+//       .map(Number)
+//       .reduce((a, c) => a + c, 0)
+//   );
+//   return 2 * n[0] - n.reduce((a, c) => a + c, 0);
+// }
 
-console.log(sol(input));
+// console.log(sol(input));
+
+//13305-주유소
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const n = +input[0];
+// const distance = input[1].split(" ").map((v) => BigInt(v));
+// const price = input[2].split(" ").map((v) => BigInt(v));
+
+// let curP = price[0];
+// let cost = 0n;
+
+// for (let i = 0; i < n - 1; i++) {
+//   cost += distance[i] * curP;
+//   if (curP > price[i + 1]) curP = price[i + 1];
+// }
+
+// console.log(String(cost));
