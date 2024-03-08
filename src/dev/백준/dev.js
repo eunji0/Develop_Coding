@@ -2530,24 +2530,36 @@
 // console.log(s);
 
 //11399-ATM
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const arr = input[1]
+//   .split(" ")
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// let s = 0;
+// let a = 0;
+
+// for (let i = 0; i < arr.length; i++) {
+//   s += a + arr[i];
+//   a += arr[i];
+// }
+
+// console.log(s);
+
+//1541-잃어버린 괄호
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .trim()
-  .split("\n");
+const input = require("fs").readFileSync(filePath).toString().trim();
 
-const arr = input[1]
-  .split(" ")
-  .map(Number)
-  .sort((a, b) => a - b);
-
-let s = 0;
-let a = 0;
-
-for (let i = 0; i < arr.length; i++) {
-  s += a + arr[i];
-  a += arr[i];
-}
-
-console.log(s);
+const i = input.split("-").map((v) =>
+  v
+    .split("+")
+    .map(Number)
+    .reduce((a, c) => a + c, 0)
+);
+console.log(i[0] * 2 - i.reduce((a, c) => a + c, 0));
