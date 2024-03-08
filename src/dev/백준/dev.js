@@ -2553,13 +2553,34 @@
 // console.log(s);
 
 //1541-잃어버린 괄호
-const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs").readFileSync(filePath).toString().trim();
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs").readFileSync(filePath).toString().trim();
 
-const i = input.split("-").map((v) =>
-  v
-    .split("+")
-    .map(Number)
-    .reduce((a, c) => a + c, 0)
-);
-console.log(i[0] * 2 - i.reduce((a, c) => a + c, 0));
+// const i = input.split("-").map((v) =>
+//   v
+//     .split("+")
+//     .map(Number)
+//     .reduce((a, c) => a + c, 0)
+// );
+// console.log(i[0] * 2 - i.reduce((a, c) => a + c, 0));
+
+//13305-주유소
+const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+const input = require("fs")
+  .readFileSync(filePath)
+  .toString()
+  .trim()
+  .split("\n");
+
+const n = +input[0];
+const dis = input[1].split(" ").map((v) => BigInt(v));
+const price = input[2].split(" ").map((v) => BigInt(v));
+
+let s = 0n;
+let cur = price[0];
+for (let i = 0; i < n - 1; i++) {
+  s += cur * dis[i];
+  if (cur > price[i + 1]) cur = price[i + 1];
+}
+
+console.log(String(s));
