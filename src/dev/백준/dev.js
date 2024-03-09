@@ -2724,21 +2724,60 @@ const e = require("express");
 // console.log((day += 1));
 
 //14720-우유 축제
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const arr = input[1].split(" ").map(Number);
+
+// let count = 0;
+
+// arr.forEach((v) => {
+//   if (v === count % 3) {
+//     count += 1;
+//   }
+// });
+
+// console.log(count);
+
+//14469-소가 길을 건너간 이유 3
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// let input = require("fs").readFileSync(filePath).toString().trim().split("\n");
+// const N = Number(input.shift());
+// input = input.map((a) => a.split(" ").map(Number));
+// input = input.sort((a, b) => a[0] - b[0]);
+// let time = 0;
+// input.forEach((list, i) => {
+//   const [arrived, delay] = list;
+//   if (i === 0) time = arrived + delay;
+//   else {
+//     time = Math.max(arrived, time) + delay;
+//   }
+// });
+// console.log(time);
+
+//14487-욱제는 효도쟁이야!!
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
   .toString()
   .trim()
   .split("\n");
+const N = Number(input.shift());
 
-const arr = input[1].split(" ").map(Number);
+let sum = 0;
+let max = 0;
 
-let count = 0;
+input[0]
+  .split(" ")
+  .map(Number)
+  .forEach((numStr) => {
+    sum += numStr;
+    max = Math.max(max, numStr);
+  });
 
-arr.forEach((v) => {
-  if (v === count % 3) {
-    count += 1;
-  }
-});
-
-console.log(count);
+sum -= max;
+console.log(sum);
