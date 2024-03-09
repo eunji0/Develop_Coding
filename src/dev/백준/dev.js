@@ -2760,24 +2760,40 @@ const e = require("express");
 // console.log(time);
 
 //14487-욱제는 효도쟁이야!!
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+// const N = Number(input.shift());
+
+// let sum = 0;
+// let max = 0;
+
+// input[0]
+//   .split(" ")
+//   .map(Number)
+//   .forEach((numStr) => {
+//     sum += numStr;
+//     max = Math.max(max, numStr);
+//   });
+
+// sum -= max;
+// console.log(sum);
+
+//20115-에너지드링크
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .trim()
-  .split("\n");
+let input = require("fs").readFileSync(filePath).toString().trim().split("\n");
 const N = Number(input.shift());
-
-let sum = 0;
-let max = 0;
-
-input[0]
+input = input
+  .toString()
   .split(" ")
   .map(Number)
-  .forEach((numStr) => {
-    sum += numStr;
-    max = Math.max(max, numStr);
-  });
+  .sort((a, b) => b - a);
 
-sum -= max;
-console.log(sum);
+let s = input[0];
+for (let i = 1; i < input.length; i++) {
+  s += input[i] / 2;
+}
+console.log(s);
