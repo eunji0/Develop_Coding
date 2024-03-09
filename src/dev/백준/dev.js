@@ -2704,6 +2704,26 @@ const e = require("express");
 // console.log(l);
 
 //9237-이장님초대
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const t = input[1]
+//   .split(" ")
+//   .map(Number)
+//   .sort((a, b) => b - a);
+// let day = 0;
+
+// for (let i = 0; i < t.length; i++) {
+//   day = Math.max(day, t[i] + i + 1);
+// }
+
+// console.log((day += 1));
+
+//14720-우유 축제
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
@@ -2711,14 +2731,14 @@ const input = require("fs")
   .trim()
   .split("\n");
 
-const t = input[1]
-  .split(" ")
-  .map(Number)
-  .sort((a, b) => b - a);
-let day = 0;
+const arr = input[1].split(" ").map(Number);
 
-for (let i = 0; i < t.length; i++) {
-  day = Math.max(day, t[i] + i + 1);
-}
+let count = 0;
 
-console.log((day += 1));
+arr.forEach((v) => {
+  if (v === count % 3) {
+    count += 1;
+  }
+});
+
+console.log(count);
