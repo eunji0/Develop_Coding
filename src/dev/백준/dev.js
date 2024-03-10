@@ -2783,17 +2783,31 @@ const e = require("express");
 // console.log(sum);
 
 //20115-에너지드링크
-const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-let input = require("fs").readFileSync(filePath).toString().trim().split("\n");
-const N = Number(input.shift());
-input = input
-  .toString()
-  .split(" ")
-  .map(Number)
-  .sort((a, b) => b - a);
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// let input = require("fs").readFileSync(filePath).toString().trim().split("\n");
+// const N = Number(input.shift());
+// input = input
+//   .toString()
+//   .split(" ")
+//   .map(Number)
+//   .sort((a, b) => b - a);
 
-let s = input[0];
-for (let i = 1; i < input.length; i++) {
-  s += input[i] / 2;
-}
-console.log(s);
+// let s = input[0];
+// for (let i = 1; i < input.length; i++) {
+//   s += input[i] / 2;
+// }
+// console.log(s);
+
+//1920-수찾기
+const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+const input = require("fs")
+  .readFileSync(filePath)
+  .toString()
+  .trim()
+  .split("\n");
+
+const numbersSet = new Set(input[1].split(" ").map(Number));
+const b = input[3].split(" ").map(Number);
+
+let result = b.map((v) => (numbersSet.has(v) ? 1 : 0));
+console.log(result.join("\n"));
