@@ -2799,6 +2799,20 @@ const e = require("express");
 // console.log(s);
 
 //1920-수찾기
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const numbersSet = new Set(input[1].split(" ").map(Number));
+// const b = input[3].split(" ").map(Number);
+
+// let result = b.map((v) => (numbersSet.has(v) ? 1 : 0));
+// console.log(result.join("\n"));
+
+//11659-구간 합 구하기 4
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
@@ -2806,8 +2820,17 @@ const input = require("fs")
   .trim()
   .split("\n");
 
-const numbersSet = new Set(input[1].split(" ").map(Number));
-const b = input[3].split(" ").map(Number);
+const arr = input[1].split(" ").map(Number);
+const cumsum = new Array(arr.length + 1).fill(0);
+const output = [];
 
-let result = b.map((v) => (numbersSet.has(v) ? 1 : 0));
-console.log(result.join("\n"));
+arr.forEach((v, i) => {
+  cumsum[i + 1] = cumsum[i] + v;
+});
+
+input.slice(2).forEach((ij) => {
+  const [i, j] = ij.split(" ").map((v) => +v);
+  output.push(cumsum[j] - cumsum[i - 1]);
+});
+
+console.log(output.join("\n"));
