@@ -2836,6 +2836,28 @@ const e = require("express");
 // console.log(output.join("\n"));
 
 //2559-수열
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const [N, K] = input[0].split(" ").map(Number);
+// const arr = input[1].split(" ").map(Number);
+// let sum = arr.slice(0, K).reduce((a, c)=>a+c, 0);
+
+// let answer = sum;
+
+// for(let i=0; i<N-K; i++){
+//   sum += arr[i+K]-arr[i];
+//   if(sum>answer){
+//     answer=sum
+//   }
+// }
+// console.log(answer)
+
+//11659-구간 합 구하기 4
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
@@ -2843,16 +2865,17 @@ const input = require("fs")
   .trim()
   .split("\n");
 
-const [N, K] = input[0].split(" ").map(Number);
 const arr = input[1].split(" ").map(Number);
-let sum = arr.slice(0, K).reduce((a, c)=>a+c, 0);
+const sum = new Array(arr.length + 1).fill(0);
 
-let answer = sum;
+arr.forEach((v, i) => {
+  sum[i + 1] = sum[i] + v;
+});
 
-for(let i=0; i<N-K; i++){
-  sum += arr[i+K]-arr[i];
-  if(sum>answer){
-    answer=sum
-  }
-}
-console.log(answer)
+let out = [];
+input.slice(2).forEach((ij) => {
+  let [i, j] = ij.split(" ").map(Number);
+  out.push(sum[j] - sum[i-1]);
+});
+
+console.log(out.join("\n"));
