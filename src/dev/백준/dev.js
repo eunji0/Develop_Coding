@@ -2813,6 +2813,29 @@ const e = require("express");
 // console.log(result.join("\n"));
 
 //11659-구간 합 구하기 4
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const arr = input[1].split(" ").map(Number);
+// const cumsum = new Array(arr.length + 1).fill(0);
+// const output = [];
+
+// arr.forEach((v, i) => {
+//   cumsum[i + 1] = cumsum[i] + v;
+// });
+
+// input.slice(2).forEach((ij) => {
+//   const [i, j] = ij.split(" ").map((v) => +v);
+//   output.push(cumsum[j] - cumsum[i - 1]);
+// });
+
+// console.log(output.join("\n"));
+
+//2559-수열
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
@@ -2820,17 +2843,16 @@ const input = require("fs")
   .trim()
   .split("\n");
 
+const [N, K] = input[0].split(" ").map(Number);
 const arr = input[1].split(" ").map(Number);
-const cumsum = new Array(arr.length + 1).fill(0);
-const output = [];
+let sum = arr.slice(0, K).reduce((a, c)=>a+c, 0);
 
-arr.forEach((v, i) => {
-  cumsum[i + 1] = cumsum[i] + v;
-});
+let answer = sum;
 
-input.slice(2).forEach((ij) => {
-  const [i, j] = ij.split(" ").map((v) => +v);
-  output.push(cumsum[j] - cumsum[i - 1]);
-});
-
-console.log(output.join("\n"));
+for(let i=0; i<N-K; i++){
+  sum += arr[i+K]-arr[i];
+  if(sum>answer){
+    answer=sum
+  }
+}
+console.log(answer)
