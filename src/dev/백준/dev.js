@@ -2858,24 +2858,68 @@ const e = require("express");
 // console.log(answer)
 
 //11659-구간 합 구하기 4
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const arr = input[1].split(" ").map(Number);
+// const sum = new Array(arr.length + 1).fill(0);
+
+// arr.forEach((v, i) => {
+//   sum[i + 1] = sum[i] + v;
+// });
+
+// let out = [];
+// input.slice(2).forEach((ij) => {
+//   let [i, j] = ij.split(" ").map(Number);
+//   out.push(sum[j] - sum[i-1]);
+// });
+
+// console.log(out.join("\n"));
+
+//16139-인간-컴퓨터 상호작용
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs")
+
+const [str, q, ...INPUT] = require("fs")
   .readFileSync(filePath)
   .toString()
   .trim()
   .split("\n");
 
-const arr = input[1].split(" ").map(Number);
-const sum = new Array(arr.length + 1).fill(0);
+let result = '';
+let input=[];
 
-arr.forEach((v, i) => {
-  sum[i + 1] = sum[i] + v;
-});
+INPUT.forEach(e=>{
+  let temp = e.split(' ');
+  temp[1] = +temp[1];
+  temp[2]= +temp[2];
 
-let out = [];
-input.slice(2).forEach((ij) => {
-  let [i, j] = ij.split(" ").map(Number);
-  out.push(sum[j] - sum[i-1]);
-});
+  input.push(temp);
+})
 
-console.log(out.join("\n"));
+const dp={};
+
+input.forEach(e=>{
+  if(!dp[e[0]]){
+    let arr = [];
+
+    for(let i=0; i<str.length; i++){
+      let temp = i === 0 ? 0:arr[i-1];
+      if(str[i]===e[0]) temp++;
+      arr.push(temp)
+    }
+
+    dp[e[0]] = arr
+  }
+
+  if(e[1] === 0){
+    result+=dp[e[0]][e[2]]+'\n';
+  }else{
+    result+=dp[e[0]][e[2]] - dp[e[0]][e[1]-1]+'\n'
+  }
+})
+
+console.log(result)
