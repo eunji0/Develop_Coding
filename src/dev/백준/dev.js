@@ -3007,64 +3007,88 @@ const e = require("express");
 // console.log(q.join("\n"));
 
 //25682-체스판 다시 칠하기 2
-const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// // 입력으로부터 보드의 크기 N, M과 획득해야 하는 정사각형의 크기 K를 가져옵니다.
+// let [N, M, K] = input[0].split(" ").map(Number);
+
+// // 입력에서 보드 정보를 가져와 2차원 배열 형태로 저장합니다.
+// const board = input.slice(1, N + 1).map((line) => line.split(""));
+
+// // 최소 변경 개수를 계산하는 solve 함수를 호출합니다.
+// solve();
+
+// // 보드에서 최소로 변경해야 하는 정사각형의 개수를 출력하는 함수
+// function solve() {
+//   // 검은색 정사각형과 흰색 정사각형 중에서 최소 변경 개수를 출력합니다.
+//   console.log(Math.min(minimalBoard("B"), minimalBoard("W")));
+// }
+
+// // 보드에서 최소로 변경해야 하는 정사각형의 개수를 계산하는 함수
+// function minimalBoard(color) {
+//   let count = Infinity; // 최소 변경 개수를 저장하는 변수를 초기화합니다.
+//   let value; // 현재 위치의 값을 나타내는 변수입니다.
+
+//   // 각 위치까지의 누적 합을 저장할 배열을 초기화합니다.
+//   let prefixSum = Array.from({ length: N + 1 }, () => Array(M + 1).fill(0));
+
+//   // 보드를 순회하며 누적 합을 계산합니다.
+//   for (let i = 0; i < N; i++) {
+//     for (let j = 0; j < M; j++) {
+//       // 해당 위치의 값이 color와 일치하는지 확인하여 value를 설정합니다.
+//       if ((i + j) % 2 === 0) {
+//         value = board[i][j] !== color ? 1 : 0;
+//       } else {
+//         value = board[i][j] === color ? 1 : 0;
+//       }
+//       // 누적 합을 계산하여 prefixSum 배열에 저장합니다.
+//       prefixSum[i + 1][j + 1] =
+//         prefixSum[i][j + 1] + prefixSum[i + 1][j] - prefixSum[i][j] + value;
+//     }
+//   }
+
+//   // 보드에서 정사각형의 크기가 K인 모든 부분에서 최소 변경 개수를 계산합니다.
+//   for (let i = 1; i <= N - K + 1; i++) {
+//     for (let j = 1; j <= M - K + 1; j++) {
+//       count = Math.min(
+//         count,
+//         // 해당 부분의 누적 합을 이용하여 최소 변경 개수를 계산합니다.
+//         prefixSum[i + K - 1][j + K - 1] -
+//           prefixSum[i + K - 1][j - 1] -
+//           prefixSum[i - 1][j + K - 1] +
+//           prefixSum[i - 1][j - 1]
+//       );
+//     }
+//   }
+
+//   return count; // 최소 변경 개수를 반환합니다.
+// }
+
+//11659-구간 합 구하기 4
+const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
   .toString()
   .trim()
   .split("\n");
 
-// 입력으로부터 보드의 크기 N, M과 획득해야 하는 정사각형의 크기 K를 가져옵니다.
-let [N, M, K] = input[0].split(" ").map(Number);
+const arr = input[1].split(" ").map(Number);
+let a = new Array(arr.length + 1).fill(0);
 
-// 입력에서 보드 정보를 가져와 2차원 배열 형태로 저장합니다.
-const board = input.slice(1, N + 1).map((line) => line.split(""));
+arr.forEach((v, i) => {
+  a[i + 1] = a[i] + v;
+});
 
-// 최소 변경 개수를 계산하는 solve 함수를 호출합니다.
-solve();
+let result = [];
 
-// 보드에서 최소로 변경해야 하는 정사각형의 개수를 출력하는 함수
-function solve() {
-  // 검은색 정사각형과 흰색 정사각형 중에서 최소 변경 개수를 출력합니다.
-  console.log(Math.min(minimalBoard("B"), minimalBoard("W")));
-}
+input.slice(2).forEach((v) => {
+  const [q, w] = v.split(" ").map(Number);
+  result.push(a[w] - a[q - 1]);
+});
 
-// 보드에서 최소로 변경해야 하는 정사각형의 개수를 계산하는 함수
-function minimalBoard(color) {
-  let count = Infinity; // 최소 변경 개수를 저장하는 변수를 초기화합니다.
-  let value; // 현재 위치의 값을 나타내는 변수입니다.
-
-  // 각 위치까지의 누적 합을 저장할 배열을 초기화합니다.
-  let prefixSum = Array.from({ length: N + 1 }, () => Array(M + 1).fill(0));
-
-  // 보드를 순회하며 누적 합을 계산합니다.
-  for (let i = 0; i < N; i++) {
-    for (let j = 0; j < M; j++) {
-      // 해당 위치의 값이 color와 일치하는지 확인하여 value를 설정합니다.
-      if ((i + j) % 2 === 0) {
-        value = board[i][j] !== color ? 1 : 0;
-      } else {
-        value = board[i][j] === color ? 1 : 0;
-      }
-      // 누적 합을 계산하여 prefixSum 배열에 저장합니다.
-      prefixSum[i + 1][j + 1] =
-        prefixSum[i][j + 1] + prefixSum[i + 1][j] - prefixSum[i][j] + value;
-    }
-  }
-
-  // 보드에서 정사각형의 크기가 K인 모든 부분에서 최소 변경 개수를 계산합니다.
-  for (let i = 1; i <= N - K + 1; i++) {
-    for (let j = 1; j <= M - K + 1; j++) {
-      count = Math.min(
-        count,
-        // 해당 부분의 누적 합을 이용하여 최소 변경 개수를 계산합니다.
-        prefixSum[i + K - 1][j + K - 1] -
-          prefixSum[i + K - 1][j - 1] -
-          prefixSum[i - 1][j + K - 1] +
-          prefixSum[i - 1][j - 1]
-      );
-    }
-  }
-
-  return count; // 최소 변경 개수를 반환합니다.
-}
+console.log(result.join("\n"));
