@@ -2925,21 +2925,85 @@ const e = require("express");
 // console.log(result)
 
 //10986-나머지합
-const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs")
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const [n, m] = input[0].split(" ").map(Number);
+// const a = input[1].split(" ").map(Number);
+
+// const [b, c] = [Array(n).fill(0), Array(m).fill(0n)];
+
+// for (let i = 0; i < n; i++) {
+//   b[i] = ((b[i - 1] ?? 0) + a[i]) % m;
+// }
+// b.forEach((e) => c[e]++);
+// const o = c[0] + c.reduce((a, c) => a + (c * (c - 1n)) / 2n, 0n);
+// console.log(o.toString());
+
+//11659-구간 합 구하기 4
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const arr = input[1].split(" ").map(Number);
+// const sum = new Array(arr.length).fill(0);
+// let q = [];
+
+// arr.forEach((v, i) => {
+//   sum[i + 1] = sum[i] + v;
+// });
+
+// input.slice(2).forEach((ij) => {
+//   const [i, j] = ij.split(" ").map(Number);
+//   q.push(sum[j] - sum[i - 1]);
+// });
+
+// console.log(q.join("\n"));
+
+//11660- 구간 합 구하기 5
+const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+const [[n, m], ...input] = require("fs")
   .readFileSync(filePath)
   .toString()
   .trim()
-  .split("\n");
+  .split("\n")
+  .map((v) => v.split(" ").map(Number));
 
-const [n, m] = input[0].split(" ").map(Number);
-const a = input[1].split(" ").map(Number);
+const arr = input.slice(0, n);
+const xy = input.slice(n);
 
-const [b, c] = [Array(n).fill(0), Array(m).fill(0n)];
+const table = Array.from({ length: n + 1 }, () => Array(n + 1).fill(0));
 
-for (let i = 0; i < n; i++) {
-  b[i] = ((b[i - 1] ?? 0) + a[i]) % m;
+arr.forEach((v, i) => {
+  v.forEach((q, j) => {
+    table[i + 1][j + 1] = q;
+  });
+});
+
+console.log(table);
+
+for (let i = 1; i <= n; i++) {
+  for (let j = 1; j <= n; j++) {
+    table[i][j] += table[i - 1][j] + table[i][j - 1] - table[i - 1][j - 1];
+  }
 }
-b.forEach((e) => c[e]++);
-const o = c[0] + c.reduce((a, c) => a + (c * (c - 1n)) / 2n, 0n);
-console.log(o.toString());
+
+const q = [];
+
+xy.forEach(([x1, y1, x2, y2]) => {
+  q.push(
+    table[x2][y2] +
+      table[x1 - 1][y1 - 1] -
+      table[x1 - 1][y2] -
+      table[x2][y1 - 1]
+  );
+});
+
+console.log(q.join("\n"));
