@@ -3070,6 +3070,30 @@ const e = require("express");
 // }
 
 //11659-구간 합 구하기 4
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// const arr = input[1].split(" ").map(Number);
+// let a = new Array(arr.length + 1).fill(0);
+
+// arr.forEach((v, i) => {
+//   a[i + 1] = a[i] + v;
+// });
+
+// let result = [];
+
+// input.slice(2).forEach((v) => {
+//   const [q, w] = v.split(" ").map(Number);
+//   result.push(a[w] - a[q - 1]);
+// });
+
+// console.log(result.join("\n"));
+
+//2559-수열
 const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
 const input = require("fs")
   .readFileSync(filePath)
@@ -3077,18 +3101,17 @@ const input = require("fs")
   .trim()
   .split("\n");
 
+const [n, m] = input[0].split(" ").map(Number);
 const arr = input[1].split(" ").map(Number);
-let a = new Array(arr.length + 1).fill(0);
+let sum = arr.slice(0, m).reduce((a, c) => a + c, 0);
 
-arr.forEach((v, i) => {
-  a[i + 1] = a[i] + v;
-});
+let answer = sum;
 
-let result = [];
+for (let i = 0; i < n - m; i++) {
+  sum += arr[i + m] - arr[i];
+  if (sum > answer) {
+    answer = sum;
+  }
+}
 
-input.slice(2).forEach((v) => {
-  const [q, w] = v.split(" ").map(Number);
-  result.push(a[w] - a[q - 1]);
-});
-
-console.log(result.join("\n"));
+console.log(answer);
