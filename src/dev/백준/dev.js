@@ -3094,24 +3094,67 @@ const e = require("express");
 // console.log(result.join("\n"));
 
 //2559-수열
-const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .trim()
-  .split("\n");
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
 
-const [n, m] = input[0].split(" ").map(Number);
-const arr = input[1].split(" ").map(Number);
-let sum = arr.slice(0, m).reduce((a, c) => a + c, 0);
+// const [n, m] = input[0].split(" ").map(Number);
+// const arr = input[1].split(" ").map(Number);
+// let sum = arr.slice(0, m).reduce((a, c) => a + c, 0);
 
-let answer = sum;
+// let answer = sum;
 
-for (let i = 0; i < n - m; i++) {
-  sum += arr[i + m] - arr[i];
-  if (sum > answer) {
-    answer = sum;
-  }
-}
+// for (let i = 0; i < n - m; i++) {
+//   sum += arr[i + m] - arr[i];
+//   if (sum > answer) {
+//     answer = sum;
+//   }
+// }
 
-console.log(answer);
+// console.log(answer);
+
+//16139-인간-컴퓨터 상호작용
+// const filePath = process.platform === "linux" ? "dev/stdin" : "./input.txt";
+
+// const [str, q, ...INPUT] = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+// let result = "";
+// let input = [];
+
+// INPUT.forEach((v) => {
+//   let temp = v.split(" ");
+//   temp[1] = +temp[1];
+//   temp[2] = +temp[2];
+//   input.push(temp);
+// });
+
+// let dp = {};
+
+// input.forEach((v) => {
+//   if (!dp[v[0]]) {
+//     let arr = [];
+
+//     for (let i = 0; i < str.length; i++) {
+//       let temp = i === 0 ? 0 : arr[i - 1];
+//       if (str[i] === v[0]) temp++;
+//       arr.push(temp);
+//     }
+
+//     dp[v[0]]= arr
+//   }
+
+//   if (v[1] === 0) {
+//     result += dp[v[0]][v[2]] + "\n";
+//   } else {
+//     result += dp[v[0]][v[2]] - dp[v[0]][v[1] - 1] + "\n";
+//   }
+// });
+
+// console.log(result);
