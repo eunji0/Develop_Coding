@@ -3199,63 +3199,199 @@ const e = require("express");
 // console.log(result.join("\n"));
 
 //25682-체스판 다시 칠하기 2
-const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
-const input = require("fs")
-  .readFileSync(filePath)
-  .toString()
-  .trim()
-  .split("\n");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "./input.txt";
+// const input = require("fs")
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split("\n");
 
-let [N, M, K] = input[0].split(" ").map(Number);
+// let [N, M, K] = input[0].split(" ").map(Number);
 
-// 입력에서 보드 정보를 가져와 2차원 배열 형태로 저장
-const board = input.slice(1, N + 1).map((line) => line.split(""));
+// // 입력에서 보드 정보를 가져와 2차원 배열 형태로 저장
+// const board = input.slice(1, N + 1).map((line) => line.split(""));
 
-// 최소 변경 개수를 계산하는 solve 함수를 호출
-solve();
+// // 최소 변경 개수를 계산하는 solve 함수를 호출
+// solve();
 
-// 보드에서 최소로 변경해야 하는 정사각형의 개수를 출력하는 함수
-function solve() {
-  // 검은색 정사각형과 흰색 정사각형 중에서 최소 변경 개수를 출력
-  console.log(Math.min(minimalBoard("B"), minimalBoard("W")));
-}
+// // 보드에서 최소로 변경해야 하는 정사각형의 개수를 출력하는 함수
+// function solve() {
+//   // 검은색 정사각형과 흰색 정사각형 중에서 최소 변경 개수를 출력
+//   console.log(Math.min(minimalBoard("B"), minimalBoard("W")));
+// }
 
-// 보드에서 최소로 변경해야 하는 정사각형의 개수를 계산하는 함수
-function minimalBoard(color) {
-  let count = Infinity; // 최소 변경 개수를 저장하는 변수를 초기화
-  let value; // 현재 위치의 값을 나타내는 변수
+// // 보드에서 최소로 변경해야 하는 정사각형의 개수를 계산하는 함수
+// function minimalBoard(color) {
+//   let count = Infinity; // 최소 변경 개수를 저장하는 변수를 초기화
+//   let value; // 현재 위치의 값을 나타내는 변수
 
-  // 각 위치까지의 누적 합을 저장할 배열을 초기화
-  let prefixSum = Array.from({ length: N + 1 }, () => Array(M + 1).fill(0));
+//   // 각 위치까지의 누적 합을 저장할 배열을 초기화
+//   let prefixSum = Array.from({ length: N + 1 }, () => Array(M + 1).fill(0));
 
-  // 보드를 순회하며 누적 합을 계산
-  for (let i = 0; i < N; i++) {
-    for (let j = 0; j < M; j++) {
-      // 해당 위치의 값이 color와 일치하는지 확인하여 value를 설정
-      if ((i + j) % 2 === 0) {
-        value = board[i][j] !== color ? 1 : 0;
-      } else {
-        value = board[i][j] === color ? 1 : 0;
+//   // 보드를 순회하며 누적 합을 계산
+//   for (let i = 0; i < N; i++) {
+//     for (let j = 0; j < M; j++) {
+//       // 해당 위치의 값이 color와 일치하는지 확인하여 value를 설정
+//       if ((i + j) % 2 === 0) {
+//         value = board[i][j] !== color ? 1 : 0;
+//       } else {
+//         value = board[i][j] === color ? 1 : 0;
+//       }
+//       // 누적 합을 계산하여 prefixSum 배열에 저장
+//       prefixSum[i + 1][j + 1] =
+//         prefixSum[i][j + 1] + prefixSum[i + 1][j] - prefixSum[i][j] + value;
+//     }
+//   }
+
+//   // 보드에서 정사각형의 크기가 K인 모든 부분에서 최소 변경 개수를 계산
+//   for (let i = 1; i <= N - K + 1; i++) {
+//     for (let j = 1; j <= M - K + 1; j++) {
+//       count = Math.min(
+//         count,
+//         // 해당 부분의 누적 합을 이용하여 최소 변경 개수를 계산.
+//         prefixSum[i + K - 1][j + K - 1] -
+//           prefixSum[i + K - 1][j - 1] -
+//           prefixSum[i - 1][j + K - 1] +
+//           prefixSum[i - 1][j - 1]
+//       );
+//     }
+//   }
+
+//   return count; // 최소 변경 개수를 반환.
+// }
+
+//1753-최단경로
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+let input = fs.readFileSync(filePath).toString().trim().split("\n");
+
+class minHeap {
+  heapArray = [];
+  constructor() {
+    this.heapArray.push(null);
+  }
+
+  push(data) {
+    if (this.heapArray === null) {
+      this.heapArray = [];
+      this.heapArray.push(null);
+      this.heapArray.push(data);
+    } else {
+      this.heapArray.push(data);
+      let inserted_idx = this.heapArray.length - 1;
+      let parent_idx = parseInt(inserted_idx / 2);
+      while (inserted_idx > 1) {
+        if (this.heapArray[inserted_idx][1] < this.heapArray[parent_idx][1]) {
+          const tmp = this.heapArray[inserted_idx];
+          this.heapArray[inserted_idx] = this.heapArray[parent_idx];
+          this.heapArray[parent_idx] = tmp;
+          inserted_idx = parent_idx;
+          parent_idx = parseInt(parent_idx / 2);
+        } else {
+          break;
+        }
       }
-      // 누적 합을 계산하여 prefixSum 배열에 저장
-      prefixSum[i + 1][j + 1] =
-        prefixSum[i][j + 1] + prefixSum[i + 1][j] - prefixSum[i][j] + value;
+    }
+  }
+  move_down(pop_idx) {
+    const left_child = pop_idx * 2;
+    const right_child = pop_idx * 2 + 1;
+
+    if (left_child >= this.heapArray.length) {
+      return false;
+    } else if (right_child >= this.heapArray.length) {
+      if (this.heapArray[pop_idx][1] > this.heapArray[left_child][1]) {
+        return true;
+      }
+      return false;
+    } else {
+      if (this.heapArray[left_child][1] < this.heapArray[right_child][1]) {
+        if (this.heapArray[pop_idx][1] > this.heapArray[left_child][1]) {
+          return true;
+        }
+        return false;
+      } else {
+        if (this.heapArray[pop_idx][1] > this.heapArray[right_child][1]) {
+          return true;
+        }
+        return false;
+      }
     }
   }
 
-  // 보드에서 정사각형의 크기가 K인 모든 부분에서 최소 변경 개수를 계산
-  for (let i = 1; i <= N - K + 1; i++) {
-    for (let j = 1; j <= M - K + 1; j++) {
-      count = Math.min(
-        count,
-        // 해당 부분의 누적 합을 이용하여 최소 변경 개수를 계산.
-        prefixSum[i + K - 1][j + K - 1] -
-          prefixSum[i + K - 1][j - 1] -
-          prefixSum[i - 1][j + K - 1] +
-          prefixSum[i - 1][j - 1]
-      );
+  pop() {
+    if (this.heapArray === null) {
+      return null;
+    } else {
+      const return_data = this.heapArray[1];
+      this.heapArray[1] = this.heapArray[this.heapArray.length - 1];
+      this.heapArray.pop();
+      let popped_idx = 1;
+      while (this.move_down(popped_idx)) {
+        const left_child = popped_idx * 2;
+        const right_child = popped_idx * 2 + 1;
+        if (right_child >= this.heapArray.length) {
+          if (this.heapArray[popped_idx][1] > this.heapArray[left_child][1]) {
+            const tmp = this.heapArray[popped_idx];
+            this.heapArray[popped_idx] = this.heapArray[left_child];
+            this.heapArray[left_child] = tmp;
+            popped_idx = left_child;
+          }
+        } else {
+          if (this.heapArray[left_child][1] < this.heapArray[right_child][1]) {
+            if (this.heapArray[popped_idx][1] > this.heapArray[left_child][1]) {
+              const tmp = this.heapArray[popped_idx];
+              this.heapArray[popped_idx] = this.heapArray[left_child];
+              this.heapArray[left_child] = tmp;
+              popped_idx = left_child;
+            }
+          } else {
+            if (
+              this.heapArray[popped_idx][1] > this.heapArray[right_child][1]
+            ) {
+              const tmp = this.heapArray[popped_idx];
+              this.heapArray[popped_idx] = this.heapArray[right_child];
+              this.heapArray[right_child] = tmp;
+              popped_idx = right_child;
+            }
+          }
+        }
+      }
+      return return_data;
     }
   }
-
-  return count; // 최소 변경 개수를 반환.
 }
+
+const [v, e] = input.shift().split(" ").map(Number);
+const start = +input.shift();
+const graph = Array.from({ length: v + 1 }, () => []);
+const distance = Array.from({ length: v + 1 }, () => Infinity);
+const visited = Array.from({ length: v + 1 }, () => false);
+const pq = new minHeap();
+
+input.forEach(i => {
+  const [from, to, weight] = i.split(" ").map(Number);
+  graph[from].push([to, weight]);
+});
+
+distance[start] = 0;
+pq.push([start, 0]);
+
+while (pq.heapArray.length > 1) {
+  const [curNode, dist] = pq.pop();
+  if (visited[curNode]) continue;
+  
+  visited[curNode] = true;
+  for (let [nextNode, nextDistance] of graph[curNode]) {
+    if (distance[nextNode] > distance[curNode] + nextDistance) {
+      distance[nextNode] = nextDistance + distance[curNode];
+      pq.push([nextNode, distance[nextNode]]);
+    }
+  }
+}
+console.log(
+  distance
+    .map(i => (i === Infinity ? "INF" : i))
+    .slice(1)
+    .join("\n")
+);
