@@ -3261,137 +3261,253 @@ const e = require("express");
 // }
 
 //1753-최단경로
-const fs = require("fs");
-const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-let input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// let input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-class minHeap {
-  heapArray = [];
-  constructor() {
-    this.heapArray.push(null);
-  }
+// class minHeap {
+//   heapArray = [];
+//   constructor() {
+//     this.heapArray.push(null);
+//   }
 
-  push(data) {
-    if (this.heapArray === null) {
-      this.heapArray = [];
-      this.heapArray.push(null);
-      this.heapArray.push(data);
-    } else {
-      this.heapArray.push(data);
-      let inserted_idx = this.heapArray.length - 1;
-      let parent_idx = parseInt(inserted_idx / 2);
-      while (inserted_idx > 1) {
-        if (this.heapArray[inserted_idx][1] < this.heapArray[parent_idx][1]) {
-          const tmp = this.heapArray[inserted_idx];
-          this.heapArray[inserted_idx] = this.heapArray[parent_idx];
-          this.heapArray[parent_idx] = tmp;
-          inserted_idx = parent_idx;
-          parent_idx = parseInt(parent_idx / 2);
-        } else {
-          break;
-        }
-      }
-    }
-  }
-  move_down(pop_idx) {
-    const left_child = pop_idx * 2;
-    const right_child = pop_idx * 2 + 1;
+//   push(data) {
+//     if (this.heapArray === null) {
+//       this.heapArray = [];
+//       this.heapArray.push(null);
+//       this.heapArray.push(data);
+//     } else {
+//       this.heapArray.push(data);
+//       let inserted_idx = this.heapArray.length - 1;
+//       let parent_idx = parseInt(inserted_idx / 2);
+//       while (inserted_idx > 1) {
+//         if (this.heapArray[inserted_idx][1] < this.heapArray[parent_idx][1]) {
+//           const tmp = this.heapArray[inserted_idx];
+//           this.heapArray[inserted_idx] = this.heapArray[parent_idx];
+//           this.heapArray[parent_idx] = tmp;
+//           inserted_idx = parent_idx;
+//           parent_idx = parseInt(parent_idx / 2);
+//         } else {
+//           break;
+//         }
+//       }
+//     }
+//   }
+//   move_down(pop_idx) {
+//     const left_child = pop_idx * 2;
+//     const right_child = pop_idx * 2 + 1;
 
-    if (left_child >= this.heapArray.length) {
-      return false;
-    } else if (right_child >= this.heapArray.length) {
-      if (this.heapArray[pop_idx][1] > this.heapArray[left_child][1]) {
-        return true;
-      }
-      return false;
-    } else {
-      if (this.heapArray[left_child][1] < this.heapArray[right_child][1]) {
-        if (this.heapArray[pop_idx][1] > this.heapArray[left_child][1]) {
-          return true;
-        }
-        return false;
-      } else {
-        if (this.heapArray[pop_idx][1] > this.heapArray[right_child][1]) {
-          return true;
-        }
-        return false;
-      }
-    }
-  }
+//     if (left_child >= this.heapArray.length) {
+//       return false;
+//     } else if (right_child >= this.heapArray.length) {
+//       if (this.heapArray[pop_idx][1] > this.heapArray[left_child][1]) {
+//         return true;
+//       }
+//       return false;
+//     } else {
+//       if (this.heapArray[left_child][1] < this.heapArray[right_child][1]) {
+//         if (this.heapArray[pop_idx][1] > this.heapArray[left_child][1]) {
+//           return true;
+//         }
+//         return false;
+//       } else {
+//         if (this.heapArray[pop_idx][1] > this.heapArray[right_child][1]) {
+//           return true;
+//         }
+//         return false;
+//       }
+//     }
+//   }
 
-  pop() {
-    if (this.heapArray === null) {
-      return null;
-    } else {
-      const return_data = this.heapArray[1];
-      this.heapArray[1] = this.heapArray[this.heapArray.length - 1];
-      this.heapArray.pop();
-      let popped_idx = 1;
-      while (this.move_down(popped_idx)) {
-        const left_child = popped_idx * 2;
-        const right_child = popped_idx * 2 + 1;
-        if (right_child >= this.heapArray.length) {
-          if (this.heapArray[popped_idx][1] > this.heapArray[left_child][1]) {
-            const tmp = this.heapArray[popped_idx];
-            this.heapArray[popped_idx] = this.heapArray[left_child];
-            this.heapArray[left_child] = tmp;
-            popped_idx = left_child;
-          }
-        } else {
-          if (this.heapArray[left_child][1] < this.heapArray[right_child][1]) {
-            if (this.heapArray[popped_idx][1] > this.heapArray[left_child][1]) {
-              const tmp = this.heapArray[popped_idx];
-              this.heapArray[popped_idx] = this.heapArray[left_child];
-              this.heapArray[left_child] = tmp;
-              popped_idx = left_child;
-            }
-          } else {
-            if (
-              this.heapArray[popped_idx][1] > this.heapArray[right_child][1]
-            ) {
-              const tmp = this.heapArray[popped_idx];
-              this.heapArray[popped_idx] = this.heapArray[right_child];
-              this.heapArray[right_child] = tmp;
-              popped_idx = right_child;
-            }
-          }
-        }
-      }
-      return return_data;
-    }
-  }
-}
+//   pop() {
+//     if (this.heapArray === null) {
+//       return null;
+//     } else {
+//       const return_data = this.heapArray[1];
+//       this.heapArray[1] = this.heapArray[this.heapArray.length - 1];
+//       this.heapArray.pop();
+//       let popped_idx = 1;
+//       while (this.move_down(popped_idx)) {
+//         const left_child = popped_idx * 2;
+//         const right_child = popped_idx * 2 + 1;
+//         if (right_child >= this.heapArray.length) {
+//           if (this.heapArray[popped_idx][1] > this.heapArray[left_child][1]) {
+//             const tmp = this.heapArray[popped_idx];
+//             this.heapArray[popped_idx] = this.heapArray[left_child];
+//             this.heapArray[left_child] = tmp;
+//             popped_idx = left_child;
+//           }
+//         } else {
+//           if (this.heapArray[left_child][1] < this.heapArray[right_child][1]) {
+//             if (this.heapArray[popped_idx][1] > this.heapArray[left_child][1]) {
+//               const tmp = this.heapArray[popped_idx];
+//               this.heapArray[popped_idx] = this.heapArray[left_child];
+//               this.heapArray[left_child] = tmp;
+//               popped_idx = left_child;
+//             }
+//           } else {
+//             if (
+//               this.heapArray[popped_idx][1] > this.heapArray[right_child][1]
+//             ) {
+//               const tmp = this.heapArray[popped_idx];
+//               this.heapArray[popped_idx] = this.heapArray[right_child];
+//               this.heapArray[right_child] = tmp;
+//               popped_idx = right_child;
+//             }
+//           }
+//         }
+//       }
+//       return return_data;
+//     }
+//   }
+// }
 
-const [v, e] = input.shift().split(" ").map(Number);
-const start = +input.shift();
-const graph = Array.from({ length: v + 1 }, () => []);
-const distance = Array.from({ length: v + 1 }, () => Infinity);
-const visited = Array.from({ length: v + 1 }, () => false);
-const pq = new minHeap();
+// const [v, e] = input.shift().split(" ").map(Number);
+// const start = +input.shift();
+// const graph = Array.from({ length: v + 1 }, () => []);
+// const distance = Array.from({ length: v + 1 }, () => Infinity);
+// const visited = Array.from({ length: v + 1 }, () => false);
+// const pq = new minHeap();
 
-input.forEach(i => {
-  const [from, to, weight] = i.split(" ").map(Number);
-  graph[from].push([to, weight]);
-});
+// input.forEach(i => {
+//   const [from, to, weight] = i.split(" ").map(Number);
+//   graph[from].push([to, weight]);
+// });
 
-distance[start] = 0;
-pq.push([start, 0]);
+// distance[start] = 0;
+// pq.push([start, 0]);
 
-while (pq.heapArray.length > 1) {
-  const [curNode, dist] = pq.pop();
-  if (visited[curNode]) continue;
+// while (pq.heapArray.length > 1) {
+//   const [curNode, dist] = pq.pop();
+//   if (visited[curNode]) continue;
   
-  visited[curNode] = true;
-  for (let [nextNode, nextDistance] of graph[curNode]) {
-    if (distance[nextNode] > distance[curNode] + nextDistance) {
-      distance[nextNode] = nextDistance + distance[curNode];
-      pq.push([nextNode, distance[nextNode]]);
+//   visited[curNode] = true;
+//   for (let [nextNode, nextDistance] of graph[curNode]) {
+//     if (distance[nextNode] > distance[curNode] + nextDistance) {
+//       distance[nextNode] = nextDistance + distance[curNode];
+//       pq.push([nextNode, distance[nextNode]]);
+//     }
+//   }
+// }
+// console.log(
+//   distance
+//     .map(i => (i === Infinity ? "INF" : i))
+//     .slice(1)
+//     .join("\n")
+// );
+
+//1504-특정한 최단 경로
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  empty() {
+    if (this.heap.length == 0) {
+      return true;
+    }
+    return false;
+  }
+
+  swap(arr, x, y) {
+    let temp = arr[x];
+    arr[x] = arr[y];
+    arr[y] = temp;
+    return;
+  }
+
+
+  insert(value) {
+    this.heap.push(value);
+    this.bubbleUp();
+  }
+
+  bubbleUp() {
+    let currentIndex = this.heap.length - 1;
+
+    while (currentIndex > 0) {
+      const parentIndex = Math.floor((currentIndex - 1) / 2);
+      if (this.heap[parentIndex].cost <= this.heap[currentIndex].cost) break;
+      this.swap(this.heap, parentIndex, currentIndex)
+      currentIndex = parentIndex;
+    }
+  }
+
+
+  extractMin() {
+    if (this.heap.length == 1) {
+      return this.heap.pop();
+    }
+    const min = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.sinkDown(0);
+    return min
+  }
+
+  sinkDown(index) {
+    const leftIndex = 2 * index + 1;
+    const rightIndex = 2 * index + 2;
+    const length = this.heap.length;
+    let smallestIndex = index;
+
+    if (leftIndex < length && this.heap[leftIndex].cost < this.heap[smallestIndex].cost) {
+      smallestIndex = leftIndex;
+    }
+    if (rightIndex < length && this.heap[rightIndex].cost < this.heap[smallestIndex].cost) {
+      smallestIndex = rightIndex;
+    }
+    if (smallestIndex !== index) {
+      this.swap(this.heap, index, smallestIndex);
+      this.sinkDown(smallestIndex)
     }
   }
 }
-console.log(
-  distance
-    .map(i => (i === Infinity ? "INF" : i))
-    .slice(1)
-    .join("\n")
-);
+
+
+const fs = require('fs');
+const input = fs.readFileSync("./dev/stdin").toString().trim().split('\n').map(v => v.split(' ').map(v => +v));
+const [E, _] = input.shift();
+const [X, Y] = input.pop();
+const S = 1;
+
+let adj = Array.from(Array(E + 1), () => [])
+
+input.forEach(x => {
+  const [u, v, w] = x;
+  adj[u].push([v, w]);
+  adj[v].push([u, w]);
+})
+
+function route(s) {
+
+  let cost = new Array(E + 1).fill(Infinity);
+  cost[s] = 0;
+
+  let heap = new MinHeap();
+  heap.insert({ node: s, cost: 0 });
+
+  while (!heap.empty()) {
+    let now = heap.extractMin();
+    for (let i = 0; i < adj[now.node].length; i++) {
+      const [n, c] = adj[now.node][i];
+      if (cost[n] > now.cost + c) {
+        cost[n] = now.cost + c;
+        heap.insert({ node: n, cost: cost[n] })
+      }
+    }
+  }
+
+  return cost
+}
+
+const routeS = route(S);
+const routeX = route(X);
+const routeY = route(Y);
+
+const planA = routeS[X] + routeX[Y] + routeY[E];
+const planB = routeS[Y] + routeY[X] + routeX[E];
+if (planA == Infinity && planB == Infinity) {
+  console.log(-1)
+} else {
+  console.log(planA > planB ? planB : planA)
+}
