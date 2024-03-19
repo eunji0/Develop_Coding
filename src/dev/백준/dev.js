@@ -3397,117 +3397,153 @@ const e = require("express");
 // );
 
 //1504-특정한 최단 경로
-class MinHeap {
-  constructor() {
-    this.heap = [];
-  }
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
 
-  empty() {
-    if (this.heap.length == 0) {
-      return true;
-    }
-    return false;
-  }
+//   empty() {
+//     if (this.heap.length == 0) {
+//       return true;
+//     }
+//     return false;
+//   }
 
-  swap(arr, x, y) {
-    let temp = arr[x];
-    arr[x] = arr[y];
-    arr[y] = temp;
-    return;
-  }
-
-
-  insert(value) {
-    this.heap.push(value);
-    this.bubbleUp();
-  }
-
-  bubbleUp() {
-    let currentIndex = this.heap.length - 1;
-
-    while (currentIndex > 0) {
-      const parentIndex = Math.floor((currentIndex - 1) / 2);
-      if (this.heap[parentIndex].cost <= this.heap[currentIndex].cost) break;
-      this.swap(this.heap, parentIndex, currentIndex)
-      currentIndex = parentIndex;
-    }
-  }
+//   swap(arr, x, y) {
+//     let temp = arr[x];
+//     arr[x] = arr[y];
+//     arr[y] = temp;
+//     return;
+//   }
 
 
-  extractMin() {
-    if (this.heap.length == 1) {
-      return this.heap.pop();
-    }
-    const min = this.heap[0];
-    this.heap[0] = this.heap.pop();
-    this.sinkDown(0);
-    return min
-  }
+//   insert(value) {
+//     this.heap.push(value);
+//     this.bubbleUp();
+//   }
 
-  sinkDown(index) {
-    const leftIndex = 2 * index + 1;
-    const rightIndex = 2 * index + 2;
-    const length = this.heap.length;
-    let smallestIndex = index;
+//   bubbleUp() {
+//     let currentIndex = this.heap.length - 1;
 
-    if (leftIndex < length && this.heap[leftIndex].cost < this.heap[smallestIndex].cost) {
-      smallestIndex = leftIndex;
-    }
-    if (rightIndex < length && this.heap[rightIndex].cost < this.heap[smallestIndex].cost) {
-      smallestIndex = rightIndex;
-    }
-    if (smallestIndex !== index) {
-      this.swap(this.heap, index, smallestIndex);
-      this.sinkDown(smallestIndex)
-    }
-  }
-}
+//     while (currentIndex > 0) {
+//       const parentIndex = Math.floor((currentIndex - 1) / 2);
+//       if (this.heap[parentIndex].cost <= this.heap[currentIndex].cost) break;
+//       this.swap(this.heap, parentIndex, currentIndex)
+//       currentIndex = parentIndex;
+//     }
+//   }
 
 
-const fs = require('fs');
-const input = fs.readFileSync("./dev/stdin").toString().trim().split('\n').map(v => v.split(' ').map(v => +v));
-const [E, _] = input.shift();
-const [X, Y] = input.pop();
-const S = 1;
+//   extractMin() {
+//     if (this.heap.length == 1) {
+//       return this.heap.pop();
+//     }
+//     const min = this.heap[0];
+//     this.heap[0] = this.heap.pop();
+//     this.sinkDown(0);
+//     return min
+//   }
 
-let adj = Array.from(Array(E + 1), () => [])
+//   sinkDown(index) {
+//     const leftIndex = 2 * index + 1;
+//     const rightIndex = 2 * index + 2;
+//     const length = this.heap.length;
+//     let smallestIndex = index;
 
-input.forEach(x => {
-  const [u, v, w] = x;
-  adj[u].push([v, w]);
-  adj[v].push([u, w]);
-})
+//     if (leftIndex < length && this.heap[leftIndex].cost < this.heap[smallestIndex].cost) {
+//       smallestIndex = leftIndex;
+//     }
+//     if (rightIndex < length && this.heap[rightIndex].cost < this.heap[smallestIndex].cost) {
+//       smallestIndex = rightIndex;
+//     }
+//     if (smallestIndex !== index) {
+//       this.swap(this.heap, index, smallestIndex);
+//       this.sinkDown(smallestIndex)
+//     }
+//   }
+// }
 
-function route(s) {
 
-  let cost = new Array(E + 1).fill(Infinity);
-  cost[s] = 0;
+// const fs = require('fs');
+// const input = fs.readFileSync("./dev/stdin").toString().trim().split('\n').map(v => v.split(' ').map(v => +v));
+// const [E, _] = input.shift();
+// const [X, Y] = input.pop();
+// const S = 1;
 
-  let heap = new MinHeap();
-  heap.insert({ node: s, cost: 0 });
+// let adj = Array.from(Array(E + 1), () => [])
 
-  while (!heap.empty()) {
-    let now = heap.extractMin();
-    for (let i = 0; i < adj[now.node].length; i++) {
-      const [n, c] = adj[now.node][i];
-      if (cost[n] > now.cost + c) {
-        cost[n] = now.cost + c;
-        heap.insert({ node: n, cost: cost[n] })
+// input.forEach(x => {
+//   const [u, v, w] = x;
+//   adj[u].push([v, w]);
+//   adj[v].push([u, w]);
+// })
+
+// function route(s) {
+
+//   let cost = new Array(E + 1).fill(Infinity);
+//   cost[s] = 0;
+
+//   let heap = new MinHeap();
+//   heap.insert({ node: s, cost: 0 });
+
+//   while (!heap.empty()) {
+//     let now = heap.extractMin();
+//     for (let i = 0; i < adj[now.node].length; i++) {
+//       const [n, c] = adj[now.node][i];
+//       if (cost[n] > now.cost + c) {
+//         cost[n] = now.cost + c;
+//         heap.insert({ node: n, cost: cost[n] })
+//       }
+//     }
+//   }
+
+//   return cost
+// }
+
+// const routeS = route(S);
+// const routeX = route(X);
+// const routeY = route(Y);
+
+// const planA = routeS[X] + routeX[Y] + routeY[E];
+// const planB = routeS[Y] + routeY[X] + routeX[E];
+// if (planA == Infinity && planB == Infinity) {
+//   console.log(-1)
+// } else {
+//   console.log(planA > planB ? planB : planA)
+// }
+
+//13549-숨바꼭질3
+const sol = (input) => {
+  const [N, K] = input.split(" ").map(Number);
+  const visit = Array.from({ length: 100100 }, () => 0);
+
+  function bfs(N) {
+    const queue = [];
+    queue.push([N, 0]);
+    visit[N] = 1;
+    while (queue.length) {
+      const [cur, time] = queue.shift();
+      if (cur === K) return time;
+      for (let next of [cur * 2, cur - 1, cur + 1]) {
+        if (!visit[next] && next >= 0 && next <= 100000) {
+          visit[next] = 1;
+          if (next == cur * 2) {
+            queue.unshift([next, time]); // 2X로 이동할 때는 시간을 증가시키지 않고, 우선순위를 반영하여 큐의 맨 앞에 넣어준다.
+          } else {
+            queue.push([next, time + 1]); // X-1, X+1로 이동할 때는 시간을 증가시키고, 큐에 순서대로 넣어준다.
+          }
+        }
       }
     }
   }
+  return bfs(N);
+};
 
-  return cost
-}
-
-const routeS = route(S);
-const routeX = route(X);
-const routeY = route(Y);
-
-const planA = routeS[X] + routeX[Y] + routeY[E];
-const planB = routeS[Y] + routeY[X] + routeX[E];
-if (planA == Infinity && planB == Infinity) {
-  console.log(-1)
-} else {
-  console.log(planA > planB ? planB : planA)
-}
+require("readline")
+  .createInterface(process.stdin, process.stdout)
+  .on("line", (line) => {
+    console.log(sol(line));
+  })
+  .on("close", () => {
+    process.exit();
+  });
