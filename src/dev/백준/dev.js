@@ -3513,37 +3513,78 @@ const e = require("express");
 // }
 
 //13549-숨바꼭질3
-const sol = (input) => {
-  const [N, K] = input.split(" ").map(Number);
-  const visit = Array.from({ length: 100100 }, () => 0);
+// const sol = (input) => {
+//   const [N, K] = input.split(" ").map(Number);
+//   const visit = Array.from({ length: 100100 }, () => 0);
 
-  function bfs(N) {
-    const queue = [];
-    queue.push([N, 0]);
-    visit[N] = 1;
-    while (queue.length) {
-      const [cur, time] = queue.shift();
-      if (cur === K) return time;
-      for (let next of [cur * 2, cur - 1, cur + 1]) {
-        if (!visit[next] && next >= 0 && next <= 100000) {
-          visit[next] = 1;
-          if (next == cur * 2) {
-            queue.unshift([next, time]); // 2X로 이동할 때는 시간을 증가시키지 않고, 우선순위를 반영하여 큐의 맨 앞에 넣어준다.
-          } else {
-            queue.push([next, time + 1]); // X-1, X+1로 이동할 때는 시간을 증가시키고, 큐에 순서대로 넣어준다.
-          }
-        }
+//   function bfs(N) {
+//     const queue = [];
+//     queue.push([N, 0]);
+//     visit[N] = 1;
+//     while (queue.length) {
+//       const [cur, time] = queue.shift();
+//       if (cur === K) return time;
+//       for (let next of [cur * 2, cur - 1, cur + 1]) {
+//         if (!visit[next] && next >= 0 && next <= 100000) {
+//           visit[next] = 1;
+//           if (next == cur * 2) {
+//             queue.unshift([next, time]); // 2X로 이동할 때는 시간을 증가시키지 않고, 우선순위를 반영하여 큐의 맨 앞에 넣어준다.
+//           } else {
+//             queue.push([next, time + 1]); // X-1, X+1로 이동할 때는 시간을 증가시키고, 큐에 순서대로 넣어준다.
+//           }
+//         }
+//       }
+//     }
+//   }
+//   return bfs(N);
+// };
+
+// require("readline")
+//   .createInterface(process.stdin, process.stdout)
+//   .on("line", (line) => {
+//     console.log(sol(line));
+//   })
+//   .on("close", () => {
+//     process.exit();
+//   });
+
+//9370-미확인 도착지
+function dijkstra(start, graph) {
+  heap.push([0, start]);
+  dist[start] = 0;
+
+  while (heap.size() > 0) {
+    const [curDist, curNode] = heap.pop();
+
+    if (curDist > dist[curNode]) continue;
+    
+    for (const [nextNode, weight] of graph[curNode]) {
+      const nextDist = curDist + weight;
+
+      if (nextDist < dist[nextNode]) {
+        dist[nextNode] = nextDist;
+        heap.push([nextDist, nextNode]);
       }
     }
   }
-  return bfs(N);
-};
 
-require("readline")
-  .createInterface(process.stdin, process.stdout)
-  .on("line", (line) => {
-    console.log(sol(line));
-  })
-  .on("close", () => {
-    process.exit();
-  });
+  return dist;
+}
+
+const answer = [];
+
+// 각 좌표를 출발지로 하는 dist를 생성한다.
+const distS = dijkstra(s, graph);
+const distG = dijkstra(g, graph);
+const distH = dijkstra(h, graph);
+
+// 입력된 후보 값들을 검증한다.
+for (const goal of goalList) {
+	const fromS = distS[goal];
+  	const gToH = distS[g] + distG[h] + distH[goal];
+  	const hToG = distS[h] + distH[g] + distG[goal];
+  	if (fromS != INF && (fromS === gToA || fromS === hToG))
+      answer.push(goal);
+}
+
+console.log(answer.sort().join(' '));
