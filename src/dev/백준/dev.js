@@ -6,8 +6,6 @@
 // console.log("      |");
 // console.log("      |");
 
-const e = require("express");
-
 //3003
 // let fs = require("fs");
 // let input = fs
@@ -3585,3 +3583,157 @@ const e = require("express");
 // }
 
 // console.log(answer.sort().join(' '));
+
+//1753-최단경로
+
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+let input = fs.readFileSync(filePath).toString().trim().split("\n");
+
+class minHeap {
+  heapArray = [];
+  constructor() {
+    this.heapArray.push(null);
+  }
+
+  push(data) {
+    if (this.heapArray === null) {
+      this.heapArray = [];
+      this.heapArray.push(null);
+      this.heapArray.push(data);
+    } else {
+      this.heapArray.push(data);
+      let inserted_idx = this.heapArray.length - 1;
+      let parent_idx = parseInt(inserted_idx / 2);
+      while (inserted_idx > 1) {
+        if (this.heapArray[inserted_idx][1] < this.heapArray[parent_idx][1]) {
+          const tmp = this.heapArray[inserted_idx];
+          this.heapArray[inserted_idx] = this.heapArray[parent_idx];
+          this.heapArray[parent_idx] = tmp;
+          inserted_idx = parent_idx;
+          parent_idx = parseInt(parent_idx / 2);
+        } else {
+          break;
+        }
+      }
+    }
+  }
+  move_down(pop_idx) {
+    const left_child = pop_idx * 2;
+    const right_child = pop_idx * 2 + 1;
+
+    if (left_child >= this.heapArray.length) {
+      return false;
+    } else if (right_child >= this.heapArray.length) {
+      if (this.heapArray[pop_idx][1] > this.heapArray[left_child][1]) {
+        return true;
+      }
+      return false;
+    } else {
+      if (this.heapArray[left_child][1] < this.heapArray[right_child][1]) {
+        if (this.heapArray[pop_idx][1] > this.heapArray[left_child][1]) {
+          return true;
+        }
+        return false;
+      } else {
+        if (this.heapArray[pop_idx][1] > this.heapArray[right_child][1]) {
+          return true;
+        }
+        return false;
+      }
+    }
+  }
+
+  pop() {
+    if (this.heapArray === null) {
+      return null;
+    } else {
+      const return_data = this.heapArray[1];
+      this.heapArray[1] = this.heapArray[this.heapArray.length - 1];
+      this.heapArray.pop();
+      let popped_idx = 1;
+      while (this.move_down(popped_idx)) {
+        const left_child = popped_idx * 2;
+        const right_child = popped_idx * 2 + 1;
+        if (right_child >= this.heapArray.length) {
+          if (this.heapArray[popped_idx][1] > this.heapArray[left_child][1]) {
+            const tmp = this.heapArray[popped_idx];
+            this.heapArray[popped_idx] = this.heapArray[left_child];
+            this.heapArray[left_child] = tmp;
+            popped_idx = left_child;
+          }
+        } else {
+          if (this.heapArray[left_child][1] < this.heapArray[right_child][1]) {
+            if (this.heapArray[popped_idx][1] > this.heapArray[left_child][1]) {
+              const tmp = this.heapArray[popped_idx];
+              this.heapArray[popped_idx] = this.heapArray[left_child];
+              this.heapArray[left_child] = tmp;
+              popped_idx = left_child;
+            }
+          } else {
+            if (
+              this.heapArray[popped_idx][1] > this.heapArray[right_child][1]
+            ) {
+              const tmp = this.heapArray[popped_idx];
+              this.heapArray[popped_idx] = this.heapArray[right_child];
+              this.heapArray[right_child] = tmp;
+              popped_idx = right_child;
+            }
+          }
+        }
+      }
+      return return_data;
+    }
+  }
+}
+
+// 입력에서 정점의 개수와 간선의 개수를 읽어옵니다.
+const [v, e] = input.shift().split(" ").map(Number);
+// 시작 노드를 읽어옵니다.
+const start = +input.shift();
+// 그래프를 표현할 배열을 생성합니다.
+const graph = Array.from({ length: v + 1 }, () => []);
+// 각 노드로부터의 최단 거리를 저장할 배열을 생성하고 모두 무한대로 초기화합니다.
+const distance = Array.from({ length: v + 1 }, () => Infinity);
+// 각 노드의 방문 여부를 저장할 배열을 생성하고 모두 방문하지 않았음을 나타내는 false로 초기화합니다.
+const visited = Array.from({ length: v + 1 }, () => false);
+// 최소 힙을 생성합니다.
+const pq = new minHeap();
+
+// 입력된 간선 정보를 이용하여 그래프를 생성합니다.
+input.forEach((i) => {
+  const [from, to, weight] = i.split(" ").map(Number);
+  // 그래프의 from 노드에 [to, weight] 형태로 연결된 노드와 가중치를 추가합니다.
+  graph[from].push([to, weight]);
+});
+
+// 시작 노드의 거리를 0으로 설정하고 최소 힙에 시작 노드와 거리 0을 추가합니다.
+distance[start] = 0;
+pq.push([start, 0]);
+
+// 최소 힙이 비어있지 않은 동안 다음을 반복합니다.
+while (pq.heapArray.length > 1) {
+  // 최소 힙에서 노드와 해당 노드까지의 거리를 추출합니다.
+  const [curNode, dist] = pq.pop();
+  // 해당 노드가 이미 방문한 노드라면 반복문의 처음으로 돌아갑니다.
+  if (visited[curNode]) continue;
+
+  // 해당 노드를 방문 처리합니다.
+  visited[curNode] = true;
+  // 해당 노드와 연결된 모든 노드들에 대해 다음을 수행합니다.
+  for (let [nextNode, nextDistance] of graph[curNode]) {
+    // 다음 노드까지의 거리가 현재까지의 거리보다 짧다면 거리를 업데이트하고 최소 힙에 추가합니다.
+    if (distance[nextNode] > distance[curNode] + nextDistance) {
+      distance[nextNode] = nextDistance + distance[curNode];
+      pq.push([nextNode, distance[nextNode]]);
+    }
+  }
+}
+
+// 계산된 최단 거리를 출력합니다.
+console.log(
+  distance
+    .map((i) => (i === Infinity ? "INF" : i))
+    .slice(1)
+    .join("\n")
+);
