@@ -3380,7 +3380,7 @@ const e = require("express");
 // while (pq.heapArray.length > 1) {
 //   const [curNode, dist] = pq.pop();
 //   if (visited[curNode]) continue;
-  
+
 //   visited[curNode] = true;
 //   for (let [nextNode, nextDistance] of graph[curNode]) {
 //     if (distance[nextNode] > distance[curNode] + nextDistance) {
@@ -3416,7 +3416,6 @@ const e = require("express");
 //     return;
 //   }
 
-
 //   insert(value) {
 //     this.heap.push(value);
 //     this.bubbleUp();
@@ -3432,7 +3431,6 @@ const e = require("express");
 //       currentIndex = parentIndex;
 //     }
 //   }
-
 
 //   extractMin() {
 //     if (this.heap.length == 1) {
@@ -3462,7 +3460,6 @@ const e = require("express");
 //     }
 //   }
 // }
-
 
 // const fs = require('fs');
 // const input = fs.readFileSync("./dev/stdin").toString().trim().split('\n').map(v => v.split(' ').map(v => +v));
@@ -3549,42 +3546,42 @@ const e = require("express");
 //   });
 
 //9370-미확인 도착지
-function dijkstra(start, graph) {
-  heap.push([0, start]);
-  dist[start] = 0;
+// function dijkstra(start, graph) {
+//   heap.push([0, start]);
+//   dist[start] = 0;
 
-  while (heap.size() > 0) {
-    const [curDist, curNode] = heap.pop();
+//   while (heap.size() > 0) {
+//     const [curDist, curNode] = heap.pop();
 
-    if (curDist > dist[curNode]) continue;
-    
-    for (const [nextNode, weight] of graph[curNode]) {
-      const nextDist = curDist + weight;
+//     if (curDist > dist[curNode]) continue;
 
-      if (nextDist < dist[nextNode]) {
-        dist[nextNode] = nextDist;
-        heap.push([nextDist, nextNode]);
-      }
-    }
-  }
+//     for (const [nextNode, weight] of graph[curNode]) {
+//       const nextDist = curDist + weight;
 
-  return dist;
-}
+//       if (nextDist < dist[nextNode]) {
+//         dist[nextNode] = nextDist;
+//         heap.push([nextDist, nextNode]);
+//       }
+//     }
+//   }
 
-const answer = [];
+//   return dist;
+// }
 
-// 각 좌표를 출발지로 하는 dist를 생성한다.
-const distS = dijkstra(s, graph);
-const distG = dijkstra(g, graph);
-const distH = dijkstra(h, graph);
+// const answer = [];
 
-// 입력된 후보 값들을 검증한다.
-for (const goal of goalList) {
-	const fromS = distS[goal];
-  	const gToH = distS[g] + distG[h] + distH[goal];
-  	const hToG = distS[h] + distH[g] + distG[goal];
-  	if (fromS != INF && (fromS === gToA || fromS === hToG))
-      answer.push(goal);
-}
+// // 각 좌표를 출발지로 하는 dist를 생성한다.
+// const distS = dijkstra(s, graph);
+// const distG = dijkstra(g, graph);
+// const distH = dijkstra(h, graph);
 
-console.log(answer.sort().join(' '));
+// // 입력된 후보 값들을 검증한다.
+// for (const goal of goalList) {
+// 	const fromS = distS[goal];
+//   	const gToH = distS[g] + distG[h] + distH[goal];
+//   	const hToG = distS[h] + distH[g] + distG[goal];
+//   	if (fromS != INF && (fromS === gToA || fromS === hToG))
+//       answer.push(goal);
+// }
+
+// console.log(answer.sort().join(' '));
