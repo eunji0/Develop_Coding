@@ -3586,106 +3586,106 @@
 
 //1753-최단경로
 
-const fs = require("fs");
-const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-let input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// let input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-class minHeap {
-  heapArray = [];
-  constructor() {
-    this.heapArray.push(null);
-  }
+// class minHeap {
+//   heapArray = [];
+//   constructor() {
+//     this.heapArray.push(null);
+//   }
 
-  push(data) {
-    if (this.heapArray === null) {
-      this.heapArray = [];
-      this.heapArray.push(null);
-      this.heapArray.push(data);
-    } else {
-      this.heapArray.push(data);
-      let inserted_idx = this.heapArray.length - 1;
-      let parent_idx = parseInt(inserted_idx / 2);
-      while (inserted_idx > 1) {
-        if (this.heapArray[inserted_idx][1] < this.heapArray[parent_idx][1]) {
-          const tmp = this.heapArray[inserted_idx];
-          this.heapArray[inserted_idx] = this.heapArray[parent_idx];
-          this.heapArray[parent_idx] = tmp;
-          inserted_idx = parent_idx;
-          parent_idx = parseInt(parent_idx / 2);
-        } else {
-          break;
-        }
-      }
-    }
-  }
-  move_down(pop_idx) {
-    const left_child = pop_idx * 2;
-    const right_child = pop_idx * 2 + 1;
+//   push(data) {
+//     if (this.heapArray === null) {
+//       this.heapArray = [];
+//       this.heapArray.push(null);
+//       this.heapArray.push(data);
+//     } else {
+//       this.heapArray.push(data);
+//       let inserted_idx = this.heapArray.length - 1;
+//       let parent_idx = parseInt(inserted_idx / 2);
+//       while (inserted_idx > 1) {
+//         if (this.heapArray[inserted_idx][1] < this.heapArray[parent_idx][1]) {
+//           const tmp = this.heapArray[inserted_idx];
+//           this.heapArray[inserted_idx] = this.heapArray[parent_idx];
+//           this.heapArray[parent_idx] = tmp;
+//           inserted_idx = parent_idx;
+//           parent_idx = parseInt(parent_idx / 2);
+//         } else {
+//           break;
+//         }
+//       }
+//     }
+//   }
+//   move_down(pop_idx) {
+//     const left_child = pop_idx * 2;
+//     const right_child = pop_idx * 2 + 1;
 
-    if (left_child >= this.heapArray.length) {
-      return false;
-    } else if (right_child >= this.heapArray.length) {
-      if (this.heapArray[pop_idx][1] > this.heapArray[left_child][1]) {
-        return true;
-      }
-      return false;
-    } else {
-      if (this.heapArray[left_child][1] < this.heapArray[right_child][1]) {
-        if (this.heapArray[pop_idx][1] > this.heapArray[left_child][1]) {
-          return true;
-        }
-        return false;
-      } else {
-        if (this.heapArray[pop_idx][1] > this.heapArray[right_child][1]) {
-          return true;
-        }
-        return false;
-      }
-    }
-  }
+//     if (left_child >= this.heapArray.length) {
+//       return false;
+//     } else if (right_child >= this.heapArray.length) {
+//       if (this.heapArray[pop_idx][1] > this.heapArray[left_child][1]) {
+//         return true;
+//       }
+//       return false;
+//     } else {
+//       if (this.heapArray[left_child][1] < this.heapArray[right_child][1]) {
+//         if (this.heapArray[pop_idx][1] > this.heapArray[left_child][1]) {
+//           return true;
+//         }
+//         return false;
+//       } else {
+//         if (this.heapArray[pop_idx][1] > this.heapArray[right_child][1]) {
+//           return true;
+//         }
+//         return false;
+//       }
+//     }
+//   }
 
-  pop() {
-    if (this.heapArray === null) {
-      return null;
-    } else {
-      const return_data = this.heapArray[1];
-      this.heapArray[1] = this.heapArray[this.heapArray.length - 1];
-      this.heapArray.pop();
-      let popped_idx = 1;
-      while (this.move_down(popped_idx)) {
-        const left_child = popped_idx * 2;
-        const right_child = popped_idx * 2 + 1;
-        if (right_child >= this.heapArray.length) {
-          if (this.heapArray[popped_idx][1] > this.heapArray[left_child][1]) {
-            const tmp = this.heapArray[popped_idx];
-            this.heapArray[popped_idx] = this.heapArray[left_child];
-            this.heapArray[left_child] = tmp;
-            popped_idx = left_child;
-          }
-        } else {
-          if (this.heapArray[left_child][1] < this.heapArray[right_child][1]) {
-            if (this.heapArray[popped_idx][1] > this.heapArray[left_child][1]) {
-              const tmp = this.heapArray[popped_idx];
-              this.heapArray[popped_idx] = this.heapArray[left_child];
-              this.heapArray[left_child] = tmp;
-              popped_idx = left_child;
-            }
-          } else {
-            if (
-              this.heapArray[popped_idx][1] > this.heapArray[right_child][1]
-            ) {
-              const tmp = this.heapArray[popped_idx];
-              this.heapArray[popped_idx] = this.heapArray[right_child];
-              this.heapArray[right_child] = tmp;
-              popped_idx = right_child;
-            }
-          }
-        }
-      }
-      return return_data;
-    }
-  }
-}
+//   pop() {
+//     if (this.heapArray === null) {
+//       return null;
+//     } else {
+//       const return_data = this.heapArray[1];
+//       this.heapArray[1] = this.heapArray[this.heapArray.length - 1];
+//       this.heapArray.pop();
+//       let popped_idx = 1;
+//       while (this.move_down(popped_idx)) {
+//         const left_child = popped_idx * 2;
+//         const right_child = popped_idx * 2 + 1;
+//         if (right_child >= this.heapArray.length) {
+//           if (this.heapArray[popped_idx][1] > this.heapArray[left_child][1]) {
+//             const tmp = this.heapArray[popped_idx];
+//             this.heapArray[popped_idx] = this.heapArray[left_child];
+//             this.heapArray[left_child] = tmp;
+//             popped_idx = left_child;
+//           }
+//         } else {
+//           if (this.heapArray[left_child][1] < this.heapArray[right_child][1]) {
+//             if (this.heapArray[popped_idx][1] > this.heapArray[left_child][1]) {
+//               const tmp = this.heapArray[popped_idx];
+//               this.heapArray[popped_idx] = this.heapArray[left_child];
+//               this.heapArray[left_child] = tmp;
+//               popped_idx = left_child;
+//             }
+//           } else {
+//             if (
+//               this.heapArray[popped_idx][1] > this.heapArray[right_child][1]
+//             ) {
+//               const tmp = this.heapArray[popped_idx];
+//               this.heapArray[popped_idx] = this.heapArray[right_child];
+//               this.heapArray[right_child] = tmp;
+//               popped_idx = right_child;
+//             }
+//           }
+//         }
+//       }
+//       return return_data;
+//     }
+//   }
+// }
 
 // // 입력에서 정점의 개수와 간선의 개수를 읽어옵니다.
 // const [v, e] = input.shift().split(" ").map(Number);
@@ -3737,3 +3737,31 @@ class minHeap {
 //     .slice(1)
 //     .join("\n")
 // );
+
+//2630-색종이 만들기
+const input = require("fs").readFileSync("/dev/stdin").toString().trim().split("\n");
+const n = +input[0];
+const paper = input.slice(1).map(v => v.split(" ").map(vv => +vv));
+const countPaper = n => {
+    const count = [0, 0];
+    const recursion = (n, x, y) => {
+        let total = 0;
+        for(let i=0; i<n; i++) {
+            for(let j=0; j<n; j++) {
+                total += paper[y+j][x+i];
+            }
+        }
+        if (total === 0) count[0]++;
+        else if (total === n*n) count[1]++;
+        else {
+            n /= 2;
+            recursion(n, x, y);
+            recursion(n, x+n, y);
+            recursion(n, x, y+n);
+            recursion(n, x+n, y+n);
+        }
+    }
+    recursion(n, 0, 0);
+    console.log(count.join("\n"));
+};
+countPaper(n);
