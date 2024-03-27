@@ -3795,37 +3795,73 @@
 // console.log(max);
 
 //1992-쿼드트리
+// const input = require("fs")
+//   .readFileSync("/dev/stdin")
+//   .toString()
+//   .trim()
+//   .split("\n");
+// const n = +input[0];
+// const screen = input.slice(1).map((v) => v.split("").map((vv) => +vv));
+
+// const genQuadTree = (n) => {
+//   const quadTree = [];
+//   const recursion = (n, x, y) => {
+//     let total = 0;
+//     for (let i = 0; i < n; i++) {
+//       for (let j = 0; j < n; j++) {
+//         total += screen[y + j][x + i];
+//       }
+//     }
+//     if (total === 0) quadTree.push("0");
+//     else if (total === n * n) quadTree.push("1");
+//     else {
+//       n /= 2;
+//       quadTree.push("(");
+//       recursion(n, x, y);
+//       recursion(n, x + n, y);
+//       recursion(n, x, y + n);
+//       recursion(n, x + n, y + n);
+//       quadTree.push(")");
+//     }
+//   };
+//   recursion(n, 0, 0);
+//   console.log(quadTree.join(""));
+// };
+
+// genQuadTree(n);
+
+//1780-종이의 개수
 const input = require("fs")
   .readFileSync("/dev/stdin")
   .toString()
   .trim()
   .split("\n");
 const n = +input[0];
-const screen = input.slice(1).map((v) => v.split("").map((vv) => +vv));
+const paper = input.slice(1).map((v) => v.split(" ").map((vv) => +vv));
 
-const genQuadTree = (n) => {
-  const quadTree = [];
+const countPaper = (n) => {
+  const count = [0, 0, 0];
   const recursion = (n, x, y) => {
-    let total = 0;
+    const num = paper[y][x];
+    let numCount = 0;
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) {
-        total += screen[y + j][x + i];
+        if (paper[y + j][x + i] === num) numCount++;
+        else break;
       }
     }
-    if (total === 0) quadTree.push("0");
-    else if (total === n * n) quadTree.push("1");
+    if (numCount === n * n) count[num + 1]++;
     else {
-      n /= 2;
-      quadTree.push("(");
-      recursion(n, x, y);
-      recursion(n, x + n, y);
-      recursion(n, x, y + n);
-      recursion(n, x + n, y + n);
-      quadTree.push(")");
+      n /= 3;
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          recursion(n, x + i * n, y + j * n);
+        }
+      }
     }
   };
   recursion(n, 0, 0);
-  console.log(quadTree.join(""));
+  console.log(count.join("\n"));
 };
 
-genQuadTree(n);
+countPaper(n);
