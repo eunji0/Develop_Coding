@@ -3585,7 +3585,6 @@
 // console.log(answer.sort().join(' '));
 
 //1753-최단경로
-
 // const fs = require("fs");
 // const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 // let input = fs.readFileSync(filePath).toString().trim().split("\n");
@@ -3831,37 +3830,74 @@
 // genQuadTree(n);
 
 //1780-종이의 개수
-const input = require("fs")
-  .readFileSync("/dev/stdin")
-  .toString()
-  .trim()
-  .split("\n");
-const n = +input[0];
-const paper = input.slice(1).map((v) => v.split(" ").map((vv) => +vv));
+// const input = require("fs")
+//   .readFileSync("/dev/stdin")
+//   .toString()
+//   .trim()
+//   .split("\n");
+// const n = +input[0];
+// const paper = input.slice(1).map((v) => v.split(" ").map((vv) => +vv));
 
-const countPaper = (n) => {
-  const count = [0, 0, 0];
-  const recursion = (n, x, y) => {
-    const num = paper[y][x];
-    let numCount = 0;
-    for (let i = 0; i < n; i++) {
-      for (let j = 0; j < n; j++) {
-        if (paper[y + j][x + i] === num) numCount++;
-        else break;
+// const countPaper = (n) => {
+//   const count = [0, 0, 0];
+//   const recursion = (n, x, y) => {
+//     const num = paper[y][x];
+//     let numCount = 0;
+//     for (let i = 0; i < n; i++) {
+//       for (let j = 0; j < n; j++) {
+//         if (paper[y + j][x + i] === num) numCount++;
+//         else break;
+//       }
+//     }
+//     if (numCount === n * n) count[num + 1]++;
+//     else {
+//       n /= 3;
+//       for (let i = 0; i < 3; i++) {
+//         for (let j = 0; j < 3; j++) {
+//           recursion(n, x + i * n, y + j * n);
+//         }
+//       }
+//     }
+//   };
+//   recursion(n, 0, 0);
+//   console.log(count.join("\n"));
+// };
+
+// countPaper(n);
+
+//백트래킹
+//15649-N과 M (1)
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+const input = fs.readFileSync(filePath).toString().trim();
+const [n, m]=input.split(' ').map(Number);
+
+function solution(n, m){
+  const seq = [...Array(m)].fill(0);
+  const visited = [...Array(n)].fill(false);
+  let result = "";
+  
+  function dfs(k) {
+    if (k === m) {
+      const arr = [];
+      for (let i=0; i<m; i++) {
+          arr.push(seq[i]);
+      }
+      return result += `${arr.join(' ')}\n`;
+  }
+
+    for(let i=1; i<=n; i++){
+      if(!visited[i]){
+        seq[k]=i;
+        visited[i]=true;
+        dfs(k+1);
+        visited[i]=false;
       }
     }
-    if (numCount === n * n) count[num + 1]++;
-    else {
-      n /= 3;
-      for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-          recursion(n, x + i * n, y + j * n);
-        }
-      }
-    }
-  };
-  recursion(n, 0, 0);
-  console.log(count.join("\n"));
-};
+  }
+  dfs(0);
+  return result
+}
 
-countPaper(n);
+console.log(solution(n, m))
+
