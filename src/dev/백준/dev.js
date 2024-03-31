@@ -3904,6 +3904,42 @@
 // console.log(solution(n, m))
 
 //15650-N과 M (2)
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim();
+// const [n, m] = input.split(' ').map(Number)
+
+// function solution(n, m){
+//   let seq = [...Array(m)].fill(0);
+//   let visited = [...Array(n)].fill(false);
+//   let result = '';
+
+//   function dfs(k){
+//     if(k===m){
+//       let arr = [];
+//       for(let i=0; i<m; i++){
+//         arr.push(seq[i])
+//       }
+//       return result+=`${arr.join(' ')}\n`
+//     }
+
+//     for(let i=1; i<=n; i++){
+//       if(!visited[i] && (k===0||seq[k-1]<i)){
+//         seq[k]=i;
+//         visited[i]=true;
+//         dfs(k+1);
+//         visited[i]=false;
+//       }
+//     }
+//   }
+
+//   dfs(0)
+//   return result
+// }
+
+// console.log(solution(n, m))
+
+//15651-N과 M (3) 
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim();
@@ -3911,7 +3947,6 @@ const [n, m] = input.split(' ').map(Number)
 
 function solution(n, m){
   let seq = [...Array(m)].fill(0);
-  let visited = [...Array(n)].fill(false);
   let result = '';
 
   function dfs(k){
@@ -3920,21 +3955,18 @@ function solution(n, m){
       for(let i=0; i<m; i++){
         arr.push(seq[i])
       }
+
       return result+=`${arr.join(' ')}\n`
     }
 
     for(let i=1; i<=n; i++){
-      if(!visited[i] && (k===0||seq[k-1]<i)){
-        seq[k]=i;
-        visited[i]=true;
-        dfs(k+1);
-        visited[i]=false;
-      }
+      seq[k]=i;
+      dfs(k+1);
     }
   }
 
   dfs(0)
-  return result
+  return result;
 }
 
 console.log(solution(n, m))
