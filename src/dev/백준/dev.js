@@ -3940,6 +3940,38 @@
 // console.log(solution(n, m))
 
 //15651-N과 M (3) 
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim();
+// const [n, m] = input.split(' ').map(Number)
+
+// function solution(n, m){
+//   let seq = [...Array(m)].fill(0);
+//   let result = '';
+
+//   function dfs(k){
+//     if(k===m){
+//       let arr = [];
+//       for(let i=0; i<m; i++){
+//         arr.push(seq[i])
+//       }
+
+//       return result+=`${arr.join(' ')}\n`
+//     }
+
+//     for(let i=1; i<=n; i++){
+//       seq[k]=i;
+//       dfs(k+1);
+//     }
+//   }
+
+//   dfs(0)
+//   return result;
+// }
+
+// console.log(solution(n, m))
+
+//15652-N과 M (4) 
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim();
@@ -3956,17 +3988,16 @@ function solution(n, m){
         arr.push(seq[i])
       }
 
-      return result+=`${arr.join(' ')}\n`
+      return result += `${arr.join(' ')}\n`
     }
 
-    for(let i=1; i<=n; i++){
+    for(let i=(k===0 ? 1: seq[k-1]); i<=n; i++){
       seq[k]=i;
       dfs(k+1);
     }
   }
-
-  dfs(0)
-  return result;
+  dfs(0);
+  return result
 }
 
 console.log(solution(n, m))
