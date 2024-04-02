@@ -3972,32 +3972,66 @@
 // console.log(solution(n, m))
 
 //15652-N과 M (4) 
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim();
+// const [n, m] = input.split(' ').map(Number)
+
+// function solution(n, m){
+//   let seq = [...Array(m)].fill(0);
+//   let result = '';
+
+//   function dfs(k){
+//     if(k===m){
+//       let arr = [];
+//       for(let i=0; i<m; i++){
+//         arr.push(seq[i])
+//       }
+
+//       return result += `${arr.join(' ')}\n`
+//     }
+
+//     for(let i=(k===0 ? 1: seq[k-1]); i<=n; i++){
+//       seq[k]=i;
+//       dfs(k+1);
+//     }
+//   }
+//   dfs(0);
+//   return result
+// }
+
+// console.log(solution(n, m))
+
+//9663 - N-Queen
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim();
-const [n, m] = input.split(' ').map(Number)
+const N = +input;
 
-function solution(n, m){
-  let seq = [...Array(m)].fill(0);
-  let result = '';
+let answer = 0;
+let row = Array.from({ length: N + 1 }, () => 0);
 
-  function dfs(k){
-    if(k===m){
-      let arr = [];
-      for(let i=0; i<m; i++){
-        arr.push(seq[i])
-      }
-
-      return result += `${arr.join(' ')}\n`
-    }
-
-    for(let i=(k===0 ? 1: seq[k-1]); i<=n; i++){
-      seq[k]=i;
-      dfs(k+1);
+function check(L) {
+  for (let i = 0; i < L; i++) {
+    if (row[L] === row[i] || L - i === Math.abs(row[L] - row[i])) {
+      return false;
     }
   }
-  dfs(0);
-  return result
+  return true;
 }
 
-console.log(solution(n, m))
+function DFS(L) {
+  if (L === N) {
+    answer++;
+  } else {
+    for (let i = 0; i < N; i++) {
+      row[L] = i;
+      if (check(L)) {
+        DFS(L + 1);
+      }
+    }
+  }
+}
+
+DFS(0);
+console.log(answer);
