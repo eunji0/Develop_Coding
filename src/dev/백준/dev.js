@@ -4037,59 +4037,95 @@
 // console.log(answer);
 
 //2580-스도쿠
-const fs = require("fs");
-const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-const input = fs.readFileSync(filePath).toString().trim().split("\n");
-input = input.map(row => row.split(' ').map(i => Number(i)));
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// input = input.map(row => row.split(' ').map(i => Number(i)));
 
-let zeroCoords = getZeroCoords();
-let N = zeroCoords.length;
-let answer = "";
-DFS(0);
+// let zeroCoords = getZeroCoords();
+// let N = zeroCoords.length;
+// let answer = "";
+// DFS(0);
 
-function DFS(L) {
-  if (L === N) {
-    for (let x of input) {
-      answer += `${x.join(" ")}\n`;
-    }
-    console.log(answer);
-    process.exit(0);
-  } else {
-    let [row, col] = zeroCoords[L];
+// function DFS(L) {
+//   if (L === N) {
+//     for (let x of input) {
+//       answer += `${x.join(" ")}\n`;
+//     }
+//     console.log(answer);
+//     process.exit(0);
+//   } else {
+//     let [row, col] = zeroCoords[L];
 
-    for (let i = 1; i <= input.length; i++) {
-      if (check(row, col, i)) {
-        input[row][col] = i;
-        DFS(L + 1);
-        input[row][col] = 0;
+//     for (let i = 1; i <= input.length; i++) {
+//       if (check(row, col, i)) {
+//         input[row][col] = i;
+//         DFS(L + 1);
+//         input[row][col] = 0;
+//       }
+//     }
+//   }
+// }
+
+// function check(row, col, value) {
+//   let threeRow = Math.floor(row / 3) * 3;
+//   let threeCol = Math.floor(col / 3) * 3;
+
+//   for (let i = 0; i < input.length; i++) {
+//     if (input[row][i] === value || input[i][col] === value) return false;
+//   }
+
+//   for (let i = threeRow; i < threeRow + 3; i++) {
+//     for (let j = threeCol; j < threeCol + 3; j++) {
+//       if (input[i][j] === value) return false;
+//     }
+//   }
+
+//   return true;
+// }
+
+// function getZeroCoords() {
+//   const arr = [];
+//   for (let i = 0; i < input.length; i++) {
+//     for (let j = 0; j < input.length; j++) {
+//       if (input[i][j] === 0) arr.push([i, j]);
+//     }
+//   }
+//   return arr;
+// }
+
+//13549-숨바꼭질3
+const sol = (input) => {
+  const [N, K] = input.split(" ").map(Number);
+  const visit = Array.from({ length: 100100 }, () => 0);
+
+  function bfs(N) {
+    const queue = [];
+    queue.push([N, 0]);
+    visit[N] = 1;
+    while (queue.length) {
+      const [cur, time] = queue.shift();
+      if (cur === K) return time;
+      for (next of [cur * 2, cur - 1, cur + 1]) {
+        if (!visit[next] && next >= 0 && next <= 100000) {
+          visit[next] = 1;
+          if (next == cur * 2) {
+            queue.unshift([next, time]); // 2X로 이동할 때는 시간을 증가시키지 않고, 우선순위를 반영하여 큐의 맨 앞에 넣어준다.
+          } else {
+            queue.push([next, time + 1]); // X-1, X+1로 이동할 때는 시간을 증가시키고, 큐에 순서대로 넣어준다.
+          }
+        }
       }
     }
   }
-}
+  return bfs(N);
+};
 
-function check(row, col, value) {
-  let threeRow = Math.floor(row / 3) * 3;
-  let threeCol = Math.floor(col / 3) * 3;
-
-  for (let i = 0; i < input.length; i++) {
-    if (input[row][i] === value || input[i][col] === value) return false;
-  }
-
-  for (let i = threeRow; i < threeRow + 3; i++) {
-    for (let j = threeCol; j < threeCol + 3; j++) {
-      if (input[i][j] === value) return false;
-    }
-  }
-
-  return true;
-}
-
-function getZeroCoords() {
-  const arr = [];
-  for (let i = 0; i < input.length; i++) {
-    for (let j = 0; j < input.length; j++) {
-      if (input[i][j] === 0) arr.push([i, j]);
-    }
-  }
-  return arr;
-}
+require("readline")
+  .createInterface(process.stdin, process.stdout)
+  .on("line", (line) => {
+    console.log(sol(line));
+  })
+  .on("close", () => {
+    process.exit();
+  });
