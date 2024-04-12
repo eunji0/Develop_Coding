@@ -4164,42 +4164,79 @@
 // console.log(findNum());
 
 //2630-색종이 만들기
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+
+// let [number, ...paper] = input;
+// number = Number(number);
+// paper = paper.map(v => v.split(' ').map(Number));
+
+// function solution(number, paper) {
+//   let white =0 ;
+//   let blue=0;
+
+//   function divide(x, y, length){
+//     let tempCount =0 ;
+//     for(let i=x; i<x+length; i++){
+//       for(let j=y; j<y+length; j++){
+//         if(paper[i][j]) tempCount++;
+//       }
+//     }
+
+//     if(!tempCount){
+//       white++;
+//     }else if(tempCount === length * length){
+//       blue++;
+//     }else{
+//       divide(x, y, length/2);
+//       divide(x, y+length/2, length/2);
+//       divide(x+length/2, y, length/2);
+//       divide(x+length/2, y+length/2, length/2)
+//     }
+//   }
+
+//   divide(0,0,number);
+//   console.log(white);
+//   console.log(blue)
+// }
+
+// solution(number, paper);
+
+//1992-쿼드트리
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
+const n = +input[0];
+const screen = input.slice(1).map(v => v.split("").map(vv => +vv));
 
-let [number, ...paper] = input;
-number = Number(number);
-paper = paper.map(v => v.split(' ').map(Number));
+const genQuadTree = n => {
+  const quadTree = [];
 
-function solution(number, paper) {
-  let white =0 ;
-  let blue=0;
-
-  function divide(x, y, length){
-    let tempCount =0 ;
-    for(let i=x; i<x+length; i++){
-      for(let j=y; j<y+length; j++){
-        if(paper[i][j]) tempCount++;
+  const recursion = (n, x, y)=>{
+    let total = 0;
+    for(let i=0; i<n; i++){
+      for(let j=0; j<n; j++){
+        total += screen[j+y][i+x];
       }
     }
 
-    if(!tempCount){
-      white++;
-    }else if(tempCount === length * length){
-      blue++;
-    }else{
-      divide(x, y, length/2);
-      divide(x, y+length/2, length/2);
-      divide(x+length/2, y, length/2);
-      divide(x+length/2, y+length/2, length/2)
+    if(total === 0) quadTree.push('0');
+    else if(total === n*n) quadTree.push('1');
+    else{
+      n/=2;
+      quadTree.push('(');
+      recursion(n, x, y);
+      recursion(n, x+n, y);
+      recursion(n, x, y+n);
+      recursion(n, x+n, y+n);
+      quadTree.push(')')
     }
   }
 
-  divide(0,0,number);
-  console.log(white);
-  console.log(blue)
-}
+  recursion(n, 0, 0);
+  console.log(quadTree.join(''))
+};
 
-solution(number, paper);
+genQuadTree(n);
 
