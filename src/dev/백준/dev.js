@@ -4131,34 +4131,75 @@
 //   });
 
 //1300-k번째 수
-const fs = require("fs");
-const input = fs.readFileSync(0).toString().trim().split("\n");
-const [N, K] = input.map(Number);
+// const fs = require("fs");
+// const input = fs.readFileSync(0).toString().trim().split("\n");
+// const [N, K] = input.map(Number);
 
-function findOrder(n){
-    let count = 0;
-    for (let i=1; i<N+1; i++){
-        count += Math.min(parseInt(n/i), N);
-    }
-    return count;
-}
+// function findOrder(n){
+//     let count = 0;
+//     for (let i=1; i<N+1; i++){
+//         count += Math.min(parseInt(n/i), N);
+//     }
+//     return count;
+// }
 
-function findNum(){
-    let start = 1;
-    let end = K;
+// function findNum(){
+//     let start = 1;
+//     let end = K;
     
-    while (start <= end){
-        let mid = parseInt((start + end) / 2);
-        let order = findOrder(mid);
+//     while (start <= end){
+//         let mid = parseInt((start + end) / 2);
+//         let order = findOrder(mid);
         
-        if (order >= K){
-            end = mid - 1;
-        } else{
-            start = mid + 1;
-        }
-    }
+//         if (order >= K){
+//             end = mid - 1;
+//         } else{
+//             start = mid + 1;
+//         }
+//     }
     
-    return start;
+//     return start;
+// }
+
+// console.log(findNum());
+
+//2630-색종이 만들기
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
+
+let [number, ...paper] = input;
+number = Number(number);
+paper = paper.map(v => v.split(' ').map(Number));
+
+function solution(number, paper) {
+  let white =0 ;
+  let blue=0;
+
+  function divide(x, y, length){
+    let tempCount =0 ;
+    for(let i=x; i<x+length; i++){
+      for(let j=y; j<y+length; j++){
+        if(paper[i][j]) tempCount++;
+      }
+    }
+
+    if(!tempCount){
+      white++;
+    }else if(tempCount === length * length){
+      blue++;
+    }else{
+      divide(x, y, length/2);
+      divide(x, y+length/2, length/2);
+      divide(x+length/2, y, length/2);
+      divide(x+length/2, y+length/2, length/2)
+    }
+  }
+
+  divide(0,0,number);
+  console.log(white);
+  console.log(blue)
 }
 
-console.log(findNum());
+solution(number, paper);
+
