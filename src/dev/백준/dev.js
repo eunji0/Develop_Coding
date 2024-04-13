@@ -4204,39 +4204,77 @@
 // solution(number, paper);
 
 //1992-쿼드트리
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const n = +input[0];
+// const screen = input.slice(1).map(v => v.split("").map(vv => +vv));
+
+// const genQuadTree = n => {
+//   const quadTree = [];
+
+//   const recursion = (n, x, y)=>{
+//     let total = 0;
+//     for(let i=0; i<n; i++){
+//       for(let j=0; j<n; j++){
+//         total += screen[j+y][i+x];
+//       }
+//     }
+
+//     if(total === 0) quadTree.push('0');
+//     else if(total === n*n) quadTree.push('1');
+//     else{
+//       n/=2;
+//       quadTree.push('(');
+//       recursion(n, x, y);
+//       recursion(n, x+n, y);
+//       recursion(n, x, y+n);
+//       recursion(n, x+n, y+n);
+//       quadTree.push(')')
+//     }
+//   }
+
+//   recursion(n, 0, 0);
+//   console.log(quadTree.join(''))
+// };
+
+// genQuadTree(n);
+
+//1780-색종이 만들기
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
 const n = +input[0];
-const screen = input.slice(1).map(v => v.split("").map(vv => +vv));
+const paper = input.slice(1).map(v => v.split(" ").map(vv => +vv));
 
-const genQuadTree = n => {
-  const quadTree = [];
+const solution = n => {
+  let count = [0,0,0];
 
   const recursion = (n, x, y)=>{
-    let total = 0;
-    for(let i=0; i<n; i++){
-      for(let j=0; j<n; j++){
-        total += screen[j+y][i+x];
-      }
+    const num = paper[y][x];
+    let numCount = 0;
+    for (let i=0; i<n; i++) {
+        for (let j=0; j<n; j++) {
+            if (paper[y+j][x+i] === num) numCount++;
+            else break;
+        }
     }
-
-    if(total === 0) quadTree.push('0');
-    else if(total === n*n) quadTree.push('1');
-    else{
-      n/=2;
-      quadTree.push('(');
-      recursion(n, x, y);
-      recursion(n, x+n, y);
-      recursion(n, x, y+n);
-      recursion(n, x+n, y+n);
-      quadTree.push(')')
+    if (numCount === n*n) count[num+1]++;
+    else {
+        n /= 3;
+        for (let i=0; i<3; i++) {
+            for (let j=0; j<3; j++) {
+                recursion(n, x+i*n, y+j*n);
+            }
+        }
     }
-  }
+}
 
-  recursion(n, 0, 0);
-  console.log(quadTree.join(''))
-};
+  recursion(n, 0,0);
+  console.log(count.join('\n'))
+}
 
-genQuadTree(n);
+solution(n)
+
+
 
