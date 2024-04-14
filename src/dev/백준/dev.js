@@ -4241,40 +4241,64 @@
 // genQuadTree(n);
 
 //1780-색종이 만들기
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const n = +input[0];
+// const paper = input.slice(1).map(v => v.split(" ").map(vv => +vv));
+
+// const solution = n => {
+//   let count = [0,0,0];
+
+//   const recursion = (n, x, y)=>{
+//     const num = paper[y][x];
+//     let numCount = 0;
+//     for (let i=0; i<n; i++) {
+//         for (let j=0; j<n; j++) {
+//             if (paper[y+j][x+i] === num) numCount++;
+//             else break;
+//         }
+//     }
+//     if (numCount === n*n) count[num+1]++;
+//     else {
+//         n /= 3;
+//         for (let i=0; i<3; i++) {
+//             for (let j=0; j<3; j++) {
+//                 recursion(n, x+i*n, y+j*n);
+//             }
+//         }
+//     }
+// }
+
+//   recursion(n, 0,0);
+//   console.log(count.join('\n'))
+// }
+
+// solution(n)
+
+//1629-곱셈
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-const input = fs.readFileSync(filePath).toString().trim().split("\n");
-const n = +input[0];
-const paper = input.slice(1).map(v => v.split(" ").map(vv => +vv));
+const input = fs.readFileSync(filePath).toString()
+.trim()
+.split(' ')
+.map(BigInt);
+const [a, b, c]=input;
 
-const solution = n => {
-  let count = [0,0,0];
+const solve = p =>{
+  if(p === 1n){
+    return a%c
+  }
 
-  const recursion = (n, x, y)=>{
-    const num = paper[y][x];
-    let numCount = 0;
-    for (let i=0; i<n; i++) {
-        for (let j=0; j<n; j++) {
-            if (paper[y+j][x+i] === num) numCount++;
-            else break;
-        }
-    }
-    if (numCount === n*n) count[num+1]++;
-    else {
-        n /= 3;
-        for (let i=0; i<3; i++) {
-            for (let j=0; j<3; j++) {
-                recursion(n, x+i*n, y+j*n);
-            }
-        }
-    }
+  const half = solve(p/2n)%c;
+
+  if(p%2n){
+    return (half*half*(a%c))%c
+  }
+
+  return (half*half)%c
 }
 
-  recursion(n, 0,0);
-  console.log(count.join('\n'))
-}
-
-solution(n)
-
+console.log(solve(b).toString())
 
 
