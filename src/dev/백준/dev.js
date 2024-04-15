@@ -4277,28 +4277,76 @@
 // solution(n)
 
 //1629-곱셈
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString()
+// .trim()
+// .split(' ')
+// .map(BigInt);
+
+// const [a, b, c]=input;
+
+// const solve = p =>{
+//   if(p === 1n){
+//     return a%c
+//   }
+
+//   const half = solve(p/2n)%c;
+
+//   if(p%2n){
+//     return (half*half*(a%c))%c
+//   }
+
+//   return (half*half)%c
+// }
+
+// console.log(solve(b).toString())
+
+//2740-행렬 곱셈
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-const input = fs.readFileSync(filePath).toString()
-.trim()
-.split(' ')
-.map(BigInt);
-const [a, b, c]=input;
+const input = fs.readFileSync(filePath).toString().trim().split("\n").map(v=>v.split(' ').map(x=>+x)); 
+const A=[]; //첫번째 행렬
+const B=[];  // 두번째 행렬
+const C =[]; // 계산하기 좋게 두번째 행렬을 바꿔서 만들 행렬
 
-const solve = p =>{
-  if(p === 1n){
-    return a%c
-  }
-
-  const half = solve(p/2n)%c;
-
-  if(p%2n){
-    return (half*half*(a%c))%c
-  }
-
-  return (half*half)%c
+//첫번째 행렬 정리
+const [N,M] = input.shift();  
+for(let i = 0; i<N; i++){
+  A.push(input.shift());
 }
 
-console.log(solve(b).toString())
+//두번째 행렬 정리
+const [K,L] = input.shift();
+for(let i = 0; i<K; i++){
+  B.push(input.shift());
+}
 
+//두번째 행렬 수정
+ while(B[0].length>0){
+   const temp = [];
+   for(let i = 0; i<K;i++){
+    temp.push(B[i].shift())
+   }
+   C.push(temp)
+ }
 
+ // 행렬의 곱셈
+ const answer = [];
+ for(let i = 0; i < N; i++) { // 첫 번째 행렬 A의 각 행에 대해 반복합니다.
+   answer.push([]); // 결과 행렬의 각 행을 초기화합니다.
+   const X = A[i]; // 첫 번째 행렬 A의 i번째 행을 X에 저장합니다.
+   for(let j = 0; j < L; j++) { // 두 번째 행렬 C의 각 열에 대해 반복합니다.
+     let sum = 0; // 결과 행렬의 각 원소를 계산하기 위한 합을 초기화합니다.
+     const Y = C[j]; // 두 번째 행렬 C의 j번째 열을 Y에 저장합니다.
+     for(let k = 0; k < K; k++) { // 각 행과 열을 곱하여 결과 행렬의 원소를 계산합니다.
+       sum += X[k] * Y[k]; // 첫 번째 행렬 A의 k번째 원소와 두 번째 행렬 C의 k번째 원소를 곱하여 합에 더합니다.
+     }
+     answer[answer.length - 1].push(sum); // 계산한 결과를 결과 행렬의 현재 행에 추가합니다.
+   }
+ }
+ 
+
+ const result = answer.map(v=>v.join(' ')).join('\n')
+
+ console.log(result)
