@@ -4303,50 +4303,129 @@
 // console.log(solve(b).toString())
 
 //2740-행렬 곱셈
-const fs = require("fs");
-const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-const input = fs.readFileSync(filePath).toString().trim().split("\n").map(v=>v.split(' ').map(x=>+x)); 
-const A=[]; //첫번째 행렬
-const B=[];  // 두번째 행렬
-const C =[]; // 계산하기 좋게 두번째 행렬을 바꿔서 만들 행렬
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n").map(v=>v.split(' ').map(x=>+x)); 
+// const A=[]; //첫번째 행렬
+// const B=[];  // 두번째 행렬
+// const C =[]; // 계산하기 좋게 두번째 행렬을 바꿔서 만들 행렬
 
-//첫번째 행렬 정리
-const [N,M] = input.shift();  
-for(let i = 0; i<N; i++){
-  A.push(input.shift());
-}
+// //첫번째 행렬 정리
+// const [N,M] = input.shift();  
+// for(let i = 0; i<N; i++){
+//   A.push(input.shift());
+// }
 
-//두번째 행렬 정리
-const [K,L] = input.shift();
-for(let i = 0; i<K; i++){
-  B.push(input.shift());
-}
+// //두번째 행렬 정리
+// const [K,L] = input.shift();
+// for(let i = 0; i<K; i++){
+//   B.push(input.shift());
+// }
 
-//두번째 행렬 수정
- while(B[0].length>0){
-   const temp = [];
-   for(let i = 0; i<K;i++){
-    temp.push(B[i].shift())
-   }
-   C.push(temp)
- }
+// //두번째 행렬 수정
+//  while(B[0].length>0){
+//    const temp = [];
+//    for(let i = 0; i<K;i++){
+//     temp.push(B[i].shift())
+//    }
+//    C.push(temp)
+//  }
 
- // 행렬의 곱셈
- const answer = [];
- for(let i = 0; i < N; i++) { // 첫 번째 행렬 A의 각 행에 대해 반복합니다.
-   answer.push([]); // 결과 행렬의 각 행을 초기화합니다.
-   const X = A[i]; // 첫 번째 행렬 A의 i번째 행을 X에 저장합니다.
-   for(let j = 0; j < L; j++) { // 두 번째 행렬 C의 각 열에 대해 반복합니다.
-     let sum = 0; // 결과 행렬의 각 원소를 계산하기 위한 합을 초기화합니다.
-     const Y = C[j]; // 두 번째 행렬 C의 j번째 열을 Y에 저장합니다.
-     for(let k = 0; k < K; k++) { // 각 행과 열을 곱하여 결과 행렬의 원소를 계산합니다.
-       sum += X[k] * Y[k]; // 첫 번째 행렬 A의 k번째 원소와 두 번째 행렬 C의 k번째 원소를 곱하여 합에 더합니다.
-     }
-     answer[answer.length - 1].push(sum); // 계산한 결과를 결과 행렬의 현재 행에 추가합니다.
-   }
- }
+//  // 행렬의 곱셈
+//  const answer = [];
+//  for(let i = 0; i < N; i++) { // 첫 번째 행렬 A의 각 행에 대해 반복합니다.
+//    answer.push([]); // 결과 행렬의 각 행을 초기화합니다.
+//    const X = A[i]; // 첫 번째 행렬 A의 i번째 행을 X에 저장합니다.
+//    for(let j = 0; j < L; j++) { // 두 번째 행렬 C의 각 열에 대해 반복합니다.
+//      let sum = 0; // 결과 행렬의 각 원소를 계산하기 위한 합을 초기화합니다.
+//      const Y = C[j]; // 두 번째 행렬 C의 j번째 열을 Y에 저장합니다.
+//      for(let k = 0; k < K; k++) { // 각 행과 열을 곱하여 결과 행렬의 원소를 계산합니다.
+//        sum += X[k] * Y[k]; // 첫 번째 행렬 A의 k번째 원소와 두 번째 행렬 C의 k번째 원소를 곱하여 합에 더합니다.
+//      }
+//      answer[answer.length - 1].push(sum); // 계산한 결과를 결과 행렬의 현재 행에 추가합니다.
+//    }
+//  }
  
 
- const result = answer.map(v=>v.join(' ')).join('\n')
+//  const result = answer.map(v=>v.join(' ')).join('\n')
 
- console.log(result)
+//  console.log(result)
+
+//10830-행렬 제곱
+const fs = require('fs');
+const stdin = (process.platform === 'linux'
+        ? fs.readFileSync('/dev/stdin').toString()
+        : `2 5
+1 2
+3 4`
+).split('\n');
+
+const input = (() => {
+    let line = 0;
+    return () => stdin[line++];
+})();
+
+function mulMat(mata, matb){
+    // tmpmat init
+    let tmpmat = new Array(size);
+    for(let i=0; i<size; i++){
+        tmpmat[i] = new Array(size);
+    }
+    for(let i=0; i<size; i++){
+        for(let j=0; j<size; j++){
+            tmpmat[i][j] = 0;
+        }
+    }
+
+    // mul
+    for(let i=0; i<size; i++){
+        for(let j=0; j<size; j++){
+            for(let k=0; k<size; k++){
+                tmpmat[i][j] += mata[i][k] * matb[k][j];
+            }
+            tmpmat[i][j] %= 1000;
+        }
+    }
+
+    return tmpmat;
+}
+
+// init
+const f = input().split(' ').map(Number);
+const size = f[0];
+let pow = f[1];
+let matrix = [];
+
+for(let i=0; i<size; i++){
+    matrix.push(input().split(' ').map(Number)); //deep copy
+}
+
+// unit matrix
+let tmpmat = new Array(size);
+for(let i=0; i<size; i++){
+    tmpmat[i] = new Array(size);
+}
+for(let i=0; i<size; i++){
+    for(let j=0; j<size; j++){
+        tmpmat[i][j] = 0;
+    }
+    tmpmat[i][i] = 1;
+}
+
+while(pow){
+    if(pow % 2 == 1){
+        tmpmat = mulMat(tmpmat, matrix);
+        pow--;
+    }
+    pow /= 2;
+    matrix = mulMat(matrix, matrix);
+}
+
+// answer
+for(let i=0; i<size; i++){
+    let tmp = "";
+    for(let j=0; j<size; j++){
+        tmp += tmpmat[i][j] + " ";
+    }
+    console.log(tmp);
+}
