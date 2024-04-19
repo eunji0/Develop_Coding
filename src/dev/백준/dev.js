@@ -4431,22 +4431,53 @@
 // }
 
 //1654-랜선자르기
-const input = require("fs").readFileSync('/dev/stdin').toString().trim().split('\n');
+// const input = require("fs").readFileSync('/dev/stdin').toString().trim().split('\n');
 
-const [n, k] = input.shift().split(' ').map((a) => +a);
-	const lines = input.map((a) => +a).sort();
-	let max = Math.max(...lines);
-	let min = 1;
+// const [n, k] = input.shift().split(' ').map((a) => +a);
+// 	const lines = input.map((a) => +a).sort();
+// 	let max = Math.max(...lines);
+// 	let min = 1;
 
-while (min <= max) {
-  let mid = parseInt((max + min) / 2);
-  let howManyPieces = lines
-    .map((line) => parseInt(line / mid))
-    .reduce((a, b) => a + b, 0);
-  if (howManyPieces >= k) {
-    min = mid + 1;
-  } else {
-    max = mid - 1;
+// while (min <= max) {
+//   let mid = parseInt((max + min) / 2);
+//   let howManyPieces = lines
+//     .map((line) => parseInt(line / mid))
+//     .reduce((a, b) => a + b, 0);
+//   if (howManyPieces >= k) {
+//     min = mid + 1;
+//   } else {
+//     max = mid - 1;
+//   }
+// }
+// console.log(max);
+
+//2805-나무 자르기
+const input = require("fs").readFileSync("/dev/stdin").toString().split("\n");
+var [N, H] = input.shift().split(" ").map(Number);
+var Trees = input.shift().split(" ").map(Number);
+var MaxH = Math.max(...Trees);
+
+function binarySearch(H, Trees, min, max) {
+  let mid = 0;
+  let BestH = 0;
+  
+  while (min <= max) {
+    let SumWood = 0;
+    mid = Math.floor((min + max) / 2);
+    Trees.forEach((a) => {
+      let rest = a - mid;
+      if (rest > 0) SumWood += rest;
+    });
+    if (SumWood >= H) {
+      if (mid > BestH) BestH = mid;
+      min = mid + 1;
+    } 
+    else {
+      max = mid - 1;
+    }
   }
+  return BestH;
 }
-console.log(max);
+
+const answer = binarySearch(H, Trees, 0, MaxH);
+console.log(answer);
