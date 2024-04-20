@@ -4452,32 +4452,107 @@
 // console.log(max);
 
 //2805-나무 자르기
-const input = require("fs").readFileSync("/dev/stdin").toString().split("\n");
-var [N, H] = input.shift().split(" ").map(Number);
-var Trees = input.shift().split(" ").map(Number);
-var MaxH = Math.max(...Trees);
+// const input = require("fs").readFileSync("/dev/stdin").toString().split("\n");
+// var [N, H] = input.shift().split(" ").map(Number);
+// var Trees = input.shift().split(" ").map(Number);
+// var MaxH = Math.max(...Trees);
 
-function binarySearch(H, Trees, min, max) {
-  let mid = 0;
-  let BestH = 0;
+// function binarySearch(H, Trees, min, max) {
+//   let mid = 0;
+//   let BestH = 0;
   
-  while (min <= max) {
-    let SumWood = 0;
-    mid = Math.floor((min + max) / 2);
-    Trees.forEach((a) => {
-      let rest = a - mid;
-      if (rest > 0) SumWood += rest;
-    });
-    if (SumWood >= H) {
-      if (mid > BestH) BestH = mid;
-      min = mid + 1;
-    } 
-    else {
-      max = mid - 1;
+//   while (min <= max) {
+//     let SumWood = 0;
+//     mid = Math.floor((min + max) / 2);
+//     Trees.forEach((a) => {
+//       let rest = a - mid;
+//       if (rest > 0) SumWood += rest;
+//     });
+//     if (SumWood >= H) {
+//       if (mid > BestH) BestH = mid;
+//       min = mid + 1;
+//     } 
+//     else {
+//       max = mid - 1;
+//     }
+//   }
+//   return BestH;
+// }
+
+// const answer = binarySearch(H, Trees, 0, MaxH);
+// console.log(answer);
+
+//1654-랜선 자르기
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// // 표준 입력을 받아와서 처리합니다.
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const [K, N] = input[0].split(" ").map(Number); // K: 가지고 있는 랜선의 개수, N: 필요한 랜선의 개수
+// const lanCables = input.slice(1).map(Number); // 각 랜선의 길이를 배열로 저장합니다.
+
+// // 최소 길이 1부터 최대 길이까지 이진 탐색을 수행하여 조건에 맞는 랜선의 길이를 찾습니다.
+// let start = 1;
+// let end = Math.max(...lanCables);
+// let result = 0;
+
+// while (start <= end) {
+//     const mid = Math.floor((start + end) / 2); // 현재 탐색하는 랜선의 길이(mid)
+
+//     let total = 0; // 현재 랜선 길이로 만들 수 있는 랜선의 개수
+//     for (let cable of lanCables) {
+//         total += Math.floor(cable / mid); // 현재 랜선 길이로 자른 개수를 누적합니다.
+//     }
+
+//     // 만들 수 있는 랜선의 개수가 필요한 개수보다 적은 경우
+//     // 현재 랜선 길이로 만들 수 있는 랜선의 개수를 줄이기 위해
+//     // 탐색 범위를 왼쪽으로 좁힙니다.
+//     if (total < N) {
+//         end = mid - 1;
+//     }
+//     // 만들 수 있는 랜선의 개수가 필요한 개수보다 많거나 같은 경우
+//     // 현재 랜선 길이로 만들 수 있는 랜선의 개수를 늘리기 위해
+//     // 탐색 범위를 오른쪽으로 좁힙니다.
+//     else {
+//         result = mid; // 현재 길이로 가능한 경우, 최대 길이를 갱신합니다.
+//         start = mid + 1;
+//     }
+// }
+
+// console.log(result); // 최대 길이를 출력합니다.
+
+//1920-수찾기
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
+input.shift();
+const n = input[0].split(' ').map(Number).sort((a, b)=>a-b);
+input.shift();
+input.shift();
+const m = input[0].split(' ').map(Number);
+
+const solution = (arr, target) => {
+    let start = 0;
+    let end = arr.length - 1;
+
+    while (start <= end) {
+        let mid = Math.floor((start + end) / 2);
+
+        if (target < arr[mid]) {
+            end = mid - 1;
+        } else if (target > arr[mid]) {
+            start = mid + 1;
+        } else {
+            return 1;
+        }
     }
-  }
-  return BestH;
+    return 0;
 }
 
-const answer = binarySearch(H, Trees, 0, MaxH);
-console.log(answer);
+let result = [];
+m.forEach(v => {
+    result.push(solution(n, v));
+})
+
+console.log(result.join('\n'));
+
+
