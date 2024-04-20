@@ -4668,35 +4668,67 @@
 // console.log(end)
 
 //12015-가장 긴 증가하는 부분 수열 2
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const n = +input[0];
+// const arr = input[1].split(' ').map(Number);
+
+// const sol = (list, left, right, target) => {
+    
+//     while(left < right){
+//         let mid = Math.floor((left+right)/2);
+//         if(list[mid] < target){
+//             left = mid+1;
+//         }else{
+//             right = mid;
+//         }
+//     }
+
+//     return right;
+// }
+
+// let lis = [];
+// lis.push(arr[0]);
+// for(let i=1; i<n; i++){
+//     if(lis[lis.length-1]<arr[i]){
+//         lis.push(arr[i])
+//     }else{
+//         let idx = sol(lis, 0, lis.length-1, arr[i]);
+//         lis[idx] = arr[i]
+//     }
+// }
+
+// console.log(lis.length)
+
+//1920-수 찾기
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
-const n = +input[0];
-const arr = input[1].split(' ').map(Number);
+const n = input[1].split(' ').map(Number).sort((a, b)=>a-b);
+const m = input[3].split(' ').map(Number);
 
-const sol = (list, left, right, target) => {
-    
-    while(left < right){
-        let mid = Math.floor((left+right)/2);
-        if(list[mid] < target){
-            left = mid+1;
+const sol = (arr, target)=>{
+    let start = 0;
+    let end = arr.length-1;
+
+    while(start <= end){
+        let mid = Math.floor((start+end)/2);
+
+        if(arr[mid] > target){
+            end = mid -1;
+        }else if(arr[mid] < target){
+            start = mid+1;
         }else{
-            right = mid;
+            return 1;
         }
     }
-
-    return right;
+    return 0;
 }
 
-let lis = [];
-lis.push(arr[0]);
-for(let i=1; i<n; i++){
-    if(lis[lis.length-1]<arr[i]){
-        lis.push(arr[i])
-    }else{
-        let idx = sol(lis, 0, lis.length-1, arr[i]);
-        lis[idx] = arr[i]
-    }
-}
+let result = [];
+m.forEach(v=>{
+    result.push(sol(n, v))
+})
 
-console.log(lis.length)
+console.log(result.join('\n'))
