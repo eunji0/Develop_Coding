@@ -4556,26 +4556,54 @@
 // console.log(result.join('\n'));
 
 //10816-숫자카드2
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// input.shift();
+// const n = input[0].split(' ').map(Number).sort((a, b)=>a-b);
+// input.shift();
+// input.shift();
+// const m = input[0].split(' ').map(Number);
+
+// const myMap = new Map();
+// n.forEach(v=>{
+//     if(myMap.has(v)) myMap.set(v, myMap.get(v)+1);
+//     else myMap.set(v, 1);
+// })
+
+// let result = [];
+// m.forEach(v=>{
+//     result.push(myMap.get(v)||0)
+// })
+
+// console.log(result.join(' '))
+
+//1654-랜선자르기
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
-input.shift();
-const n = input[0].split(' ').map(Number).sort((a, b)=>a-b);
-input.shift();
-input.shift();
-const m = input[0].split(' ').map(Number);
+const [K, N] = input[0].split(" ").map(Number);
+const lanCables = input.slice(1).map(Number);
 
-const myMap = new Map();
-n.forEach(v=>{
-    if(myMap.has(v)) myMap.set(v, myMap.get(v)+1);
-    else myMap.set(v, 1);
-})
+let start = 1;
+let end = Math.max(...lanCables);
+let result =0 ;
 
-let result = [];
-m.forEach(v=>{
-    result.push(myMap.get(v)||0)
-})
+while(start<=end){
+    let mid = Math.floor((start+end)/2);
 
-console.log(result.join(' '))
+    let total = 0;
+    for(let cable of lanCables){
+        total += Math.floor(cable/mid);
+    }
 
+    if(total < N){
+        end = mid-1;
+    }else{
+        result = mid
+        start = mid+1;
+    }
+}
+
+console.log(result)
 
