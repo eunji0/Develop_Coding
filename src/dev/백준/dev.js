@@ -4641,28 +4641,62 @@
 // console.log(solution(m, arr, 0, maxH))
 
 //2110-공유기 설치
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const [n, m]=input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(Number).sort((a, b)=>a-b);
+
+// let start = 1;
+// let end = arr[arr.length-1];
+
+// while(start <= end){
+//     let mid = Math.floor((start+end)/2);
+
+//     let count=1;
+//     let prev = arr[0];
+//     for(let cur of arr){
+//         if(cur-prev<mid) continue;
+//         prev=cur
+//         count+=1;
+//     }
+
+//     if(count<m) end=mid-1;
+//     else start = mid+1;
+// }
+
+// console.log(end)
+
+//12015-가장 긴 증가하는 부분 수열 2
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
-const [n, m]=input[0].split(' ').map(Number);
-const arr = input.slice(1).map(Number).sort((a, b)=>a-b);
+const n = +input[0];
+const arr = input[1].split(' ').map(Number);
 
-let start = 1;
-let end = arr[arr.length-1];
-
-while(start <= end){
-    let mid = Math.floor((start+end)/2);
-
-    let count=1;
-    let prev = arr[0];
-    for(let cur of arr){
-        if(cur-prev<mid) continue;
-        prev=cur
-        count+=1;
+const sol = (list, left, right, target) => {
+    
+    while(left < right){
+        let mid = Math.floor((left+right)/2);
+        if(list[mid] < target){
+            left = mid+1;
+        }else{
+            right = mid;
+        }
     }
 
-    if(count<m) end=mid-1;
-    else start = mid+1;
+    return right;
 }
 
-console.log(end)
+let lis = [];
+lis.push(arr[0]);
+for(let i=1; i<n; i++){
+    if(lis[lis.length-1]<arr[i]){
+        lis.push(arr[i])
+    }else{
+        let idx = sol(lis, 0, lis.length-1, arr[i]);
+        lis[idx] = arr[i]
+    }
+}
+
+console.log(lis.length)
