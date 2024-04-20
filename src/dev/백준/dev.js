@@ -4579,31 +4579,63 @@
 // console.log(result.join(' '))
 
 //1654-랜선자르기
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const [K, N] = input[0].split(" ").map(Number);
+// const lanCables = input.slice(1).map(Number);
+
+// let start = 1;
+// let end = Math.max(...lanCables);
+// let result =0 ;
+
+// while(start<=end){
+//     let mid = Math.floor((start+end)/2);
+
+//     let total = 0;
+//     for(let cable of lanCables){
+//         total += Math.floor(cable/mid);
+//     }
+
+//     if(total < N){
+//         end = mid-1;
+//     }else{
+//         result = mid
+//         start = mid+1;
+//     }
+// }
+
+// console.log(result)
+
+//2805-나무자르기
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
-const [K, N] = input[0].split(" ").map(Number);
-const lanCables = input.slice(1).map(Number);
+const [n, m] = input[0].split(' ').map(Number);
+const arr = input[1].split(' ').map(Number);
+const maxH = Math.max(...arr);
 
-let start = 1;
-let end = Math.max(...lanCables);
-let result =0 ;
+const solution = (m, arr, min, max)=>{
+    let mid =0;
+    let bestH=0;
 
-while(start<=end){
-    let mid = Math.floor((start+end)/2);
+    while(min<=max){
+        let sumWood = 0;
+        mid = Math.floor((min+max)/2);
 
-    let total = 0;
-    for(let cable of lanCables){
-        total += Math.floor(cable/mid);
+        arr.forEach(v=>{
+            let rest = v-mid;
+            if(rest>0) sumWood+=rest
+        })
+
+        if(sumWood >= m){
+            if(mid>bestH) bestH=mid;
+            min=mid+1;
+        }else{
+            max = mid-1;
+        }
     }
-
-    if(total < N){
-        end = mid-1;
-    }else{
-        result = mid
-        start = mid+1;
-    }
+    return bestH;
 }
 
-console.log(result)
-
+console.log(solution(m, arr, 0, maxH))
