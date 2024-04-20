@@ -4702,33 +4702,54 @@
 // console.log(lis.length)
 
 //1920-수 찾기
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const n = input[1].split(' ').map(Number).sort((a, b)=>a-b);
+// const m = input[3].split(' ').map(Number);
+
+// const sol = (arr, target)=>{
+//     let start = 0;
+//     let end = arr.length-1;
+
+//     while(start <= end){
+//         let mid = Math.floor((start+end)/2);
+
+//         if(arr[mid] > target){
+//             end = mid -1;
+//         }else if(arr[mid] < target){
+//             start = mid+1;
+//         }else{
+//             return 1;
+//         }
+//     }
+//     return 0;
+// }
+
+// let result = [];
+// m.forEach(v=>{
+//     result.push(sol(n, v))
+// })
+
+// console.log(result.join('\n'))
+
+//10816-숫자카드2
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
 const n = input[1].split(' ').map(Number).sort((a, b)=>a-b);
-const m = input[3].split(' ').map(Number);
+const m=input[3].split(' ').map(Number);
 
-const sol = (arr, target)=>{
-    let start = 0;
-    let end = arr.length-1;
+const arr = new Map();
 
-    while(start <= end){
-        let mid = Math.floor((start+end)/2);
-
-        if(arr[mid] > target){
-            end = mid -1;
-        }else if(arr[mid] < target){
-            start = mid+1;
-        }else{
-            return 1;
-        }
-    }
-    return 0;
-}
+n.forEach(v=>{
+    arr.set(v, (arr.get(v)||0)+1)
+})
 
 let result = [];
 m.forEach(v=>{
-    result.push(sol(n, v))
+    result.push(arr.get(v)||0)
 })
 
-console.log(result.join('\n'))
+console.log(result.join(' '))
+
