@@ -4608,34 +4608,61 @@
 // console.log(result)
 
 //2805-나무자르기
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const [n, m] = input[0].split(' ').map(Number);
+// const arr = input[1].split(' ').map(Number);
+// const maxH = Math.max(...arr);
+
+// const solution = (m, arr, min, max)=>{
+//     let mid =0;
+//     let bestH=0;
+
+//     while(min<=max){
+//         let sumWood = 0;
+//         mid = Math.floor((min+max)/2);
+
+//         arr.forEach(v=>{
+//             let rest = v-mid;
+//             if(rest>0) sumWood+=rest
+//         })
+
+//         if(sumWood >= m){
+//             if(mid>bestH) bestH=mid;
+//             min=mid+1;
+//         }else{
+//             max = mid-1;
+//         }
+//     }
+//     return bestH;
+// }
+
+// console.log(solution(m, arr, 0, maxH))
+
+//2110-공유기 설치
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
-const [n, m] = input[0].split(' ').map(Number);
-const arr = input[1].split(' ').map(Number);
-const maxH = Math.max(...arr);
+const [n, m]=input[0].split(' ').map(Number);
+const arr = input.slice(1).map(Number).sort((a, b)=>a-b);
 
-const solution = (m, arr, min, max)=>{
-    let mid =0;
-    let bestH=0;
+let start = 1;
+let end = arr[arr.length-1];
 
-    while(min<=max){
-        let sumWood = 0;
-        mid = Math.floor((min+max)/2);
+while(start <= end){
+    let mid = Math.floor((start+end)/2);
 
-        arr.forEach(v=>{
-            let rest = v-mid;
-            if(rest>0) sumWood+=rest
-        })
-
-        if(sumWood >= m){
-            if(mid>bestH) bestH=mid;
-            min=mid+1;
-        }else{
-            max = mid-1;
-        }
+    let count=1;
+    let prev = arr[0];
+    for(let cur of arr){
+        if(cur-prev<mid) continue;
+        prev=cur
+        count+=1;
     }
-    return bestH;
+
+    if(count<m) end=mid-1;
+    else start = mid+1;
 }
 
-console.log(solution(m, arr, 0, maxH))
+console.log(end)
