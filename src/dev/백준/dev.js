@@ -4521,6 +4521,41 @@
 // console.log(result); // 최대 길이를 출력합니다.
 
 //1920-수찾기
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// input.shift();
+// const n = input[0].split(' ').map(Number).sort((a, b)=>a-b);
+// input.shift();
+// input.shift();
+// const m = input[0].split(' ').map(Number);
+
+// const solution = (arr, target) => {
+//     let start = 0;
+//     let end = arr.length - 1;
+
+//     while (start <= end) {
+//         let mid = Math.floor((start + end) / 2);
+
+//         if (target < arr[mid]) {
+//             end = mid - 1;
+//         } else if (target > arr[mid]) {
+//             start = mid + 1;
+//         } else {
+//             return 1;
+//         }
+//     }
+//     return 0;
+// }
+
+// let result = [];
+// m.forEach(v => {
+//     result.push(solution(n, v));
+// })
+
+// console.log(result.join('\n'));
+
+//10816-숫자카드2
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
@@ -4530,29 +4565,17 @@ input.shift();
 input.shift();
 const m = input[0].split(' ').map(Number);
 
-const solution = (arr, target) => {
-    let start = 0;
-    let end = arr.length - 1;
-
-    while (start <= end) {
-        let mid = Math.floor((start + end) / 2);
-
-        if (target < arr[mid]) {
-            end = mid - 1;
-        } else if (target > arr[mid]) {
-            start = mid + 1;
-        } else {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-let result = [];
-m.forEach(v => {
-    result.push(solution(n, v));
+const myMap = new Map();
+n.forEach(v=>{
+    if(myMap.has(v)) myMap.set(v, myMap.get(v)+1);
+    else myMap.set(v, 1);
 })
 
-console.log(result.join('\n'));
+let result = [];
+m.forEach(v=>{
+    result.push(myMap.get(v)||0)
+})
+
+console.log(result.join(' '))
 
 
