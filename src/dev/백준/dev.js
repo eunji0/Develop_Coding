@@ -4754,36 +4754,69 @@
 // console.log(result.join(' '))
 
 //1654-랜선자르기
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+
+// const [k, n] = input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(Number);
+
+// const sol = (arr, target) => {
+//     let start = 1;
+//     let end = Math.max(...arr);
+
+//     let result =0;
+//     while(start<=end){
+//         let mid = Math.floor((start+end)/2);
+
+//         let total = 0;
+
+//         for(let a of arr){
+//             total+=Math.floor(a/mid)
+//         }
+
+//         if(total < target){
+//             end = mid-1;
+//         }else{
+//             result = mid;
+//             start = mid+1
+//         }
+//     }
+
+//     return result;
+// }
+
+// console.log(sol(arr, n))
+
+//2805-나무자르기
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
+const [n, m]=input[0].split(' ').map(Number);
+const arr = input[1].split(' ').map(Number).sort((a, b)=>a-b);
 
-const [k, n] = input[0].split(' ').map(Number);
-const arr = input.slice(1).map(Number);
+const sol = (arr, m, min, max) => {
+    let mid =0 ;
+    let bestH =0 ;
 
-const sol = (arr, target) => {
-    let start = 1;
-    let end = Math.max(...arr);
+    while(min<=max){
+        let sumwood =0; 
+        mid = Math.floor((min+max)/2);
 
-    let result =0;
-    while(start<=end){
-        let mid = Math.floor((start+end)/2);
+        arr.forEach(v=>{
+            let rest = v-mid;
+            if(rest>0) sumwood +=rest
+        })
 
-        let total = 0;
-
-        for(let a of arr){
-            total+=Math.floor(a/mid)
-        }
-
-        if(total < target){
-            end = mid-1;
+        if(sumwood >= m) {
+            if(mid>bestH) bestH = mid;
+            min = mid+1;
         }else{
-            result = mid;
-            start = mid+1
+            max = mid-1;
         }
     }
 
-    return result;
+    return bestH
 }
 
-console.log(sol(arr, n))
+console.log(sol(arr, m, 0, Math.max(...arr)))
