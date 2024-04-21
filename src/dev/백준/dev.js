@@ -4734,22 +4734,56 @@
 // console.log(result.join('\n'))
 
 //10816-숫자카드2
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const n = input[1].split(' ').map(Number).sort((a, b)=>a-b);
+// const m=input[3].split(' ').map(Number);
+
+// const arr = new Map();
+
+// n.forEach(v=>{
+//     arr.set(v, (arr.get(v)||0)+1)
+// })
+
+// let result = [];
+// m.forEach(v=>{
+//     result.push(arr.get(v)||0)
+// })
+
+// console.log(result.join(' '))
+
+//1654-랜선자르기
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
-const n = input[1].split(' ').map(Number).sort((a, b)=>a-b);
-const m=input[3].split(' ').map(Number);
 
-const arr = new Map();
+const [k, n] = input[0].split(' ').map(Number);
+const arr = input.slice(1).map(Number);
 
-n.forEach(v=>{
-    arr.set(v, (arr.get(v)||0)+1)
-})
+const sol = (arr, target) => {
+    let start = 1;
+    let end = Math.max(...arr);
 
-let result = [];
-m.forEach(v=>{
-    result.push(arr.get(v)||0)
-})
+    let result =0;
+    while(start<=end){
+        let mid = Math.floor((start+end)/2);
 
-console.log(result.join(' '))
+        let total = 0;
 
+        for(let a of arr){
+            total+=Math.floor(a/mid)
+        }
+
+        if(total < target){
+            end = mid-1;
+        }else{
+            result = mid;
+            start = mid+1
+        }
+    }
+
+    return result;
+}
+
+console.log(sol(arr, n))
