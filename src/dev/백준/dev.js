@@ -4789,34 +4789,61 @@
 // console.log(sol(arr, n))
 
 //2805-나무자르기
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const [n, m]=input[0].split(' ').map(Number);
+// const arr = input[1].split(' ').map(Number).sort((a, b)=>a-b);
+
+// const sol = (arr, m, min, max) => {
+//     let mid =0 ;
+//     let bestH =0 ;
+
+//     while(min<=max){
+//         let sumwood =0; 
+//         mid = Math.floor((min+max)/2);
+
+//         arr.forEach(v=>{
+//             let rest = v-mid;
+//             if(rest>0) sumwood +=rest
+//         })
+
+//         if(sumwood >= m) {
+//             if(mid>bestH) bestH = mid;
+//             min = mid+1;
+//         }else{
+//             max = mid-1;
+//         }
+//     }
+
+//     return bestH
+// }
+
+// console.log(sol(arr, m, 0, Math.max(...arr)))
+
+//2110-공유기 설치
 const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
 const [n, m]=input[0].split(' ').map(Number);
-const arr = input[1].split(' ').map(Number).sort((a, b)=>a-b);
+const arr = input.slice(1).map(Number).sort((a, b)=>a-b);
 
-const sol = (arr, m, min, max) => {
-    let mid =0 ;
-    let bestH =0 ;
+let start = 1;
+let end = arr[arr.length-1];
 
-    while(min<=max){
-        let sumwood =0; 
-        mid = Math.floor((min+max)/2);
+while(start <= end){
+    let mid = Math.floor((start+end)/2);
 
-        arr.forEach(v=>{
-            let rest = v-mid;
-            if(rest>0) sumwood +=rest
-        })
-
-        if(sumwood >= m) {
-            if(mid>bestH) bestH = mid;
-            min = mid+1;
-        }else{
-            max = mid-1;
-        }
+    let count=1;
+    let prev = arr[0];
+    for(let cur of arr){
+        if(cur-prev<mid) continue;
+        prev=cur
+        count+=1;
     }
 
-    return bestH
+    if(count<m) end=mid-1;
+    else start = mid+1;
 }
 
-console.log(sol(arr, m, 0, Math.max(...arr)))
+console.log(end)
