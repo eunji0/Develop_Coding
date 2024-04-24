@@ -4849,94 +4849,172 @@
 // console.log(end)
 
 //11279-최대힙
-const fs = require("fs");
-const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-const input = fs.readFileSync(filePath).toString().trim().split("\n");
-let operations = []
-for (let i = 1; i < input.length; i++) {
-    operations.push(+input[i])
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
+// let operations = []
+// for (let i = 1; i < input.length; i++) {
+//     operations.push(+input[i])
+// }
+
+// class maxHeap {
+//     constructor() {
+//         this.nodes = []
+//     }
+
+//     insert(data) {
+//         this.nodes.push(data)
+//         this.bubbleUp()
+//     }
+
+//     bubbleUp(index = this.nodes.length - 1) {
+//         if (index < 1) return
+//         let currentNode = this.nodes[index]
+//         let parentIndex = Math.floor((index - 1) / 2)
+//         let parentNode = this.nodes[parentIndex]
+
+//         if (parentNode >= currentNode) return
+
+//         this.nodes[parentIndex] = currentNode
+//         this.nodes[index] = parentNode
+//         index = parentIndex
+//         this.bubbleUp(index)
+//     }
+
+//     extract() {
+//         const max = this.nodes[0]
+//         if (this.nodes.length === 1) {
+//             this.nodes.pop()
+//             return max
+//         }
+//         this.nodes[0] = this.nodes.pop()
+//         this.trickleDown()
+//         return max
+//     }
+
+//     trickleDown(index = 0) {
+//         let leftChildIndex = index * 2 + 1
+//         let rightChildIndex = index * 2 + 2
+//         let length = this.nodes.length
+//         let maximum = index
+
+//         if (!this.nodes[leftChildIndex] && !this.nodes[rightChildIndex]) return
+
+//         if (!this.nodes[rightChildIndex]) {
+//             if (this.nodes[leftChildIndex] > this.nodes[maximum]) {
+//                 maximum = leftChildIndex
+//             }
+//         }
+
+//         if (this.nodes[leftChildIndex] < this.nodes[rightChildIndex]) {
+//             if (rightChildIndex <= length && this.nodes[rightChildIndex] > this.nodes[maximum]) {
+//                 maximum = rightChildIndex
+//             }
+//         } else {
+//             if (leftChildIndex <= length && this.nodes[leftChildIndex] > this.nodes[maximum]) {
+//                 maximum = leftChildIndex
+//             }
+//         }
+
+//         if (maximum !== index) {
+//             let t = this.nodes[maximum]
+//             this.nodes[maximum] = this.nodes[index]
+//             this.nodes[index] = t
+//             this.trickleDown(maximum)
+//         }
+//     }
+// }
+// const heap = new maxHeap()
+// let extracts = ''
+// operations.forEach((operation, index) => {
+//     if (operation !== 0) {
+//         heap.insert(operation)
+//     } else {
+//         if (heap.nodes.length === 0) {
+//             extracts += "0" + "\n"
+//         } else {
+//             let t = heap.extract()
+//             extracts += t + "\n"
+//         }
+//     }
+// })
+
+// console.log(extracts.trim())
+
+//1927-최소 힙
+const [N, ...ARR] = require('fs')
+  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : './input.txt')
+  .toString()
+  .trim()
+  .split('\n')
+  .map(Number);
+
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  heapifyUp(index) {
+    const parentIndex = Math.floor((index - 1) / 2);
+    if (parentIndex >= 0 && this.heap[index] < this.heap[parentIndex]) {
+      [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
+      this.heapifyUp(parentIndex);
+    }
+  }
+
+  heapifyDown(index) {
+    const len = this.heap.length;
+    let smallest = index;
+    const leftChild = 2 * index + 1;
+    const rightChild = 2 * index + 2;
+
+    if (leftChild < len && this.heap[leftChild] < this.heap[smallest]) {
+      smallest = leftChild;
+    }
+
+    if (rightChild < len && this.heap[rightChild] < this.heap[smallest]) {
+      smallest = rightChild;
+    }
+
+    if (smallest !== index) {
+      [this.heap[smallest], this.heap[index]] = [this.heap[index], this.heap[smallest]];
+      this.heapifyDown(smallest);
+    }
+  }
+
+  insert(value) {
+    this.heap.push(value);
+    this.heapifyUp(this.heap.length - 1);
+  }
+
+  extractMin() {
+    if (this.heap.length === 0) {
+      return null;
+    }
+    
+    const min = this.heap[0];
+    const lastIdx = this.heap.length - 1;
+    this.heap[0] = this.heap[lastIdx];
+    this.heap.pop();
+    this.heapifyDown(0);
+
+    return min;
+  }
 }
 
-class maxHeap {
-    constructor() {
-        this.nodes = []
-    }
 
-    insert(data) {
-        this.nodes.push(data)
-        this.bubbleUp()
-    }
+const minHeap = new MinHeap();
+const answer = [];
 
-    bubbleUp(index = this.nodes.length - 1) {
-        if (index < 1) return
-        let currentNode = this.nodes[index]
-        let parentIndex = Math.floor((index - 1) / 2)
-        let parentNode = this.nodes[parentIndex]
+for (let i = 0; i < N; i++) {
+  const x = ARR[i];
 
-        if (parentNode >= currentNode) return
-
-        this.nodes[parentIndex] = currentNode
-        this.nodes[index] = parentNode
-        index = parentIndex
-        this.bubbleUp(index)
-    }
-
-    extract() {
-        const max = this.nodes[0]
-        if (this.nodes.length === 1) {
-            this.nodes.pop()
-            return max
-        }
-        this.nodes[0] = this.nodes.pop()
-        this.trickleDown()
-        return max
-    }
-
-    trickleDown(index = 0) {
-        let leftChildIndex = index * 2 + 1
-        let rightChildIndex = index * 2 + 2
-        let length = this.nodes.length
-        let maximum = index
-
-        if (!this.nodes[leftChildIndex] && !this.nodes[rightChildIndex]) return
-
-        if (!this.nodes[rightChildIndex]) {
-            if (this.nodes[leftChildIndex] > this.nodes[maximum]) {
-                maximum = leftChildIndex
-            }
-        }
-
-        if (this.nodes[leftChildIndex] < this.nodes[rightChildIndex]) {
-            if (rightChildIndex <= length && this.nodes[rightChildIndex] > this.nodes[maximum]) {
-                maximum = rightChildIndex
-            }
-        } else {
-            if (leftChildIndex <= length && this.nodes[leftChildIndex] > this.nodes[maximum]) {
-                maximum = leftChildIndex
-            }
-        }
-
-        if (maximum !== index) {
-            let t = this.nodes[maximum]
-            this.nodes[maximum] = this.nodes[index]
-            this.nodes[index] = t
-            this.trickleDown(maximum)
-        }
-    }
+  if (x !== 0) {
+    minHeap.insert(x);
+  } else {
+    const min = minHeap.extractMin() || 0;
+    answer.push(min);
+  }
 }
-const heap = new maxHeap()
-let extracts = ''
-operations.forEach((operation, index) => {
-    if (operation !== 0) {
-        heap.insert(operation)
-    } else {
-        if (heap.nodes.length === 0) {
-            extracts += "0" + "\n"
-        } else {
-            let t = heap.extract()
-            extracts += t + "\n"
-        }
-    }
-})
 
-console.log(extracts.trim())
+console.log(answer.join('\n'));
