@@ -4942,79 +4942,200 @@
 // console.log(extracts.trim())
 
 //1927-최소 힙
-const [N, ...ARR] = require('fs')
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : './input.txt')
-  .toString()
-  .trim()
-  .split('\n')
-  .map(Number);
+// const [N, ...ARR] = require('fs')
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : './input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n')
+//   .map(Number);
 
-class MinHeap {
-  constructor() {
-    this.heap = [];
-  }
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
 
-  heapifyUp(index) {
-    const parentIndex = Math.floor((index - 1) / 2);
-    if (parentIndex >= 0 && this.heap[index] < this.heap[parentIndex]) {
-      [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
-      this.heapifyUp(parentIndex);
-    }
-  }
+//   heapifyUp(index) {
+//     const parentIndex = Math.floor((index - 1) / 2);
+//     if (parentIndex >= 0 && this.heap[index] < this.heap[parentIndex]) {
+//       [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
+//       this.heapifyUp(parentIndex);
+//     }
+//   }
 
-  heapifyDown(index) {
-    const len = this.heap.length;
-    let smallest = index;
-    const leftChild = 2 * index + 1;
-    const rightChild = 2 * index + 2;
+//   heapifyDown(index) {
+//     const len = this.heap.length;
+//     let smallest = index;
+//     const leftChild = 2 * index + 1;
+//     const rightChild = 2 * index + 2;
 
-    if (leftChild < len && this.heap[leftChild] < this.heap[smallest]) {
-      smallest = leftChild;
-    }
+//     if (leftChild < len && this.heap[leftChild] < this.heap[smallest]) {
+//       smallest = leftChild;
+//     }
 
-    if (rightChild < len && this.heap[rightChild] < this.heap[smallest]) {
-      smallest = rightChild;
-    }
+//     if (rightChild < len && this.heap[rightChild] < this.heap[smallest]) {
+//       smallest = rightChild;
+//     }
 
-    if (smallest !== index) {
-      [this.heap[smallest], this.heap[index]] = [this.heap[index], this.heap[smallest]];
-      this.heapifyDown(smallest);
-    }
-  }
+//     if (smallest !== index) {
+//       [this.heap[smallest], this.heap[index]] = [this.heap[index], this.heap[smallest]];
+//       this.heapifyDown(smallest);
+//     }
+//   }
 
-  insert(value) {
-    this.heap.push(value);
-    this.heapifyUp(this.heap.length - 1);
-  }
+//   insert(value) {
+//     this.heap.push(value);
+//     this.heapifyUp(this.heap.length - 1);
+//   }
 
-  extractMin() {
-    if (this.heap.length === 0) {
-      return null;
-    }
+//   extractMin() {
+//     if (this.heap.length === 0) {
+//       return null;
+//     }
     
-    const min = this.heap[0];
-    const lastIdx = this.heap.length - 1;
-    this.heap[0] = this.heap[lastIdx];
-    this.heap.pop();
-    this.heapifyDown(0);
+//     const min = this.heap[0];
+//     const lastIdx = this.heap.length - 1;
+//     this.heap[0] = this.heap[lastIdx];
+//     this.heap.pop();
+//     this.heapifyDown(0);
 
-    return min;
-  }
+//     return min;
+//   }
+// }
+
+
+// const minHeap = new MinHeap();
+// const answer = [];
+
+// for (let i = 0; i < N; i++) {
+//   const x = ARR[i];
+
+//   if (x !== 0) {
+//     minHeap.insert(x);
+//   } else {
+//     const min = minHeap.extractMin() || 0;
+//     answer.push(min);
+//   }
+// }
+
+// console.log(answer.join('\n'));
+
+//11279-최대힙
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
+
+class maxHeap {
+    constructor() {
+        this.nodes = []
+    }
+
+    insert(data) {
+        this.nodes.push(data)
+        //push된 가장 마지막 원소를 부모노드와 비교
+        this.bubbleUp()
+    }
+
+    //삽입된 노드를 위로 올려 부모와 비교하여 위치를 조정하는 메서드
+    bubbleUp(index = this.nodes.length - 1) {
+        if (index < 1) return
+        //현재노드
+        let currentNode = this.nodes[index]
+        //부모인덱스
+        let parentIndex = Math.floor((index - 1) / 2)
+        //부모노드
+        let parentNode = this.nodes[parentIndex]
+
+        //현재 노드와 부모 노드를 비교하여 부모 노드가 크다면 return.
+        if (parentNode >= currentNode) return
+
+        //현재 노드가 크다면 swap
+        this.nodes[parentIndex] = currentNode
+        this.nodes[index] = parentNode
+        index = parentIndex
+        //제자리를 찾을때까지 swap
+        this.bubbleUp(index)
+    }
+
+    //최대 힙에서 최댓값(루트 노드)을 추출
+    extract() {
+      //최댓값 정의
+        const max = this.nodes[0]
+
+        //힙의 길이가 1이면 pop하고 해당원소를 return
+        if (this.nodes.length === 1) {
+            this.nodes.pop()
+            return max
+        }
+
+        //현재 힙에 있는 가장 마지막 노드를 루트 자리에 놓는다.
+        this.nodes[0] = this.nodes.pop()
+        //최대 힙 속성을 다시 만족하도록 한다.
+        this.trickleDown()
+        return max
+    }
+
+    //부모자식 관계 재정리
+    trickleDown(index = 0) {
+      //왼쪽 자식 index: (현재 노드의 index × 2) + 1
+        let leftChildIndex = index * 2 + 1
+        //오른쪽 자식 index: (현재 노드의 index × 2) + 2
+        let rightChildIndex = index * 2 + 2
+        let length = this.nodes.length
+        let maximum = index
+
+        //자식이 둘 다 없으면? 마침내 제자리를 찾았다는 의미다. 재귀를 멈춘다.
+        if (!this.nodes[leftChildIndex] && !this.nodes[rightChildIndex]) return
+
+        //왼쪽 자식만 있으면?(=오른쪽 자식이 없다면) 왼쪽 자식과 비교한다.
+        if (!this.nodes[rightChildIndex]) {
+            if (this.nodes[leftChildIndex] > this.nodes[maximum]) {
+                maximum = leftChildIndex
+            }
+        }
+
+        //자식이 둘 다 있으면? 두 자식 중 값이 더 큰 자식과 비교한다.
+        if (this.nodes[leftChildIndex] < this.nodes[rightChildIndex]) {
+            if (rightChildIndex <= length && this.nodes[rightChildIndex] > this.nodes[maximum]) {
+                maximum = rightChildIndex
+            }
+        } else {
+            if (leftChildIndex <= length && this.nodes[leftChildIndex] > this.nodes[maximum]) {
+                maximum = leftChildIndex
+            }
+        }
+
+        if (maximum !== index) {
+            let t = this.nodes[maximum]
+            this.nodes[maximum] = this.nodes[index]
+            this.nodes[index] = t
+            this.trickleDown(maximum)
+        }
+    }
 }
 
+let operations = []
 
-const minHeap = new MinHeap();
-const answer = [];
-
-for (let i = 0; i < N; i++) {
-  const x = ARR[i];
-
-  if (x !== 0) {
-    minHeap.insert(x);
-  } else {
-    const min = minHeap.extractMin() || 0;
-    answer.push(min);
-  }
+for (let i = 1; i < input.length; i++) {
+    operations.push(+input[i])
 }
 
-console.log(answer.join('\n'));
+const heap = new maxHeap()
+let extracts = ''
+
+operations.forEach((operation, index) => {
+    if (operation !== 0) {
+        heap.insert(operation)
+    } else {
+      //힙의 노드 개수가 0이라면, 추출할 값이 없으므로 "0"을 extracts에 추가한다.
+        if (heap.nodes.length === 0) {
+            extracts += "0" + "\n"
+        } else {
+          //그렇지 않으면, heap.extract()를 호출하여 힙에서 최댓값을 추출하고, extracts에 추가한다.
+            let t = heap.extract()
+            extracts += t + "\n"
+        }
+    }
+})
+
+console.log(extracts.trim())
+
