@@ -5239,99 +5239,112 @@
 // console.log(extracts.trim());
 
 //11286-절댓값 힙
-const fs = require('fs');
-const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-const [_, ...input] = fs.readFileSync(filePath).toString().trim().split("\n");
+// const fs = require('fs');
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-const num = input.map(v => +v);
+// let operations = [];
 
-class AbsoluteMinHeap {
+// for (let i = 1; i < input.length; i++) {
+//   operations.push(+input[i]);
+// }
+
+// const heap = new AbsoluteMinHeap();
+// let extracts = '';
+
+// operations.forEach((operation, index) => {
+//   if (operation !== 0) {
+//       heap.insert(operation);
+//   } else {
+//       if (heap.nodes.length === 0) {
+//           extracts += "0" + "\n";
+//       } else {
+//           let t = heap.extract();
+//           extracts += t + "\n";
+//       }
+//   }
+// });
+
+// console.log(extracts.trim());
+
+//1715-카드 정렬하기
+class MinHeap {
   constructor() {
     this.heap = [];
   }
 
-  empty() {
-    if (this.heap.length == 0) {
-      return true;
+  getLength = () => {
+    return this.heap.length;
+  };
+
+  push = (node) => {
+    this.heap.push(node);
+    let i = this.heap.length - 1;
+    let parentI = Math.floor((i - 1) / 2);
+    while (i > 0 && this.heap[parentI] > this.heap[i]) {
+      this.swap(i, parentI);
+      i = parentI;
+      parentI = Math.floor((i - 1) / 2);
     }
-    return false;
-  }
+  };
 
-  swap(arr, x, y) {
-    let temp = arr[x];
-    arr[x] = arr[y];
-    arr[y] = temp;
-    return;
-  }
-
-  //[절대값, 원래값]으로 넣어줄 에정. 
-
-  insert(value) {
-    this.heap.push(value);
-    this.bubbleUp();
-  }
-
-  bubbleUp() {
-    let currentIndex = this.heap.length - 1;
-
-    while (currentIndex > 0) {
-      const parentIndex = Math.floor((currentIndex - 1) / 2);
-      if (this.heap[parentIndex][0] < this.heap[currentIndex][0]
-        || (this.heap[parentIndex][0] == this.heap[currentIndex][0] && this.heap[parentIndex][1] < this.heap[currentIndex][1])
-      ) {
-        break;
-      }
-      this.swap(this.heap, parentIndex, currentIndex)
-      currentIndex = parentIndex;
-    }
-  }
-
-
-  extractMin() {
-    if (this.heap.length == 1) {
+  pop = () => {
+    if (this.heap.length === 1) {
       return this.heap.pop();
     }
-    const min = this.heap[0];
+
+    const result = this.heap[0];
     this.heap[0] = this.heap.pop();
-    this.sinkDown(0);
-    return min
-  }
+    let i = 0;
+    while (true) {
+      const leftI = i * 2 + 1,
+        rightI = i * 2 + 2;
+      if (leftI >= this.heap.size) {
+        break;
+      }
+      let nextI = i;
+      if (this.heap[nextI] > this.heap[leftI]) {
+        nextI = leftI;
+      }
+      if (rightI < this.heap.length && this.heap[nextI] > this.heap[rightI]) {
+        nextI = rightI;
+      }
+      if (nextI === i) {
+        break;
+      }
+      this.swap(i, nextI);
+      i = nextI;
+    }
+    return result;
+  };
 
-  sinkDown(index) {
-    const leftIndex = 2 * index + 1;
-    const rightIndex = 2 * index + 2;
-    const length = this.heap.length;
-    let smallestIndex = index;
-
-    if (leftIndex < length && (this.heap[leftIndex][0] < this.heap[smallestIndex][0]
-      || (this.heap[leftIndex][0] == this.heap[smallestIndex][0]) && this.heap[leftIndex][1] < this.heap[smallestIndex][1])
-    ) {
-      smallestIndex = leftIndex;
-    }
-    if (rightIndex < length && (this.heap[rightIndex][0] < this.heap[smallestIndex][0]
-      || (this.heap[rightIndex][0] == this.heap[smallestIndex][0]) && this.heap[rightIndex][1] < this.heap[smallestIndex][1])
-    ) {
-      smallestIndex = rightIndex;
-    }
-    if (smallestIndex !== index) {
-      this.swap(this.heap, index, smallestIndex);
-      this.sinkDown(smallestIndex)
-    }
-  }
+  swap = (a, b) => {
+    const temp = this.heap[a];
+    this.heap[a] = this.heap[b];
+    this.heap[b] = temp;
+  };
 }
 
-const answer = [];
-const maxHeap = new AbsoluteMinHeap();
-num.forEach(v => {
-  if (v == 0) {
-    if (maxHeap.empty()) {
-      answer.push(0);
-    } else {
-      answer.push(maxHeap.extractMin()[1]);
-    }
-  } else {
-    maxHeap.insert([Math.abs(v), v]);
-  }
-})
+const input = [];
 
-console.log(answer.join('\n'));
+require('readline')
+  .createInterface(process.stdin, process.stdout)
+  .on('line', function (line) {
+    input.push(line.trim());
+  })
+  .on('close', function () {
+    const minHeap = new MinHeap();
+    for (let i = 1; i < input.length; i++) {
+      minHeap.push(+input[i]);
+    }
+
+    let totalCompareCount = 0;
+    while (minHeap.getLength() > 1) {
+      let aCount = minHeap.pop();
+      let bCount = minHeap.pop();
+      let compareCount = aCount + bCount;
+      totalCompareCount += compareCount;
+      minHeap.push(compareCount);
+    }
+    console.log(totalCompareCount);
+  });
