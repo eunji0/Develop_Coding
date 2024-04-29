@@ -5268,83 +5268,247 @@
 // console.log(extracts.trim());
 
 //1715-카드 정렬하기
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   getLength = () => {
+//     return this.heap.length;
+//   };
+
+//   push = (node) => {
+//     this.heap.push(node);
+//     let i = this.heap.length - 1;
+//     let parentI = Math.floor((i - 1) / 2);
+//     while (i > 0 && this.heap[parentI] > this.heap[i]) {
+//       this.swap(i, parentI);
+//       i = parentI;
+//       parentI = Math.floor((i - 1) / 2);
+//     }
+//   };
+
+//   pop = () => {
+//     if (this.heap.length === 1) {
+//       return this.heap.pop();
+//     }
+
+//     const result = this.heap[0];
+//     this.heap[0] = this.heap.pop();
+//     let i = 0;
+//     while (true) {
+//       const leftI = i * 2 + 1,
+//         rightI = i * 2 + 2;
+//       if (leftI >= this.heap.size) {
+//         break;
+//       }
+//       let nextI = i;
+//       if (this.heap[nextI] > this.heap[leftI]) {
+//         nextI = leftI;
+//       }
+//       if (rightI < this.heap.length && this.heap[nextI] > this.heap[rightI]) {
+//         nextI = rightI;
+//       }
+//       if (nextI === i) {
+//         break;
+//       }
+//       this.swap(i, nextI);
+//       i = nextI;
+//     }
+//     return result;
+//   };
+
+//   swap = (a, b) => {
+//     const temp = this.heap[a];
+//     this.heap[a] = this.heap[b];
+//     this.heap[b] = temp;
+//   };
+// }
+
+// const input = [];
+
+// require('readline')
+//   .createInterface(process.stdin, process.stdout)
+//   .on('line', function (line) {
+//     input.push(line.trim());
+//   })
+//   .on('close', function () {
+//     const minHeap = new MinHeap();
+//     for (let i = 1; i < input.length; i++) {
+//       minHeap.push(+input[i]);
+//     }
+
+//     let totalCompareCount = 0;
+//     while (minHeap.getLength() > 1) {
+//       let aCount = minHeap.pop();
+//       let bCount = minHeap.pop();
+//       let compareCount = aCount + bCount;
+//       totalCompareCount += compareCount;
+//       minHeap.push(compareCount);
+//     }
+//     console.log(totalCompareCount);
+//   });
+
+
+//1665-가운데를 말해요
+const fs = require("fs");
+
+// 큰수그룹
 class MinHeap {
   constructor() {
-    this.heap = [];
+    this.values = [];
   }
 
-  getLength = () => {
-    return this.heap.length;
-  };
+  getLen() {
+    return this.values.length;
+  }
 
-  push = (node) => {
-    this.heap.push(node);
-    let i = this.heap.length - 1;
-    let parentI = Math.floor((i - 1) / 2);
-    while (i > 0 && this.heap[parentI] > this.heap[i]) {
-      this.swap(i, parentI);
-      i = parentI;
-      parentI = Math.floor((i - 1) / 2);
+  enqueue(val) {
+    this.values.push(val);
+    this.bubbleUp();
+  }
+
+  bubbleUp() {
+    let idx = this.values.length - 1;
+    const element = this.values[idx];
+    while (idx > 0) {
+      let parentIdx = Math.floor((idx - 1) / 2);
+      let parent = this.values[parentIdx];
+      if (element >= parent) break;
+      this.values[parentIdx] = element;
+      this.values[idx] = parent;
+      idx = parentIdx;
     }
-  };
+  }
 
-  pop = () => {
-    if (this.heap.length === 1) {
-      return this.heap.pop();
+  dequeue() {
+    const min = this.values[0];
+    const end = this.values.pop();
+    if (this.values.length > 0) {
+      this.values[0] = end;
+      this.sinkDown();
     }
+    return min;
+  }
 
-    const result = this.heap[0];
-    this.heap[0] = this.heap.pop();
-    let i = 0;
+  sinkDown() {
+    let idx = 0;
+    const length = this.values.length;
+    const element = this.values[0];
     while (true) {
-      const leftI = i * 2 + 1,
-        rightI = i * 2 + 2;
-      if (leftI >= this.heap.size) {
-        break;
+      let leftIdx = 2 * idx + 1;
+      let rightIdx = 2 * idx + 2;
+      let left, right;
+      let swap = null;
+      if (leftIdx < length) {
+        left = this.values[leftIdx];
+        if (left < element) {
+          swap = leftIdx;
+        }
       }
-      let nextI = i;
-      if (this.heap[nextI] > this.heap[leftI]) {
-        nextI = leftI;
+      if (rightIdx < length) {
+        right = this.values[rightIdx];
+        if (
+          (swap === null && right < element) ||
+          (swap !== null && right < left)
+        ) {
+          swap = rightIdx;
+        }
       }
-      if (rightI < this.heap.length && this.heap[nextI] > this.heap[rightI]) {
-        nextI = rightI;
-      }
-      if (nextI === i) {
-        break;
-      }
-      this.swap(i, nextI);
-      i = nextI;
+      if (swap === null) break;
+      this.values[idx] = this.values[swap];
+      this.values[swap] = element;
+      idx = swap;
     }
-    return result;
-  };
-
-  swap = (a, b) => {
-    const temp = this.heap[a];
-    this.heap[a] = this.heap[b];
-    this.heap[b] = temp;
-  };
+  }
 }
 
-const input = [];
+// 작은수그룹
+class MaxHeap {
+  constructor() {
+    this.values = [];
+  }
 
-require('readline')
-  .createInterface(process.stdin, process.stdout)
-  .on('line', function (line) {
-    input.push(line.trim());
-  })
-  .on('close', function () {
-    const minHeap = new MinHeap();
-    for (let i = 1; i < input.length; i++) {
-      minHeap.push(+input[i]);
-    }
+  getLen() {
+    return this.values.length;
+  }
 
-    let totalCompareCount = 0;
-    while (minHeap.getLength() > 1) {
-      let aCount = minHeap.pop();
-      let bCount = minHeap.pop();
-      let compareCount = aCount + bCount;
-      totalCompareCount += compareCount;
-      minHeap.push(compareCount);
+  enqueue(val) {
+    this.values.push(val);
+    this.bubbleUp();
+  }
+
+  bubbleUp() {
+    let idx = this.values.length - 1;
+    const element = this.values[idx];
+    while (idx > 0) {
+      let parentIdx = Math.floor((idx - 1) / 2);
+      let parent = this.values[parentIdx];
+      if (element <= parent) break;
+      this.values[parentIdx] = element;
+      this.values[idx] = parent;
+      idx = parentIdx;
     }
-    console.log(totalCompareCount);
-  });
+  }
+
+  dequeue() {
+    const max = this.values[0];
+    const end = this.values.pop();
+    if (this.values.length > 0) {
+      this.values[0] = end;
+      this.sinkDown();
+    }
+    return max;
+  }
+
+  sinkDown() {
+    let idx = 0;
+    const length = this.values.length;
+    const element = this.values[0];
+    while (true) {
+      let leftIdx = 2 * idx + 1;
+      let rightIdx = 2 * idx + 2;
+      let left, right;
+      let swap = null;
+      if (leftIdx < length) {
+        left = this.values[leftIdx];
+        if (left > element) {
+          swap = leftIdx;
+        }
+      }
+      if (rightIdx < length) {
+        right = this.values[rightIdx];
+        if (
+          (swap === null && right > element) ||
+          (swap !== null && right > left)
+        ) {
+          swap = rightIdx;
+        }
+      }
+      if (swap === null) break;
+      this.values[idx] = this.values[swap];
+      this.values[swap] = element;
+      idx = swap;
+    }
+  }
+}
+
+const input = fs.readFileSync("input.txt").toString().trim().split("\n");
+const N = parseInt(input[0]);
+const nums = input[1].split(" ").map(Number);
+const minHeap = new MinHeap();
+const maxHeap = new MaxHeap();
+const answer = [nums[0]];
+maxHeap.enqueue(nums[0]);
+for (let i = 1; i < N; i++) {
+  if (nums[i] > maxHeap.values[0]) minHeap.enqueue(nums[i]);
+  else maxHeap.enqueue(nums[i]);
+
+  if (minHeap.getLen() > maxHeap.getLen()) {
+    maxHeap.enqueue(minHeap.dequeue());
+  } else if (minHeap.getLen() + 1 < maxHeap.getLen()) {
+    minHeap.enqueue(maxHeap.dequeue());
+  }
+  answer.push(maxHeap.values[0]);
+}
+console.log(answer.join("\n"));
