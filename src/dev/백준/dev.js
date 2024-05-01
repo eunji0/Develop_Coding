@@ -5515,79 +5515,128 @@
 
 //1202-보석도둑
 //우선순위 큐
-class PriorityQueue {
-  constructor() {
-    this.store = [];
-  }
-  //무게와 가격을 받아서 배열에 넣어준다.
-  enqueue(name, score) {
-    this.store.push([name, score]);
-  }
-  //제일 큰 값을 리턴
-  dequeue() {
-    let entry = 0;
-    this.store.forEach((item, index) => {
-      if (this.store[entry][1] < this.store[index][1]) {
-        entry = index;
-      }
-    });
-    return this.store.splice(entry, 1);
-  }
+// class PriorityQueue {
+//   constructor() {
+//     this.store = [];
+//   }
+//   //무게와 가격을 받아서 배열에 넣어준다.
+//   enqueue(name, score) {
+//     this.store.push([name, score]);
+//   }
+//   //제일 큰 값을 리턴
+//   dequeue() {
+//     let entry = 0;
+//     this.store.forEach((item, index) => {
+//       if (this.store[entry][1] < this.store[index][1]) {
+//         entry = index;
+//       }
+//     });
+//     return this.store.splice(entry, 1);
+//   }
+// }
+
+// const solution = (k, priorityQueue, bag) => {
+//   let cnt = 0;
+//   //가방 개수 만큼
+//   for (let i = 0; i < k; i++) {
+//     //우선순위 큐에서 제일 큰 보석정보 가져옴
+//     let value = priorityQueue.dequeue();
+
+//     //가방을 순회하면서 보석 무게보다 크거가 같은 경우는 그 보석을 담았다고 가정하고
+//     //담은 가방을 제외한 가방을 리턴함
+//     bag = bag.map((el, index) => {
+//       if (el >= value[0][0]) {
+//         return;
+//       } else {
+//         return el;
+//       }
+//     });
+//     cnt += value[0][1];
+//   }
+//   console.log(cnt);
+// };
+
+// const readline = require("readline");
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+
+// let input = [];
+// rl.on("line", function (line) {
+//   //여러줄 입력
+//   input.push(line);
+// }).on("close", function () {
+//   let [n, k] = input
+//     .shift()
+//     .split(" ")
+//     .map((el) => Number(el));
+
+//   //우선순위 큐 생성
+//   const priorityQueue = new PriorityQueue();
+
+//   for (let i = 0; i < n; i++) {
+//     let [x, y] = input[i].split(" ").map((el) => Number(el));
+//     //우선순위 큐에 보석 무게, 가격 담아줌
+//     priorityQueue.enqueue(x, y);
+//   }
+//   let bag = [];
+//   //가방넣어줌
+//   for (let j = 0; j < k; j++) {
+//     bag.push(Number(input[j]));
+//   }
+//   //가방 오름차순정렬
+//   bag = bag.sort((a, b) => a - b);
+//   solution(k, priorityQueue, bag);
+//   process.exit();
+// });
+
+//7662-이중 우선순위 큐
+const fs = require("fs");
+
+const MAX = 1000003;
+const visited = new Array(MAX).fill(false);
+
+const input = fs.readFileSync("input.txt").toString().trim().split("\n");
+
+const output = [];
+
+const N = parseInt(input[0]);
+let idx = 1;
+for (let i = 0; i < N; i++) {
+    const M = parseInt(input[idx++]);
+    const maxPQ = [];
+    const minPQ = [];
+
+    for (let j = 0; j < M; j++) {
+        const [command, num] = input[idx++].split(" ");
+        if (command === 'I') {
+            const index = j;
+            minPQ.push({ num: parseInt(num), index });
+            maxPQ.push({ num: parseInt(num), index });
+            visited[index] = true;
+        } else if (command === 'D') {
+            if (num === '1') {
+                while (maxPQ.length && !visited[maxPQ[0].index]) maxPQ.shift();
+                if (!maxPQ.length) continue;
+                visited[maxPQ[0].index] = false;
+                maxPQ.shift();
+            } else if (num === '-1') {
+                while (minPQ.length && !visited[minPQ[0].index]) minPQ.shift();
+                if (!minPQ.length) continue;
+                visited[minPQ[0].index] = false;
+                minPQ.shift();
+            }
+        }
+    }
+
+    while (maxPQ.length && !visited[maxPQ[0].index]) maxPQ.shift();
+    while (minPQ.length && !visited[minPQ[0].index]) minPQ.shift();
+
+    if (!minPQ.length || !maxPQ.length) output.push("EMPTY");
+    else output.push(`${maxPQ[0].num} ${minPQ[0].num}`);
 }
 
-const solution = (k, priorityQueue, bag) => {
-  let cnt = 0;
-  //가방 개수 만큼
-  for (let i = 0; i < k; i++) {
-    //우선순위 큐에서 제일 큰 보석정보 가져옴
-    let value = priorityQueue.dequeue();
+fs.writeFileSync("output.txt", output.join("\n"));
 
-    //가방을 순회하면서 보석 무게보다 크거가 같은 경우는 그 보석을 담았다고 가정하고
-    //담은 가방을 제외한 가방을 리턴함
-    bag = bag.map((el, index) => {
-      if (el >= value[0][0]) {
-        return;
-      } else {
-        return el;
-      }
-    });
-    cnt += value[0][1];
-  }
-  console.log(cnt);
-};
-
-const readline = require("readline");
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-let input = [];
-rl.on("line", function (line) {
-  //여러줄 입력
-  input.push(line);
-}).on("close", function () {
-  let [n, k] = input
-    .shift()
-    .split(" ")
-    .map((el) => Number(el));
-
-  //우선순위 큐 생성
-  const priorityQueue = new PriorityQueue();
-
-  for (let i = 0; i < n; i++) {
-    let [x, y] = input[i].split(" ").map((el) => Number(el));
-    //우선순위 큐에 보석 무게, 가격 담아줌
-    priorityQueue.enqueue(x, y);
-  }
-  let bag = [];
-  //가방넣어줌
-  for (let j = 0; j < k; j++) {
-    bag.push(Number(input[j]));
-  }
-  //가방 오름차순정렬
-  bag = bag.sort((a, b) => a - b);
-  solution(k, priorityQueue, bag);
-  process.exit();
-});
 
