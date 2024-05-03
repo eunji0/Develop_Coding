@@ -5592,51 +5592,131 @@
 // });
 
 //7662-이중 우선순위 큐
-const fs = require("fs");
+// const fs = require("fs");
 
-const MAX = 1000003;
-const visited = new Array(MAX).fill(false);
+// const MAX = 1000003;
+// const visited = new Array(MAX).fill(false);
 
-const input = fs.readFileSync("input.txt").toString().trim().split("\n");
+// const input = fs.readFileSync("input.txt").toString().trim().split("\n");
 
-const output = [];
+// const output = [];
 
-const N = parseInt(input[0]);
-let idx = 1;
-for (let i = 0; i < N; i++) {
-    const M = parseInt(input[idx++]);
-    const maxPQ = [];
-    const minPQ = [];
+// const N = parseInt(input[0]);
+// let idx = 1;
+// for (let i = 0; i < N; i++) {
+//     const M = parseInt(input[idx++]);
+//     const maxPQ = [];
+//     const minPQ = [];
 
-    for (let j = 0; j < M; j++) {
-        const [command, num] = input[idx++].split(" ");
-        if (command === 'I') {
-            const index = j;
-            minPQ.push({ num: parseInt(num), index });
-            maxPQ.push({ num: parseInt(num), index });
-            visited[index] = true;
-        } else if (command === 'D') {
-            if (num === '1') {
-                while (maxPQ.length && !visited[maxPQ[0].index]) maxPQ.shift();
-                if (!maxPQ.length) continue;
-                visited[maxPQ[0].index] = false;
-                maxPQ.shift();
-            } else if (num === '-1') {
-                while (minPQ.length && !visited[minPQ[0].index]) minPQ.shift();
-                if (!minPQ.length) continue;
-                visited[minPQ[0].index] = false;
-                minPQ.shift();
-            }
-        }
+//     for (let j = 0; j < M; j++) {
+//         const [command, num] = input[idx++].split(" ");
+//         if (command === 'I') {
+//             const index = j;
+//             minPQ.push({ num: parseInt(num), index });
+//             maxPQ.push({ num: parseInt(num), index });
+//             visited[index] = true;
+//         } else if (command === 'D') {
+//             if (num === '1') {
+//                 while (maxPQ.length && !visited[maxPQ[0].index]) maxPQ.shift();
+//                 if (!maxPQ.length) continue;
+//                 visited[maxPQ[0].index] = false;
+//                 maxPQ.shift();
+//             } else if (num === '-1') {
+//                 while (minPQ.length && !visited[minPQ[0].index]) minPQ.shift();
+//                 if (!minPQ.length) continue;
+//                 visited[minPQ[0].index] = false;
+//                 minPQ.shift();
+//             }
+//         }
+//     }
+
+//     while (maxPQ.length && !visited[maxPQ[0].index]) maxPQ.shift();
+//     while (minPQ.length && !visited[minPQ[0].index]) minPQ.shift();
+
+//     if (!minPQ.length || !maxPQ.length) output.push("EMPTY");
+//     else output.push(`${maxPQ[0].num} ${minPQ[0].num}`);
+// }
+
+// fs.writeFileSync("output.txt", output.join("\n"));
+
+//1715-카드 정렬하기
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  getLength = () => {
+    return this.heap.length;
+  };
+
+  push = (node) => {
+    this.heap.push(node);
+    let i = this.heap.length - 1;
+    let parentI = Math.floor((i - 1) / 2);
+    while (i > 0 && this.heap[parentI] > this.heap[i]) {
+      this.swap(i, parentI);
+      i = parentI;
+      parentI = Math.floor((i - 1) / 2);
+    }
+  };
+
+  pop = () => {
+    if (this.heap.length === 1) {
+      return this.heap.pop();
     }
 
-    while (maxPQ.length && !visited[maxPQ[0].index]) maxPQ.shift();
-    while (minPQ.length && !visited[minPQ[0].index]) minPQ.shift();
+    const result = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    let i = 0;
+    while (true) {
+      const leftI = i * 2 + 1,
+        rightI = i * 2 + 2;
+      if (leftI >= this.heap.size) {
+        break;
+      }
+      let nextI = i;
+      if (this.heap[nextI] > this.heap[leftI]) {
+        nextI = leftI;
+      }
+      if (rightI < this.heap.length && this.heap[nextI] > this.heap[rightI]) {
+        nextI = rightI;
+      }
+      if (nextI === i) {
+        break;
+      }
+      this.swap(i, nextI);
+      i = nextI;
+    }
+    return result;
+  };
 
-    if (!minPQ.length || !maxPQ.length) output.push("EMPTY");
-    else output.push(`${maxPQ[0].num} ${minPQ[0].num}`);
+  swap = (a, b) => {
+    const temp = this.heap[a];
+    this.heap[a] = this.heap[b];
+    this.heap[b] = temp;
+  };
 }
 
-fs.writeFileSync("output.txt", output.join("\n"));
+const input = [];
 
+require('readline')
+  .createInterface(process.stdin, process.stdout)
+  .on('line', function (line) {
+    input.push(line.trim());
+  })
+  .on('close', function () {
+    const minHeap = new MinHeap();
+    for (let i = 1; i < input.length; i++) {
+      minHeap.push(+input[i]);
+    }
 
+    let totalCompareCount = 0;
+    while (minHeap.getLength() > 1) {
+      let aCount = minHeap.pop();
+      let bCount = minHeap.pop();
+      let compareCount = aCount + bCount;
+      totalCompareCount += compareCount;
+      minHeap.push(compareCount);
+    }
+    console.log(totalCompareCount);
+  });
