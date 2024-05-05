@@ -5753,9 +5753,116 @@
 
 // console.log(answer);
 
-//1927-최소힙
-const fs = require("fs");
-const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-const input = fs.readFileSync(filePath).toString().trim().split("\n");
+//2075-n번째 큰 수
+const readline = require('readline');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
+let n;
+
+rl.question('', (answer) => {
+  n = Number(answer);
+
+  rl.on('line', lineListener).on('close', closeListener);
+});
+
+class MinHeap {
+  constructor() {
+    this.list = [];
+  }
+
+  swap(a, b) {
+    const tmp = this.list[a];
+    this.list[a] = this.list[b];
+    this.list[b] = tmp;
+  }
+
+  push(num) {
+    this.list.push(num);
+    let index = this.size - 1;
+
+    while (index > 0) {
+      const parentIndex = Math.floor((index - 1) / 2);
+      const parent = this.list[parentIndex];
+      const currentChild = this.list[index];
+
+      if (parent <= currentChild) {
+        break;
+      }
+
+      this.swap(parentIndex, index);
+      index = parentIndex;
+    }
+  }
+
+  shift() {
+    this.swap(0, this.size - 1);
+    this.list.pop();
+
+    let index = 0;
+
+    while (true) {
+      const leftChildIndex = index * 2 + 1;
+
+      if (leftChildIndex >= this.size) {
+        break;
+      }
+
+      const rightChildIndex = index * 2 + 2;
+      const leftChild = this.list[leftChildIndex];
+      const rightChild = this.list[rightChildIndex];
+
+      let minChildIndex;
+      let minChild;
+
+      if (rightChild === undefined || leftChild < rightChild) {
+        minChildIndex = leftChildIndex;
+        minChild = leftChild;
+      } else {
+        minChildIndex = rightChildIndex;
+        minChild = rightChild;
+      }
+
+      if (minChild >= this.list[index]) {
+        break;
+      }
+
+      this.swap(index, minChildIndex);
+      index = minChildIndex;
+    }
+  }
+
+  peek() {
+    return this.list[0];
+  }
+
+  get size() {
+    return this.list.length;
+  }
+}
+
+const priorityQ = new MinHeap();
+
+function lineListener(line) {
+  if (line === '') {
+    rl.close();
+  }
+
+  line.split(' ').forEach((num) => {
+    num = Number(num);
+
+    priorityQ.push(num);
+
+    if (priorityQ.size > n) {
+      priorityQ.shift();
+    }
+  });
+}
+
+function closeListener() {
+  console.log(priorityQ.peek());
+  process.exit();
+}
 
