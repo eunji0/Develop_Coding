@@ -5754,115 +5754,148 @@
 // console.log(answer);
 
 //2075-n번째 큰 수
-const readline = require('readline');
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
+// const readline = require('readline');
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+
+// let n;
+
+// rl.question('', (answer) => {
+//   n = Number(answer);
+
+//   rl.on('line', lineListener).on('close', closeListener);
+// });
+
+// class MinHeap {
+//   constructor() {
+//     this.list = [];
+//   }
+
+//   swap(a, b) {
+//     const tmp = this.list[a];
+//     this.list[a] = this.list[b];
+//     this.list[b] = tmp;
+//   }
+
+//   push(num) {
+//     this.list.push(num);
+//     let index = this.size - 1;
+
+//     while (index > 0) {
+//       const parentIndex = Math.floor((index - 1) / 2);
+//       const parent = this.list[parentIndex];
+//       const currentChild = this.list[index];
+
+//       if (parent <= currentChild) {
+//         break;
+//       }
+
+//       this.swap(parentIndex, index);
+//       index = parentIndex;
+//     }
+//   }
+
+//   shift() {
+//     this.swap(0, this.size - 1);
+//     this.list.pop();
+
+//     let index = 0;
+
+//     while (true) {
+//       const leftChildIndex = index * 2 + 1;
+
+//       if (leftChildIndex >= this.size) {
+//         break;
+//       }
+
+//       const rightChildIndex = index * 2 + 2;
+//       const leftChild = this.list[leftChildIndex];
+//       const rightChild = this.list[rightChildIndex];
+
+//       let minChildIndex;
+//       let minChild;
+
+//       if (rightChild === undefined || leftChild < rightChild) {
+//         minChildIndex = leftChildIndex;
+//         minChild = leftChild;
+//       } else {
+//         minChildIndex = rightChildIndex;
+//         minChild = rightChild;
+//       }
+
+//       if (minChild >= this.list[index]) {
+//         break;
+//       }
+
+//       this.swap(index, minChildIndex);
+//       index = minChildIndex;
+//     }
+//   }
+
+//   peek() {
+//     return this.list[0];
+//   }
+
+//   get size() {
+//     return this.list.length;
+//   }
+// }
+
+// const priorityQ = new MinHeap();
+
+// function lineListener(line) {
+//   if (line === '') {
+//     rl.close();
+//   }
+
+//   line.split(' ').forEach((num) => {
+//     num = Number(num);
+
+//     priorityQ.push(num);
+
+//     if (priorityQ.size > n) {
+//       priorityQ.shift();
+//     }
+//   });
+// }
+
+// function closeListener() {
+//   console.log(priorityQ.peek());
+//   process.exit();
+// }
+
+//24479-깊이 우선 탐색 1
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+const [N, M, R] = input.shift().split(' ').map(Number);
+const arr = input.map((v) => v.split(' ').map(Number));
+const graph = [...Array(N + 1)].map(() => []);
+const visited = Array(N).fill(0);
+let cnt = 1;
+
+// 무방향(양방향) 그래프 만들기
+arr.map(([from, to]) => {
+  graph[from].push(to);
+  graph[to].push(from);
 });
 
-let n;
+// 오름차순 정렬
+graph.map((v) => v.sort((a, b) => a - b));
 
-rl.question('', (answer) => {
-  n = Number(answer);
-
-  rl.on('line', lineListener).on('close', closeListener);
-});
-
-class MinHeap {
-  constructor() {
-    this.list = [];
+// DFS
+const dfs = (node) => {
+  // graph의 0번째 인덱스는 쓰지 않으므로 현재 노드번호에 -1의 방문여부 체크
+  if (!visited[node - 1]) {
+    // 방문 체크함과 동시에 해당 인덱스의 값은 1씩 증가하는 cnt로 넣어준다.
+    visited[node - 1] = cnt;
+    cnt++;
+    for (const next of graph[node]) dfs(next); // 재귀
   }
+};
 
-  swap(a, b) {
-    const tmp = this.list[a];
-    this.list[a] = this.list[b];
-    this.list[b] = tmp;
-  }
+dfs(R);
 
-  push(num) {
-    this.list.push(num);
-    let index = this.size - 1;
-
-    while (index > 0) {
-      const parentIndex = Math.floor((index - 1) / 2);
-      const parent = this.list[parentIndex];
-      const currentChild = this.list[index];
-
-      if (parent <= currentChild) {
-        break;
-      }
-
-      this.swap(parentIndex, index);
-      index = parentIndex;
-    }
-  }
-
-  shift() {
-    this.swap(0, this.size - 1);
-    this.list.pop();
-
-    let index = 0;
-
-    while (true) {
-      const leftChildIndex = index * 2 + 1;
-
-      if (leftChildIndex >= this.size) {
-        break;
-      }
-
-      const rightChildIndex = index * 2 + 2;
-      const leftChild = this.list[leftChildIndex];
-      const rightChild = this.list[rightChildIndex];
-
-      let minChildIndex;
-      let minChild;
-
-      if (rightChild === undefined || leftChild < rightChild) {
-        minChildIndex = leftChildIndex;
-        minChild = leftChild;
-      } else {
-        minChildIndex = rightChildIndex;
-        minChild = rightChild;
-      }
-
-      if (minChild >= this.list[index]) {
-        break;
-      }
-
-      this.swap(index, minChildIndex);
-      index = minChildIndex;
-    }
-  }
-
-  peek() {
-    return this.list[0];
-  }
-
-  get size() {
-    return this.list.length;
-  }
-}
-
-const priorityQ = new MinHeap();
-
-function lineListener(line) {
-  if (line === '') {
-    rl.close();
-  }
-
-  line.split(' ').forEach((num) => {
-    num = Number(num);
-
-    priorityQ.push(num);
-
-    if (priorityQ.size > n) {
-      priorityQ.shift();
-    }
-  });
-}
-
-function closeListener() {
-  console.log(priorityQ.peek());
-  process.exit();
-}
+console.log(visited.join('\n'));
 
