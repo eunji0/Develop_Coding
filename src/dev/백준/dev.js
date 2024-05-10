@@ -5933,50 +5933,79 @@
 // console.log(visited.join('\n'));
 
 //24444-너비우선탐색1
-const input = require("fs").readFileSync("dev/stdin").toString().trim().split("\n");
+// const input = require("fs").readFileSync("dev/stdin").toString().trim().split("\n");
 
-class Que {
-    q = [];
-    h = 0;
-    t = 0;
-    enque(v) {
-        this.q[this.t++] = v;
-    }
-    deque() {
-        const v = this.q[this.h];
-        delete this.q[this.h++];
-        return v;
-    }
-    size() {
-        return this.t - this.h;
-    }
+// class Que {
+//     q = [];
+//     h = 0;
+//     t = 0;
+//     enque(v) {
+//         this.q[this.t++] = v;
+//     }
+//     deque() {
+//         const v = this.q[this.h];
+//         delete this.q[this.h++];
+//         return v;
+//     }
+//     size() {
+//         return this.t - this.h;
+//     }
+// }
+
+// const [n, m, r] = input[0].split(" ").map(Number);
+// const graph = Array.from({ length: n + 1 }, () => []);
+// for (let i = 1; i <= m; i++) {
+//     const [a, b] = input[i].split(" ").map(Number);
+//     graph[a].push(b);
+//     graph[b].push(a);
+// }
+// graph.forEach((line) => line.sort((a, b) => a - b));
+// // console.log(graph);
+// const visited = new Array(n + 1).fill(0);
+
+// const queue = new Que();
+// queue.enque(r);
+// visited[r] = 1;
+
+// let step = 1;
+// while (queue.size()) {
+//     const cur = queue.deque();
+
+//     for (const next of graph[cur]) {
+//         if (!visited[next]) {
+//             queue.enque(next);
+//             visited[next] = ++step;
+//         }
+//     }
+// }
+
+// console.log(visited.slice(1).join("\n"));
+
+//24445-너비우선탐색2
+const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n'); 
+const [N, M, R] = input.shift().split(' ').map(v => +v); 
+const graph = Array.from({length:N+1}).map(() => []); //정점이 1부터 N까지 이니까, 배열의 idx를 N+1d 을 해줘야 생각하기 쉬움 
+for(let i=0; i<N; i++){ //만든 graph 채우기 
+    const [from, to] = input[i].split(' ').map(v => +v); 
+    graph[from].push(to); //간선 연결
+    graph[to].push(from);
 }
+graph.forEach((el) => el.sort((a,b) => b-a)); //내림차순 정렬  
+const visited = new Array(N+1).fill(0); //방문하지 않음 0 표시 
 
-const [n, m, r] = input[0].split(" ").map(Number);
-const graph = Array.from({ length: n + 1 }, () => []);
-for (let i = 1; i <= m; i++) {
-    const [a, b] = input[i].split(" ").map(Number);
-    graph[a].push(b);
-    graph[b].push(a);
-}
-graph.forEach((line) => line.sort((a, b) => a - b));
-// console.log(graph);
-const visited = new Array(n + 1).fill(0);
-
-const queue = new Que();
-queue.enque(r);
-visited[r] = 1;
-
-let step = 1;
-while (queue.size()) {
-    const cur = queue.deque();
-
-    for (const next of graph[cur]) {
-        if (!visited[next]) {
-            queue.enque(next);
-            visited[next] = ++step;
+const queue = []; 
+queue.push(R);// 시작 정점 push
+let cnt = 1; //첫번째 순서
+visited[R] = cnt //방문 표시 & 순서 표시 
+while(queue.length){
+    let cur = queue.shift(); //현재 방문하고 있는 정점 
+    for(let i=0; i<graph[cur].length; i++){ //방문한 정점과 연결되어있는 모든 정점 방문해보자
+        let nx = graph[cur][i]
+        if(visited[nx] === 0){ //단 이미 방문했으면 안됨 
+            queue.push(nx); //queue에 넣으면서 방문
+            visited[nx] = ++cnt;  //방문 표시 & 순서 표시 
         }
     }
 }
+console.log(visited.slice(1).join('\n')) //아까 visited 배열을 0부터 N 까지 생성했으니, idx 1부터 slice 하면 된다.
 
-console.log(visited.slice(1).join("\n"));
