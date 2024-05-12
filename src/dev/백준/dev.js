@@ -6010,30 +6010,76 @@
 // console.log(visited.slice(1).join('\n')) //아까 visited 배열을 0부터 N 까지 생성했으니, idx 1부터 slice 하면 된다.
 
 //2606-바이러스
-let input = require("fs").readFileSync("/dev/stdin").toString().split("\n");
-let node = Number(input[0]);
-let edge_num = Number(input[1]);
-let graph = [...new Array(node + 1)].map(() => []);
-let visited = [...new Array(node + 1)].fill(0);
-let ans = 0;
-// 그래프 생성
-for (let i = 0; i < edge_num; i++) {
-  let start = Number(input[i + 2].split(" ")[0]);
-  let end = Number(input[i + 2].split(" ")[1]);
-  graph[start].push(end);
-  graph[end].push(start);
-}
-// 1번노드 방문처리해주고 dfs 시작
-visited[1] = 1;
-function dfs(start) {
-  for (let end of graph[start]) {
-    if (!visited[end]) {
-      visited[end] = 1;
-      ans++;
-      dfs(end);
+// let input = require("fs").readFileSync("/dev/stdin").toString().split("\n");
+// let node = Number(input[0]);
+// let edge_num = Number(input[1]);
+// let graph = [...new Array(node + 1)].map(() => []);
+// let visited = [...new Array(node + 1)].fill(0);
+// let ans = 0;
+// // 그래프 생성
+// for (let i = 0; i < edge_num; i++) {
+//   let start = Number(input[i + 2].split(" ")[0]);
+//   let end = Number(input[i + 2].split(" ")[1]);
+//   graph[start].push(end);
+//   graph[end].push(start);
+// }
+// // 1번노드 방문처리해주고 dfs 시작
+// visited[1] = 1;
+// function dfs(start) {
+//   for (let end of graph[start]) {
+//     if (!visited[end]) {
+//       visited[end] = 1;
+//       ans++;
+//       dfs(end);
+//     }
+//   }
+// }
+// dfs(1);
+// console.log(ans);
+
+//1260-DFS와 BFS
+const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
+const [N, M, V] = input.shift().split(' ').map(Number);
+const edges = input.map(v => v.split(' ').map(Number));
+const graph = [...Array(N + 1)].map(() => []);
+edges.forEach(([from, to]) => {
+  graph[from].push(to);
+  graph[to].push(from);
+});
+
+const dfs = (start) => {
+  const stack = [start];
+  const visited = Array(N + 1).fill(false);
+  const order = [];
+  while (stack.length) {
+    const node = stack.pop();
+    if (!visited[node]) {
+      visited[node] = true;
+      order.push(node);
+      stack.push(...graph[node]);
     }
   }
-}
-dfs(1);
-console.log(ans);
+  return order.join(' ');
+};
+
+const bfs = (start) => {
+  const queue = [start];
+  const visited = Array(N + 1).fill(false);
+  const order = [];
+  while (queue.length) {
+    const node = queue.shift();
+    if (!visited[node]) {
+      visited[node] = true;
+      order.push(node);
+      queue.push(...graph[node]);
+    }
+  }
+  return order.join(' ');
+};
+
+graph.forEach(v => v.sort((a, b) => b - a));
+console.log(dfs(V));
+
+graph.forEach(v => v.sort((a, b) => a - b));
+console.log(bfs(V));
 
