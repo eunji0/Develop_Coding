@@ -6084,57 +6084,108 @@
 // console.log(bfs(V));
 
 //2667-단지번호붙이기
-const input = require('fs').readFileSync('example.txt').toString().trim().split('\n');
-const N = input.shift();
-const arr = input.map((item) => item.split('').map(Number))
+// const input = require('fs').readFileSync('example.txt').toString().trim().split('\n');
+// const N = input.shift();
+// const arr = input.map((item) => item.split('').map(Number))
 
-function bfs(x, y) {
-    const queue = [[x,y]];
-    const visited = {};
-    visited[[x,y]] = true;
-    visitedCoords[[x,y]] = true;
-    let dx = [0, 0, 1, -1];
-    let dy = [-1, 1, 0, 0];
-    let cnt = 1;
+// function bfs(x, y) {
+//     const queue = [[x,y]];
+//     const visited = {};
+//     visited[[x,y]] = true;
+//     visitedCoords[[x,y]] = true;
+//     let dx = [0, 0, 1, -1];
+//     let dy = [-1, 1, 0, 0];
+//     let cnt = 1;
 
-    while(queue.length) {
-        for(let i=0; i<queue.length; i++) {
-            let X = queue.shift();
-            for(let j = 0; j < 4; j++) {
-                let nx = X[0] + dx[j];
-                let ny = X[1] + dy[j];
-                if(( nx >= 0 &&
-                    ny >= 0 &&
-                    nx < arr.length &&
-                    ny < arr.length ) &&
-                // 좌표의 유효성 확인 
-                    (arr[nx][ny] === 1) &&
-                // 1일 경우에만 진행되므로 1인 경우만 좌표 출력
-                    (!visited[[nx,ny]])
-                // visited 확인
-                    )
-                {   
-                    visited[[nx,ny]] = true;
-                    visitedCoords[[nx,ny]] = true;
-                    cnt++;
-                    queue.push([nx,ny]);
-                }
-            }
-        }
+//     while(queue.length) {
+//         for(let i=0; i<queue.length; i++) {
+//             let X = queue.shift();
+//             for(let j = 0; j < 4; j++) {
+//                 let nx = X[0] + dx[j];
+//                 let ny = X[1] + dy[j];
+//                 if(( nx >= 0 &&
+//                     ny >= 0 &&
+//                     nx < arr.length &&
+//                     ny < arr.length ) &&
+//                 // 좌표의 유효성 확인 
+//                     (arr[nx][ny] === 1) &&
+//                 // 1일 경우에만 진행되므로 1인 경우만 좌표 출력
+//                     (!visited[[nx,ny]])
+//                 // visited 확인
+//                     )
+//                 {   
+//                     visited[[nx,ny]] = true;
+//                     visitedCoords[[nx,ny]] = true;
+//                     cnt++;
+//                     queue.push([nx,ny]);
+//                 }
+//             }
+//         }
+//     }
+//     return cnt;
+// }
+
+// // 정답 출력을 위해 좌표를 순회할때, 중복된 좌표를 순회하지 않기 위해서 추가로 삽입한 객체
+// // 여기서, ture로 지정된 좌표는 더이상 순회하지 않는다.
+// const visitedCoords = {};
+// const answer = [];
+// for(let i=0; i<N; i++) {
+//     for(let j=0; j<N; j++) {
+//         if(arr[i][j] === 1 && !visitedCoords[[i,j]]) answer.push(bfs(i,j));
+//     }
+// }
+
+// console.log(answer.length);
+// answer.sort((a,b) => a-b)
+// answer.forEach((item) => console.log(item));
+
+//1012-유기농 배추
+const input = require("fs").readFileSync("/dev/stdin").toString().trim().split("\n");
+const num = Number(input.shift());
+const ds = [
+  [-1, 0],
+  [1, 0],
+  [0, 1],
+  [0, -1],
+];
+function bfs(startX, startY) {
+  //시작 좌표 기준으로 시작
+  const queue = [[startX, startY]];
+  // queue가 비워지면 탈출
+  while (queue.length) {
+    const [x, y] = queue.shift();
+    // queue의 값을 하나씩 빼서 xy로 저장
+    // xy좌표가 0 이면 다시, 1이면 0으로 만들어준다.
+    // 인접한 1들 다 0으로 만들기
+    if (!map[x][y]) continue;
+    else map[x][y] = 0;
+
+    // 상하좌우 탐색하여 1이 있다면 queue에 push 해준다.
+    for (let i = 0; i < 4; i++) {
+      const xPos = x + ds[i][0];
+      const yPos = y + ds[i][1];
+
+      if (xPos < 0 || yPos < 0 || xPos >= M || yPos >= N) continue;
+      if (map[xPos][yPos]) queue.push([xPos, yPos]);
     }
-    return cnt;
+  }
 }
-
-// 정답 출력을 위해 좌표를 순회할때, 중복된 좌표를 순회하지 않기 위해서 추가로 삽입한 객체
-// 여기서, ture로 지정된 좌표는 더이상 순회하지 않는다.
-const visitedCoords = {};
-const answer = [];
-for(let i=0; i<N; i++) {
-    for(let j=0; j<N; j++) {
-        if(arr[i][j] === 1 && !visitedCoords[[i,j]]) answer.push(bfs(i,j));
+for (let i = 0; i < num; i++) {
+  let worm = 0;
+  var [M, N, K] = input.shift().split(" ").map(Number);
+  var map = Array.from(Array(M), () => new Array(N).fill(0));
+  for (let j = 0; j < K; j++) {
+    let xy = input.shift().split(" ");
+    map[xy[0]][xy[1]] = 1;
+  }
+  for (let k = 0; k < M; k++) {
+    for (let l = 0; l < N; l++) {
+      //만약 그 좌표가 1이라면 worm을 늘려주고 상하좌우 탐색하여 전부 0으로 만들어준다.
+      if (map[k][l]) {
+        bfs(k, l);
+        worm++;
+      }
     }
+  }
+  console.log(worm);
 }
-
-console.log(answer.length);
-answer.sort((a,b) => a-b)
-answer.forEach((item) => console.log(item));
