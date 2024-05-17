@@ -6192,42 +6192,75 @@
 
 
 //2178-미로탐색
-const sol = (input) => {
-    const [N, M] = input[0].split(" ").map((v) => +v);
-    const adjM = [];
-    for (let i = 1; i <= N; i++) adjM.push(input[i].split("").map((v) => +v)); // 미로 행렬
-    const check = Array.from({ length: N }, () => Array(M).fill(0)); // 방문 여부를 위한 체크 행렬
+// const sol = (input) => {
+//     const [N, M] = input[0].split(" ").map((v) => +v);
+//     const adjM = [];
+//     for (let i = 1; i <= N; i++) adjM.push(input[i].split("").map((v) => +v)); // 미로 행렬
+//     const check = Array.from({ length: N }, () => Array(M).fill(0)); // 방문 여부를 위한 체크 행렬
   
-    function bfs(row, col) {
-      const dx = [-1, 0, 1, 0];
-      const dy = [0, 1, 0, -1]; // 현재 위치로부터 동서남북 조회를 위한 dx, dy 배열
-      const queue = [];
-      queue.push([row, col]);
-      check[row][col] = 1;
-      while (queue.length) {
-        const [x, y] = queue.shift(); // 큐는 FIFO이므로, 맨 앞부터 꺼낸다.
-        for (let i = 0; i < 4; i++) {
-          const [nx, ny] = [x + dx[i], y + dy[i]]; // (nx, ny)는 이동 가능성이 있는 좌표.
-          if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue; // 미로를 벗어나는 좌표는 제외
-          if (adjM[nx][ny] && !check[nx][ny]) { // 길이 있고, 방문하지 않았다면 방문
-            check[nx][ny] = check[x][y] + 1; // (x,y)의 값이 (x,y)까지 최단경로에 해당한다.
-            queue.push([nx, ny]); // BFS(너비 우선)로 현재 위치에서 갈 수 있는 좌표를 모두 큐에 넣어준다.
-          }
-        }
-      }
-    }
-    bfs(0, 0);
-    return check[N - 1][M - 1];
-  };
+//     function bfs(row, col) {
+//       const dx = [-1, 0, 1, 0];
+//       const dy = [0, 1, 0, -1]; // 현재 위치로부터 동서남북 조회를 위한 dx, dy 배열
+//       const queue = [];
+//       queue.push([row, col]);
+//       check[row][col] = 1;
+//       while (queue.length) {
+//         const [x, y] = queue.shift(); // 큐는 FIFO이므로, 맨 앞부터 꺼낸다.
+//         for (let i = 0; i < 4; i++) {
+//           const [nx, ny] = [x + dx[i], y + dy[i]]; // (nx, ny)는 이동 가능성이 있는 좌표.
+//           if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue; // 미로를 벗어나는 좌표는 제외
+//           if (adjM[nx][ny] && !check[nx][ny]) { // 길이 있고, 방문하지 않았다면 방문
+//             check[nx][ny] = check[x][y] + 1; // (x,y)의 값이 (x,y)까지 최단경로에 해당한다.
+//             queue.push([nx, ny]); // BFS(너비 우선)로 현재 위치에서 갈 수 있는 좌표를 모두 큐에 넣어준다.
+//           }
+//         }
+//       }
+//     }
+//     bfs(0, 0);
+//     return check[N - 1][M - 1];
+//   };
   
-  // 백준에서 입력을 받기 위한 코드
-  const input = [];
-  require("readline")
-    .createInterface(process.stdin, process.stdout)
-    .on("line", (line) => {
-      input.push(line);
-    })
-    .on("close", () => {
-      console.log(sol(input));
-      process.exit();
-    });
+//   // 백준에서 입력을 받기 위한 코드
+//   const input = [];
+//   require("readline")
+//     .createInterface(process.stdin, process.stdout)
+//     .on("line", (line) => {
+//       input.push(line);
+//     })
+//     .on("close", () => {
+//       console.log(sol(input));
+//       process.exit();
+//     });
+
+//24479-알고리즘 수업 - 깊이 우선 탐색 1
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+const [N, M, R] = input.shift().split(' ').map(Number);
+const arr = input.map((v) => v.split(' ').map(Number));
+const graph = [...Array(N + 1)].map(() => []);
+const visited = Array(N).fill(0);
+let cnt = 1;
+
+// 무방향(양방향) 그래프 만들기
+arr.map(([from, to]) => {
+  graph[from].push(to);
+  graph[to].push(from);
+});
+
+// 오름차순 정렬
+graph.map((v) => v.sort((a, b) => a - b));
+
+// DFS
+const dfs = (node) => {
+  // graph의 0번째 인덱스는 쓰지 않으므로 현재 노드번호에 -1의 방문여부 체크
+  if (!visited[node - 1]) {
+    // 방문 체크함과 동시에 해당 인덱스의 값은 1씩 증가하는 cnt로 넣어준다.
+    visited[node - 1] = cnt;
+    cnt++;
+    for (const next of graph[node]) dfs(next); // 재귀
+  }
+};
+
+dfs(R);
+
+console.log(visited.join('\n'));
