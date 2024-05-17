@@ -49,7 +49,39 @@
 // console.log(popValue)
 
 //10773-제로
-class Zero {
+// class Zero {
+//   constructor() {
+//     this.arr = [];
+//   }
+
+//   push(data) {
+//     return this.arr.push(data);
+//   }
+
+//   pop() {
+//     return this.arr.pop();
+//   }
+// }
+
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+// const [n, ...arr] = input.map(Number);
+
+// let array = new Zero();
+
+// arr.forEach(v => {
+//   if (v === 0) {
+//     array.pop();
+//   } else {
+//     array.push(v);
+//   }
+// });
+
+// let sum = array.arr.reduce((a, c) => a + c, 0);
+// console.log(sum);
+
+//10799-쇠막대기
+class Stack {
   constructor() {
     this.arr = [];
   }
@@ -61,22 +93,30 @@ class Zero {
   pop() {
     return this.arr.pop();
   }
+
+  length() {
+    return this.arr.length;
+  }
 }
 
 const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
-const [n, ...arr] = input.map(Number);
+const input = require('fs').readFileSync(filePath).toString().trim().split('');
 
-let array = new Zero();
+let stack = new Stack();
+let answer =0;
 
-arr.forEach(v => {
-  if (v === 0) {
-    array.pop();
-  } else {
-    array.push(v);
+input.forEach((v, i)=>{
+  if(v==='('){
+    stack.push(v);
+  }else{
+    if(input[i-1]==='('){
+      stack.pop();
+      answer+=stack.length();
+    }else{
+      stack.pop();
+      answer++;
+    }
   }
-});
+})
 
-let sum = array.arr.reduce((a, c) => a + c, 0);
-console.log(sum);
-
+console.log(answer)
