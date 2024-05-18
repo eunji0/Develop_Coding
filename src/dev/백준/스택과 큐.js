@@ -187,12 +187,32 @@
 // console.log(count)
 
 //12605-단어순서 뒤집기
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+// const [n, ...arr] = input;
+
+// arr.forEach((v, i)=>{
+//   console.log(`Case #${i+1}: `+v.trim().split(' ').reverse().join(' '))
+// })
+
+//11899-괄호끼워넣기
 const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
-const [n, ...arr] = input;
+const input = require('fs').readFileSync(filePath).toString().trim().split('');
 
-arr.forEach((v, i)=>{
-  console.log(`Case #${i+1}: `+v.trim().split(' ').reverse().join(' '))
-})
+let balance = 0;  // 현재 균형을 나타내는 변수
+let additions = 0; // 추가해야 할 괄호의 개수를 저장하는 변수
 
+for(let str of input){
+  if(str === '('){
+    balance++;
+  }else{
+    balance--;
+  }
 
+  if(balance<0){
+    balance++;
+    additions++;
+  }
+}
+
+console.log(balance+additions)
