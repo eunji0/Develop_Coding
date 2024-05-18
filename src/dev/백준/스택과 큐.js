@@ -165,25 +165,34 @@
 // console.log(ans)
 
 //3986-좋은 단어
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+// const [n, ...arr]=input;
+
+// let count =0;
+
+// for(let word of arr){
+//   let stack = [];
+//   for(let letter of word){
+//     if(stack.length && stack[stack.length-1] === letter){
+//       stack.pop();
+//     }else{
+//       stack.push(letter);
+//     }
+//   }
+
+//   if(stack.length === 0) count++;
+// }
+
+// console.log(count)
+
+//12605-단어순서 뒤집기
 const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
 const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
-const [n, ...arr]=input;
+const [n, ...arr] = input;
 
-let count =0;
-
-for(let word of arr){
-  let stack = [];
-  for(let letter of word){
-    if(stack.length && stack[stack.length-1] === letter){
-      stack.pop();
-    }else{
-      stack.push(letter);
-    }
-  }
-
-  if(stack.length === 0) count++;
-}
-
-console.log(count)
+arr.forEach((v, i)=>{
+  console.log(`Case #${i+1}: `+v.trim().split(' ').reverse().join(' '))
+})
 
 
