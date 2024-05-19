@@ -108,6 +108,7 @@ arr.forEach(v=>{
   else if (command === "B") LStack.pop();
   //추가한 경우(P) LStack에 쌓는다
   else if (command === "P") LStack.push(val);
-  //왼쪽(LStack)부터 오른쪽(RStack) 값을 출력한다. 
- console.log([...LStack, ...RStack.reverse()].join(""));
 })
+
+  //왼쪽(LStack)부터 오른쪽(RStack) 값을 출력한다. 
+  console.log([...LStack, ...RStack.reverse()].join(""));
