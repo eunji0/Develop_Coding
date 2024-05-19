@@ -1,0 +1,88 @@
+//연결리스트
+class Node{
+  constructor(data){
+    this.data = data;
+    this.next=null;
+  }
+}
+
+class LinkedList {
+  constructor(){
+    let init = new Node('init');
+    this.head = init;
+    this.tail = init;
+  
+    this.현재노드 = undefined;
+    this.데이터수 =0;
+  }
+
+  length(){
+    return this.데이터수;
+  }
+
+  append(data){
+    let 새로운노드 = new Node(data);
+    this.tail.next = 새로운노드;
+    this.tail = 새로운노드;
+    this.데이터수+=1;
+  }
+
+  toString(){
+    let 순회용현재노드 = this.head;
+    순회용현재노드 = 순회용현재노드.next;
+
+    let s = '';
+    for(let i=0; i<this.데이터수; i++){
+      s+=`${순회용현재노드.data}, `
+
+      //순회용현재노드가 계속해서 next값을 가리켜야함
+      순회용현재노드 = 순회용현재노드.next;
+    }
+
+    //맨 마지막,이거는 빼고
+    return `${s.slice(0, -1)}`
+  }
+
+  getfullData(){
+    let 순회용현재노드 = this.head;
+    순회용현재노드 = 순회용현재노드.next;
+
+    let s = '';
+    for(let i=0; i<this.데이터수; i++){
+      s+=`${순회용현재노드.data}, `
+
+      //순회용현재노드가 계속해서 next값을 가리켜야함
+      순회용현재노드 = 순회용현재노드.next;
+    }
+
+    //맨 마지막,이거는 빼고
+    //배열로 바꿔줌
+    return JSON.parse(`[${s.slice(0, -2)}]`)
+  }
+
+  //index에 data를 넣어주는 메서드,
+  insert(index, data){
+    let 순회용현재노드 = this.head;
+    순회용현재노드 = 순회용현재노드.next;
+
+    for(let i=0; i<index-1; i++){
+      순회용현재노드 = 순회용현재노드.next;
+    }
+
+    let 새로운노드 = new Node(data);
+    새로운노드.next = 순회용현재노드.next;
+    순회용현재노드.next = 새로운노드;
+    this.데이터수+=1;
+  }
+}
+
+let l = new LinkedList();
+l.append(1);
+l.append(2);
+l.append(3);
+l.append(10);
+l.append(20);
+l.append(30);
+l.insert(2, 2000)
+console.log(l.length());
+console.log(l.toString())
