@@ -88,27 +88,48 @@
 // console.log(l.toString())
 
 //1406-에디터
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+// const [str, n, ...arr] = input.map(v=>v.trim());
+
+// let LStack = str.split('');// 커서의 왼쪽 stack
+// let RStack = [];// 커서의 오른쪽 stack
+
+// arr.forEach(v=>{
+//   const [command, val] = v.split(' ');
+
+//   //LStack의 길이가 0이 아닐 경우만, 왼쪽으로 커서 이동(L) 
+//   //커서가 왼쪽으로 이동하기 때문에 RStack에 쌓는다.
+//   if (command === "L" && LStack.length) RStack.push(LStack.pop());
+//   //RStack의 길이가 0이 아닐 경우만, 오른쪽으로 커서 이동(D)
+//   //마찬가지 이유로 LStack에 쌓는다.
+//   else if (command === "D" && RStack.length) LStack.push(RStack.pop());
+//   //제할 경우(B) LStack에서 지운다.
+//   else if (command === "B") LStack.pop();
+//   //추가한 경우(P) LStack에 쌓는다
+//   else if (command === "P") LStack.push(val);
+// })
+
+//   //왼쪽(LStack)부터 오른쪽(RStack) 값을 출력한다. 
+//   console.log([...LStack, ...RStack.reverse()].join(""));
+
+//5397-키로거
 const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
 const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
-const [str, n, ...arr] = input.map(v=>v.trim());
+const [n, ...arr] = input;
 
-let LStack = str.split('');// 커서의 왼쪽 stack
-let RStack = [];// 커서의 오른쪽 stack
+for(let i of arr){
+  let LStack = [];// 커서의 왼쪽 stack
+  let RStack = [];// 커서의 오른쪽 stack
 
-arr.forEach(v=>{
-  const [command, val] = v.split(' ');
+  const str= i.trim().split('');
 
-  //LStack의 길이가 0이 아닐 경우만, 왼쪽으로 커서 이동(L) 
-  //커서가 왼쪽으로 이동하기 때문에 RStack에 쌓는다.
-  if (command === "L" && LStack.length) RStack.push(LStack.pop());
-  //RStack의 길이가 0이 아닐 경우만, 오른쪽으로 커서 이동(D)
-  //마찬가지 이유로 LStack에 쌓는다.
-  else if (command === "D" && RStack.length) LStack.push(RStack.pop());
-  //제할 경우(B) LStack에서 지운다.
-  else if (command === "B") LStack.pop();
-  //추가한 경우(P) LStack에 쌓는다
-  else if (command === "P") LStack.push(val);
-})
+  str.forEach(v=>{
+    if(v==='<'&&LStack.length) RStack.push(LStack.pop())
+    else if (v==='>' && RStack.length) LStack.push(RStack.pop())
+    else if(v==='-'&&LStack.length) LStack.pop()
+    else if (v !== '<' && v !== '>' && v !== '-') LStack.push(v)
+  })
 
-  //왼쪽(LStack)부터 오른쪽(RStack) 값을 출력한다. 
-  console.log([...LStack, ...RStack.reverse()].join(""));
+  console.log(LStack.join('')+RStack.reverse().join(''))
+}
