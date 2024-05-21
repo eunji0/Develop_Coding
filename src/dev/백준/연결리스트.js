@@ -114,22 +114,100 @@
 //   console.log([...LStack, ...RStack.reverse()].join(""));
 
 //5397-키로거
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
-const [n, ...arr] = input;
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+// const [n, ...arr] = input;
 
-for(let i of arr){
-  let LStack = [];// 커서의 왼쪽 stack
-  let RStack = [];// 커서의 오른쪽 stack
+// for(let i of arr){
+//   let LStack = [];// 커서의 왼쪽 stack
+//   let RStack = [];// 커서의 오른쪽 stack
 
-  const str= i.trim().split('');
+//   const str= i.trim().split('');
 
-  str.forEach(v=>{
-    if(v==='<'&&LStack.length) RStack.push(LStack.pop())
-    else if (v==='>' && RStack.length) LStack.push(RStack.pop())
-    else if(v==='-'&&LStack.length) LStack.pop()
-    else if (v !== '<' && v !== '>' && v !== '-') LStack.push(v)
-  })
+//   str.forEach(v=>{
+//     if(v==='<'&&LStack.length) RStack.push(LStack.pop())
+//     else if (v==='>' && RStack.length) LStack.push(RStack.pop())
+//     else if(v==='-'&&LStack.length) LStack.pop()
+//     else if (v !== '<' && v !== '>' && v !== '-') LStack.push(v)
+//   })
 
-  console.log(LStack.join('')+RStack.reverse().join(''))
+//   console.log(LStack.join('')+RStack.reverse().join(''))
+// }
+
+//1158-요세푸스 문제
+class ListNode {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+    this.prev = null;
+  }
 }
+
+class CircularDoublyLinkedList {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.size = 0;
+  }
+
+  append(value) {
+    const newNode = new ListNode(value);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+      this.head.next = this.head;
+      this.head.prev = this.head;
+    } else {
+      newNode.prev = this.tail;
+      newNode.next = this.head;
+      this.tail.next = newNode;
+      this.head.prev = newNode;
+      this.tail = newNode;
+    }
+    this.size++;
+  }
+
+  remove(node) {
+    if (this.size === 1) {
+      this.head = null;
+      this.tail = null;
+    } else {
+      node.prev.next = node.next;
+      node.next.prev = node.prev;
+      if (node === this.head) this.head = node.next;
+      if (node === this.tail) this.tail = node.prev;
+    }
+    this.size--;
+    return node.value;
+  }
+}
+
+function josephusProblem(N, K) {
+  const list = new CircularDoublyLinkedList();
+
+  // 리스트에 1부터 N까지의 노드를 추가
+  for (let i = 1; i <= N; i++) {
+    list.append(i);
+  }
+
+  let result = [];
+  let currentNode = list.head;
+
+  // 리스트에서 K번째 노드를 제거하고 결과에 추가
+  while (list.size > 0) {
+    for (let i = 1; i < K; i++) {
+      currentNode = currentNode.next;
+    }
+    result.push(list.remove(currentNode));
+    currentNode = currentNode.next;
+  }
+
+  // 결과 출력
+  console.log(`<${result.join(', ')}>`);
+}
+
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+const [N, K] = require('fs').readFileSync(filePath).toString().trim().split(' ');
+josephusProblem(N, K);
+
+
