@@ -135,79 +135,145 @@
 // }
 
 //1158-요세푸스 문제
+// class ListNode {
+//   constructor(value) {
+//     this.value = value;
+//     this.next = null;
+//     this.prev = null;
+//   }
+// }
+
+// class CircularDoublyLinkedList {
+//   constructor() {
+//     this.head = null;
+//     this.tail = null;
+//     this.size = 0;
+//   }
+
+//   append(value) {
+//     const newNode = new ListNode(value);
+//     if (!this.head) {
+//       this.head = newNode;
+//       this.tail = newNode;
+//       this.head.next = this.head;
+//       this.head.prev = this.head;
+//     } else {
+//       newNode.prev = this.tail;
+//       newNode.next = this.head;
+//       this.tail.next = newNode;
+//       this.head.prev = newNode;
+//       this.tail = newNode;
+//     }
+//     this.size++;
+//   }
+
+//   remove(node) {
+//     if (this.size === 1) {
+//       this.head = null;
+//       this.tail = null;
+//     } else {
+//       node.prev.next = node.next;
+//       node.next.prev = node.prev;
+//       if (node === this.head) this.head = node.next;
+//       if (node === this.tail) this.tail = node.prev;
+//     }
+//     this.size--;
+//     return node.value;
+//   }
+// }
+
+// function josephusProblem(N, K) {
+//   const list = new CircularDoublyLinkedList();
+
+//   // 리스트에 1부터 N까지의 노드를 추가
+//   for (let i = 1; i <= N; i++) {
+//     list.append(i);
+//   }
+
+//   let result = [];
+//   let currentNode = list.head;
+
+//   // 리스트에서 K번째 노드를 제거하고 결과에 추가
+//   while (list.size > 0) {
+//     for (let i = 1; i < K; i++) {
+//       currentNode = currentNode.next;
+//     }
+//     result.push(list.remove(currentNode));
+//     currentNode = currentNode.next;
+//   }
+
+//   // 결과 출력
+//   console.log(`<${result.join(', ')}>`);
+// }
+
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const [N, K] = require('fs').readFileSync(filePath).toString().trim().split(' ');
+// josephusProblem(N, K);
+
+//2164-카드2
 class ListNode {
   constructor(value) {
     this.value = value;
     this.next = null;
-    this.prev = null;
   }
 }
 
-class CircularDoublyLinkedList {
+class LinkedListQueue {
   constructor() {
     this.head = null;
     this.tail = null;
     this.size = 0;
   }
 
-  append(value) {
+  enqueue(value) {
     const newNode = new ListNode(value);
-    if (!this.head) {
-      this.head = newNode;
-      this.tail = newNode;
-      this.head.next = this.head;
-      this.head.prev = this.head;
-    } else {
-      newNode.prev = this.tail;
-      newNode.next = this.head;
+    if (this.tail) {
       this.tail.next = newNode;
-      this.head.prev = newNode;
-      this.tail = newNode;
+    } else {
+      this.head = newNode;
     }
+    this.tail = newNode;
     this.size++;
   }
 
-  remove(node) {
-    if (this.size === 1) {
-      this.head = null;
+  dequeue() {
+    if (!this.head) {
+      return null;
+    }
+    const dequeuedValue = this.head.value;
+    this.head = this.head.next;
+    if (!this.head) {
       this.tail = null;
-    } else {
-      node.prev.next = node.next;
-      node.next.prev = node.prev;
-      if (node === this.head) this.head = node.next;
-      if (node === this.tail) this.tail = node.prev;
     }
     this.size--;
-    return node.value;
+    return dequeuedValue;
+  }
+
+  getSize() {
+    return this.size;
   }
 }
 
-function josephusProblem(N, K) {
-  const list = new CircularDoublyLinkedList();
+function card2(N) {
+  const queue = new LinkedListQueue();
 
-  // 리스트에 1부터 N까지의 노드를 추가
+  // 1부터 N까지의 카드를 큐에 추가
   for (let i = 1; i <= N; i++) {
-    list.append(i);
+    queue.enqueue(i);
   }
 
-  let result = [];
-  let currentNode = list.head;
-
-  // 리스트에서 K번째 노드를 제거하고 결과에 추가
-  while (list.size > 0) {
-    for (let i = 1; i < K; i++) {
-      currentNode = currentNode.next;
-    }
-    result.push(list.remove(currentNode));
-    currentNode = currentNode.next;
+  // 카드가 한 장 남을 때까지 반복
+  while (queue.getSize() > 1) {
+    queue.dequeue(); // 제일 위에 있는 카드를 버림
+    queue.enqueue(queue.dequeue()); // 그 다음 제일 위에 있는 카드를 제일 아래로 옮김
   }
 
-  // 결과 출력
-  console.log(`<${result.join(', ')}>`);
+  // 마지막으로 남은 카드
+  console.log(queue.dequeue());
 }
 
 const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const [N, K] = require('fs').readFileSync(filePath).toString().trim().split(' ');
-josephusProblem(N, K);
-
+const input= require('fs').readFileSync(filePath).toString().trim().split(' ');
+const N = parseInt(input, 10);
+card2(N);
 
