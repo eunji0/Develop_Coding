@@ -211,69 +211,131 @@
 // josephusProblem(N, K);
 
 //2164-카드2
-class ListNode {
-  constructor(value) {
-    this.value = value;
-    this.next = null;
-  }
-}
+// class ListNode {
+//   constructor(value) {
+//     this.value = value;
+//     this.next = null;
+//   }
+// }
 
-class LinkedListQueue {
-  constructor() {
-    this.head = null;
-    this.tail = null;
-    this.size = 0;
-  }
+// class LinkedListQueue {
+//   constructor() {
+//     this.head = null;
+//     this.tail = null;
+//     this.size = 0;
+//   }
 
-  enqueue(value) {
-    const newNode = new ListNode(value);
-    if (this.tail) {
-      this.tail.next = newNode;
-    } else {
-      this.head = newNode;
+//   enqueue(value) {
+//     const newNode = new ListNode(value);
+//     if (this.tail) {
+//       this.tail.next = newNode;
+//     } else {
+//       this.head = newNode;
+//     }
+//     this.tail = newNode;
+//     this.size++;
+//   }
+
+//   dequeue() {
+//     if (!this.head) {
+//       return null;
+//     }
+//     const dequeuedValue = this.head.value;
+//     this.head = this.head.next;
+//     if (!this.head) {
+//       this.tail = null;
+//     }
+//     this.size--;
+//     return dequeuedValue;
+//   }
+
+//   getSize() {
+//     return this.size;
+//   }
+// }
+
+// function card2(N) {
+//   const queue = new LinkedListQueue();
+
+//   // 1부터 N까지의 카드를 큐에 추가
+//   for (let i = 1; i <= N; i++) {
+//     queue.enqueue(i);
+//   }
+
+//   // 카드가 한 장 남을 때까지 반복
+//   while (queue.getSize() > 1) {
+//     queue.dequeue(); // 제일 위에 있는 카드를 버림
+//     queue.enqueue(queue.dequeue()); // 그 다음 제일 위에 있는 카드를 제일 아래로 옮김
+//   }
+
+//   // 마지막으로 남은 카드
+//   console.log(queue.dequeue());
+// }
+
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input= require('fs').readFileSync(filePath).toString().trim().split(' ');
+// const N = parseInt(input, 10);
+// card2(N);
+
+//20920-영단어암기는 어려워
+let input = require('fs').readFileSync('/dev/stdin').toString();
+let N = Number(input)
+
+    class Node{ // 1
+        constructor(val){
+            this.val = val; 
+            this.next = null;
+        }
     }
-    this.tail = newNode;
-    this.size++;
-  }
+    
+    class LinkedList{ // 2
+        constructor(){
+            this.head = null;
+            this.tail = null;
+            this.length = 0;
+        }
+        
+        push(val){ // 3
+            let newNode = new Node(val);
+            
+            if(!this.head){
+                this.head = newNode
+                
+            }else{
+                this.tail.next = newNode
+            }
+            this.tail = newNode;
+            this.length++;
 
-  dequeue() {
-    if (!this.head) {
-      return null;
+            return newNode;
+        }
+        
+        getHead(){ // 4
+          return this.head.val;
+        }
+        
+        removeHead(){ // 5
+            this.head = this.head.next;
+            this.length--;
+        }
+        
+        getLength(){ // 6
+            return this.length;
+        }
     }
-    const dequeuedValue = this.head.value;
-    this.head = this.head.next;
-    if (!this.head) {
-      this.tail = null;
+    
+    const cards = new LinkedList(); // 7
+    
+    for(let i = 1; i<=N; i++){ // 8
+        cards.push(i)
+        
     }
-    this.size--;
-    return dequeuedValue;
-  }
 
-  getSize() {
-    return this.size;
-  }
-}
-
-function card2(N) {
-  const queue = new LinkedListQueue();
-
-  // 1부터 N까지의 카드를 큐에 추가
-  for (let i = 1; i <= N; i++) {
-    queue.enqueue(i);
-  }
-
-  // 카드가 한 장 남을 때까지 반복
-  while (queue.getSize() > 1) {
-    queue.dequeue(); // 제일 위에 있는 카드를 버림
-    queue.enqueue(queue.dequeue()); // 그 다음 제일 위에 있는 카드를 제일 아래로 옮김
-  }
-
-  // 마지막으로 남은 카드
-  console.log(queue.dequeue());
-}
-
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const input= require('fs').readFileSync(filePath).toString().trim().split(' ');
-const N = parseInt(input, 10);
-card2(N);
+      while(cards.getLength() != 1){ // 9
+        cards.removeHead()
+        cards.push(cards.getHead())
+        cards.removeHead()
+    }
+    
+    console.log(cards.getHead()) // 10
 
