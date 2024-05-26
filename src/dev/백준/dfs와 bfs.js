@@ -50,109 +50,176 @@
 // BFS(graph, 0, visited); // 노드 0부터 BFS 탐색 시작
 
 //1753-최단경로
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
 
-// 첫 번째 줄에는 정점의 개수 V와 간선의 개수 E가 주어집니다.
-const [V, E] = input[0].split(' ').map(Number);
+// // 첫 번째 줄에는 정점의 개수 V와 간선의 개수 E가 주어집니다.
+// const [V, E] = input[0].split(' ').map(Number);
 
-// 두 번째 줄에는 시작 정점의 번호 K가 주어집니다.
-const K = Number(input[1]);
+// // 두 번째 줄에는 시작 정점의 번호 K가 주어집니다.
+// const K = Number(input[1]);
 
-// 간선 정보를 저장할 그래프를 초기화합니다.
-const graph = Array.from({ length: V + 1 }, () => []);
+// // 간선 정보를 저장할 그래프를 초기화합니다.
+// const graph = Array.from({ length: V + 1 }, () => []);
 
-// 세 번째 줄부터 E개의 줄에 걸쳐 각 간선의 정보를 읽어옵니다.
-for (let i = 2; i < 2 + E; i++) {
-  const [u, v, w] = input[i].split(' ').map(Number);
-  graph[u].push({ node: v, weight: w });
-}
+// // 세 번째 줄부터 E개의 줄에 걸쳐 각 간선의 정보를 읽어옵니다.
+// for (let i = 2; i < 2 + E; i++) {
+//   const [u, v, w] = input[i].split(' ').map(Number);
+//   graph[u].push({ node: v, weight: w });
+// }
 
-// 무한대를 나타내는 큰 값으로 초기화합니다.
-const INF = 1e9;
-const distances = Array(V + 1).fill(INF);
-//다익스트라 알고리즘의 시작 정점에서 시작 정점 자체로 가는 거리는 항상 0이기 때문
-distances[K] = 0;
+// // 무한대를 나타내는 큰 값으로 초기화합니다.
+// const INF = 1e9;
+// const distances = Array(V + 1).fill(INF);
+// //다익스트라 알고리즘의 시작 정점에서 시작 정점 자체로 가는 거리는 항상 0이기 때문
+// distances[K] = 0;
 
-// 우선순위 큐를 사용하기 위해 MinHeap 클래스를 구현합니다.
-//최소 힙은 완전 이진 트리의 형태를 가지며, 부모 노드가 자식 노드보다 항상 작거나 같은 값을 갖는 성질을 갖는다
-class MinHeap {
-  constructor() {
-    this.heap = [];
+// // 우선순위 큐를 사용하기 위해 MinHeap 클래스를 구현합니다.
+// //최소 힙은 완전 이진 트리의 형태를 가지며, 부모 노드가 자식 노드보다 항상 작거나 같은 값을 갖는 성질을 갖는다
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   insert(value) {
+//     this.heap.push(value);
+//     this._bubbleUp();
+//   }
+
+//   extractMin() {
+//     if (this.heap.length === 1) return this.heap.pop();
+//     const min = this.heap[0];
+//     this.heap[0] = this.heap.pop();
+//     this._bubbleDown();
+//     return min;
+//   }
+
+//   _bubbleUp() {
+//     let index = this.heap.length - 1;
+//     while (index > 0) {
+//       const parentIndex = Math.floor((index - 1) / 2);
+//       //부모 노드와 비교하여 부모 노드보다 작으면 위치를 교환
+//       if (this.heap[parentIndex].distance <= this.heap[index].distance) break;
+//       [this.heap[parentIndex], this.heap[index]] = [this.heap[index], this.heap[parentIndex]];
+//       index = parentIndex;
+//     }
+//   }
+
+//   _bubbleDown() {
+//     let index = 0;
+//     while (2 * index + 1 < this.heap.length) {
+//       let smallerChildIndex = 2 * index + 1;
+//       //자식 노드와 비교하여 자식 노드보다 크면 위치를 교환
+//       if (2 * index + 2 < this.heap.length && this.heap[2 * index + 2].distance < this.heap[2 * index + 1].distance) {
+//         smallerChildIndex = 2 * index + 2;
+//       }
+//       if (this.heap[index].distance <= this.heap[smallerChildIndex].distance) break;
+//       [this.heap[index], this.heap[smallerChildIndex]] = [this.heap[smallerChildIndex], this.heap[index]];
+//       index = smallerChildIndex;
+//     }
+//   }
+
+//   size() {
+//     return this.heap.length;
+//   }
+// }
+
+// // 다익스트라 알고리즘을 사용하여 최단 경로를 찾습니다.
+// function dijkstra(start) {
+//   const pq = new MinHeap();
+//   pq.insert({ node: start, distance: 0 });
+
+//   while (pq.size() > 0) {
+//     const { node: currentNode, distance: currentDistance } = pq.extractMin();
+
+//     if (distances[currentNode] < currentDistance) continue;
+
+//     for (const neighbor of graph[currentNode]) {
+//       const distance = currentDistance + neighbor.weight;
+//       if (distance < distances[neighbor.node]) {
+//         distances[neighbor.node] = distance;
+//         pq.insert({ node: neighbor.node, distance });
+//       }
+//     }
+//   }
+// }
+
+// // 시작점에서 다익스트라 알고리즘 실행
+// dijkstra(K);
+
+// // 결과 출력
+// const result = [];
+// for (let i = 1; i <= V; i++) {
+//   result.push(distances[i] === INF ? 'INF' : distances[i]);
+// }
+// console.log(result.join('\n'));
+
+
+//최단 경로 문제 => 최소힙+다익스트라 알고리즘
+
+class MinHeap{
+  constructor(){
+    this.heap=[];
   }
 
-  insert(value) {
+  push(value){
     this.heap.push(value);
-    this._bubbleUp();
+    this.heapifyUp();
   }
 
-  extractMin() {
-    if (this.heap.length === 1) return this.heap.pop();
-    const min = this.heap[0];
-    this.heap[0] = this.heap.pop();
-    this._bubbleDown();
-    return min;
-  }
+  //새로운 노드 자리 찾아주기
+  heapifyUp(){
+    let index = this.heap.length-1;
 
-  _bubbleUp() {
-    let index = this.heap.length - 1;
-    while (index > 0) {
-      const parentIndex = Math.floor((index - 1) / 2);
-      //부모 노드와 비교하여 부모 노드보다 작으면 위치를 교환
-      if (this.heap[parentIndex].distance <= this.heap[index].distance) break;
+    //인덱스가 부모노드가 될때까지
+    while(index>0){
+      const parentIndex = Math.floor((index-1)/2);
+
+      if(this.heap[parentIndex]<=this.heap[index]) break;
+
       [this.heap[parentIndex], this.heap[index]] = [this.heap[index], this.heap[parentIndex]];
+
       index = parentIndex;
     }
   }
 
-  _bubbleDown() {
-    let index = 0;
-    while (2 * index + 1 < this.heap.length) {
-      let smallerChildIndex = 2 * index + 1;
-      //자식 노드와 비교하여 자식 노드보다 크면 위치를 교환
-      if (2 * index + 2 < this.heap.length && this.heap[2 * index + 2].distance < this.heap[2 * index + 1].distance) {
-        smallerChildIndex = 2 * index + 2;
-      }
-      if (this.heap[index].distance <= this.heap[smallerChildIndex].distance) break;
-      [this.heap[index], this.heap[smallerChildIndex]] = [this.heap[smallerChildIndex], this.heap[index]];
-      index = smallerChildIndex;
+  pop(){
+    if(this.isEmpty()) return null;
+
+    const root = this.heap[0];
+    const lastNode = this.heap.pop();
+
+    if(!this.isEmpty()){
+      this.heap[0] = lastNode;
+      this.heapifyDown();
     }
+
+    return root
   }
 
-  size() {
-    return this.heap.length;
-  }
-}
+  //루트 노드 제거후 재정비
+  heapifyDown(){
+    let index =0;
+    const length = this.heap.length;
 
-// 다익스트라 알고리즘을 사용하여 최단 경로를 찾습니다.
-function dijkstra(start) {
-  const pq = new MinHeap();
-  pq.insert({ node: start, distance: 0 });
+    while(true){
+      let smallest = index;
+      const leftChildIndex = index*2+1;
+      const rigthChildIndex = index*2+2;
 
-  while (pq.size() > 0) {
-    const { node: currentNode, distance: currentDistance } = pq.extractMin();
-
-    if (distances[currentNode] < currentDistance) continue;
-
-    for (const neighbor of graph[currentNode]) {
-      const distance = currentDistance + neighbor.weight;
-      if (distance < distances[neighbor.node]) {
-        distances[neighbor.node] = distance;
-        pq.insert({ node: neighbor.node, distance });
+      if(leftChildIndex < length &&this.heap[leftChildIndex] <this.heap[smallest]){
+        smallest = leftChildIndex;
       }
+
+      if(rigthChildIndex <length &&this.heap[rigthChildIndex] < this.heap[smallest]){
+        smallest = rigthChildIndex;
+      }
+
+      if(smallest === index) break;
+
+      [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]]
+      index = smallest
     }
+    
   }
 }
-
-// 시작점에서 다익스트라 알고리즘 실행
-dijkstra(K);
-
-// 결과 출력
-const result = [];
-for (let i = 1; i <= V; i++) {
-  result.push(distances[i] === INF ? 'INF' : distances[i]);
-}
-console.log(result.join('\n'));
-
-
-
