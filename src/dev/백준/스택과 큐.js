@@ -296,101 +296,135 @@
 // });
 
 //1766-문제집
+// const fs = require('fs');
+
+// const input = fs.readFileSync('/dev/stdin', 'utf8').trim().split('\n');
+
+// const strToNumArr = (str) => str.split(' ').map(Number);
+
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   getLength = () => {
+//     return this.heap.length;
+//   };
+
+//   push = (node) => {
+//     this.heap.push(node);
+//     let i = this.heap.length - 1;
+//     let parentI = Math.floor((i - 1) / 2);
+//     while (i > 0 && this.heap[parentI] > this.heap[i]) {
+//       this.swap(i, parentI);
+//       i = parentI;
+//       parentI = Math.floor((i - 1) / 2);
+//     }
+//   };
+
+//   pop = () => {
+//     if (this.heap.length === 1) {
+//       return this.heap.pop();
+//     }
+
+//     const result = this.heap[0];
+//     this.heap[0] = this.heap.pop();
+//     let i = 0;
+//     while (true) {
+//       const leftI = i * 2 + 1,
+//         rightI = i * 2 + 2;
+//       if (leftI >= this.heap.length) {
+//         break;
+//       }
+//       let nextI = i;
+//       if (this.heap[nextI] > this.heap[leftI]) {
+//         nextI = leftI;
+//       }
+//       if (rightI < this.heap.length && this.heap[nextI] > this.heap[rightI]) {
+//         nextI = rightI;
+//       }
+//       if (nextI === i) {
+//         break;
+//       }
+//       this.swap(i, nextI);
+//       i = nextI;
+//     }
+//     return result;
+//   };
+
+//   swap = (a, b) => {
+//     const temp = this.heap[a];
+//     this.heap[a] = this.heap[b];
+//     this.heap[b] = temp;
+//   };
+// }
+
+// const [N, M] = strToNumArr(input.shift());
+// const graph = [];
+// const inDegrees = Array(N + 1).fill(0);
+// for (let i = 0; i <= N; i++) {
+//   graph.push([]);
+// }
+
+// input.forEach((str) => {
+//   const [prev, next] = strToNumArr(str);
+//   graph[prev].push(next);
+//   inDegrees[next] += 1;
+// });
+
+// const pq = new MinHeap();
+// for (let n = 1; n <= N; n++) {
+//   if (inDegrees[n] === 0) {
+//     pq.push(n);
+//   }
+// }
+
+// const result = [];
+// while (pq.getLength()) {
+//   const n = pq.pop();
+//   result.push(n);
+//   graph[n].forEach((v) => {
+//     inDegrees[v] -= 1;
+//     if (!inDegrees[v]) {
+//       pq.push(v);
+//     }
+//   });
+// }
+
+// console.log(result.join(' '));
+
+//11000-강의실배정
 const fs = require('fs');
 
+// 입력을 읽어들입니다.
 const input = fs.readFileSync('/dev/stdin', 'utf8').trim().split('\n');
+input.shift(); // 첫 번째 줄 제거
 
-const strToNumArr = (str) => str.split(' ').map(Number);
+const times = [];
 
-class MinHeap {
-  constructor() {
-    this.heap = [];
-  }
-
-  getLength = () => {
-    return this.heap.length;
-  };
-
-  push = (node) => {
-    this.heap.push(node);
-    let i = this.heap.length - 1;
-    let parentI = Math.floor((i - 1) / 2);
-    while (i > 0 && this.heap[parentI] > this.heap[i]) {
-      this.swap(i, parentI);
-      i = parentI;
-      parentI = Math.floor((i - 1) / 2);
-    }
-  };
-
-  pop = () => {
-    if (this.heap.length === 1) {
-      return this.heap.pop();
-    }
-
-    const result = this.heap[0];
-    this.heap[0] = this.heap.pop();
-    let i = 0;
-    while (true) {
-      const leftI = i * 2 + 1,
-        rightI = i * 2 + 2;
-      if (leftI >= this.heap.length) {
-        break;
-      }
-      let nextI = i;
-      if (this.heap[nextI] > this.heap[leftI]) {
-        nextI = leftI;
-      }
-      if (rightI < this.heap.length && this.heap[nextI] > this.heap[rightI]) {
-        nextI = rightI;
-      }
-      if (nextI === i) {
-        break;
-      }
-      this.swap(i, nextI);
-      i = nextI;
-    }
-    return result;
-  };
-
-  swap = (a, b) => {
-    const temp = this.heap[a];
-    this.heap[a] = this.heap[b];
-    this.heap[b] = temp;
-  };
-}
-
-const [N, M] = strToNumArr(input.shift());
-const graph = [];
-const inDegrees = Array(N + 1).fill(0);
-for (let i = 0; i <= N; i++) {
-  graph.push([]);
-}
-
-input.forEach((str) => {
-  const [prev, next] = strToNumArr(str);
-  graph[prev].push(next);
-  inDegrees[next] += 1;
+// 입력을 처리하여 times 배열에 시작 시간과 끝 시간을 저장합니다.
+input.forEach((v) => {
+  const [start, end] = v.split(' ').map(Number);
+  times.push([start, 1]);
+  times.push([end, -1]);
 });
 
-const pq = new MinHeap();
-for (let n = 1; n <= N; n++) {
-  if (inDegrees[n] === 0) {
-    pq.push(n);
-  }
+// times 배열을 정렬합니다.
+times.sort((a, b) => {
+  if (a[0] === b[0]) return a[1] - b[1];
+  return a[0] - b[0];
+});
+
+let answer = 0;
+let result = 0;
+
+// 각 시간점에서의 변화를 누적하여 최대 동시 사용자를 계산합니다.
+for (let i = 0; i < times.length; i++) {
+  result += times[i][1];
+  answer = Math.max(result, answer);
 }
 
-const result = [];
-while (pq.getLength()) {
-  const n = pq.pop();
-  result.push(n);
-  graph[n].forEach((v) => {
-    inDegrees[v] -= 1;
-    if (!inDegrees[v]) {
-      pq.push(v);
-    }
-  });
-}
-
-console.log(result.join(' '));
+// 결과를 출력합니다.
+console.log(answer);
 
 
