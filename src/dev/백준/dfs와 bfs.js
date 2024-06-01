@@ -317,3 +317,62 @@ const dijkstra = (graph, visited, dist) => {
 // 순차 탐색 방식은 ‘방문하지 않은 노드 중 거리값이 가장 작은 노드’를 다음 탐색 노드로 선택한다.
 // 그 노드를 찾는 방식은 거리 테이블의 앞에서부터 찾아내야 하기 때문에 
 // 시간 복잡도는 O(N2)이 된다.
+
+//우선순위 큐
+//그래프는 2차원 배열 안에 객체 형태로 to 목적지와 dist 거리를 저장
+// 0번 노드는 사용하지 않는 빈 노드이다.
+// 이는 시작 노드를 1번으로 설정하기 위함이다.
+const graph = [
+  [], // 사용X
+  [
+    { to: 2, dist: 1 },
+    { to: 4, dist: 2 },
+  ],
+  [
+    { to: 1, dist: 1 },
+    { to: 3, dist: 3 },
+    { to: 5, dist: 2 },
+  ],
+  [
+    { to: 2, dist: 3 },
+    { to: 5, dist: 1 },
+  ],
+  [
+    { to: 1, dist: 2 },
+    { to: 5, dist: 2 },
+  ],
+  [
+    { to: 2, dist: 2 },
+    { to: 3, dist: 1 },
+    { to: 4, dist: 2 },
+  ],
+];
+
+// 1번 노드와 각 노드까지 최단 경로를 저장하는 배열 생성
+const dist = Array(graph.length).fill(Infinity);
+
+// 큐 생성 및 1번 노드에 대한 정보 저장
+const queue = [{ to: 1, dist: 0 }];
+
+// 1번 노드의 거리는 0 으로 설정
+dist[1] = 0;
+
+// 큐가 빌 때까지 반복
+while (queue.length) {
+  // 큐에서 방문할 노드 꺼내기
+  const { to } = queue.pop();
+
+  // 방문한 노드까지 이동한 거리 + 다음 방문 노드까지 거리를
+  // 기존에 저장된 값과 비교해서 갱신
+  graph[to].forEach((next) => {
+    //acc는 새로운 거리(방문한 노드까지 이동한 거리 + 다음 방문 노드까지 거리)
+    const acc = dist[to] + next.dist;
+    //새로운 거리가 기존 거리보다 짧다면
+    if (dist[next.to] > acc) {
+      //갱신
+      dist[next.to] = acc;
+      // 최단 경로가 되는 노드는 큐에 추가
+      queue.push(next);
+    }
+  });
+}
