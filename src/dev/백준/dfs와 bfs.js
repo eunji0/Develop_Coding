@@ -438,105 +438,129 @@
 
 
 //우선 순위 큐 방식 사용하기
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = require('fs').readFileSync(filePath).toString().trim().split("\n");
+
+// const N = +input[0];
+// const M = +input[1];
+// const arr = Array.from({ length: N + 1 }, () => []);
+// for (let i = 2; i < 2 + M; i++) {
+//   const [a, b, c] = input[i].trim().split(" ").map((v) => +v);
+//   arr[a].push([c, b]);
+// }
+
+// class Heap {
+//   constructor(comparator = (a, b) => a - b) {
+//     this.array = [];
+//     this.comparator = (i1, i2) => {
+//       const value = comparator(this.array[i1], this.array[i2]);
+//       if (Number.isNaN(value)) {
+//         throw new Error(
+//           `Comparator should evaluate to a number. Got ${value} when comparing ${this.array[i1]} with ${this.array[i2]}`
+//         );
+//       }
+//       return value;
+//     };
+//   }
+
+//   add(value) {
+//     this.array.push(value);
+//     this.bubbleUp();
+//   }
+
+//   peek() {
+//     return this.array[0];
+//   }
+
+//   remove(index = 0) {
+//     if (!this.size) return null;
+//     this.swap(index, this.size - 1);
+//     const value = this.array.pop();
+//     this.bubbleDown(index);
+//     return value;
+//   }
+
+//   get size() {
+//     return this.array.length;
+//   }
+
+//   bubbleUp() {
+//     let index = this.size - 1;
+//     const parent = (i) => Math.ceil(i / 2 - 1);
+//     while (parent(index) >= 0 && this.comparator(parent(index), index) > 0) {
+//       this.swap(parent(index), index);
+//       index = parent(index);
+//     }
+//   }
+
+//   bubbleDown(index = 0) {
+//     let curr = index;
+//     const left = (i) => 2 * i + 1;
+//     const right = (i) => 2 * i + 2;
+//     const getTopChild = (i) =>
+//       right(i) < this.size && this.comparator(left(i), right(i)) > 0
+//         ? right(i)
+//         : left(i);
+
+//     while (
+//       left(curr) < this.size &&
+//       this.comparator(curr, getTopChild(curr)) > 0
+//     ) {
+//       const next = getTopChild(curr);
+//       this.swap(curr, next);
+//       curr = next;
+//     }
+//   }
+
+//   swap(i1, i2) {
+//     [this.array[i1], this.array[i2]] = [this.array[i2], this.array[i1]];
+//   }
+// }
+
+// const pq = new Heap((a, b) => a[0] - b[0]);
+
+// const dijkstra = (start) => {
+//   const dp = new Array(N + 1).fill(Infinity);
+//   dp[start] = 0;
+//   pq.add([0, start]);
+//   while (pq.size > 0) {
+//     const [pqW, pqV] = pq.remove();
+//     if (dp[pqV] < pqW) continue;
+//     for (let [arrW, arrV] of arr[pqV]) {
+//       const totalW = arrW + pqW;
+//       if (totalW < dp[arrV]) {
+//         dp[arrV] = totalW;
+//         pq.add([totalW, arrV]);
+//       }
+//     }
+//   }
+//   return dp;
+// };
+
+// const [start, destination] = input[2 + M].trim().split(" ").map((v) => +v);
+// const result = dijkstra(start);
+// console.log(result[destination]);
+
+//11403-경로 찾기
 const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
 const input = require('fs').readFileSync(filePath).toString().trim().split("\n");
-
 const N = +input[0];
-const M = +input[1];
-const arr = Array.from({ length: N + 1 }, () => []);
-for (let i = 2; i < 2 + M; i++) {
-  const [a, b, c] = input[i].trim().split(" ").map((v) => +v);
-  arr[a].push([c, b]);
-}
+const graph = input.slice(1).map(v => v.split(' ').map(Number));
 
-class Heap {
-  constructor(comparator = (a, b) => a - b) {
-    this.array = [];
-    this.comparator = (i1, i2) => {
-      const value = comparator(this.array[i1], this.array[i2]);
-      if (Number.isNaN(value)) {
-        throw new Error(
-          `Comparator should evaluate to a number. Got ${value} when comparing ${this.array[i1]} with ${this.array[i2]}`
-        );
-      }
-      return value;
-    };
-  }
-
-  add(value) {
-    this.array.push(value);
-    this.bubbleUp();
-  }
-
-  peek() {
-    return this.array[0];
-  }
-
-  remove(index = 0) {
-    if (!this.size) return null;
-    this.swap(index, this.size - 1);
-    const value = this.array.pop();
-    this.bubbleDown(index);
-    return value;
-  }
-
-  get size() {
-    return this.array.length;
-  }
-
-  bubbleUp() {
-    let index = this.size - 1;
-    const parent = (i) => Math.ceil(i / 2 - 1);
-    while (parent(index) >= 0 && this.comparator(parent(index), index) > 0) {
-      this.swap(parent(index), index);
-      index = parent(index);
+const output = [...Array(N)].map(() => Array(N).fill(0));
+const dfs = (node, start, visited) => {
+  for (let i = 0; i < N; i++) {
+    if (graph[node][i] && !visited[i]) {
+      visited[i] = true;
+      output[start][i] = 1;
+      dfs(i, start, visited);
     }
   }
-
-  bubbleDown(index = 0) {
-    let curr = index;
-    const left = (i) => 2 * i + 1;
-    const right = (i) => 2 * i + 2;
-    const getTopChild = (i) =>
-      right(i) < this.size && this.comparator(left(i), right(i)) > 0
-        ? right(i)
-        : left(i);
-
-    while (
-      left(curr) < this.size &&
-      this.comparator(curr, getTopChild(curr)) > 0
-    ) {
-      const next = getTopChild(curr);
-      this.swap(curr, next);
-      curr = next;
-    }
-  }
-
-  swap(i1, i2) {
-    [this.array[i1], this.array[i2]] = [this.array[i2], this.array[i1]];
-  }
-}
-
-const pq = new Heap((a, b) => a[0] - b[0]);
-
-const dijkstra = (start) => {
-  const dp = new Array(N + 1).fill(Infinity);
-  dp[start] = 0;
-  pq.add([0, start]);
-  while (pq.size > 0) {
-    const [pqW, pqV] = pq.remove();
-    if (dp[pqV] < pqW) continue;
-    for (let [arrW, arrV] of arr[pqV]) {
-      const totalW = arrW + pqW;
-      if (totalW < dp[arrV]) {
-        dp[arrV] = totalW;
-        pq.add([totalW, arrV]);
-      }
-    }
-  }
-  return dp;
 };
 
-const [start, destination] = input[2 + M].trim().split(" ").map((v) => +v);
-const result = dijkstra(start);
-console.log(result[destination]);
+for (let i = 0; i < N; i++) {
+  const visited = Array(N).fill(false);
+  dfs(i, i, visited);
+}
+
+console.log(output.map(v => v.join(' ')).join('\n'));
