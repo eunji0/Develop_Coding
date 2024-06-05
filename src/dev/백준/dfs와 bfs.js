@@ -542,25 +542,70 @@
 // console.log(result[destination]);
 
 //11403-경로 찾기
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = require('fs').readFileSync(filePath).toString().trim().split("\n");
+// const N = +input[0];
+// const graph = input.slice(1).map(v => v.split(' ').map(Number));
+
+// const output = [...Array(N)].map(() => Array(N).fill(0));
+// const dfs = (node, start, visited) => {
+//   for (let i = 0; i < N; i++) {
+//     if (graph[node][i] && !visited[i]) {
+//       visited[i] = true;
+//       output[start][i] = 1;
+//       dfs(i, start, visited);
+//     }
+//   }
+// };
+
+// for (let i = 0; i < N; i++) {
+//   const visited = Array(N).fill(false);
+//   dfs(i, i, visited);
+// }
+
+// console.log(output.map(v => v.join(' ')).join('\n'));
+
+//11404-플로이드
 const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const input = require('fs').readFileSync(filePath).toString().trim().split("\n");
-const N = +input[0];
-const graph = input.slice(1).map(v => v.split(' ').map(Number));
+const input = require('fs').readFileSync(filePath).toString().trim().split("\n").map(str => str.split(' ').map(Number));
+const N = input.shift()[0];
+const M = input.shift()[0];
 
-const output = [...Array(N)].map(() => Array(N).fill(0));
-const dfs = (node, start, visited) => {
-  for (let i = 0; i < N; i++) {
-    if (graph[node][i] && !visited[i]) {
-      visited[i] = true;
-      output[start][i] = 1;
-      dfs(i, start, visited);
-    }
-  }
-};
+//전부 무한대에서 시작
+const cost = Array.from(Array(N), () => Array(N).fill(Infinity));
 
+//자기 자신으로 가는 비용은 0
 for (let i = 0; i < N; i++) {
-  const visited = Array(N).fill(false);
-  dfs(i, i, visited);
+  cost[i][i] = 0;
 }
 
-console.log(output.map(v => v.join(' ')).join('\n'));
+//초기상태 각 정점에서 인접노드로의 방향만 뻗어나갔을때.
+input.forEach(v => {
+  const [s, e, c] = v; //start end cost
+  if (cost[s - 1][e - 1] > cost[s - 1][s - 1] + c) {
+    cost[s - 1][e - 1] = cost[s - 1][s - 1] + c
+  }
+})
+
+
+for (let mid = 0; mid < N; mid++) {//거쳐가는 지점.
+  for (let start = 0; start < N; start++) { // 시작지점 
+    for (let end = 0; end < N; end++) { // 도착지점.
+      if (cost[start][mid] + cost[mid][end] < cost[start][end]) {
+        cost[start][end] = cost[start][mid] + cost[mid][end];
+      }
+    }
+  }
+}
+
+// 못가는 경로는 0
+for (let start = 0; start < N; start++) {
+  for (let end = 0; end < N; end++) {
+    if (cost[start][end] === Infinity) {
+      cost[start][end] = 0;
+    }
+  }
+}
+
+
+console.log(cost.map(arr => arr.join(' ')).join('\n'))
