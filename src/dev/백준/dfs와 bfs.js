@@ -543,49 +543,96 @@
 
 
 //2665-미로만들기
+// const fs = require('fs');
+
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const n = parseInt(input[0]);
+// const map = [];
+// const visited = Array.from({ length: n }, () => Array(n).fill(Infinity));
+
+// for (let i = 0; i < n; i++) {
+//     const row = input[i + 1].split('').map(char => char === '1');
+//     map.push(row);
+// }
+
+// const dx = [-1, 1, 0, 0];
+// const dy = [0, 0, -1, 1];
+
+// function bfs(x, y) {
+//     const queue = [];
+//     queue.push([x, y]);
+//     visited[x][y] = 0;
+
+//     while (queue.length > 0) {
+//         const [xx, yy] = queue.shift();
+
+//         for (let i = 0; i < 4; i++) {
+//             const nowX = xx + dx[i];
+//             const nowY = yy + dy[i];
+
+//             if (nowX >= 0 && nowY >= 0 && nowX < n && nowY < n) {
+//                 if (visited[nowX][nowY] > visited[xx][yy]) {
+//                     if (map[nowX][nowY]) {
+//                         queue.push([nowX, nowY]);
+//                         visited[nowX][nowY] = visited[xx][yy];
+//                     } else {
+//                         queue.push([nowX, nowY]);
+//                         visited[nowX][nowY] = visited[xx][yy] + 1;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
+
+// bfs(0, 0);
+// console.log(visited[n - 1][n - 1]);
+
+//1238-파티
 const fs = require('fs');
 
 const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const n = parseInt(input[0]);
-const map = [];
-const visited = Array.from({ length: n }, () => Array(n).fill(Infinity));
+let [n, m, x] = input[0].split(' ').map(Number);
+const edges = input.slice(1).map(line => line.split(' ').map(Number));
 
-for (let i = 0; i < n; i++) {
-    const row = input[i + 1].split('').map(char => char === '1');
-    map.push(row);
-}
-
-const dx = [-1, 1, 0, 0];
-const dy = [0, 0, -1, 1];
-
-function bfs(x, y) {
-    const queue = [];
-    queue.push([x, y]);
-    visited[x][y] = 0;
+function dijkstra(graph, start) {
+    const distance = new Array(n + 1).fill(Infinity);
+    const queue = [[start, 0]];
+    distance[start] = 0;
 
     while (queue.length > 0) {
-        const [xx, yy] = queue.shift();
-
-        for (let i = 0; i < 4; i++) {
-            const nowX = xx + dx[i];
-            const nowY = yy + dy[i];
-
-            if (nowX >= 0 && nowY >= 0 && nowX < n && nowY < n) {
-                if (visited[nowX][nowY] > visited[xx][yy]) {
-                    if (map[nowX][nowY]) {
-                        queue.push([nowX, nowY]);
-                        visited[nowX][nowY] = visited[xx][yy];
-                    } else {
-                        queue.push([nowX, nowY]);
-                        visited[nowX][nowY] = visited[xx][yy] + 1;
-                    }
-                }
+        const [current, cost] = queue.shift();
+        for (const [next, nextCost] of graph[current]) {
+            const newCost = cost + nextCost;
+            if (distance[next] > newCost) {
+                distance[next] = newCost;
+                queue.push([next, newCost]);
             }
         }
     }
+    return distance;
 }
 
-bfs(0, 0);
-console.log(visited[n - 1][n - 1]);
+const goGraph = Array.from({ length: n + 1 }, () => []);
+const backGraph = Array.from({ length: n + 1 }, () => []);
+
+for (const [start, end, cost] of edges) {
+    goGraph[start].push([end, cost]);
+    backGraph[end].push([start, cost]);
+}
+
+const backDistance = dijkstra(backGraph, x);
+const goDistance = dijkstra(goGraph, x);
+
+let maxTime = 0;
+for (let i = 1; i <= n; i++) {
+    const roundTrip = backDistance[i] + goDistance[i];
+    maxTime = Math.max(maxTime, roundTrip);
+}
+
+console.log(maxTime);
+
