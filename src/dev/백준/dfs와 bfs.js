@@ -591,48 +591,90 @@
 // console.log(visited[n - 1][n - 1]);
 
 //1238-파티
+// const fs = require('fs');
+
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [n, m, x] = input[0].split(' ').map(Number);
+// const edges = input.slice(1).map(line => line.split(' ').map(Number));
+
+// function dijkstra(graph, start) {
+//     const distance = new Array(n + 1).fill(Infinity);
+//     const queue = [[start, 0]];
+//     distance[start] = 0;
+
+//     while (queue.length > 0) {
+//         const [current, cost] = queue.shift();
+//         for (const [next, nextCost] of graph[current]) {
+//             const newCost = cost + nextCost;
+//             if (distance[next] > newCost) {
+//                 distance[next] = newCost;
+//                 queue.push([next, newCost]);
+//             }
+//         }
+//     }
+//     return distance;
+// }
+
+// const goGraph = Array.from({ length: n + 1 }, () => []);
+// const backGraph = Array.from({ length: n + 1 }, () => []);
+
+// for (const [start, end, cost] of edges) {
+//     goGraph[start].push([end, cost]);
+//     backGraph[end].push([start, cost]);
+// }
+
+// const backDistance = dijkstra(backGraph, x);
+// const goDistance = dijkstra(goGraph, x);
+
+// let maxTime = 0;
+// for (let i = 1; i <= n; i++) {
+//     const roundTrip = backDistance[i] + goDistance[i];
+//     maxTime = Math.max(maxTime, roundTrip);
+// }
+
+// console.log(maxTime);
+
+//1261-알고스팟
 const fs = require('fs');
 
 const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [n, m, x] = input[0].split(' ').map(Number);
-const edges = input.slice(1).map(line => line.split(' ').map(Number));
+const sol = (input) => {
+  const [M, N] = input[0].split(" ").map(Number); // M,N 순서로 데이터가 주어진다.
+  input = input.slice(1);
+  const adjM = input.map((row) => row.split("").map(Number));
 
-function dijkstra(graph, start) {
-    const distance = new Array(n + 1).fill(Infinity);
-    const queue = [[start, 0]];
-    distance[start] = 0;
+  function bfs(sx, sy) {
+    const deque = [];
+    deque.push([sx, sy, 0]);
+    const check = Array.from({ length: N }, () => new Array(M).fill(0));
+    check[sx][sy] = 1;
+    const dx = [-1, 0, 1, 0];
+    const dy = [0, 1, 0, -1];
+    while (deque.length) {
+      const [x, y, cnt] = deque.shift();
+      if (x === N - 1 && y === M - 1) return cnt; // (N,M) 위치에 도달하면 종료한다.
 
-    while (queue.length > 0) {
-        const [current, cost] = queue.shift();
-        for (const [next, nextCost] of graph[current]) {
-            const newCost = cost + nextCost;
-            if (distance[next] > newCost) {
-                distance[next] = newCost;
-                queue.push([next, newCost]);
-            }
+      for (let i = 0; i < 4; i++) { // 현재 위치 (x,y)에서 상하좌우 한번씩 이동을 탐색한다.
+        const [nx, ny] = [x + dx[i], y + dy[i]];
+        if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
+        if (check[nx][ny]) continue;
+        check[nx][ny] = 1;
+        if (adjM[nx][ny]) {
+          adjM[nx][ny] = 0;
+          deque.push([nx, ny, cnt + 1]);
+        } else {
+          deque.unshift([nx, ny, cnt]); // 벽이 없어서 바로 이동하는 경우를 우선적으로 처리하도록 맨 앞에 넣어준다.
         }
+      }
     }
-    return distance;
-}
+  }
+  return bfs(0, 0);
+};
 
-const goGraph = Array.from({ length: n + 1 }, () => []);
-const backGraph = Array.from({ length: n + 1 }, () => []);
+console.log(sol(input));
 
-for (const [start, end, cost] of edges) {
-    goGraph[start].push([end, cost]);
-    backGraph[end].push([start, cost]);
-}
-
-const backDistance = dijkstra(backGraph, x);
-const goDistance = dijkstra(goGraph, x);
-
-let maxTime = 0;
-for (let i = 1; i <= n; i++) {
-    const roundTrip = backDistance[i] + goDistance[i];
-    maxTime = Math.max(maxTime, roundTrip);
-}
-
-console.log(maxTime);
 
