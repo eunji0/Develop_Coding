@@ -637,44 +637,84 @@
 // console.log(maxTime);
 
 //1261-알고스팟
-const fs = require('fs');
+// const fs = require('fs');
 
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const sol = (input) => {
-  const [M, N] = input[0].split(" ").map(Number); // M,N 순서로 데이터가 주어진다.
-  input = input.slice(1);
-  const adjM = input.map((row) => row.split("").map(Number));
+// const sol = (input) => {
+//   const [M, N] = input[0].split(" ").map(Number); // M,N 순서로 데이터가 주어진다.
+//   input = input.slice(1);
+//   const adjM = input.map((row) => row.split("").map(Number));
 
-  function bfs(sx, sy) {
-    const deque = [];
-    deque.push([sx, sy, 0]);
-    const check = Array.from({ length: N }, () => new Array(M).fill(0));
-    check[sx][sy] = 1;
-    const dx = [-1, 0, 1, 0];
-    const dy = [0, 1, 0, -1];
-    while (deque.length) {
-      const [x, y, cnt] = deque.shift();
-      if (x === N - 1 && y === M - 1) return cnt; // (N,M) 위치에 도달하면 종료한다.
+//   function bfs(sx, sy) {
+//     const deque = [];
+//     deque.push([sx, sy, 0]);
+//     const check = Array.from({ length: N }, () => new Array(M).fill(0));
+//     check[sx][sy] = 1;
+//     const dx = [-1, 0, 1, 0];
+//     const dy = [0, 1, 0, -1];
+//     while (deque.length) {
+//       const [x, y, cnt] = deque.shift();
+//       if (x === N - 1 && y === M - 1) return cnt; // (N,M) 위치에 도달하면 종료한다.
 
-      for (let i = 0; i < 4; i++) { // 현재 위치 (x,y)에서 상하좌우 한번씩 이동을 탐색한다.
-        const [nx, ny] = [x + dx[i], y + dy[i]];
-        if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
-        if (check[nx][ny]) continue;
-        check[nx][ny] = 1;
-        if (adjM[nx][ny]) {
-          adjM[nx][ny] = 0;
-          deque.push([nx, ny, cnt + 1]);
-        } else {
-          deque.unshift([nx, ny, cnt]); // 벽이 없어서 바로 이동하는 경우를 우선적으로 처리하도록 맨 앞에 넣어준다.
+//       for (let i = 0; i < 4; i++) { // 현재 위치 (x,y)에서 상하좌우 한번씩 이동을 탐색한다.
+//         const [nx, ny] = [x + dx[i], y + dy[i]];
+//         if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
+//         if (check[nx][ny]) continue;
+//         check[nx][ny] = 1;
+//         if (adjM[nx][ny]) {
+//           adjM[nx][ny] = 0;
+//           deque.push([nx, ny, cnt + 1]);
+//         } else {
+//           deque.unshift([nx, ny, cnt]); // 벽이 없어서 바로 이동하는 경우를 우선적으로 처리하도록 맨 앞에 넣어준다.
+//         }
+//       }
+//     }
+//   }
+//   return bfs(0, 0);
+// };
+
+// console.log(sol(input));
+
+//4485-녹색 옷 입은 애가 젤다지?
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './Javascript/input.txt';
+const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+let N = +input.shift();
+const dx = [-1, 1, 0, 0];
+const dy = [0, 0, -1, 1];
+let answerCount = 1;
+let answer = '';
+
+while (N !== 0) {
+    const map = input.splice(0, N).map((e) => e.split(' ').map(Number));
+    dijkstra([0, 0], map);
+    N = +input.shift();
+}
+
+console.log(answer.trimEnd());
+
+function dijkstra(start, map) {
+    const [x, y] = start;
+    const distance = Array.from({ length: N }, () => Array(N).fill(Infinity));
+
+    // 다익스트라 + BFS
+    const queue = [[x, y]];
+    let front = 0;
+    distance[y][x] = map[y][x];
+
+    while (queue.length > front) {
+        const [x, y] = queue[front++];
+        for (let i = 0; i < 4; i++) {
+            const nx = x + dx[i];
+            const ny = y + dy[i];
+            if (ny >= 0 && nx >= 0 && ny < N && nx < N && distance[ny][nx] > distance[y][x] + map[ny][nx]) {
+                distance[ny][nx] = distance[y][x] + map[ny][nx];
+                queue.push([nx, ny]);
+            }
         }
-      }
     }
-  }
-  return bfs(0, 0);
-};
-
-console.log(sol(input));
+    answer += `Problem ${answerCount++}: ${distance[N - 1][N - 1]}\n`;
+}
 
 
