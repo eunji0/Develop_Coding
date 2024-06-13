@@ -718,39 +718,89 @@
 // }
 
 //2485-가로수
-let input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n')
-input.shift();
-let arr = input.map(el=>+Number(el))
-let answer = [];
-  for(let i = 0; i<arr.length-1; i++){
-    answer.push(Math.abs(arr[i]-arr[i+1]))
-  }
+// let input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n')
+// input.shift();
+// let arr = input.map(el=>+Number(el))
+// let answer = [];
+//   for(let i = 0; i<arr.length-1; i++){
+//     answer.push(Math.abs(arr[i]-arr[i+1]))
+//   }
 
-  function gcd(a, b) { //최대공약수 구하기
-    if (a < b) {
-      [a, b] = [b, a];
-    }
+//   function gcd(a, b) { //최대공약수 구하기
+//     if (a < b) {
+//       [a, b] = [b, a];
+//     }
   
-    if (b === 0) {
-      return a;
-    } else {
-      return gcd(b, a % b);
-    }
-  }
+//     if (b === 0) {
+//       return a;
+//     } else {
+//       return gcd(b, a % b);
+//     }
+//   }
 
-  function findGCD(arr) { //여러개 숫자의 최대공약수
+//   function findGCD(arr) { //여러개 숫자의 최대공약수
     
-    let result = arr[0];
-    for (let i = 1; i < arr.length; i++) {
-      result = gcd(result, arr[i]);
-    }
-    return result;
-  }
+//     let result = arr[0];
+//     for (let i = 1; i < arr.length; i++) {
+//       result = gcd(result, arr[i]);
+//     }
+//     return result;
+//   }
   
-  let num = findGCD(answer)
-  let sum = 0;
-  for(let x of answer){
-    sum += Math.floor(x/num)-1;
-  } 
-  console.log(sum)
+//   let num = findGCD(answer)
+//   let sum = 0;
+//   for(let x of answer){
+//     sum += Math.floor(x/num)-1;
+//   } 
+//   console.log(sum)
 
+//2660-회장뽑기
+let input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
+const n=+input[0];
+let graph=Array.from({length:n+1},()=>new Array());
+let i = 1;
+while (i < input.length - 1) {
+  const [u, v] = input[i].split(' ').map(Number);
+  graph[u].push(v);
+  graph[v].push(u);
+  i++;
+}
+let min = 51;
+let idxGraph = [[]];
+for (let i = 1; i <= n; i++) {
+  let queue = [];
+  let visited = Array(n + 1).fill(0);
+  visited[i] = 1;
+  let relation = Array.from({ length: n }, () => new Array());
+  for (let neighbor of graph[i]) {
+    queue.push([neighbor, 0]);
+    visited[neighbor] = 1;
+  }
+  let max = 0;
+  while (queue.length) {
+    const [neighbor, dis] = queue.shift();
+    max = dis;
+    relation[dis].push(neighbor);
+    for (let friend of graph[neighbor]) {
+      if (visited[friend] === 0) {
+        visited[friend] = 1;
+        queue.push([friend, dis + 1]);
+      }
+    }
+  }
+  relation = relation.slice(0, max + 1);
+  idxGraph.push(relation);
+  min = Math.min(min, relation.length);
+}
+let answer1 = `${min} `;
+let answer2 = "";
+let cnt = 0;
+for (let i = 1; i <= n; i++) {
+  if (idxGraph[i].length === min) {
+    cnt++;
+    answer2 += `${i} `;
+  }
+}
+answer1 += `${cnt}`;
+console.log(answer1);
+console.log(answer2.trim());
