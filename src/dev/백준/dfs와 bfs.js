@@ -541,266 +541,41 @@
 // const result = dijkstra(start);
 // console.log(result[destination]);
 
+//17182-우주탐사선
+const fs = require('fs');
 
-//2665-미로만들기
-// const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+const [N, K] = input[0].split(' ').map(Number);
+const time = input.slice(1, N + 1).map(line => line.split(' ').map(Number));
+const visited = new Array(N).fill(0);
+visited[K] = 1;
+let answer = Infinity;
 
-// const n = parseInt(input[0]);
-// const map = [];
-// const visited = Array.from({ length: n }, () => Array(n).fill(Infinity));
-
-// for (let i = 0; i < n; i++) {
-//     const row = input[i + 1].split('').map(char => char === '1');
-//     map.push(row);
-// }
-
-// const dx = [-1, 1, 0, 0];
-// const dy = [0, 0, -1, 1];
-
-// function bfs(x, y) {
-//     const queue = [];
-//     queue.push([x, y]);
-//     visited[x][y] = 0;
-
-//     while (queue.length > 0) {
-//         const [xx, yy] = queue.shift();
-
-//         for (let i = 0; i < 4; i++) {
-//             const nowX = xx + dx[i];
-//             const nowY = yy + dy[i];
-
-//             if (nowX >= 0 && nowY >= 0 && nowX < n && nowY < n) {
-//                 if (visited[nowX][nowY] > visited[xx][yy]) {
-//                     if (map[nowX][nowY]) {
-//                         queue.push([nowX, nowY]);
-//                         visited[nowX][nowY] = visited[xx][yy];
-//                     } else {
-//                         queue.push([nowX, nowY]);
-//                         visited[nowX][nowY] = visited[xx][yy] + 1;
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// }
-
-// bfs(0, 0);
-// console.log(visited[n - 1][n - 1]);
-
-//1238-파티
-// const fs = require('fs');
-
-// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-// const input = fs.readFileSync(filePath).toString().trim().split('\n');
-
-// let [n, m, x] = input[0].split(' ').map(Number);
-// const edges = input.slice(1).map(line => line.split(' ').map(Number));
-
-// function dijkstra(graph, start) {
-//     const distance = new Array(n + 1).fill(Infinity);
-//     const queue = [[start, 0]];
-//     distance[start] = 0;
-
-//     while (queue.length > 0) {
-//         const [current, cost] = queue.shift();
-//         for (const [next, nextCost] of graph[current]) {
-//             const newCost = cost + nextCost;
-//             if (distance[next] > newCost) {
-//                 distance[next] = newCost;
-//                 queue.push([next, newCost]);
-//             }
-//         }
-//     }
-//     return distance;
-// }
-
-// const goGraph = Array.from({ length: n + 1 }, () => []);
-// const backGraph = Array.from({ length: n + 1 }, () => []);
-
-// for (const [start, end, cost] of edges) {
-//     goGraph[start].push([end, cost]);
-//     backGraph[end].push([start, cost]);
-// }
-
-// const backDistance = dijkstra(backGraph, x);
-// const goDistance = dijkstra(goGraph, x);
-
-// let maxTime = 0;
-// for (let i = 1; i <= n; i++) {
-//     const roundTrip = backDistance[i] + goDistance[i];
-//     maxTime = Math.max(maxTime, roundTrip);
-// }
-
-// console.log(maxTime);
-
-//1261-알고스팟
-// const fs = require('fs');
-
-// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-// const input = fs.readFileSync(filePath).toString().trim().split('\n');
-
-// const sol = (input) => {
-//   const [M, N] = input[0].split(" ").map(Number); // M,N 순서로 데이터가 주어진다.
-//   input = input.slice(1);
-//   const adjM = input.map((row) => row.split("").map(Number));
-
-//   function bfs(sx, sy) {
-//     const deque = [];
-//     deque.push([sx, sy, 0]);
-//     const check = Array.from({ length: N }, () => new Array(M).fill(0));
-//     check[sx][sy] = 1;
-//     const dx = [-1, 0, 1, 0];
-//     const dy = [0, 1, 0, -1];
-//     while (deque.length) {
-//       const [x, y, cnt] = deque.shift();
-//       if (x === N - 1 && y === M - 1) return cnt; // (N,M) 위치에 도달하면 종료한다.
-
-//       for (let i = 0; i < 4; i++) { // 현재 위치 (x,y)에서 상하좌우 한번씩 이동을 탐색한다.
-//         const [nx, ny] = [x + dx[i], y + dy[i]];
-//         if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
-//         if (check[nx][ny]) continue;
-//         check[nx][ny] = 1;
-//         if (adjM[nx][ny]) {
-//           adjM[nx][ny] = 0;
-//           deque.push([nx, ny, cnt + 1]);
-//         } else {
-//           deque.unshift([nx, ny, cnt]); // 벽이 없어서 바로 이동하는 경우를 우선적으로 처리하도록 맨 앞에 넣어준다.
-//         }
-//       }
-//     }
-//   }
-//   return bfs(0, 0);
-// };
-
-// console.log(sol(input));
-
-//4485-녹색 옷 입은 애가 젤다지?
-// const filePath = process.platform === 'linux' ? '/dev/stdin' : './Javascript/input.txt';
-// const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
-// let N = +input.shift();
-// const dx = [-1, 1, 0, 0];
-// const dy = [0, 0, -1, 1];
-// let answerCount = 1;
-// let answer = '';
-
-// while (N !== 0) {
-//     const map = input.splice(0, N).map((e) => e.split(' ').map(Number));
-//     dijkstra([0, 0], map);
-//     N = +input.shift();
-// }
-
-// console.log(answer.trimEnd());
-
-// function dijkstra(start, map) {
-//     const [x, y] = start;
-//     const distance = Array.from({ length: N }, () => Array(N).fill(Infinity));
-
-//     // 다익스트라 + BFS
-//     const queue = [[x, y]];
-//     let front = 0;
-//     distance[y][x] = map[y][x];
-
-//     while (queue.length > front) {
-//         const [x, y] = queue[front++];
-//         for (let i = 0; i < 4; i++) {
-//             const nx = x + dx[i];
-//             const ny = y + dy[i];
-//             if (ny >= 0 && nx >= 0 && ny < N && nx < N && distance[ny][nx] > distance[y][x] + map[ny][nx]) {
-//                 distance[ny][nx] = distance[y][x] + map[ny][nx];
-//                 queue.push([nx, ny]);
-//             }
-//         }
-//     }
-//     answer += `Problem ${answerCount++}: ${distance[N - 1][N - 1]}\n`;
-// }
-
-//2485-가로수
-// let input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n')
-// input.shift();
-// let arr = input.map(el=>+Number(el))
-// let answer = [];
-//   for(let i = 0; i<arr.length-1; i++){
-//     answer.push(Math.abs(arr[i]-arr[i+1]))
-//   }
-
-//   function gcd(a, b) { //최대공약수 구하기
-//     if (a < b) {
-//       [a, b] = [b, a];
-//     }
-  
-//     if (b === 0) {
-//       return a;
-//     } else {
-//       return gcd(b, a % b);
-//     }
-//   }
-
-//   function findGCD(arr) { //여러개 숫자의 최대공약수
-    
-//     let result = arr[0];
-//     for (let i = 1; i < arr.length; i++) {
-//       result = gcd(result, arr[i]);
-//     }
-//     return result;
-//   }
-  
-//   let num = findGCD(answer)
-//   let sum = 0;
-//   for(let x of answer){
-//     sum += Math.floor(x/num)-1;
-//   } 
-//   console.log(sum)
-
-//2660-회장뽑기
-let input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
-const n=+input[0];
-let graph=Array.from({length:n+1},()=>new Array());
-let i = 1;
-while (i < input.length - 1) {
-  const [u, v] = input[i].split(' ').map(Number);
-  graph[u].push(v);
-  graph[v].push(u);
-  i++;
-}
-let min = 51;
-let idxGraph = [[]];
-for (let i = 1; i <= n; i++) {
-  let queue = [];
-  let visited = Array(n + 1).fill(0);
-  visited[i] = 1;
-  let relation = Array.from({ length: n }, () => new Array());
-  for (let neighbor of graph[i]) {
-    queue.push([neighbor, 0]);
-    visited[neighbor] = 1;
-  }
-  let max = 0;
-  while (queue.length) {
-    const [neighbor, dis] = queue.shift();
-    max = dis;
-    relation[dis].push(neighbor);
-    for (let friend of graph[neighbor]) {
-      if (visited[friend] === 0) {
-        visited[friend] = 1;
-        queue.push([friend, dis + 1]);
-      }
+// Floyd-Warshall Algorithm
+for (let k = 0; k < N; k++) {
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < N; j++) {
+      time[i][j] = Math.min(time[i][j], time[i][k] + time[k][j]);
     }
   }
-  relation = relation.slice(0, max + 1);
-  idxGraph.push(relation);
-  min = Math.min(min, relation.length);
 }
-let answer1 = `${min} `;
-let answer2 = "";
-let cnt = 0;
-for (let i = 1; i <= n; i++) {
-  if (idxGraph[i].length === min) {
-    cnt++;
-    answer2 += `${i} `;
+
+function findMin(curr, cost, cnt) {
+  if (N === cnt) {
+    answer = Math.min(answer, cost);
+    return;
+  }
+  for (let i = 0; i < N; i++) {
+    if (visited[i] === 0) {
+      visited[i] = 1;
+      findMin(i, cost + time[curr][i], cnt + 1);
+      visited[i] = 0;
+    }
   }
 }
-answer1 += `${cnt}`;
-console.log(answer1);
-console.log(answer2.trim());
+
+findMin(K, 0, 1);
+console.log(answer);
+
