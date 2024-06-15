@@ -278,64 +278,108 @@
 // card2(N);
 
 //20920-영단어암기는 어려워
-let input = require('fs').readFileSync('/dev/stdin').toString();
-let N = Number(input)
+// let input = require('fs').readFileSync('/dev/stdin').toString();
+// let N = Number(input)
 
-    class Node{ // 1
-        constructor(val){
-            this.val = val; 
-            this.next = null;
-        }
-    }
+//     class Node{ // 1
+//         constructor(val){
+//             this.val = val; 
+//             this.next = null;
+//         }
+//     }
     
-    class LinkedList{ // 2
-        constructor(){
-            this.head = null;
-            this.tail = null;
-            this.length = 0;
-        }
+//     class LinkedList{ // 2
+//         constructor(){
+//             this.head = null;
+//             this.tail = null;
+//             this.length = 0;
+//         }
         
-        push(val){ // 3
-            let newNode = new Node(val);
+//         push(val){ // 3
+//             let newNode = new Node(val);
             
-            if(!this.head){
-                this.head = newNode
+//             if(!this.head){
+//                 this.head = newNode
                 
-            }else{
-                this.tail.next = newNode
-            }
-            this.tail = newNode;
-            this.length++;
+//             }else{
+//                 this.tail.next = newNode
+//             }
+//             this.tail = newNode;
+//             this.length++;
 
-            return newNode;
-        }
+//             return newNode;
+//         }
         
-        getHead(){ // 4
-          return this.head.val;
-        }
+//         getHead(){ // 4
+//           return this.head.val;
+//         }
         
-        removeHead(){ // 5
-            this.head = this.head.next;
-            this.length--;
-        }
+//         removeHead(){ // 5
+//             this.head = this.head.next;
+//             this.length--;
+//         }
         
-        getLength(){ // 6
-            return this.length;
-        }
-    }
+//         getLength(){ // 6
+//             return this.length;
+//         }
+//     }
     
-    const cards = new LinkedList(); // 7
+//     const cards = new LinkedList(); // 7
     
-    for(let i = 1; i<=N; i++){ // 8
-        cards.push(i)
+//     for(let i = 1; i<=N; i++){ // 8
+//         cards.push(i)
         
-    }
+//     }
 
-      while(cards.getLength() != 1){ // 9
-        cards.removeHead()
-        cards.push(cards.getHead())
-        cards.removeHead()
-    }
+//       while(cards.getLength() != 1){ // 9
+//         cards.removeHead()
+//         cards.push(cards.getHead())
+//         cards.removeHead()
+//     }
     
-    console.log(cards.getHead()) // 10
+//     console.log(cards.getHead()) // 10
 
+
+// 연결리스트 시간 복잡도
+// 삽입 (Insertion)
+
+// 리스트의 시작 부분에 삽입: O(1)
+// 새로운 노드를 생성하고, 그 노드의 next 포인터를 현재의 헤드 노드를 가리키도록 한 후, 헤드를 새로운 노드로 변경하면 된다.
+// 리스트의 끝 부분에 삽입: O(n)
+// 리스트의 끝을 찾기 위해 리스트의 모든 노드를 순회한 후, 마지막 노드의 next 포인터를 새로운 노드를 가리키도록 설정한다.
+// 중간 위치에 삽입: O(n)
+// 삽입 위치까지 노드를 순회한 후, 해당 위치에 노드를 삽입한다. 삽입 위치까지 가는 데 O(n) 시간이 걸린다.
+// 삭제 (Deletion)
+
+// 리스트의 시작 부분에서 삭제: O(1)
+// 헤드 노드를 다음 노드로 변경하면 된다.
+// 리스트의 끝 부분에서 삭제: O(n)
+// 끝 노드를 찾기 위해 리스트를 순회한 후, 마지막 노드의 이전 노드의 next 포인터를 null로 설정한다.
+// 중간 위치에서 삭제: O(n)
+// 삭제 위치까지 노드를 순회한 후, 해당 위치의 노드를 제거한다. 삭제 위치까지 가는 데 O(n) 시간이 걸린다.
+// 탐색 (Search)
+
+// 특정 값 또는 인덱스 탐색: O(n)
+// 원하는 값을 찾기 위해 리스트의 모든 노드를 순회해야 한다.
+// 접근 (Access)
+
+// 특정 인덱스의 값 접근: O(n)
+// 특정 인덱스에 접근하기 위해 해당 인덱스까지 리스트를 순회해야 한다.
+// 정리
+// 삽입
+
+// 시작 부분: O(1)
+// 끝 부분: O(n)
+// 중간 위치: O(n)
+// 삭제
+
+// 시작 부분: O(1)
+// 끝 부분: O(n)
+// 중간 위치: O(n)
+// 탐색
+
+// 특정 값: O(n)
+// 특정 인덱스: O(n)
+// 접근
+
+// 특정 인덱스: O(n)
