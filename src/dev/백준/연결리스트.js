@@ -394,16 +394,38 @@ class LinkedList {
     // 리스트의 끝에 노드 추가
     append(data) {
 
+        //먼저, data를 저장하는 새로운 노드를 생성한다.
+        // new Node(data)를 호출하여 Node 클래스의 인스턴스를 만든다.
+        // 새 노드의 next 포인터는 null로 초기화된다.
         const newNode = new Node(data);
+
+        //헤드 노드가 없는 경우 (리스트가 비어있는 경우)
         if (this.head === null) {
+
+            //리스트가 비어있다면 새 노드가 첫 번째 노드가 된다.
             this.head = newNode;
+
+            //헤드 노드가 있는 경우 (리스트가 비어있지 않은 경우)
         } else {
+
+            //current 변수를 this.head로 초기화한다.
             let current = this.head;
+
+            //current.next가 null이 될 때까지 리스트를 순회
+            //이 루프는 리스트의 끝을 찾기 위한 것이다.
+            //current.next가 null이 되는 시점은 현재 노드가 리스트의 마지막 노드인 경우이다.
             while (current.next !== null) {
+
+                //루프가 종료되면 current는 리스트의 마지막 노드를 가리키고 있다.
                 current = current.next;
             }
+
+            // 마지막 노드의 next 포인터를 새 노드로 설정한다.
+            // 이로써 새 노드가 리스트의 끝에 추가된다.
             current.next = newNode;
         }
+
+        //리스트의 크기를 업데이트
         this.size++;
     }
 
