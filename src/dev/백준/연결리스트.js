@@ -384,3 +384,103 @@
 
 // 특정 인덱스: O(n)
 
+//연결리스트 클래스
+class LinkedList {
+    constructor() {
+        this.head = null;
+        this.size = 0;
+    }
+
+    // 리스트의 끝에 노드 추가
+    append(data) {
+
+        const newNode = new Node(data);
+        if (this.head === null) {
+            this.head = newNode;
+        } else {
+            let current = this.head;
+            while (current.next !== null) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+        this.size++;
+    }
+
+    // 특정 위치에 노드 삽입
+    insertAt(data, index) {
+        if (index < 0 || index > this.size) {
+            return console.log("Invalid index");
+        }
+
+        const newNode = new Node(data);
+        if (index === 0) {
+            newNode.next = this.head;
+            this.head = newNode;
+        } else {
+            let current = this.head;
+            let previous;
+            let count = 0;
+
+            while (count < index) {
+                previous = current;
+                current = current.next;
+                count++;
+            }
+
+            newNode.next = current;
+            previous.next = newNode;
+        }
+        this.size++;
+    }
+
+    // 노드 삭제
+    removeAt(index) {
+        if (index < 0 || index >= this.size) {
+            return console.log("Invalid index");
+        }
+
+        let current = this.head;
+        let previous;
+        let count = 0;
+
+        if (index === 0) {
+            this.head = current.next;
+        } else {
+            while (count < index) {
+                previous = current;
+                current = current.next;
+                count++;
+            }
+            previous.next = current.next;
+        }
+        this.size--;
+        return current.data;
+    }
+
+    // 특정 위치의 노드 데이터 반환
+    getAt(index) {
+        if (index < 0 || index >= this.size) {
+            return console.log("Invalid index");
+        }
+
+        let current = this.head;
+        let count = 0;
+
+        while (count < index) {
+            current = current.next;
+            count++;
+        }
+
+        return current.data;
+    }
+
+    // 전체 리스트 출력
+    printList() {
+        let current = this.head;
+        while (current) {
+            console.log(current.data);
+            current = current.next;
+        }
+    }
+}
