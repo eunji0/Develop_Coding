@@ -542,40 +542,78 @@
 // console.log(result[destination]);
 
 //17182-우주탐사선
-const fs = require('fs');
+// const fs = require('fs');
 
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const [N, K] = input[0].split(' ').map(Number);
-const time = input.slice(1, N + 1).map(line => line.split(' ').map(Number));
-const visited = new Array(N).fill(0);
-visited[K] = 1;
-let answer = Infinity;
+// const [N, K] = input[0].split(' ').map(Number);
+// const time = input.slice(1, N + 1).map(line => line.split(' ').map(Number));
+// const visited = new Array(N).fill(0);
+// visited[K] = 1;
+// let answer = Infinity;
 
-// Floyd-Warshall Algorithm
-for (let k = 0; k < N; k++) {
-  for (let i = 0; i < N; i++) {
-    for (let j = 0; j < N; j++) {
-      time[i][j] = Math.min(time[i][j], time[i][k] + time[k][j]);
+// // Floyd-Warshall Algorithm
+// for (let k = 0; k < N; k++) {
+//   for (let i = 0; i < N; i++) {
+//     for (let j = 0; j < N; j++) {
+//       time[i][j] = Math.min(time[i][j], time[i][k] + time[k][j]);
+//     }
+//   }
+// }
+
+// function findMin(curr, cost, cnt) {
+//   if (N === cnt) {
+//     answer = Math.min(answer, cost);
+//     return;
+//   }
+//   for (let i = 0; i < N; i++) {
+//     if (visited[i] === 0) {
+//       visited[i] = 1;
+//       findMin(i, cost + time[curr][i], cnt + 1);
+//       visited[i] = 0;
+//     }
+//   }
+// }
+
+// findMin(K, 0, 1);
+// console.log(answer);
+
+
+//1719-택배
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './Javascript/input.txt';
+const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+const [n, m] = input[0].split(' ').map(Number);
+const path = input.slice(1).map((e) => e.split(' ').map(Number));
+const distance = Array.from({ length: n + 1 }, () => Array(n + 1).fill(Infinity));
+let arr = Array.from({ length: n + 1 }, () => Array(n + 1));
+path.forEach(([s, e, cost]) => {
+    distance[s][e] = cost;
+    distance[e][s] = cost;
+    arr[s][e] = e;
+    arr[e][s] = s;
+});
+
+// 플로이드 워셜 알고리즘 수행
+for (let k = 1; k <= n; k++) {
+    for (let a = 1; a <= n; a++) {
+        for (let b = 1; b <= n; b++) {
+            if (a === b) {
+                arr[a][b] = '-';
+                continue;
+            }
+            if (distance[a][b] > distance[a][k] + distance[k][b]) {
+                distance[a][b] = distance[a][k] + distance[k][b];
+                arr[a][b] = arr[a][k];
+            }
+        }
     }
-  }
 }
-
-function findMin(curr, cost, cnt) {
-  if (N === cnt) {
-    answer = Math.min(answer, cost);
-    return;
-  }
-  for (let i = 0; i < N; i++) {
-    if (visited[i] === 0) {
-      visited[i] = 1;
-      findMin(i, cost + time[curr][i], cnt + 1);
-      visited[i] = 0;
-    }
-  }
-}
-
-findMin(K, 0, 1);
-console.log(answer);
+// 출력 형태로 변환
+arr = arr.slice(1).map((e) => e.slice(1));
+let answer = '';
+arr.forEach((row) => {
+    answer += row.join(' ') + '\n';
+});
+console.log(answer.trimEnd());
 
