@@ -581,39 +581,72 @@
 
 
 //1719-택배
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './Javascript/input.txt';
-const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
-const [n, m] = input[0].split(' ').map(Number);
-const path = input.slice(1).map((e) => e.split(' ').map(Number));
-const distance = Array.from({ length: n + 1 }, () => Array(n + 1).fill(Infinity));
-let arr = Array.from({ length: n + 1 }, () => Array(n + 1));
-path.forEach(([s, e, cost]) => {
-    distance[s][e] = cost;
-    distance[e][s] = cost;
-    arr[s][e] = e;
-    arr[e][s] = s;
-});
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './Javascript/input.txt';
+// const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// const path = input.slice(1).map((e) => e.split(' ').map(Number));
+// const distance = Array.from({ length: n + 1 }, () => Array(n + 1).fill(Infinity));
+// let arr = Array.from({ length: n + 1 }, () => Array(n + 1));
+// path.forEach(([s, e, cost]) => {
+//     distance[s][e] = cost;
+//     distance[e][s] = cost;
+//     arr[s][e] = e;
+//     arr[e][s] = s;
+// });
 
-// 플로이드 워셜 알고리즘 수행
-for (let k = 1; k <= n; k++) {
-    for (let a = 1; a <= n; a++) {
-        for (let b = 1; b <= n; b++) {
-            if (a === b) {
-                arr[a][b] = '-';
-                continue;
-            }
-            if (distance[a][b] > distance[a][k] + distance[k][b]) {
-                distance[a][b] = distance[a][k] + distance[k][b];
-                arr[a][b] = arr[a][k];
-            }
-        }
-    }
+// // 플로이드 워셜 알고리즘 수행
+// for (let k = 1; k <= n; k++) {
+//     for (let a = 1; a <= n; a++) {
+//         for (let b = 1; b <= n; b++) {
+//             if (a === b) {
+//                 arr[a][b] = '-';
+//                 continue;
+//             }
+//             if (distance[a][b] > distance[a][k] + distance[k][b]) {
+//                 distance[a][b] = distance[a][k] + distance[k][b];
+//                 arr[a][b] = arr[a][k];
+//             }
+//         }
+//     }
+// }
+// // 출력 형태로 변환
+// arr = arr.slice(1).map((e) => e.slice(1));
+// let answer = '';
+// arr.forEach((row) => {
+//     answer += row.join(' ') + '\n';
+// });
+// console.log(answer.trimEnd());
+
+//1446-지름길
+const inputs = require("fs")
+  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+  .toString()
+  .trim()
+  .split("\n");
+
+const [n, d] = inputs[0].split(" ").map(Number);
+let dist = Array.from(Array(d + 1).fill(Infinity));
+const graph = Array.from(Array(d + 1), () => []);
+
+for (let i = 0; i < n; i++) {
+  const [start, end, w] = inputs[i + 1].split(" ").map(Number);
+  if (end > d) continue;
+  if (end - start <= w) continue;
+
+  graph[start].push([end, w]);
 }
-// 출력 형태로 변환
-arr = arr.slice(1).map((e) => e.slice(1));
-let answer = '';
-arr.forEach((row) => {
-    answer += row.join(' ') + '\n';
-});
-console.log(answer.trimEnd());
+
+let prev = -1;
+for (let i = 0; i <= d; i++) {
+  if (i) prev = dist[i - 1];
+
+  dist[i] = Math.min(dist[i], prev + 1);
+
+  for (let [next, cost] of graph[i]) {
+    if (dist[next] > dist[i] + cost) {
+      dist[next] = dist[i] + cost;
+    }
+  }
+}
+console.log(dist[d]);
 
