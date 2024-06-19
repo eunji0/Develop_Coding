@@ -413,6 +413,7 @@ class LinkedList {
 
             //current.next가 null이 될 때까지 리스트를 순회
             //이 루프는 리스트의 끝을 찾기 위한 것이다.
+            //끝을 찾아야 맨 마지막에 추가하기 떄문.
             //current.next가 null이 되는 시점은 현재 노드가 리스트의 마지막 노드인 경우이다.
             while (current.next !== null) {
 
@@ -425,6 +426,7 @@ class LinkedList {
             current.next = newNode;
         }
 
+        //노드가 추가되었으니까
         //리스트의 크기를 업데이트
         this.size++;
     }
