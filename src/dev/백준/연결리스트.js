@@ -497,14 +497,19 @@ class LinkedList {
         if (index === 0) {
             this.head = current.next;
         } else {
+            //while문이 종료되면 current는 제거하려는 위치의 노드를 가리키고, previous는 그 이전 노드를 가리킨다.
             while (count < index) {
                 previous = current;
                 current = current.next;
                 count++;
             }
+
+            //previous.next를 current.next로 설정하여 현재 노드를 리스트에서 제거한다.
             previous.next = current.next;
         }
         this.size--;
+
+        //제거된 노드의 데이터를 반환한다.
         return current.data;
     }
 
@@ -514,14 +519,21 @@ class LinkedList {
             return console.log("Invalid index");
         }
 
+        //current 변수를 현재 헤드 노드(this.head)로 초기화한다
         let current = this.head;
+
+        //count 변수는 현재 노드의 인덱스를 추적한다.
         let count = 0;
 
         while (count < index) {
+            // current를 current.next로 설정하여 다음 노드로 이동한다.
             current = current.next;
+
+            //count를 1씩 증가시켜 현재 인덱스를 추적한다.
             count++;
         }
 
+        //현재 노드(current)의 데이터를 반환한다.
         return current.data;
     }
 
