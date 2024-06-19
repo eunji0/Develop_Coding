@@ -433,28 +433,54 @@ class LinkedList {
 
     // 특정 위치에 노드 삽입
     insertAt(data, index) {
+        //유효한 인덱스인지 확인
         if (index < 0 || index > this.size) {
             return console.log("Invalid index");
         }
 
+        //새로운 노드 생성
+        //new Node(data)를 호출하여 Node 클래스의 인스턴스를 만든다.
         const newNode = new Node(data);
-        if (index === 0) {
-            newNode.next = this.head;
-            this.head = newNode;
-        } else {
-            let current = this.head;
-            let previous;
-            let count = 0;
 
+        //인덱스가 0인경우
+        //리스트의 시작 부분에 삽입
+        if (index === 0) {
+            //새 노드의 next 포인터를 현재의 헤드 노드(this.head)로 설정한다.
+            newNode.next = this.head;
+            //그런 다음, this.head를 새 노드로 업데이트한다.
+            this.head = newNode;
+
+
+            //인덱스가 0이 아닌 경우
+            //리스트의 중간 또는 끝 부분에 삽입
+        } else {
+
+            //인덱스가 0이 아닌 경우, 삽입하려는 위치까지 리스트를 순회한다.
+
+            let current = this.head;  // 현재 노드를 헤드 노드로 설정
+            let previous;             // 이전 노드를 추적하기 위한 변수
+            let count = 0;            // 현재 노드의 인덱스를 추적하기 위한 변수
+            
+
+            //count가 index보다 작을 때까지 루프를 반복한다
             while (count < index) {
                 previous = current;
                 current = current.next;
+                //count를 1씩 증가시켜 현재 인덱스를 추적한다.
                 count++;
             }
+            //루프가 종료되면 
+            //current는 삽입하려는 위치의 노드를 가리키고, 
+            //previous는 그 이전 노드를 가리킨다.
 
+            //새 노드의 next 포인터를 current로 설정한다.
             newNode.next = current;
+
+            //previous.next를 새 노드로 설정하여 새로운 노드를 리스트에 삽입한다.
             previous.next = newNode;
         }
+
+        //리스트의 크기를 업데이트
         this.size++;
     }
 
