@@ -578,5 +578,32 @@ class LinkedList{
         this.size++;
     }
 
+    insert(data, index){
+        if(index<0||index>this.size){
+            return console.log('s')
+        }
 
+        const newNode = new Node(data);
+
+        if(index === 0){
+            newNode.next = this.head;
+            this.head = newNode;
+        }else{
+            let current = this.head;
+            let previous;
+            let count = 0;
+
+            while(count < index){
+                previous = current;
+                current =current.next;
+                count++;
+            }
+
+            newNode.next = current;
+            previous.next = newNode;
+
+        }
+
+        this.size++;
+    }
 }
