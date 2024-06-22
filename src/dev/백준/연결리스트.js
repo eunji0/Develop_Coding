@@ -606,4 +606,43 @@ class LinkedList{
 
         this.size++;
     }
+    
+    removeAt(index){
+        if(index<0||index>this.size){
+            return console.log('a')
+        }
+
+        let current = this.head;
+        let previous;
+        let count =0;
+
+        if(index === 0){
+            this.head = current.next;
+        }else{
+            while(count < index){
+                previous = current;
+                current = current.next;
+                count++;
+            }
+            previous.next = current.next;
+        }
+        this.size--;
+        return current.data; 
+    }
+
+    getAt(index){
+        if(index<0||index>this.size){
+            return console.log('a')
+        }
+
+        let current = this.head;
+        let count =0;
+
+        while(current<index){
+            current = current.next;
+            count++;
+        }
+
+        return current.data;
+    }
 }
