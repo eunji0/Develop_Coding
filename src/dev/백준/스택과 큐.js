@@ -394,37 +394,73 @@
 // console.log(result.join(' '));
 
 //11000-강의실배정
-const fs = require('fs');
+// const fs = require('fs');
 
-// 입력을 읽어들입니다.
-const input = fs.readFileSync('/dev/stdin', 'utf8').trim().split('\n');
-input.shift(); // 첫 번째 줄 제거
+// // 입력을 읽어들입니다.
+// const input = fs.readFileSync('/dev/stdin', 'utf8').trim().split('\n');
+// input.shift(); // 첫 번째 줄 제거
 
-const times = [];
+// const times = [];
 
-// 입력을 처리하여 times 배열에 시작 시간과 끝 시간을 저장합니다.
-input.forEach((v) => {
-  const [start, end] = v.split(' ').map(Number);
-  times.push([start, 1]);
-  times.push([end, -1]);
+// // 입력을 처리하여 times 배열에 시작 시간과 끝 시간을 저장합니다.
+// input.forEach((v) => {
+//   const [start, end] = v.split(' ').map(Number);
+//   times.push([start, 1]);
+//   times.push([end, -1]);
+// });
+
+// // times 배열을 정렬합니다.
+// times.sort((a, b) => {
+//   if (a[0] === b[0]) return a[1] - b[1];
+//   return a[0] - b[0];
+// });
+
+// let answer = 0;
+// let result = 0;
+
+// // 각 시간점에서의 변화를 누적하여 최대 동시 사용자를 계산합니다.
+// for (let i = 0; i < times.length; i++) {
+//   result += times[i][1];
+//   answer = Math.max(result, answer);
+// }
+
+// // 결과를 출력합니다.
+// console.log(answer);
+
+//17299-오등큰수
+const fs = require("fs");
+let input = fs.readFileSync("/dev/stdin").toString().trim().split("\n");
+
+const iter = Number(input[0]);
+
+input = input[1].split(" ").map((item) => Number(item));
+
+// -1로 채워진 ans 배열 생성
+let ans = new Array(iter).fill(-1);
+
+// count에는 중복되는 숫자의 개수를 넣어줄 것임. key - value 형태로.
+// 예를들어, 1이 3개면 "1" : 3 이런식.
+let count = {};
+
+// input에 있는 원소를 하나씩 돌리면서
+// count[x]가 존재한다면 value + 1
+// count[x]가 없다면 0 + 1
+input.forEach((x) => {
+  count[x] = (count[x] || 0) + 1;
 });
 
-// times 배열을 정렬합니다.
-times.sort((a, b) => {
-  if (a[0] === b[0]) return a[1] - b[1];
-  return a[0] - b[0];
-});
+let stack = [];
 
-let answer = 0;
-let result = 0;
-
-// 각 시간점에서의 변화를 누적하여 최대 동시 사용자를 계산합니다.
-for (let i = 0; i < times.length; i++) {
-  result += times[i][1];
-  answer = Math.max(result, answer);
+for (let i = 0; i < iter; i++) {
+    while (
+        stack.length &&
+        count[input[stack[stack.length - 1]]] < count[input[i]]
+    ) {
+        ans[stack.pop()] = input[i];
+    }
+    stack.push(i);
 }
 
-// 결과를 출력합니다.
-console.log(answer);
+console.log(ans.join(" "));
 
 
