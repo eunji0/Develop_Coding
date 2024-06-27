@@ -428,39 +428,78 @@
 // console.log(answer);
 
 //17299-오등큰수
-const fs = require("fs");
-let input = fs.readFileSync("/dev/stdin").toString().trim().split("\n");
+// const fs = require("fs");
+// let input = fs.readFileSync("/dev/stdin").toString().trim().split("\n");
 
-const iter = Number(input[0]);
+// const iter = Number(input[0]);
 
-input = input[1].split(" ").map((item) => Number(item));
+// input = input[1].split(" ").map((item) => Number(item));
 
-// -1로 채워진 ans 배열 생성
-let ans = new Array(iter).fill(-1);
+// // -1로 채워진 ans 배열 생성
+// let ans = new Array(iter).fill(-1);
 
-// count에는 중복되는 숫자의 개수를 넣어줄 것임. key - value 형태로.
-// 예를들어, 1이 3개면 "1" : 3 이런식.
-let count = {};
+// // count에는 중복되는 숫자의 개수를 넣어줄 것임. key - value 형태로.
+// // 예를들어, 1이 3개면 "1" : 3 이런식.
+// let count = {};
 
-// input에 있는 원소를 하나씩 돌리면서
-// count[x]가 존재한다면 value + 1
-// count[x]가 없다면 0 + 1
-input.forEach((x) => {
-  count[x] = (count[x] || 0) + 1;
-});
+// // input에 있는 원소를 하나씩 돌리면서
+// // count[x]가 존재한다면 value + 1
+// // count[x]가 없다면 0 + 1
+// input.forEach((x) => {
+//   count[x] = (count[x] || 0) + 1;
+// });
 
-let stack = [];
+// let stack = [];
 
-for (let i = 0; i < iter; i++) {
-    while (
-        stack.length &&
-        count[input[stack[stack.length - 1]]] < count[input[i]]
-    ) {
-        ans[stack.pop()] = input[i];
+// for (let i = 0; i < iter; i++) {
+//     while (
+//         stack.length &&
+//         count[input[stack[stack.length - 1]]] < count[input[i]]
+//     ) {
+//         ans[stack.pop()] = input[i];
+//     }
+//     stack.push(i);
+// }
+
+// console.log(ans.join(" "));
+
+//1725-히스토그램
+const input = require("fs")
+  .readFileSync("/dev/stdin")
+  .toString()
+  .trim()
+  .split("\n");
+
+const [input_N, ...input_blocks] = input.map(
+  (v) => v.trim().split("\n").map(Number)[0]
+);
+
+function solution(N, blocks) {
+  const calculate = (stack, len, MAX) => {
+    const [target, _] = stack.pop();
+    let width = 0;
+    if (stack.length === 0) width = len;
+    else width = len - stack[stack.length - 1][1] - 1;
+    MAX = Math.max(MAX, width * target);
+
+    return [stack, MAX];
+  };
+
+  let stack = [];
+  let MAX = 0;
+  blocks.forEach((block, idx) => {
+    while (stack.length !== 0 && stack[stack.length - 1][0] > block) {
+      [stack, MAX] = calculate(stack, idx, MAX);
     }
-    stack.push(i);
+    stack.push([block, idx]);
+  });
+  while (stack.length !== 0) {
+    [stack, MAX] = calculate(stack, N, MAX);
+  }
+
+  return MAX;
 }
 
-console.log(ans.join(" "));
+console.log(solution(input_N, input_blocks));
 
 
