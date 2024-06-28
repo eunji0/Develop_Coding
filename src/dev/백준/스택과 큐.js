@@ -464,42 +464,71 @@
 // console.log(ans.join(" "));
 
 //1725-히스토그램
-const input = require("fs")
-  .readFileSync("/dev/stdin")
-  .toString()
-  .trim()
-  .split("\n");
+// const input = require("fs")
+//   .readFileSync("/dev/stdin")
+//   .toString()
+//   .trim()
+//   .split("\n");
 
-const [input_N, ...input_blocks] = input.map(
-  (v) => v.trim().split("\n").map(Number)[0]
-);
+// const [input_N, ...input_blocks] = input.map(
+//   (v) => v.trim().split("\n").map(Number)[0]
+// );
 
-function solution(N, blocks) {
-  const calculate = (stack, len, MAX) => {
-    const [target, _] = stack.pop();
-    let width = 0;
-    if (stack.length === 0) width = len;
-    else width = len - stack[stack.length - 1][1] - 1;
-    MAX = Math.max(MAX, width * target);
+// function solution(N, blocks) {
+//   const calculate = (stack, len, MAX) => {
+//     const [target, _] = stack.pop();
+//     let width = 0;
+//     if (stack.length === 0) width = len;
+//     else width = len - stack[stack.length - 1][1] - 1;
+//     MAX = Math.max(MAX, width * target);
 
-    return [stack, MAX];
-  };
+//     return [stack, MAX];
+//   };
 
-  let stack = [];
-  let MAX = 0;
-  blocks.forEach((block, idx) => {
-    while (stack.length !== 0 && stack[stack.length - 1][0] > block) {
-      [stack, MAX] = calculate(stack, idx, MAX);
+//   let stack = [];
+//   let MAX = 0;
+//   blocks.forEach((block, idx) => {
+//     while (stack.length !== 0 && stack[stack.length - 1][0] > block) {
+//       [stack, MAX] = calculate(stack, idx, MAX);
+//     }
+//     stack.push([block, idx]);
+//   });
+//   while (stack.length !== 0) {
+//     [stack, MAX] = calculate(stack, N, MAX);
+//   }
+
+//   return MAX;
+// }
+
+// console.log(solution(input_N, input_blocks));
+
+//3015-오아시스 재결합
+const fs = require('fs');
+const input = fs.readFileSync("./dev/stdin").toString().trim().split('\n').map(Number);
+const N = input.shift();
+let answer = 0;
+let s = [];
+for (let i = 0; i < N; i++) {
+  const now = input[i]
+
+  // console.log("========value: ", now,"==============")
+  let same = 1;
+  while (s.length > 0 && s[s.length - 1].value <= now) {
+    answer += s[s.length - 1].same;
+
+    if (s[s.length - 1].value == now) {
+      same = s[s.length - 1].same + 1;
+    } else {
+      same = 1;
     }
-    stack.push([block, idx]);
-  });
-  while (stack.length !== 0) {
-    [stack, MAX] = calculate(stack, N, MAX);
+    s.pop();
   }
-
-  return MAX;
+  if (s.length > 0) {
+    answer++;
+  }
+  s.push({ value: now, same })
 }
 
-console.log(solution(input_N, input_blocks));
+console.log(answer)
 
 
