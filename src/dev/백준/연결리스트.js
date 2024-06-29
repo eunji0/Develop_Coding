@@ -6,6 +6,8 @@
 //   }
 // }
 
+const { escape } = require('querystring');
+
 // class LinkedList {
 //   constructor(){
 //     let init = new Node('init');
@@ -547,111 +549,138 @@
 //     }
 // }
 
+//1406-에디터
 class Node{
     constructor(data){
-        this.data=data;
-        this.next=null;
+        this.data = data;
+        this.prev = null;
+        this.next = null;
     }
 }
 
 class LinkedList{
     constructor(){
-        this.head=null;
-        this.size=0;
+        this.head = null;
+        this.tail = null;
+        this.cursor = null;
     }
 
     append(data){
         const newNode = new Node(data);
 
         if(this.head === null){
-            this.head = newNode;
+           this.head = newNode;
+           this.tail = newNode;
         }else{
-            let current = this.head;
-
-            while(current.next !== null){
-                current = current.next;
-            }
-
-            current.next = newNode;
+            this.tail.next = newNode;
+            newNode.prev = this.tail;
+            this.tail= newNode;
         }
 
-        this.size++;
+        this.cursor = newNode;
     }
 
-    insert(data, index){
-        if(index<0||index>this.size){
-            return console.log('s')
-        }
+    initializeCursor() {
+        this.cursor = this.tail;
+      }
 
-        const newNode = new Node(data);
+    insertLeft(data) {
+    const newNode = new Node(data);
 
-        if(index === 0){
-            newNode.next = this.head;
-            this.head = newNode;
-        }else{
-            let current = this.head;
-            let previous;
-            let count = 0;
-
-            while(count < index){
-                previous = current;
-                current =current.next;
-                count++;
-            }
-
-            newNode.next = current;
-            previous.next = newNode;
-
-        }
-
-        this.size++;
+    if (this.cursor === this.tail) { // 커서가 맨 끝에 있을 때
+      this.cursor.next = newNode;
+      newNode.prev = this.cursor;
+      this.tail = newNode;
+      this.cursor = newNode;
+    } else if (this.cursor === this.head.next) { // 커서가 맨 앞에 있을 때
+      newNode.next = this.cursor;
+      this.cursor.prev = newNode;
+      this.head.next = newNode;
+      newNode.prev = this.head;
+      this.cursor = newNode;
+    } else { // 커서가 중간에 있을 때
+      newNode.prev = this.cursor;
+      newNode.next = this.cursor.next;
+      if (this.cursor.next !== null) {
+        this.cursor.next.prev = newNode;
+      }
+      this.cursor.next = newNode;
+      this.cursor = newNode;
     }
-    
-    removeAt(index){
-        if(index<0||index>this.size){
-            return console.log('a')
-        }
+  }
 
+
+    deleteLeft(){
+        if(this.cursor.prev != null){//커서가 맨앞에 있지 않다면
+            if(this.cursor.next != null){//커서가 뒤에 값이 있지 않다면
+                this.cursor.next.prev = this.cursor.prev;
+            }
+            this.cursor.prev.next - this.cursor.next;
+            this.cursor = this.cursor.prev;
+        }
+    }
+
+    toString() {
+        let result = '';
         let current = this.head;
-        let previous;
-        let count =0;
-
-        if(index === 0){
-            this.head = current.next;
-        }else{
-            while(count < index){
-                previous = current;
-                current = current.next;
-                count++;
-            }
-            previous.next = current.next;
-        }
-        this.size--;
-        return current.data; 
-    }
-
-    getAt(index){
-        if(index<0||index>this.size){
-            return console.log('a')
-        }
-
-        let current = this.head;
-        let count =0;
-
-        while(current<index){
+        while (current !== null) {
+            result += current.data;
             current = current.next;
-            count++;
         }
-
-        return current.data;
+        return result;
     }
 
-        printList() {
-        let current = this.head;
-        while (current) {
-            console.log(current.data);
-            current = current.next;
+    moveLeft() {
+        if (this.cursor !== this.head) {
+          this.cursor = this.cursor.prev;
+        }
+      }
+      
+
+    moveRight(){
+        if(this.cursor.next != null){
+            this.cursor = this.cursor.next;
         }
     }
 }
+
+
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+const [str, n, ...commands] = input.map(v => v.trim());
+
+
+const editor =(str, commands)=>{
+    const list = new LinkedList();
+
+    for(let s of str){
+        list.append(s);
+    }
+
+    list.initializeCursor();
+
+    for (let command of commands) {
+        const [op, arg] = command.split(' ');
+        console.log('l', list.toString())
+        switch (op) {
+            case 'L':
+                list.moveLeft();
+                break;
+            case 'D':
+                list.moveRight();
+                break;
+            case 'B':
+                list.deleteLeft();
+                break;
+            case 'P':
+                list.insertLeft(arg);
+                break;
+        }
+    }
+    
+    return list.toString()
+}
+
+console.log(editor(str, commands))
+
 
