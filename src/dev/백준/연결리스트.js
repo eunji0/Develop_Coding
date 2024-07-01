@@ -551,15 +551,111 @@ const { escape } = require('querystring');
 // }
 
 //1406-에디터
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const fs = require('fs');
-const input = fs.readFileSync(filePath).toString().split('\n');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const fs = require('fs');
+// const input = fs.readFileSync(filePath).toString().split('\n');
 
-let initialString = input[0].trim();
-let commandCount = parseInt(input[1]);
-let commands = input.slice(2, 2 + commandCount);
+// let initialString = input[0].trim();
+// let commandCount = parseInt(input[1]);
+// let commands = input.slice(2, 2 + commandCount);
 
-// 연결리스트 노드 정의
+// // 연결리스트 노드 정의
+// class Node {
+//     constructor(value) {
+//         this.value = value;
+//         this.prev = null;
+//         this.next = null;
+//     }
+// }
+
+// // 연결리스트 클래스 정의
+// class LinkedList {
+//     constructor() {
+//         this.head = new Node(null);  // Dummy head node
+//         this.tail = new Node(null);  // Dummy tail node
+//         this.head.next = this.tail;
+//         this.tail.prev = this.head;
+//         this.cursor = this.tail;
+//     }
+
+//     // 초기 문자열을 리스트에 추가
+//     appendString(str) {
+//         for (let char of str) {
+//             this.insert(char);
+//         }
+//     }
+
+//     // 커서 왼쪽에 문자 삽입
+//     insert(char) {
+//         let newNode = new Node(char);
+//         let prevNode = this.cursor.prev;
+
+//         newNode.next = this.cursor;
+//         newNode.prev = prevNode;
+//         prevNode.next = newNode;
+//         this.cursor.prev = newNode;
+//     }
+
+//     // 커서를 왼쪽으로 이동
+//     moveLeft() {
+//         if (this.cursor.prev !== this.head) {
+//             this.cursor = this.cursor.prev;
+//         }
+//     }
+
+//     // 커서를 오른쪽으로 이동
+//     moveRight() {
+//         if (this.cursor !== this.tail) {
+//             this.cursor = this.cursor.next;
+//         }
+//     }
+
+//     // 커서 왼쪽 문자 삭제
+//     delete() {
+//         if (this.cursor.prev !== this.head) {
+//             let prevNode = this.cursor.prev;
+//             let prevPrevNode = prevNode.prev;
+
+//             prevPrevNode.next = this.cursor;
+//             this.cursor.prev = prevPrevNode;
+//         }
+//     }
+
+//     // 리스트의 현재 상태를 문자열로 반환
+//     toString() {
+//         let result = '';
+//         let current = this.head.next;
+
+//         while (current !== this.tail) {
+//             result += current.value;
+//             current = current.next;
+//         }
+
+//         return result;
+//     }
+// }
+
+// // 연결리스트 초기화 및 명령어 처리
+// let editor = new LinkedList();
+// editor.appendString(initialString);
+
+// for (let command of commands) {
+//     command = command.trim();
+//     if (command[0] === 'L') {
+//         editor.moveLeft();
+//     } else if (command[0] === 'D') {
+//         editor.moveRight();
+//     } else if (command[0] === 'B') {
+//         editor.delete();
+//     } else if (command[0] === 'P') {
+//         let charToInsert = command.split(' ')[1];
+//         editor.insert(charToInsert);
+//     }
+// }
+
+// console.log(editor.toString());
+
+//5397-키로거
 class Node {
     constructor(value) {
         this.value = value;
@@ -568,26 +664,17 @@ class Node {
     }
 }
 
-// 연결리스트 클래스 정의
 class LinkedList {
     constructor() {
-        this.head = new Node(null);  // Dummy head node
-        this.tail = new Node(null);  // Dummy tail node
+        this.head = new Node(null);
+        this.tail = new Node(null);
         this.head.next = this.tail;
         this.tail.prev = this.head;
         this.cursor = this.tail;
     }
 
-    // 초기 문자열을 리스트에 추가
-    appendString(str) {
-        for (let char of str) {
-            this.insert(char);
-        }
-    }
-
-    // 커서 왼쪽에 문자 삽입
-    insert(char) {
-        let newNode = new Node(char);
+    insertLeft(value) {
+        let newNode = new Node(value);
         let prevNode = this.cursor.prev;
 
         newNode.next = this.cursor;
@@ -596,22 +683,19 @@ class LinkedList {
         this.cursor.prev = newNode;
     }
 
-    // 커서를 왼쪽으로 이동
     moveLeft() {
         if (this.cursor.prev !== this.head) {
             this.cursor = this.cursor.prev;
         }
     }
 
-    // 커서를 오른쪽으로 이동
     moveRight() {
         if (this.cursor !== this.tail) {
             this.cursor = this.cursor.next;
         }
     }
 
-    // 커서 왼쪽 문자 삭제
-    delete() {
+    deleteLeft() {
         if (this.cursor.prev !== this.head) {
             let prevNode = this.cursor.prev;
             let prevPrevNode = prevNode.prev;
@@ -621,7 +705,6 @@ class LinkedList {
         }
     }
 
-    // 리스트의 현재 상태를 문자열로 반환
     toString() {
         let result = '';
         let current = this.head.next;
@@ -635,22 +718,28 @@ class LinkedList {
     }
 }
 
-// 연결리스트 초기화 및 명령어 처리
-let editor = new LinkedList();
-editor.appendString(initialString);
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+const fs = require('fs');
+const input = fs.readFileSync(filePath).toString().split('\n');
 
-for (let command of commands) {
-    command = command.trim();
-    if (command[0] === 'L') {
-        editor.moveLeft();
-    } else if (command[0] === 'D') {
-        editor.moveRight();
-    } else if (command[0] === 'B') {
-        editor.delete();
-    } else if (command[0] === 'P') {
-        let charToInsert = command.split(' ')[1];
-        editor.insert(charToInsert);
+const n = parseInt(input[0].trim());
+const cases = input.slice(1, 1 + n);
+
+cases.forEach(testCase => {
+    let editor = new LinkedList();
+    let commands = testCase.trim();
+
+    for (let command of commands) {
+        if (command === '<') {
+            editor.moveLeft();
+        } else if (command === '>') {
+            editor.moveRight();
+        } else if (command === '-') {
+            editor.deleteLeft();
+        } else {
+            editor.insertLeft(command);
+        }
     }
-}
 
-console.log(editor.toString());
+    console.log(editor.toString());
+});
