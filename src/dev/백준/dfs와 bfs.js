@@ -618,35 +618,89 @@
 // console.log(answer.trimEnd());
 
 //1446-지름길
-const inputs = require("fs")
-  .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
-  .toString()
-  .trim()
-  .split("\n");
+// const inputs = require("fs")
+//   .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+//   .toString()
+//   .trim()
+//   .split("\n");
 
-const [n, d] = inputs[0].split(" ").map(Number);
-let dist = Array.from(Array(d + 1).fill(Infinity));
-const graph = Array.from(Array(d + 1), () => []);
+// const [n, d] = inputs[0].split(" ").map(Number);
+// let dist = Array.from(Array(d + 1).fill(Infinity));
+// const graph = Array.from(Array(d + 1), () => []);
 
-for (let i = 0; i < n; i++) {
-  const [start, end, w] = inputs[i + 1].split(" ").map(Number);
-  if (end > d) continue;
-  if (end - start <= w) continue;
+// for (let i = 0; i < n; i++) {
+//   const [start, end, w] = inputs[i + 1].split(" ").map(Number);
+//   if (end > d) continue;
+//   if (end - start <= w) continue;
 
-  graph[start].push([end, w]);
-}
+//   graph[start].push([end, w]);
+// }
 
-let prev = -1;
-for (let i = 0; i <= d; i++) {
-  if (i) prev = dist[i - 1];
+// let prev = -1;
+// for (let i = 0; i <= d; i++) {
+//   if (i) prev = dist[i - 1];
 
-  dist[i] = Math.min(dist[i], prev + 1);
+//   dist[i] = Math.min(dist[i], prev + 1);
 
-  for (let [next, cost] of graph[i]) {
-    if (dist[next] > dist[i] + cost) {
-      dist[next] = dist[i] + cost;
+//   for (let [next, cost] of graph[i]) {
+//     if (dist[next] > dist[i] + cost) {
+//       dist[next] = dist[i] + cost;
+//     }
+//   }
+// }
+// console.log(dist[d]);
+
+//음료수 얼려먹기
+const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];  // 방향 벡터: 상하좌우 이동을 나타냅니다.
+const visited = Array.from(Array(n), () => Array(m).fill(false));  // 방문 체크 배열: 각 위치가 방문되었는지 여부를 저장합니다.
+
+const bfs = (graph, sx, sy) => {
+  const q = [];  // BFS를 위한 큐를 선언합니다.
+  q.push([sx, sy]);  // 시작 위치를 큐에 추가합니다.
+  visited[sx][sy] = true;  // 시작 위치를 방문 처리합니다.
+
+  while (q.length !== 0) {  // 큐가 빌 때까지 반복합니다.
+    const [x, y] = q.shift();  // 큐에서 하나의 위치를 꺼냅니다.
+
+    for (let i = 0; i < 4; i++) {  // 상하좌우 네 방향에 대해 반복합니다.
+      const nx = x + dir[i][0];  // 다음 위치의 x좌표
+      const ny = y + dir[i][1];  // 다음 위치의 y좌표
+
+      if (nx < 0 || nx >= n || ny < 0 || ny >= m)  // 다음 위치가 범위를 벗어나면 건너뜁니다.
+        continue;
+
+      if (!visited[nx][ny] && graph[nx][ny] === '0') {  // 다음 위치가 방문되지 않았고, 구멍(0)이라면
+        q.push([nx, ny]);  // 큐에 다음 위치를 추가합니다.
+        visited[nx][ny] = true;  // 다음 위치를 방문 처리합니다.
+      }
     }
   }
 }
-console.log(dist[d]);
 
+function solution(n, m, graph) {
+  let count = 0;  // 아이스크림 덩어리 개수를 셀 변수를 선언합니다.
+
+  for (let i = 0; i < n; i++) {  // 모든 행에 대해 반복합니다.
+    for (let j = 0; j < m; j++) {  // 모든 열에 대해 반복합니다.
+      const cur = graph[i][j];  // 현재 위치의 값을 가져옵니다.
+      if (!visited[i][j] && cur === '0') {  // 현재 위치가 방문되지 않았고, 구멍(0)이라면
+        bfs(graph, i, j);  // BFS를 실행하여 연결된 모든 구멍을 방문 처리합니다.
+        count++;  // 아이스크림 덩어리 개수를 하나 증가시킵니다.
+      }
+    }
+  }
+
+  return count;  // 아이스크림 덩어리의 총 개수를 반환합니다.
+}
+
+// 예시 입력
+const n = 4;  // 행의 개수
+const m = 5;  // 열의 개수
+const graph = [
+  '00110',
+  '00011',
+  '11111',
+  '00000'
+].map(line => line.split(''));  // 그래프를 문자열 배열로 입력받아 각 문자를 분리합니다.
+
+console.log(solution(n, m, graph));  // 주어진 그래프에 대해 아이스크림 덩어리 개수를 출력합니다.

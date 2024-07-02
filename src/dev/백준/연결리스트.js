@@ -656,90 +656,90 @@ const { escape } = require('querystring');
 // console.log(editor.toString());
 
 //5397-키로거
-class Node {
-    constructor(value) {
-        this.value = value;
-        this.prev = null;
-        this.next = null;
-    }
-}
+// class Node {
+//     constructor(value) {
+//         this.value = value;
+//         this.prev = null;
+//         this.next = null;
+//     }
+// }
 
-class LinkedList {
-    constructor() {
-        this.head = new Node(null);
-        this.tail = new Node(null);
-        this.head.next = this.tail;
-        this.tail.prev = this.head;
-        this.cursor = this.tail;
-    }
+// class LinkedList {
+//     constructor() {
+//         this.head = new Node(null);
+//         this.tail = new Node(null);
+//         this.head.next = this.tail;
+//         this.tail.prev = this.head;
+//         this.cursor = this.tail;
+//     }
 
-    insertLeft(value) {
-        let newNode = new Node(value);
-        let prevNode = this.cursor.prev;
+//     insertLeft(value) {
+//         let newNode = new Node(value);
+//         let prevNode = this.cursor.prev;
 
-        newNode.next = this.cursor;
-        newNode.prev = prevNode;
-        prevNode.next = newNode;
-        this.cursor.prev = newNode;
-    }
+//         newNode.next = this.cursor;
+//         newNode.prev = prevNode;
+//         prevNode.next = newNode;
+//         this.cursor.prev = newNode;
+//     }
 
-    moveLeft() {
-        if (this.cursor.prev !== this.head) {
-            this.cursor = this.cursor.prev;
-        }
-    }
+//     moveLeft() {
+//         if (this.cursor.prev !== this.head) {
+//             this.cursor = this.cursor.prev;
+//         }
+//     }
 
-    moveRight() {
-        if (this.cursor !== this.tail) {
-            this.cursor = this.cursor.next;
-        }
-    }
+//     moveRight() {
+//         if (this.cursor !== this.tail) {
+//             this.cursor = this.cursor.next;
+//         }
+//     }
 
-    deleteLeft() {
-        if (this.cursor.prev !== this.head) {
-            let prevNode = this.cursor.prev;
-            let prevPrevNode = prevNode.prev;
+//     deleteLeft() {
+//         if (this.cursor.prev !== this.head) {
+//             let prevNode = this.cursor.prev;
+//             let prevPrevNode = prevNode.prev;
 
-            prevPrevNode.next = this.cursor;
-            this.cursor.prev = prevPrevNode;
-        }
-    }
+//             prevPrevNode.next = this.cursor;
+//             this.cursor.prev = prevPrevNode;
+//         }
+//     }
 
-    toString() {
-        let result = '';
-        let current = this.head.next;
+//     toString() {
+//         let result = '';
+//         let current = this.head.next;
 
-        while (current !== this.tail) {
-            result += current.value;
-            current = current.next;
-        }
+//         while (current !== this.tail) {
+//             result += current.value;
+//             current = current.next;
+//         }
 
-        return result;
-    }
-}
+//         return result;
+//     }
+// }
 
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const fs = require('fs');
-const input = fs.readFileSync(filePath).toString().split('\n');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const fs = require('fs');
+// const input = fs.readFileSync(filePath).toString().split('\n');
 
-const n = parseInt(input[0].trim());
-const cases = input.slice(1, 1 + n);
+// const n = parseInt(input[0].trim());
+// const cases = input.slice(1, 1 + n);
 
-cases.forEach(testCase => {
-    let editor = new LinkedList();
-    let commands = testCase.trim();
+// cases.forEach(testCase => {
+//     let editor = new LinkedList();
+//     let commands = testCase.trim();
 
-    for (let command of commands) {
-        if (command === '<') {
-            editor.moveLeft();
-        } else if (command === '>') {
-            editor.moveRight();
-        } else if (command === '-') {
-            editor.deleteLeft();
-        } else {
-            editor.insertLeft(command);
-        }
-    }
+//     for (let command of commands) {
+//         if (command === '<') {
+//             editor.moveLeft();
+//         } else if (command === '>') {
+//             editor.moveRight();
+//         } else if (command === '-') {
+//             editor.deleteLeft();
+//         } else {
+//             editor.insertLeft(command);
+//         }
+//     }
 
-    console.log(editor.toString());
-});
+//     console.log(editor.toString());
+// });

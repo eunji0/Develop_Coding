@@ -1,3 +1,6 @@
-2
-<<BP<A>>Cd-
-ThIsIsS3Cr3t
+4 4
+2 7 3 5
+BN 5 11
+BP 3 6
+CP 2
+CN 7
