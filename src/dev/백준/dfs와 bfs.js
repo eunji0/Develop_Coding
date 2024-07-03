@@ -708,6 +708,80 @@ const { grep } = require("jquery");
 // console.log(solution(n, m, graph));  // 주어진 그래프에 대해 아이스크림 덩어리 개수를 출력합니다.
 
 // 예시 입력
+// const n = 4;  // 행의 개수
+// const m = 5;  // 열의 개수
+// const graph = [
+//   '00110',
+//   '00011',
+//   '11111',
+//   '00000'
+// ].map(line => line.split(''));  // 그래프를 문자열 배열로 입력받아 각 문자를 분리합니다.
+
+// //방향벡터
+// const dir = [[0,1],[0,-1], [1,0], [-1,0]];
+// //방문 체크 배열
+// const visited = Array.from(Array(n), ()=>Array(m).fill(false));
+
+// const bfs = (graph, sx, sy)=>{
+//   const q=[];
+//   //시작 위치를 큐에 삽이
+//   q.push([sx, sy]);
+//   //시작 위치를 방문처리
+//   visited[sx][sy]=true;
+  
+//   //큐가 빌 때까지 반복
+//   while(q.length!==0){
+//     //맨 앞 위치 꺼내기
+//     const [x, y]=q.shift();
+
+//     //상하좌우 반복
+//     for(let i=0; i<4; i++){
+//       //다음 위치의 x좌표
+//       const nx = x+dir[i][0];
+//       //다음 위치의 y좌표
+//       const ny = y+dir[i][1];
+
+//       //다음 위치가 벗어나는지 확인
+//       if(nx<0||nx>=n||ny<0||ny>=m)
+//         continue
+
+//       //방문하지 않았고 0이라면
+//       if(!visited[nx][ny]&&graph[nx][ny]==='0'){
+//         //큐에 다음 위치 추가
+//         q.push([nx, ny]);
+//         //방문 체크
+//         visited[nx][ny]=true;
+//       }
+//     }
+//   }
+// }
+
+// const solution = (n, m, graph) =>{
+//   //아이스크림 덩어리 개수
+//   let count = 0;
+
+//   //배열 순회
+//   //행
+//   for(let i=0 ; i<n; i++){
+//     //열
+//     for(let j=0; j<m; j++){
+//       //현재 위치 값
+//       const cur = graph[i][j];
+
+//       //방문 여부와 0표시여부
+//       if(!visited[i][j]&&cur ==='0'){
+//         bfs(graph, i, j);
+//         count++;
+//       }
+//     }
+//   }
+
+//   return count
+// }
+
+// console.log(solution(n, m, graph));
+
+// 예시 입력
 const n = 4;  // 행의 개수
 const m = 5;  // 열의 개수
 const graph = [
@@ -717,60 +791,36 @@ const graph = [
   '00000'
 ].map(line => line.split(''));  // 그래프를 문자열 배열로 입력받아 각 문자를 분리합니다.
 
-//방향벡터
-const dir = [[0,1],[0,-1], [1,0], [-1,0]];
-//방문 체크 배열
+
+//dfs
+const dir = [[0,1], [0,-1], [1,0], [-1, 0]];
 const visited = Array.from(Array(n), ()=>Array(m).fill(false));
 
-const bfs = (graph, sx, sy)=>{
-  const q=[];
-  //시작 위치를 큐에 삽이
-  q.push([sx, sy]);
-  //시작 위치를 방문처리
-  visited[sx][sy]=true;
-  
-  //큐가 빌 때까지 반복
-  while(q.length!==0){
-    //맨 앞 위치 꺼내기
-    const [x, y]=q.shift();
+const dfs = (graph, x, y)=>{
+  visited[x][y]=true;
 
-    //상하좌우 반복
-    for(let i=0; i<4; i++){
-      //다음 위치의 x좌표
-      const nx = x+dir[i][0];
-      //다음 위치의 y좌표
-      const ny = y+dir[i][1];
+  for(let i=0; i<4; i++){
+    const nx = x+dir[i][0];
+    const ny = y+dir[i][1];
 
-      //다음 위치가 벗어나는지 확인
-      if(nx<0||nx>=n||ny<0||ny>=m)
-        continue
+    if(nx<0||nx>=n||ny<0||ny>=m)
+      continue;
 
-      //방문하지 않았고 0이라면
-      if(!visited[nx][ny]&&graph[nx][ny]==='0'){
-        //큐에 다음 위치 추가
-        q.push([nx, ny]);
-        //방문 체크
-        visited[nx][ny]=true;
-      }
+    if(!visited[nx][ny]&&graph[nx][ny]==='0'){
+      dfs(graph, nx, ny)
     }
   }
 }
 
-const solution = (n, m, graph) =>{
-  //아이스크림 덩어리 개수
-  let count = 0;
+const solution = ( n, m, graph)=>{
+  let count =0;
 
-  //배열 순회
-  //행
-  for(let i=0 ; i<n; i++){
-    //열
+  for(let i=0; i<n; i++){
     for(let j=0; j<m; j++){
-      //현재 위치 값
       const cur = graph[i][j];
 
-      //방문 여부와 0표시여부
-      if(!visited[i][j]&&cur ==='0'){
-        bfs(graph, i, j);
+      if(!visited[i][j]&&cur==='0'){
+        dfs(graph, i, j);
         count++;
       }
     }
