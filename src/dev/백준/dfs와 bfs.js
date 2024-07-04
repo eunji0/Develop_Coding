@@ -782,51 +782,132 @@ const { grep } = require("jquery");
 // console.log(solution(n, m, graph));
 
 // 예시 입력
-const n = 4;  // 행의 개수
-const m = 5;  // 열의 개수
-const graph = [
-  '00110',
-  '00011',
-  '11111',
-  '00000'
-].map(line => line.split(''));  // 그래프를 문자열 배열로 입력받아 각 문자를 분리합니다.
+// const n = 4;  // 행의 개수
+// const m = 5;  // 열의 개수
+// const graph = [
+//   '00110',
+//   '00011',
+//   '11111',
+//   '00000'
+// ].map(line => line.split(''));  // 그래프를 문자열 배열로 입력받아 각 문자를 분리합니다.
 
 
 //dfs
-const dir = [[0,1], [0,-1], [1,0], [-1, 0]];
-const visited = Array.from(Array(n), ()=>Array(m).fill(false));
+// const dir = [[0,1], [0,-1], [1,0], [-1, 0]];
+// const visited = Array.from(Array(n), ()=>Array(m).fill(false));
 
-const dfs = (graph, x, y)=>{
-  visited[x][y]=true;
+// const dfs = (graph, x, y)=>{
+//   visited[x][y]=true;
 
-  for(let i=0; i<4; i++){
-    const nx = x+dir[i][0];
-    const ny = y+dir[i][1];
+//   for(let i=0; i<4; i++){
+//     const nx = x+dir[i][0];
+//     const ny = y+dir[i][1];
 
-    if(nx<0||nx>=n||ny<0||ny>=m)
-      continue;
+//     if(nx<0||nx>=n||ny<0||ny>=m)
+//       continue;
 
-    if(!visited[nx][ny]&&graph[nx][ny]==='0'){
-      dfs(graph, nx, ny)
+//     if(!visited[nx][ny]&&graph[nx][ny]==='0'){
+//       dfs(graph, nx, ny)
+//     }
+//   }
+// }
+
+// const solution = ( n, m, graph)=>{
+//   let count =0;
+
+//   for(let i=0; i<n; i++){
+//     for(let j=0; j<m; j++){
+//       const cur = graph[i][j];
+
+//       if(!visited[i][j]&&cur==='0'){
+//         dfs(graph, i, j);
+//         count++;
+//       }
+//     }
+//   }
+
+//   return count
+// }
+
+// console.log(solution(n, m, graph));
+
+//미로찾기
+const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+
+const bfs = (graph, sx, sy, target) => {
+  const n = graph.length;
+  const m = graph[0].length;
+  const visited = Array.from(Array(n), () => Array(m).fill(false));
+  let time = 0;
+  const q = [];
+  q.push([sx, sy]);
+  visited[sx][sy] = true;
+
+  while (q.length !== 0) {
+    let size = q.length;
+    for (let i = 0; i < size; i++) {
+      const [x, y] = q.shift();
+
+      for (let k = 0; k < 4; k++) {
+        const nx = x + dir[k][0];
+        const ny = y + dir[k][1];
+
+        if (nx < 0 || nx >= n || ny < 0 || ny >= m)
+          continue;
+
+        if (!visited[nx][ny] && graph[nx][ny] !== 'X') {
+          if (target === graph[nx][ny]) {
+            return time + 1;
+          }
+          q.push([nx, ny]);
+          visited[nx][ny] = true;
+        }
+      }
     }
+    time++;
   }
-}
 
-const solution = ( n, m, graph)=>{
-  let count =0;
+  return -1;
+};
 
-  for(let i=0; i<n; i++){
-    for(let j=0; j<m; j++){
-      const cur = graph[i][j];
+const solution = (maps) => {
+  let lCord, sCord;
+  const graph = maps.map(element => element.split(""));
 
-      if(!visited[i][j]&&cur==='0'){
-        dfs(graph, i, j);
-        count++;
+  for (let x = 0; x < maps.length; x++) {
+    for (let y = 0; y < maps[0].length; y++) {
+      if (maps[x][y] === "L") {
+        lCord = [x, y];
+      }
+      if (maps[x][y] === "S") {
+        sCord = [x, y];
       }
     }
   }
 
-  return count
-}
+  const a = bfs(graph, sCord[0], sCord[1], "L");
 
-console.log(solution(n, m, graph));
+  if (a === -1) {
+    return -1;
+  }
+
+  const b = bfs(graph, lCord[0], lCord[1], "E");
+
+  if (b === -1) {
+    return -1;
+  }
+
+  return a + b;
+};
+
+
+// 예시 실행
+const maps = [
+  "SOOOL",
+  "XXXXO",
+  "OOOOO",
+  "OXXXX",
+  "OOOOE"
+];
+
+console.log(solution(maps));  // 예상 결과: 16
