@@ -834,70 +834,81 @@ const { grep } = require("jquery");
 //미로찾기
 const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
+// BFS 함수: 주어진 시작 지점 (sx, sy)에서 목표(target) 지점까지의 최단 거리를 찾습니다.
 const bfs = (graph, sx, sy, target) => {
-  const n = graph.length;
-  const m = graph[0].length;
-  const visited = Array.from(Array(n), () => Array(m).fill(false));
-  let time = 0;
-  const q = [];
-  q.push([sx, sy]);
-  visited[sx][sy] = true;
+  const n = graph.length;  // 그래프의 행 길이
+  const m = graph[0].length;  // 그래프의 열 길이
+  const visited = Array.from(Array(n), () => Array(m).fill(false));  // 방문 체크 배열 초기화
+  let time = 0;  // BFS 탐색 시간 초기화
+  const q = [];  // 큐 초기화
+  q.push([sx, sy]);  // 시작 위치를 큐에 삽입
+  visited[sx][sy] = true;  // 시작 위치를 방문 처리
 
+  // 큐가 빌 때까지 반복
   while (q.length !== 0) {
-    let size = q.length;
+    let size = q.length;  // 현재 큐의 크기를 저장
+    // 현재 레벨의 모든 노드를 처리
     for (let i = 0; i < size; i++) {
-      const [x, y] = q.shift();
+      const [x, y] = q.shift();  // 큐에서 하나의 위치를 꺼냄
 
+      // 상하좌우 네 방향으로 탐색
       for (let k = 0; k < 4; k++) {
-        const nx = x + dir[k][0];
-        const ny = y + dir[k][1];
+        const nx = x + dir[k][0];  // 다음 위치의 x좌표 계산
+        const ny = y + dir[k][1];  // 다음 위치의 y좌표 계산
 
+        // 다음 위치가 범위를 벗어나는지 확인
         if (nx < 0 || nx >= n || ny < 0 || ny >= m)
           continue;
 
+        // 다음 위치가 방문되지 않았고, 벽이 아닌 경우
         if (!visited[nx][ny] && graph[nx][ny] !== 'X') {
+          // 목표 위치를 찾으면 현재 시간을 반환
           if (target === graph[nx][ny]) {
             return time + 1;
           }
-          q.push([nx, ny]);
-          visited[nx][ny] = true;
+          q.push([nx, ny]);  // 다음 위치를 큐에 추가
+          visited[nx][ny] = true;  // 다음 위치를 방문 처리
         }
       }
     }
-    time++;
+    time++;  // 탐색 시간 증가
   }
 
+  // 목표를 찾지 못하면 -1을 반환
   return -1;
 };
 
 const solution = (maps) => {
-  let lCord, sCord;
-  const graph = maps.map(element => element.split(""));
+  let lCord, sCord;  // L과 S의 좌표를 저장할 변수를 선언
+  const graph = maps.map(element => element.split(""));  // 문자열 배열을 2차원 문자 배열로 변환
 
+  // L과 S의 위치를 찾기 위해 2차원 배열을 순회
   for (let x = 0; x < maps.length; x++) {
     for (let y = 0; y < maps[0].length; y++) {
       if (maps[x][y] === "L") {
-        lCord = [x, y];
+        lCord = [x, y];  // L의 좌표를 lCord에 저장
       }
       if (maps[x][y] === "S") {
-        sCord = [x, y];
+        sCord = [x, y];  // S의 좌표를 sCord에 저장
       }
     }
   }
 
+  // S에서 L로 가는 최단 거리를 계산
   const a = bfs(graph, sCord[0], sCord[1], "L");
 
   if (a === -1) {
-    return -1;
+    return -1;  // S에서 L로 갈 수 없으면 -1 반환
   }
 
+  // L에서 E로 가는 최단 거리를 계산
   const b = bfs(graph, lCord[0], lCord[1], "E");
 
   if (b === -1) {
-    return -1;
+    return -1;  // L에서 E로 갈 수 없으면 -1 반환
   }
 
-  return a + b;
+  return a + b;  // S에서 L까지의 거리와 L에서 E까지의 거리를 더해서 반환
 };
 
 
