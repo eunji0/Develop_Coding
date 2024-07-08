@@ -832,88 +832,155 @@ const { grep } = require("jquery");
 // console.log(solution(n, m, graph));
 
 //미로찾기
-const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
-const bfs = (graph, sx, sy, target) => {
-  const n=graph.length;
-  const m=graph[0].length;
-  const visited = Array.from(Array(n), ()=>Array(m).fill(false));
-  let time = 0;
-  const q=[];
-  q.push([sx, sy]);
-  visited[sx][sy]= true;
+// const bfs = (graph, sx, sy, target) => {
+//   const n=graph.length;
+//   const m=graph[0].length;
+//   const visited = Array.from(Array(n), ()=>Array(m).fill(false));
+//   let time = 0;
+//   const q=[];
+//   q.push([sx, sy]);
+//   visited[sx][sy]= true;
 
-  while(q.length!==0){
+//   while(q.length!==0){
 
-    const size = q.length;
-    for(let i=0; i<size; i++){
-      const [x, y] = q.shift();
+//     const size = q.length;
+//     for(let i=0; i<size; i++){
+//       const [x, y] = q.shift();
 
-      for(let k=0; k<4; k++){
-        const nx =x+dir[k][0];
-        const ny=y+dir[k][1];
+//       for(let k=0; k<4; k++){
+//         const nx =x+dir[k][0];
+//         const ny=y+dir[k][1];
 
-        if (nx < 0 || nx >= n || ny < 0 || ny >= m)
-          continue;
+//         if (nx < 0 || nx >= n || ny < 0 || ny >= m)
+//           continue;
 
         
-        if(!visited[nx][ny]&&graph[nx][ny]!=='X'){
-          if(graph[nx][ny]===target){
-            return time+1;
-          }
-          q.push([nx, ny]);
-          visited[nx][ny]=true;
-        }
-      }
-    }
+//         if(!visited[nx][ny]&&graph[nx][ny]!=='X'){
+//           if(graph[nx][ny]===target){
+//             return time+1;
+//           }
+//           q.push([nx, ny]);
+//           visited[nx][ny]=true;
+//         }
+//       }
+//     }
 
-    time++;
-  }
+//     time++;
+//   }
 
-  return -1;
-}
+//   return -1;
+// }
 
-const solution = (maps) =>{
-  let lCord, sCord;
-  const graph = maps.map(v=>v.split(''));
+// const solution = (maps) =>{
+//   let lCord, sCord;
+//   const graph = maps.map(v=>v.split(''));
 
-  for(let x=0; x<graph.length; x++){
-    for(let y=0; y<graph[0].length; y++){
+//   for(let x=0; x<graph.length; x++){
+//     for(let y=0; y<graph[0].length; y++){
 
-      if(maps[x][y]==='S'){
-        sCord = [x, y];
-      }
+//       if(maps[x][y]==='S'){
+//         sCord = [x, y];
+//       }
 
-      if(maps[x][y]==='L'){
-        lCord = [x, y];
-      }
+//       if(maps[x][y]==='L'){
+//         lCord = [x, y];
+//       }
       
+//     }
+//   }
+
+//   const a = bfs(graph, sCord[0], sCord[1], 'L');
+
+//   if(a===-1){
+//     return -1;
+//   }
+
+//   const b = bfs(graph, lCord[0], lCord[1], 'E')
+
+//   if(b===-1){
+//     return -1;
+//   }
+
+//   return a+b
+// }
+
+
+// // 예시 실행
+// const maps = [
+//   "SOOOL",
+//   "XXXXO",
+//   "OOOOO",
+//   "OXXXX",
+//   "OOOOE"
+// ];
+
+// console.log(solution(maps));  // 예상 결과: 16
+
+//1260-dfs와 bfs
+const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+const [N, M, V] = input.shift().split(' ').map(Number);
+const edges = input.map(v => v.split(' ').map(Number));
+const graph = [...Array(N + 1)].map(() => []);
+edges.forEach(([from, to]) => {
+  graph[from].push(to);
+  graph[to].push(from);
+});
+
+const dfs = (start)=>{
+  const stack = [start];
+
+  const visited = Array(N+1).fill(false);
+  const order = [];
+
+  while(stack.length){
+    const node = stack.pop();
+
+    if(!visited[node]){
+      visited[node]=true;
+      order.push(node);
+      stack.push(...graph[node]);
     }
   }
 
-  const a = bfs(graph, sCord[0], sCord[1], 'L');
-
-  if(a===-1){
-    return -1;
-  }
-
-  const b = bfs(graph, lCord[0], lCord[1], 'E')
-
-  if(b===-1){
-    return -1;
-  }
-
-  return a+b
+  return order.join(' ');
 }
 
+graph.forEach(v=>v.sort((a, b)=>b-a));
+console.log(dfs(V))
 
-// 예시 실행
-const maps = [
-  "SOOOL",
-  "XXXXO",
-  "OOOOO",
-  "OXXXX",
-  "OOOOE"
-];
+const bfs = (start) =>{
+  const queue = [start];
+  const visited = Array(N+1).fill(false);
+  const order=[];
 
-console.log(solution(maps));  // 예상 결과: 16
+  while(queue.length){
+    const node = queue.shift();
+
+    if(!visited[node]){
+      visited[node]=true;
+      order.push(node);
+      queue.push(...graph[node]);
+    }
+  }
+  return order.join(' ');
+}
+
+graph.forEach(v=>v.sort((a, b)=>b-a));
+console.log(bfs(V))
+
+
+//bfs적용해보기
+//최단경로
+// const inputs = require("fs")
+//   .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
+//   .toString()
+//   .trim()
+//   .split("\n");
+
+//   const [v, e] = inputs[0].split(' ').map(Number);
+//   const start = +inputs[1];
+//   const arr = inputs.slice(2).map(v=>v.trim());
+
+//   const bfs = (graph, )
