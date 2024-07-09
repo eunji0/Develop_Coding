@@ -919,68 +919,104 @@ const { grep } = require("jquery");
 // console.log(solution(maps));  // 예상 결과: 16
 
 //1260-dfs와 bfs
-const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [N, M, V] = input.shift().split(' ').map(Number);
-const edges = input.map(v => v.split(' ').map(Number));
-const graph = [...Array(N + 1)].map(() => []);
-edges.forEach(([from, to]) => {
-  graph[from].push(to);
-  graph[to].push(from);
-});
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [N, M, V] = input.shift().split(' ').map(Number);
+// const edges = input.map(v => v.split(' ').map(Number));
+// const graph = [...Array(N + 1)].map(() => []);
+// edges.forEach(([from, to]) => {
+//   graph[from].push(to);
+//   graph[to].push(from);
+// });
 
-const dfs = (start)=>{
-  const stack = [start];
+// const dfs = (start)=>{
+//   const stack = [start];
 
-  const visited = Array(N+1).fill(false);
-  const order = [];
+//   const visited = Array(N+1).fill(false);
+//   const order = [];
 
-  while(stack.length){
-    const node = stack.pop();
+//   while(stack.length){
+//     const node = stack.pop();
 
-    if(!visited[node]){
-      visited[node]=true;
-      order.push(node);
-      stack.push(...graph[node]);
-    }
-  }
+//     if(!visited[node]){
+//       visited[node]=true;
+//       order.push(node);
+//       stack.push(...graph[node]);
+//     }
+//   }
 
-  return order.join(' ');
-}
+//   return order.join(' ');
+// }
 
-graph.forEach(v=>v.sort((a, b)=>b-a));
-console.log(dfs(V))
+// graph.forEach(v=>v.sort((a, b)=>b-a));
+// console.log(dfs(V))
 
-const bfs = (start) =>{
-  const queue = [start];
-  const visited = Array(N+1).fill(false);
-  const order=[];
+// const bfs = (start) =>{
+//   const queue = [start];
+//   const visited = Array(N+1).fill(false);
+//   const order=[];
 
-  while(queue.length){
-    const node = queue.shift();
+//   while(queue.length){
+//     const node = queue.shift();
 
-    if(!visited[node]){
-      visited[node]=true;
-      order.push(node);
-      queue.push(...graph[node]);
-    }
-  }
-  return order.join(' ');
-}
+//     if(!visited[node]){
+//       visited[node]=true;
+//       order.push(node);
+//       queue.push(...graph[node]);
+//     }
+//   }
+//   return order.join(' ');
+// }
 
-graph.forEach(v=>v.sort((a, b)=>b-a));
-console.log(bfs(V))
+// graph.forEach(v=>v.sort((a, b)=>b-a));
+// console.log(bfs(V))
 
 
 //bfs적용해보기
-//최단경로
-// const inputs = require("fs")
-//   .readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt")
-//   .toString()
-//   .trim()
-//   .split("\n");
+//2178-미로탐색
+const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
 
-//   const [v, e] = inputs[0].split(' ').map(Number);
-//   const start = +inputs[1];
-//   const arr = inputs.slice(2).map(v=>v.trim());
+const bfsMaze = (maze, N, M) => {
+  const directions = [
+    [0, 1],   // 오른쪽
+    [0, -1],  // 왼쪽
+    [1, 0],   // 아래
+    [-1, 0]   // 위
+  ];
+  
+  const queue = [[0, 0]];
+  const visited = Array.from(Array(N), () => Array(M).fill(false));
+  visited[0][0] = true;
 
-//   const bfs = (graph, )
+  let steps = 1;
+
+  while (queue.length) {
+    let size = queue.length;
+
+    for (let i = 0; i < size; i++) {
+      const [x, y] = queue.shift();
+
+      if (x === N - 1 && y === M - 1) {
+        return steps;
+      }
+
+      for (const [dx, dy] of directions) {
+        const nx = x + dx;
+        const ny = y + dy;
+
+        if (nx >= 0 && nx < N && ny >= 0 && ny < M && maze[nx][ny] === 1 && !visited[nx][ny]) {
+          queue.push([nx, ny]);
+          visited[nx][ny] = true;
+        }
+      }
+    }
+
+    steps++;
+  }
+
+  return -1; // 도착할 수 없는 경우
+};
+
+const [N, M] = input[0].split(' ').map(Number);
+const maze = input.slice(1).map(line => line.split('').map(Number));
+
+console.log(bfsMaze(maze, N, M));
