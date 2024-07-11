@@ -1043,32 +1043,41 @@ const { grep } = require("jquery");
 //2606-바이러스
 const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
 
-const bfs = (graph, start) => {
+const bfs = (graph, start)=>{
+  //그래프 길이의 false로 구성된 뱁열
   const visited = Array(graph.length).fill(false);
-  let count =0;
+  //큐의 시작점 대입
   const queue = [start];
+  //방문 표시
   visited[start] = true;
+  //컴퓨터의 수
+  let count =0;
 
+  //큐가 빌때까지
   while(queue.length){
+    //맨 앞꺼 빼기
     const node = queue.shift();
 
-    for(const neighbor of graph[node]){
+    //연결된 이웃 돌기
+    for(let neighbor of graph[node]){
+      //방문하지 않았다면
       if(!visited[neighbor]){
         queue.push(neighbor);
-        visited[neighbor]=true;
+        visited[neighbor] = true;
         count++;
       }
     }
   }
-  return count;
+
+  return count
 }
 
-const n= +input[0];
-const m=+input[1];
-const graph = Array.from(Array(n+1), ()=>[])
+const n = +input[0];//컴퓨터수
+const m = +input[1]//연결된 쌍수
+const graph = Array.from(Array(n+1), ()=>[]);
 
 for(let i=2; i<2+m; i++){
-  const [a, b] = input[i].split(' ').map(Number);
+  const [a, b]=input[i].split(' ').map(Number);
   graph[a].push(b);
   graph[b].push(a);
 }
