@@ -1,6 +1,7 @@
 //bfs와 dfs
 
 const { grep } = require("jquery");
+const { start } = require("repl");
 
 //bfs
 // class Queue{
@@ -1116,3 +1117,36 @@ const input = require('fs').readFileSync(process.platform === "linux" ? "dev/std
 // })
 
 // console.log(dfs(graph, 1))
+
+//2667-단지번호붙이기
+const n = Number(input.shift());
+const map = input.map(v=>v.split('').map(Number));
+const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+
+const bfs =(startx, starty)=>{
+  const queue = [[startx, starty]];
+  let count=0;
+
+  while(queue.length){
+    const [x, y]=queue.shift();
+    count++;
+
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny=y+dy;
+
+      if(nx>=0&&nx<n&&ny>=0&&ny<n&&map[nx][ny]){
+        map[nx][ny]=0;
+        queue.push([nx, ny]);
+      }
+    }
+  }
+}
+
+let result = [];
+for(let x=0; x<n; x++){
+  for(let y=0; y<n; y++){
+    map[x][y]=0;
+    result.push(bfs(x, y))
+  }
+}
