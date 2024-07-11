@@ -973,69 +973,104 @@ const { grep } = require("jquery");
 
 //bfs적용해보기
 //2178-미로탐색
-// 파일 시스템 모듈을 불러와서 입력 데이터를 읽음
+// // 파일 시스템 모듈을 불러와서 입력 데이터를 읽음
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+
+// // 미로를 BFS로 탐색하여 최단 경로를 찾는 함수
+// const bfsMaze = (maze, N, M) => {
+//   // 네 방향(오른쪽, 왼쪽, 아래, 위)으로 이동할 수 있는 방향 배열
+//   const directions = [
+//     [0, 1],   // 오른쪽
+//     [0, -1],  // 왼쪽
+//     [1, 0],   // 아래
+//     [-1, 0]   // 위
+//   ];
+  
+//   // 탐색을 위한 큐를 초기화하고 시작점 (0, 0)을 큐에 삽입
+//   const queue = [[0, 0]];
+//   // 방문한 위치를 기록하기 위한 배열을 초기화, 처음 위치를 방문 처리
+//   const visited = Array.from(Array(N), () => Array(M).fill(false));
+//   visited[0][0] = true;
+
+//   // BFS의 레벨을 기록하는 변수, 첫 번째 칸을 포함하므로 1로 시작
+//   let steps = 1;
+
+//   // 큐가 비어있지 않은 동안 반복
+//   while (queue.length) {
+//     // 현재 레벨의 모든 노드를 처리하기 위해 큐의 크기를 저장
+//     let size = queue.length;
+
+//     // 현재 레벨의 모든 노드를 처리
+//     for (let i = 0; i < size; i++) {
+//       // 큐에서 노드를 꺼내어 현재 위치를 저장
+//       const [x, y] = queue.shift();
+
+//       // 현재 위치가 도착지점인지 확인
+//       if (x === N - 1 && y === M - 1) {
+//         return steps; // 도착지점에 도달하면 현재까지의 이동 칸 수를 반환
+//       }
+
+//       // 네 방향으로 이동을 시도
+//       for (const [dx, dy] of directions) {
+//         const nx = x + dx;
+//         const ny = y + dy;
+
+//         // 다음 위치가 미로 범위 내에 있는지 확인
+//         if (nx >= 0 && nx < N && ny >= 0 && ny < M && maze[nx][ny] === 1 && !visited[nx][ny]) {
+//           // 다음 위치가 이동 가능하고 방문하지 않은 경우
+//           queue.push([nx, ny]); // 큐에 다음 위치를 추가
+//           visited[nx][ny] = true; // 다음 위치를 방문 처리
+//         }
+//       }
+//     }
+
+//     // 현재 레벨의 처리가 끝나면 이동 칸 수를 증가
+//     steps++;
+//   }
+
+//   // 도착지점에 도달할 수 없는 경우 -1을 반환
+//   return -1;
+// };
+
+// // 첫 번째 줄에서 미로의 크기 N과 M을 읽어옴
+// const [N, M] = input[0].split(' ').map(Number);
+// // 나머지 줄에서 미로를 읽어와 2차원 배열로 변환
+// const maze = input.slice(1).map(line => line.split('').map(Number));
+
+// // bfsMaze 함수 호출하여 결과를 출력
+// console.log(bfsMaze(maze, N, M));
+
+//2606-바이러스
 const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
 
-// 미로를 BFS로 탐색하여 최단 경로를 찾는 함수
-const bfsMaze = (maze, N, M) => {
-  // 네 방향(오른쪽, 왼쪽, 아래, 위)으로 이동할 수 있는 방향 배열
-  const directions = [
-    [0, 1],   // 오른쪽
-    [0, -1],  // 왼쪽
-    [1, 0],   // 아래
-    [-1, 0]   // 위
-  ];
-  
-  // 탐색을 위한 큐를 초기화하고 시작점 (0, 0)을 큐에 삽입
-  const queue = [[0, 0]];
-  // 방문한 위치를 기록하기 위한 배열을 초기화, 처음 위치를 방문 처리
-  const visited = Array.from(Array(N), () => Array(M).fill(false));
-  visited[0][0] = true;
+const bfs = (graph, start) => {
+  const visited = Array(graph.length).fill(false);
+  let count =0;
+  const queue = [start];
+  visited[start] = true;
 
-  // BFS의 레벨을 기록하는 변수, 첫 번째 칸을 포함하므로 1로 시작
-  let steps = 1;
+  while(queue.length){
+    const node = queue.shift();
 
-  // 큐가 비어있지 않은 동안 반복
-  while (queue.length) {
-    // 현재 레벨의 모든 노드를 처리하기 위해 큐의 크기를 저장
-    let size = queue.length;
-
-    // 현재 레벨의 모든 노드를 처리
-    for (let i = 0; i < size; i++) {
-      // 큐에서 노드를 꺼내어 현재 위치를 저장
-      const [x, y] = queue.shift();
-
-      // 현재 위치가 도착지점인지 확인
-      if (x === N - 1 && y === M - 1) {
-        return steps; // 도착지점에 도달하면 현재까지의 이동 칸 수를 반환
-      }
-
-      // 네 방향으로 이동을 시도
-      for (const [dx, dy] of directions) {
-        const nx = x + dx;
-        const ny = y + dy;
-
-        // 다음 위치가 미로 범위 내에 있는지 확인
-        if (nx >= 0 && nx < N && ny >= 0 && ny < M && maze[nx][ny] === 1 && !visited[nx][ny]) {
-          // 다음 위치가 이동 가능하고 방문하지 않은 경우
-          queue.push([nx, ny]); // 큐에 다음 위치를 추가
-          visited[nx][ny] = true; // 다음 위치를 방문 처리
-        }
+    for(const neighbor of graph[node]){
+      if(!visited[neighbor]){
+        queue.push(neighbor);
+        visited[neighbor]=true;
+        count++;
       }
     }
-
-    // 현재 레벨의 처리가 끝나면 이동 칸 수를 증가
-    steps++;
   }
+  return count;
+}
 
-  // 도착지점에 도달할 수 없는 경우 -1을 반환
-  return -1;
-};
+const n= +input[0];
+const m=+input[1];
+const graph = Array.from(Array(n+1), ()=>[])
 
-// 첫 번째 줄에서 미로의 크기 N과 M을 읽어옴
-const [N, M] = input[0].split(' ').map(Number);
-// 나머지 줄에서 미로를 읽어와 2차원 배열로 변환
-const maze = input.slice(1).map(line => line.split('').map(Number));
+for(let i=2; i<2+m; i++){
+  const [a, b] = input[i].split(' ').map(Number);
+  graph[a].push(b);
+  graph[b].push(a);
+}
 
-// bfsMaze 함수 호출하여 결과를 출력
-console.log(bfsMaze(maze, N, M));
+console.log(bfs(graph, 1))
