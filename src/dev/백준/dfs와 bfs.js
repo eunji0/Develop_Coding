@@ -1043,43 +1043,76 @@ const { grep } = require("jquery");
 //2606-바이러스
 const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
 
-const bfs = (graph, start)=>{
-  //그래프 길이의 false로 구성된 뱁열
-  const visited = Array(graph.length).fill(false);
-  //큐의 시작점 대입
-  const queue = [start];
-  //방문 표시
-  visited[start] = true;
-  //컴퓨터의 수
-  let count =0;
+// const bfs = (graph, start)=>{
+//   //그래프 길이의 false로 구성된 뱁열
+//   const visited = Array(graph.length).fill(false);
+//   //큐의 시작점 대입
+//   const queue = [start];
+//   //방문 표시
+//   visited[start] = true;
+//   //컴퓨터의 수
+//   let count =0;
 
-  //큐가 빌때까지
-  while(queue.length){
-    //맨 앞꺼 빼기
-    const node = queue.shift();
+//   //큐가 빌때까지
+//   while(queue.length){
+//     //맨 앞꺼 빼기
+//     const node = queue.shift();
 
-    //연결된 이웃 돌기
-    for(let neighbor of graph[node]){
-      //방문하지 않았다면
-      if(!visited[neighbor]){
-        queue.push(neighbor);
-        visited[neighbor] = true;
-        count++;
-      }
-    }
-  }
+//     //연결된 이웃 돌기
+//     for(let neighbor of graph[node]){
+//       //방문하지 않았다면
+//       if(!visited[neighbor]){
+//         queue.push(neighbor);
+//         visited[neighbor] = true;
+//         count++;
+//       }
+//     }
+//   }
 
-  return count
-}
+//   return count
+// }
 
-const n = +input[0];//컴퓨터수
-const m = +input[1]//연결된 쌍수
-const graph = Array.from(Array(n+1), ()=>[]);
+// const n = +input[0];//컴퓨터수
+// const m = +input[1]//연결된 쌍수
+// const graph = Array.from(Array(n+1), ()=>[]);
 
-for(let i=2; i<2+m; i++){
-  const [a, b]=input[i].split(' ').map(Number);
-  graph[a].push(b);
-  graph[b].push(a);
-}
+// const computers = input.slice(2).map(v=>v.split(' ').map(Number));
+// computers.map(([from, to])=>{
+//   graph[from].push(to);
+//   graph[to].push(from);
+// })
 
-console.log(bfs(graph, 1))
+// console.log(bfs(graph, 1))
+
+//dfs
+// const dfs = (graph, start)=>{
+//   const visited = Array(graph.length).fill(false);
+//   const stack = [start];
+//   visited[start] = true;
+//   let count = 0;
+  
+//   while(stack.length){
+//     const node = stack.pop();
+
+//     for(const neighbor of graph[node]){
+//       if(!visited[neighbor]){
+//         visited[neighbor] = true;
+//         stack.push(neighbor);
+//         count++;
+//       }
+//     }
+//   }
+//   return count
+// }
+// const n = +input[0];
+// const m = +input[1];
+// const graph = Array.from(Array(n+1), ()=>[])
+
+// const computers = input.slice(2).map(v=>v.split(' ').map(Number))
+
+// computers.map(([from, to])=>{
+//   graph[from].push(to);
+//   graph[to].push(from);
+// })
+
+// console.log(dfs(graph, 1))
