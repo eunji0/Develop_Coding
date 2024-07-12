@@ -1042,8 +1042,6 @@ const { start } = require("repl");
 // console.log(bfsMaze(maze, N, M));
 
 //2606-바이러스
-const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-
 // const bfs = (graph, start)=>{
 //   //그래프 길이의 false로 구성된 뱁열
 //   const visited = Array(graph.length).fill(false);
@@ -1119,34 +1117,85 @@ const input = require('fs').readFileSync(process.platform === "linux" ? "dev/std
 // console.log(dfs(graph, 1))
 
 //2667-단지번호붙이기
-const n = Number(input.shift());
-const map = input.map(v=>v.split('').map(Number));
-const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+// const n = Number(input.shift());
+// const map = input.map(v=>v.split('').map(Number));
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
-const bfs =(startx, starty)=>{
-  const queue = [[startx, starty]];
-  let count=0;
+// const bfs =(startx, starty)=>{
+//   const queue = [[startx, starty]];
+//   let count=0;
 
-  while(queue.length){
-    const [x, y]=queue.shift();
-    count++;
+//   while(queue.length){
+//     const [x, y]=queue.shift();
+//     count++;
 
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny=y+dy;
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny=y+dy;
 
-      if(nx>=0&&nx<n&&ny>=0&&ny<n&&map[nx][ny]){
-        map[nx][ny]=0;
-        queue.push([nx, ny]);
-      }
+//       if(nx>=0&&nx<n&&ny>=0&&ny<n&&map[nx][ny]){
+//         map[nx][ny]=0;
+//         queue.push([nx, ny]);
+//       }
+//     }
+//   }
+// }
+
+// let result = [];
+// for(let x=0; x<n; x++){
+//   for(let y=0; y<n; y++){
+//     map[x][y]=0;
+//     result.push(bfs(x, y))
+//   }
+// }
+
+//1012-유기농 배추
+const input = require("fs").readFileSync("/dev/stdin").toString().trim().split("\n");
+const num = Number(input.shift());
+const ds = [
+  [-1, 0],
+  [1, 0],
+  [0, 1],
+  [0, -1],
+];
+function bfs(startX, startY) {
+  //시작 좌표 기준으로 시작
+  const queue = [[startX, startY]];
+  // queue가 비워지면 탈출
+  while (queue.length) {
+    const [x, y] = queue.shift();
+    // queue의 값을 하나씩 빼서 xy로 저장
+    // xy좌표가 0 이면 다시, 1이면 0으로 만들어준다.
+    // 인접한 1들 다 0으로 만들기
+    if (!map[x][y]) continue;
+    else map[x][y] = 0;
+
+    // 상하좌우 탐색하여 1이 있다면 queue에 push 해준다.
+    for (let i = 0; i < 4; i++) {
+      const xPos = x + ds[i][0];
+      const yPos = y + ds[i][1];
+
+      if (xPos < 0 || yPos < 0 || xPos >= M || yPos >= N) continue;
+      if (map[xPos][yPos]) queue.push([xPos, yPos]);
     }
   }
 }
-
-let result = [];
-for(let x=0; x<n; x++){
-  for(let y=0; y<n; y++){
-    map[x][y]=0;
-    result.push(bfs(x, y))
+for (let i = 0; i < num; i++) {
+  let worm = 0;
+  var [M, N, K] = input.shift().split(" ").map(Number);
+  var map = Array.from(Array(M), () => new Array(N).fill(0));
+  for (let j = 0; j < K; j++) {
+    let xy = input.shift().split(" ");
+    map[xy[0]][xy[1]] = 1;
   }
+  for (let k = 0; k < M; k++) {
+    for (let l = 0; l < N; l++) {
+      //만약 그 좌표가 1이라면 worm을 늘려주고 상하좌우 탐색하여 전부 0으로 만들어준다.
+      if (map[k][l]) {
+        bfs(k, l);
+        worm++;
+      }
+    }
+  }
+  console.log(worm);
 }
