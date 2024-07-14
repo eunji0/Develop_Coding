@@ -1150,59 +1150,152 @@ const { start } = require("repl");
 // }
 
 //1012-유기농 배추
-const input = require('fs').readFileSync(process.platform === "linux" ? "/dev/stdin" : "input.txt").toString().trim().split('\n');
-const T = +input[0];
+// const input = require('fs').readFileSync(process.platform === "linux" ? "/dev/stdin" : "input.txt").toString().trim().split('\n');
 
-const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]]; 
-let index = 1;
+// // 첫 줄의 값을 읽어서 테스트 케이스의 개수로 설정함.
+// const T = +input[0]
 
-for (let t = 0; t < T; t++) {
-  let [M, N, K] = input[index].split(' ').map(Number);
-  index++;
+// // 상하좌우 방향을 나타내는 배열
+// const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
-  let maps = Array.from({ length: N }, () => Array(M).fill(0));
-  let visited = Array.from({ length: N }, () => Array(M).fill(false));
-  let cabbage = [];
+// // 테스트 케이스의 시작 인덱스를 1로 설정
+// let index = 1;
 
-  for (let i = 0; i < K; i++) {
-    const [x, y] = input[index + i].split(' ').map(Number);
-    maps[y][x] = 1;
-    cabbage.push([y, x]);
-  }
+// // 테스트 케이스의 수만큼 반복
+// for (let t = 0; t < T; t++) {
+//   // 현재 테스트 케이스의 가로 길이 M, 세로 길이 N, 배추의 개수 K를 읽어옴.
+//   let [M, N, K] = input[index].split(' ').map(Number);
+//   index++; // 다음 줄로 이동
 
-  index += K;
-  let answer = 0;
+//   // M*N 크기의 0으로 채워진 2차원 배열 maps를 생성
+//   let maps = Array.from({ length: N }, () => Array(M).fill(0));
+  
+//   // M*N 크기의 false로 채워진 2차원 배열 visited를 생성
+//   let visited = Array.from({ length: N }, () => Array(M).fill(false));
+  
+//   // 배추의 위치를 담을 배열을 초기화
+//   let cabbage = [];
 
-  function bfs(y, x) {
-    const queue = [[y, x]];
+//   // 배추의 개수만큼 반복하면서 배추의 위치를 읽어서 저장
+//   for (let i = 0; i < K; i++) {
+//     // 현재 배추의 x, y 좌표를 읽어옴
+//     const [x, y] = input[index + i].split(' ').map(Number);
+    
+//     // 배추의 위치를 2차원 배열 maps에 기록 (배추가 있는 위치를 1로 표시)
+//     maps[y][x] = 1;
 
-    while (queue.length) {
-      const [cy, cx] = queue.shift();
+//     // 배추의 위치를 배열 cabbage에 추가 (배열에 y, x 순서로 저장)
+//     cabbage.push([y, x]);
+//   }
 
-      for (const [dy, dx] of dir) {
-        const ny = cy + dy;
-        const nx = cx + dx;
+//   // 다음 테스트 케이스로 이동하기 위해 인덱스를 K만큼 증가시킴
+//   index += K;
 
-        if (ny >= 0 && ny < N && nx >= 0 && nx < M && !visited[ny][nx]) {
-          visited[ny][nx] = true;
+//   // 필요한 지렁이 수를 저장할 변수 answer를 초기화
+//   let answer = 0;
 
-          if (maps[ny][nx] === 1) {
-            queue.push([ny, nx]);
-          }
+//   // BFS 함수 정의 - 주어진 시작 위치에서 연결된 모든 배추를 방문 처리
+//   function bfs(y, x) {
+//     // BFS를 위한 큐를 초기화하고 시작 위치를 큐에 추가
+//     const queue = [[y, x]];
+
+//     // 큐가 빌 때까지 반복
+//     while (queue.length) {
+//       // 큐의 첫 번째 원소를 꺼내서 현재 위치로 설정
+//       const [cy, cx] = queue.shift();
+
+//       // 4개의 방향(상하좌우)을 모두 검사
+//       for (const [dy, dx] of dir) {
+//         // 새로운 위치를 계산
+//         const ny = cy + dy;
+//         const nx = cx + dx;
+
+//         // 새로운 위치가 유효한 범위 내에 있고 아직 방문하지 않은 위치인 경우
+//         if (ny >= 0 && ny < N && nx >= 0 && nx < M && !visited[ny][nx]) {
+//           // 방문 처리
+//           visited[ny][nx] = true;
+
+//           // 해당 위치에 배추가 있다면 큐에 추가
+//           if (maps[ny][nx] === 1) {
+//             queue.push([ny, nx]);
+//           }
+//         }
+//       }
+//     }
+//   }
+
+//   // 모든 배추의 위치를 검사
+//   for (let i = 0; i < cabbage.length; i++) {
+//     // 현재 배추의 위치를 가져옴
+//     const [y, x] = cabbage[i];
+    
+//     // 만약 해당 위치가 방문되지 않았고 배추가 있는 경우
+//     if (!visited[y][x] && maps[y][x] === 1) {
+//       // 방문 처리
+//       visited[y][x] = true;
+      
+//       // BFS를 통해 연결된 모든 배추를 방문 처리
+//       bfs(y, x);
+      
+//       // 지렁이 수를 증가시킴
+//       answer++;
+//     }
+//   }
+
+//   // 현재 테스트 케이스의 결과를 출력
+//   console.log(answer);
+// }
+
+//7576-토마토
+const NM = input.shift();
+const [n,m] = NM.map(el => Number(el));
+const board = input.map(s => s.map(el => Number(el)));
+
+const dx=[1, 0, -1, 0];
+const dy=[0, 1, 0, -1];
+
+function solution(row,col,board) {
+    const q = [];
+    const dist = [...Array(col)].map(() => Array(row).fill(0));
+    for (let i=0; i < col; i++) {
+        for (let j=0; j < row; j++) {
+            // 익은 토마토일 시 queue에 넣어 주변 익지않은 토마토 탐색
+            if (board[i][j] === 1) {
+                q.push([i,j]);
+            }
+            // 익지 않은 토마토일 시
+            if (board[i][j] === 0) {
+                dist[i][j] = -1;
+            }
         }
-      }
     }
-  }
-
-  for (let i = 0; i < cabbage.length; i++) {
-    const [y, x] = cabbage[i];
-
-    if (!visited[y][x] && maps[y][x] === 1) {
-      visited[y][x] = true;
-      bfs(y, x);
-      answer++;
+    let head = 0;
+    // 익은토마토만 q에 있음
+    while (q.length > head) {
+        const [x,y] = q[head++];
+        for (let k=0; k<4; k++) {
+            const nx = x + dx[k];
+            const ny = y + dy[k];
+            if (nx < 0 || ny < 0 || nx >= col || ny >= row) continue;
+            // 익은 토마토 / 빈칸일시 넘어가기
+            if (dist[nx][ny] >= 0) continue;
+            // 익지않은 토마토에 대해 +1
+            dist[nx][ny] = dist[x][y] + 1;
+            // 주변 토마토 탐색
+            q.push([nx,ny]);
+        }
     }
-  }
-
-  console.log(answer);
+    
+    // 토마토가 익을 때까지의 최소 날짜 출력
+    let day = 0;
+    for (let i=0; i < col; i++) {
+        for (let j=0; j < row; j++) {
+            // 익지 않은 토마토가 있음
+            if (dist[i][j] === -1) return -1;
+            day = Math.max(day, dist[i][j]);
+        }
+    }
+    return day;
 }
+
+console.log(solution(n,m,board));
