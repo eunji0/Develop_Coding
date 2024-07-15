@@ -1304,27 +1304,65 @@ const { start } = require("repl");
 // console.log(solution(n,m,board));
 
 //1697-숨바꼭질
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const [N, K] = require('fs').readFileSync(filePath).toString().trim().split(' ').map(Number);
-const visited = Array(100001).fill(0); // 방문 체크할 배열
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const [N, K] = require('fs').readFileSync(filePath).toString().trim().split(' ').map(Number);
+// const visited = Array(100001).fill(0); // 방문 체크할 배열
 
-const bfs = (start, goal) => {
-    const queue=[[start, 0]];
+// const bfs = (start, goal) => {
+//     const queue=[[start, 0]];
+
+//     while(queue.length){
+//         const [cur, sec] = queue.shift();
+//         const move = [cur+1, cur-1, cur*2];
+
+//         if(visited[cur]) continue
+//         if(cur===goal) return sec
+//         visited[cur]=1;
+
+//         for (const pos of move) {
+//             if (!visited[pos] && pos >= 0 && pos <= 100000) {
+//               queue.push([pos, sec + 1]); // 큐에 해당 위치와 시간 1초 증가시키고 담기
+//             }
+//           }
+//     }
+// };
+
+// console.log(bfs(N, K));
+
+//11724-연결 요소의 개수
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+const [n, m]=input[0].split(' ').map(Number);
+const arr = input.slice(1).map(v=>v.split(' ').map(Number));
+let visited = Array(n+1).fill(false);
+let answer = 0;
+let graph = Array.from({length: n+1},()=>[]);
+
+arr.map(([from, to])=>{
+    graph[from].push(to);
+    graph[to].push(from);
+})
+
+const bfs = (start) =>{
+    const queue = [start];
 
     while(queue.length){
-        const [cur, sec] = queue.shift();
-        const move = [cur+1, cur-1, cur*2];
+        const cur = queue.shift();
 
-        if(visited[cur]) continue
-        if(cur===goal) return sec
-        visited[cur]=1;
-
-        for (const pos of move) {
-            if (!visited[pos] && pos >= 0 && pos <= 100000) {
-              queue.push([pos, sec + 1]); // 큐에 해당 위치와 시간 1초 증가시키고 담기
+        for(let vertax of graph[cur]){
+            if(!visited[vertax]){
+                visited[vertax]=true;
+                queue.push([vertax]);
             }
-          }
+        }
     }
-};
+}
 
-console.log(bfs(N, K));
+for(let i=1; i<=n; i++){
+    if(!visited[i]){
+        bfs(i);
+        answer++;
+    }
+}
+
+console.log(answer)
