@@ -1247,58 +1247,84 @@ const { start } = require("repl");
 // }
 
 //7576-토마토
-const input = require('fs').readFileSync(process.platform === "linux" ? "/dev/stdin" : "input.txt").toString().split('\n').map(s => s.split(" ")).slice(0,-1);
-const NM = input.shift();
-const [n,m] = NM.map(el => Number(el));
-const board = input.map(s => s.map(el => Number(el)));
+// const input = require('fs').readFileSync(process.platform === "linux" ? "/dev/stdin" : "input.txt").toString().split('\n').map(s => s.split(" ")).slice(0,-1);
+// const NM = input.shift();
+// const [n,m] = NM.map(el => Number(el));
+// const board = input.map(s => s.map(el => Number(el)));
 
-const dx=[1, 0, -1, 0];
-const dy=[0, 1, 0, -1];
+// const dx=[1, 0, -1, 0];
+// const dy=[0, 1, 0, -1];
 
-function solution(row, col, board){
-    const q = [];
-    const dist = Array.from({length: col}, ()=>Array(row).fill(0));
+// function solution(row, col, board){
+//     const q = [];
+//     const dist = Array.from({length: col}, ()=>Array(row).fill(0));
 
-    for(let i=0; i<col; i++){
-        for(let j=0; j<row; j++){
-            if(board[i][j]===1){
-                q.push([i, j]);
+//     for(let i=0; i<col; i++){
+//         for(let j=0; j<row; j++){
+//             if(board[i][j]===1){
+//                 q.push([i, j]);
+//             }
+
+//             if(board[i][j]===0){
+//                 dist[i][j]=-1;
+//             }
+//         }
+//     }
+
+//     let head = 0;
+//     while(q.length>head){
+//         const [x, y]=q[head++];
+
+//         for(let k=0; k<4; k++){
+//             const nx = x+dx[k]
+//             const ny = y+dy[k];
+
+//             if(nx<0||ny<0||nx>=col||ny>=row) continue;
+
+//             if(dist[nx][ny]>=0) continue;
+
+//             dist[nx][ny] = dist[x][y] + 1;
+
+//             q.push([nx,ny]);
+//         }
+//     }
+
+//         // 토마토가 익을 때까지의 최소 날짜 출력
+//         let day = 0;
+//         for (let i=0; i < col; i++) {
+//             for (let j=0; j < row; j++) {
+//                 // 익지 않은 토마토가 있음
+//                 if (dist[i][j] === -1) return -1;
+//                 day = Math.max(day, dist[i][j]);
+//             }
+//         }
+//         return day;
+// }
+
+// console.log(solution(n,m,board));
+
+//1697-숨바꼭질
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+const [N, K] = require('fs').readFileSync(filePath).toString().trim().split(' ').map(Number);
+const visited = Array(100001).fill(0); // 방문 체크할 배열
+
+const bfs = (start, goal) => {
+    const queue=[[start, 0]];
+
+    while(queue.length){
+        const [cur, sec] = queue.shift();
+        const move = [cur+1, cur-1, cur*2];
+
+        if(visited[cur]) continue
+        if(cur===goal) return sec
+        visited[cur]=1;
+
+        for (const pos of move) {
+            if (!visited[pos] && pos >= 0 && pos <= 100000) {
+              queue.push([pos, sec + 1]); // 큐에 해당 위치와 시간 1초 증가시키고 담기
             }
-
-            if(board[i][j]===0){
-                dist[i][j]=-1;
-            }
-        }
+          }
     }
+};
 
-    let head = 0;
-    while(q.length>head){
-        const [x, y]=q[head++];
-
-        for(let k=0; k<4; k++){
-            const nx = x+dx[k]
-            const ny = y+dy[k];
-
-            if(nx<0||ny<0||nx>=col||ny>=row) continue;
-
-            if(dist[nx][ny]>=0) continue;
-
-            dist[nx][ny] = dist[x][y] + 1;
-
-            q.push([nx,ny]);
-        }
-    }
-
-        // 토마토가 익을 때까지의 최소 날짜 출력
-        let day = 0;
-        for (let i=0; i < col; i++) {
-            for (let j=0; j < row; j++) {
-                // 익지 않은 토마토가 있음
-                if (dist[i][j] === -1) return -1;
-                day = Math.max(day, dist[i][j]);
-            }
-        }
-        return day;
-}
-
-console.log(solution(n,m,board));
+console.log(bfs(N, K));
