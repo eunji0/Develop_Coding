@@ -1,8 +1,4 @@
 //bfs와 dfs
-
-const { grep } = require("jquery");
-const { start } = require("repl");
-
 //bfs
 // class Queue{
 //   constructor(){
@@ -1330,39 +1326,94 @@ const { start } = require("repl");
 // console.log(bfs(N, K));
 
 //11724-연결 요소의 개수
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
-const [n, m]=input[0].split(' ').map(Number);
-const arr = input.slice(1).map(v=>v.split(' ').map(Number));
-let visited = Array(n+1).fill(false);
-let answer = 0;
-let graph = Array.from({length: n+1},()=>[]);
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+// const [n, m]=input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(v=>v.split(' ').map(Number));
+// let visited = Array(n+1).fill(false);
+// let answer = 0;
+// let graph = Array.from({length: n+1},()=>[]);
 
-arr.map(([from, to])=>{
-    graph[from].push(to);
-    graph[to].push(from);
-})
+// arr.map(([from, to])=>{
+//     graph[from].push(to);
+//     graph[to].push(from);
+// })
 
-const bfs = (start) =>{
-    const queue = [start];
+// const bfs = (start) =>{
+//     const queue = [start];
 
-    while(queue.length){
-        const cur = queue.shift();
+//     while(queue.length){
+//         const cur = queue.shift();
 
-        for(let vertax of graph[cur]){
-            if(!visited[vertax]){
-                visited[vertax]=true;
-                queue.push([vertax]);
-            }
-        }
-    }
+//         for(let vertax of graph[cur]){
+//             if(!visited[vertax]){
+//                 visited[vertax]=true;
+//                 queue.push([vertax]);
+//             }
+//         }
+//     }
+// }
+
+// for(let i=1; i<=n; i++){
+//     if(!visited[i]){
+//         bfs(i);
+//         answer++;
+//     }
+// }
+
+// console.log(answer)
+
+//1260-dfs와 bfs
+const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+const [n, m, k] = input.shift().split(' ').map(Number);
+let graph = Array.from({length: m}, ()=>[]);
+
+for(let i=0; i<m; i++){
+  let [from, to] = input[i].split(' ').map(Number);
+  graph[from].push(to);
+  graph[to].push(from);
 }
 
-for(let i=1; i<=n; i++){
-    if(!visited[i]){
-        bfs(i);
-        answer++;
+const dfs = (graph, start) => {
+  let stack = [start];
+  let visited = Array(graph.length).fill(false)
+  let result = [];
+
+  while(stack.length){
+    const node = stack.pop();
+
+    if(!visited[node]){
+      visited[node]=true;
+      result.push(node);
+
+      let nodes = graph[node];
+      stack = [...stack, ...nodes.sort((a, b)=>b-a)]
     }
+  }
+
+  return result
 }
 
-console.log(answer)
+const bfs = (graph, start) => {
+  let queue=[start];
+  let visited = Array(graph.length).fill(false);
+
+  let result = [];
+
+  while(queue.length){
+    const node = queue.shift();
+
+    if(!visited[node]){
+      visited[node]=true;
+      result.push(node);
+
+      const nodes = graph[node];
+      queue=[...queue, ...nodes.sort((a, b)=>a-b)]
+    }
+  }
+
+  return result
+}
+
+console.log(dfs(graph, k).join(' '))
+console.log(bfs(graph, k).join(' '))
