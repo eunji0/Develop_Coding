@@ -1463,36 +1463,79 @@ const { grep } = require('jquery');
 // console.log(bfs(maze, n, m))
 
 //2606-바이러스
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// let computers = +input[0];
+// let network = +input[1];
+// let arr = input.slice(2).map(v=>v.split(' ').map(Number));
+// let graph = Array.from({length: computers+1}, ()=>[]);
+
+// arr.map(([from, to])=>{
+//   graph[from].push(to);
+//   graph[to].push(from);
+// })
+
+// const bfs = (graph, start) =>{
+//   let visited = Array(graph.length).fill(false);
+//   let queue=[start];
+//   visited[start]=true;
+//   let count =0;
+
+//   while(queue.length){
+//     const node = queue.shift();
+
+//     for(const nodes of graph[node]){
+//       if(!visited[nodes]){
+//         visited[nodes]=true;
+//         queue.push(nodes);
+//         count++;
+//       }
+//     }
+//   }
+
+//   return count
+// }
+
+// console.log(bfs(graph, 1))
+
+//2667-단지번호붙이기
 const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-let computers = +input[0];
-let network = +input[1];
-let arr = input.slice(2).map(v=>v.split(' ').map(Number));
-let graph = Array.from({length: computers+1}, ()=>[]);
+const n = +input[0];
 
-arr.map(([from, to])=>{
-  graph[from].push(to);
-  graph[to].push(from);
-})
+const map = input.slice(1).map(v=>v.split('').map(Number));
+const dir=[[0,1], [0,-1], [1,0], [-1,0]];
 
-const bfs = (graph, start) =>{
-  let visited = Array(graph.length).fill(false);
-  let queue=[start];
-  visited[start]=true;
+const bfs = (startx, starty) => {
+  const queue = [[startx, starty]];
   let count =0;
 
   while(queue.length){
-    const node = queue.shift();
+    const [x, y] = queue.shift();
+    count++;
 
-    for(const nodes of graph[node]){
-      if(!visited[nodes]){
-        visited[nodes]=true;
-        queue.push(nodes);
-        count++;
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny=y+dy;
+
+      if(nx>=0&&ny>=0&&nx<n&&ny<n&&map[nx][ny]){
+        map[nx][ny]=0;
+        queue.push([nx, ny])
+        
       }
     }
   }
-
   return count
 }
 
-console.log(bfs(graph, 1))
+let result = [];
+
+for(let i=0; i<n; i++){
+  for(let j=0; j<n; j++){
+    if(map[i][j]){
+      map[i][j]=0;
+      result.push(bfs(i, j));
+    }
+  }
+}
+
+console.log(result.length);
+console.log(result.sort((a, b)=>a-b).join('\n'))
