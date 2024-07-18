@@ -5,6 +5,7 @@
 //     this.items = [];
 //   }
 
+const { count } = require('console');
 const { grep } = require('jquery');
 
 //   push(element){
@@ -1421,42 +1422,77 @@ const { grep } = require('jquery');
 // console.log(bfs(graph, k).join(' '))
 
 //2178-미로탐색
-const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [n, m] = input.shift().split(' ').map(Number);
-const maze = input.map(v=>v.split('').map(Number));
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [n, m] = input.shift().split(' ').map(Number);
+// const maze = input.map(v=>v.split('').map(Number));
 
-const bfs = (maze, n, m)=>{
-  const dir = [[0,1],[0,-1], [1,0], [-1,0]];
-  let visited = Array.from({length: n}, ()=>Array(m).fill(false));
-  let queue =[[0,0]];
-  let count=1;
-  visited[0][0]=true;
+// const bfs = (maze, n, m)=>{
+//   const dir = [[0,1],[0,-1], [1,0], [-1,0]];
+//   let visited = Array.from({length: n}, ()=>Array(m).fill(false));
+//   let queue =[[0,0]];
+//   let count=1;
+//   visited[0][0]=true;
+
+//   while(queue.length){
+//     const size = queue.length;
+
+//     for(let i=0; i<size; i++){
+//       const [x, y] = queue.shift();
+
+//       if(x===n-1&&y===m-1){
+//         return count
+//       }
+
+//       for(const [dx, dy] of dir){
+//         let nx = x+dx;
+//         let ny=y+dy;
+
+//         if(nx>=0&&ny>=0&&nx<n&&ny<m&&!visited[nx][ny]&&maze[nx][ny]){
+//           queue.push([nx, ny]);
+//           visited[nx][ny]=true;
+//         }
+//       }
+//     }
+
+//     count++;
+//   }
+
+//   return -1;
+// }
+
+// console.log(bfs(maze, n, m))
+
+//2606-바이러스
+const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+let computers = +input[0];
+let network = +input[1];
+let arr = input.slice(2).map(v=>v.split(' ').map(Number));
+let graph = Array.from({length: computers+1}, ()=>[]);
+
+arr.map(([from, to])=>{
+  graph[from].push(to);
+  graph[to].push(from);
+})
+
+const bfs = (graph, start) =>{
+  let visited = Array(graph.length).fill(false);
+  let queue=[start];
+  visited[start]=true;
+  let count =0;
 
   while(queue.length){
-    const size = queue.length;
+    const node = queue.shift();
 
-    for(let i=0; i<size; i++){
-      const [x, y] = queue.shift();
-
-      if(x===n-1&&y===m-1){
-        return count
-      }
-
-      for(const [dx, dy] of dir){
-        let nx = x+dx;
-        let ny=y+dy;
-
-        if(nx>=0&&ny>=0&&nx<n&&ny<m&&!visited[nx][ny]&&maze[nx][ny]){
-          queue.push([nx, ny]);
-          visited[nx][ny]=true;
-        }
+    for(const nodes of graph[node]){
+      if(!visited[nodes]){
+        visited[nodes]=true;
+        queue.push(nodes);
+        count++;
       }
     }
-
-    count++;
   }
 
-  return -1;
+  return count
 }
 
-console.log(bfs(maze, n, m))
+console.log(bfs(graph, 1))
