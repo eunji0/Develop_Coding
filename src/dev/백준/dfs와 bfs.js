@@ -5,6 +5,8 @@
 //     this.items = [];
 //   }
 
+const { grep } = require('jquery');
+
 //   push(element){
 //     this.items.push(element)
 //   }
@@ -1364,56 +1366,97 @@
 // console.log(answer)
 
 //1260-dfs와 bfs
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [n, m, k] = input.shift().split(' ').map(Number);
+// let graph = Array.from({length: n+1}, ()=>[]);
+
+// for(let i=0; i<m; i++){
+//   let [from, to] = input[i].split(' ').map(Number);
+//   graph[from].push(to);
+//   graph[to].push(from);
+// }
+
+// const dfs = (graph, start) => {
+//   let stack = [start];
+//   let visited = Array(graph.length).fill(false)
+//   let result = [];
+
+//   while(stack.length){
+//     const node = stack.pop();
+
+//     if(!visited[node]){
+//       visited[node]=true;
+//       result.push(node);
+
+//       let nodes = graph[node];
+//       stack = [...stack, ...nodes.sort((a, b)=>b-a)]
+//     }
+//   }
+
+//   return result
+// }
+
+// const bfs = (graph, start) => {
+//   let queue=[start];
+//   let visited = Array(graph.length).fill(false);
+
+//   let result = [];
+
+//   while(queue.length){
+//     const node = queue.shift();
+
+//     if(!visited[node]){
+//       visited[node]=true;
+//       result.push(node);
+
+//       const nodes = graph[node];
+//       queue=[...queue, ...nodes.sort((a, b)=>a-b)]
+//     }
+//   }
+
+//   return result
+// }
+
+// console.log(dfs(graph, k).join(' '))
+// console.log(bfs(graph, k).join(' '))
+
+//2178-미로탐색
 const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [n, m, k] = input.shift().split(' ').map(Number);
-let graph = Array.from({length: m}, ()=>[]);
+const [n, m] = input.shift().split(' ').map(Number);
+const maze = input.map(v=>v.split('').map(Number));
 
-for(let i=0; i<m; i++){
-  let [from, to] = input[i].split(' ').map(Number);
-  graph[from].push(to);
-  graph[to].push(from);
-}
-
-const dfs = (graph, start) => {
-  let stack = [start];
-  let visited = Array(graph.length).fill(false)
-  let result = [];
-
-  while(stack.length){
-    const node = stack.pop();
-
-    if(!visited[node]){
-      visited[node]=true;
-      result.push(node);
-
-      let nodes = graph[node];
-      stack = [...stack, ...nodes.sort((a, b)=>b-a)]
-    }
-  }
-
-  return result
-}
-
-const bfs = (graph, start) => {
-  let queue=[start];
-  let visited = Array(graph.length).fill(false);
-
-  let result = [];
+const bfs = (maze, n, m)=>{
+  const dir = [[0,1],[0,-1], [1,0], [-1,0]];
+  let visited = Array.from({length: n}, ()=>Array(m).fill(false));
+  let queue =[[0,0]];
+  let count=1;
+  visited[0][0]=true;
 
   while(queue.length){
-    const node = queue.shift();
+    const size = queue.length;
 
-    if(!visited[node]){
-      visited[node]=true;
-      result.push(node);
+    for(let i=0; i<size; i++){
+      const [x, y] = queue.shift();
 
-      const nodes = graph[node];
-      queue=[...queue, ...nodes.sort((a, b)=>a-b)]
+      if(x===n-1&&y===m-1){
+        return count
+      }
+
+      for(const [dx, dy] of dir){
+        let nx = x+dx;
+        let ny=y+dy;
+
+        if(nx>=0&&ny>=0&&nx<n&&ny<m&&!visited[nx][ny]&&maze[nx][ny]){
+          queue.push([nx, ny]);
+          visited[nx][ny]=true;
+        }
+      }
     }
+
+    count++;
   }
 
-  return result
+  return -1;
 }
 
-console.log(dfs(graph, k).join(' '))
-console.log(bfs(graph, k).join(' '))
+console.log(bfs(maze, n, m))
