@@ -1541,58 +1541,111 @@ const { grep } = require('jquery');
 // console.log(result.sort((a, b)=>a-b).join('\n'))
 
 //1012-유기농 배추
-const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const t = +input[0];
-let index = 1;
-const dir = [[0,1], [0,-1], [1,0], [-1,0]]
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const t = +input[0];
+// let index = 1;
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]]
 
-const bfs = (graph, i, j) => {
-  const queue = [[i, j]];
-  let count =0;
+// const bfs = (graph, i, j) => {
+//   const queue = [[i, j]];
+//   let count =0;
 
-  while(queue.length){
-    const [x, y] = queue.shift();
-    const n = graph.length;
-    const m= graph[0].length;
+//   while(queue.length){
+//     const [x, y] = queue.shift();
+//     const n = graph.length;
+//     const m= graph[0].length;
 
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny = y+dy;
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny = y+dy;
 
-      if(nx>=0&&ny>=0&&nx<n&&ny<m&&graph[nx][ny]){
-        graph[nx][ny]=0;
-        queue.push([nx, ny]);
-        count++;
+//       if(nx>=0&&ny>=0&&nx<n&&ny<m&&graph[nx][ny]){
+//         graph[nx][ny]=0;
+//         queue.push([nx, ny]);
+//         count++;
         
-      }
+//       }
+//     }
+//   }
+
+//   return count;
+// }
+
+// for(let i=0; i<t; i++){
+//   const [n, m, k]=input[index].split(' ').map(Number);
+//   const arr = input.slice(index+1, index+1+k).map(v=>v.split(' ').map(Number));
+
+//   const graph = Array.from({length: n}, ()=>Array(m).fill(0));
+
+//   arr.map(([x, y])=>{
+//     graph[x][y]=1
+//   })
+
+
+//   let result = [];
+//   for(let i=0; i<n; i++){
+//     for(let j=0; j<m; j++){
+//       if(graph[i][j]){
+//         result.push(bfs(graph, i, j))
+//       }
+//     }
+//   }
+
+//   console.log(result.length)
+
+//   index++;
+//   index+=k
+// }
+
+//7576-토마토
+const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+
+const [M, N] = input[0].split(' ').map(Number);
+const box = input.slice(1).map(line => line.split(' ').map(Number));
+
+const directions = [
+  [-1, 0], [1, 0], [0, -1], [0, 1] // 상하좌우
+];
+
+let queue = [];
+let days = 0;
+
+// 초기 상태에서 익은 토마토의 위치를 큐에 추가
+for (let i = 0; i < N; i++) {
+  for (let j = 0; j < M; j++) {
+    if (box[i][j] === 1) {
+      queue.push([i, j]);
     }
   }
-
-  return count;
 }
 
-for(let i=0; i<t; i++){
-  const [n, m, k]=input[index].split(' ').map(Number);
-  const arr = input.slice(index+1, index+1+k).map(v=>v.split(' ').map(Number));
+let index = 0;
 
-  const graph = Array.from({length: n}, ()=>Array(m).fill(0));
-
-  arr.map(([x, y])=>{
-    graph[x][y]=1
-  })
-
-
-  let result = [];
-  for(let i=0; i<n; i++){
-    for(let j=0; j<m; j++){
-      if(graph[i][j]){
-        result.push(bfs(graph, i, j))
-      }
-    }
-  }
-
-  console.log(result.length)
-
+while (index < queue.length) {
+  const [x, y] = queue[index];
   index++;
-  index+=k
+
+  for (const [dx, dy] of directions) {
+    const nx = x + dx;
+    const ny = y + dy;
+
+    if (nx >= 0 && ny >= 0 && nx < N && ny < M && box[nx][ny] === 0) {
+      box[nx][ny] = box[x][y] + 1;
+      queue.push([nx, ny]);
+    }
+  }
 }
+
+// 최소 날짜 계산
+for (let i = 0; i < N; i++) {
+  for (let j = 0; j < M; j++) {
+    if (box[i][j] === 0) {
+      console.log(-1);
+      process.exit();
+    }
+    days = Math.max(days, box[i][j]);
+  }
+}
+
+// 최초 익은 토마토가 1이므로 1을 빼줌
+console.log(days - 1);
