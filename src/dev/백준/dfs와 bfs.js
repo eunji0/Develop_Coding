@@ -1598,55 +1598,81 @@ const { grep } = require('jquery');
 // }
 
 //7576-토마토
-const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [M, N] = input[0].split(' ').map(Number);
-const box = input.slice(1).map(line => line.split(' ').map(Number));
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [M, N] = input[0].split(' ').map(Number);
+// const box = input.slice(1).map(line => line.split(' ').map(Number));
 
-const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
-let queue = [];
+// let queue = [];
 
-for (let i = 0; i < N; i++) {
-  for (let j = 0; j < M; j++) {
-    if (box[i][j] === 1) {
-      queue.push([i, j]);
-    }
-  }
-}
+// for (let i = 0; i < N; i++) {
+//   for (let j = 0; j < M; j++) {
+//     if (box[i][j] === 1) {
+//       queue.push([i, j]);
+//     }
+//   }
+// }
 
-const bfs = (box, queue)=>{
-  let index = 0;
+// const bfs = (box, queue)=>{
+//   let index = 0;
 
-  while(index<queue.length){
-    const [x, y] = queue[index];
-    index++;
+//   while(index<queue.length){
+//     const [x, y] = queue[index];
+//     index++;
 
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny = y+dy;
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny = y+dy;
 
-      if(nx>=0&&nx<N&&ny>=0&&ny<M&&!box[nx][ny]){
-        box[nx][ny]=box[x][y]+1;
-        queue.push([nx, ny]);
+//       if(nx>=0&&nx<N&&ny>=0&&ny<M&&!box[nx][ny]){
+//         box[nx][ny]=box[x][y]+1;
+//         queue.push([nx, ny]);
+//       }
+//     }
+//   }
+// }
+
+// let days =0;
+
+// const cal = (box)=>{
+//   for(let i=0; i<N; i++){
+//     for(let j=0; j<M; j++){
+//       if(!box[i][j]){
+//         return -1;
+//       }
+
+//       days = Math.max(days, box[i][j]);
+//     }
+//   }  
+//   return days-1;
+// }
+
+// bfs(box, queue);
+// console.log(cal(box))
+
+//1697-숨바꼭질
+const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim();
+const [N, K] = input.split(' ').map(Number);
+const visited = Array(100001).fill(0); // 방문 체크할 배열
+
+const bfs = (start, goal) => {
+  const queue =[[start, 0]];
+
+  while(queue.length){
+    const [cur, sec] = queue.shift();
+    const move = [cur-1, cur+1, cur*2];
+
+    if(visited[cur])continue;
+    if(cur===goal) return sec;
+    visited[cur] = 1;
+
+    for(const p of move){
+      if(!visited[p]&&p>=0&&p<=100000){
+        queue.push([p, sec+1])
       }
     }
   }
 }
 
-let days =0;
-
-const cal = (box)=>{
-  for(let i=0; i<N; i++){
-    for(let j=0; j<M; j++){
-      if(!box[i][j]){
-        return -1;
-      }
-
-      days = Math.max(days, box[i][j]);
-    }
-  }  
-  return days-1;
-}
-
-bfs(box, queue);
-console.log(cal(box))
+console.log(bfs(N, K))
