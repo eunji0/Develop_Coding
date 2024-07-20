@@ -1599,18 +1599,13 @@ const { grep } = require('jquery');
 
 //7576-토마토
 const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-
 const [M, N] = input[0].split(' ').map(Number);
 const box = input.slice(1).map(line => line.split(' ').map(Number));
 
-const directions = [
-  [-1, 0], [1, 0], [0, -1], [0, 1] // 상하좌우
-];
+const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
 let queue = [];
-let days = 0;
 
-// 초기 상태에서 익은 토마토의 위치를 큐에 추가
 for (let i = 0; i < N; i++) {
   for (let j = 0; j < M; j++) {
     if (box[i][j] === 1) {
@@ -1619,33 +1614,39 @@ for (let i = 0; i < N; i++) {
   }
 }
 
-let index = 0;
+const bfs = (box, queue)=>{
+  let index = 0;
 
-while (index < queue.length) {
-  const [x, y] = queue[index];
-  index++;
+  while(index<queue.length){
+    const [x, y] = queue[index];
+    index++;
 
-  for (const [dx, dy] of directions) {
-    const nx = x + dx;
-    const ny = y + dy;
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny = y+dy;
 
-    if (nx >= 0 && ny >= 0 && nx < N && ny < M && box[nx][ny] === 0) {
-      box[nx][ny] = box[x][y] + 1;
-      queue.push([nx, ny]);
+      if(nx>=0&&nx<N&&ny>=0&&ny<M&&!box[nx][ny]){
+        box[nx][ny]=box[x][y]+1;
+        queue.push([nx, ny]);
+      }
     }
   }
 }
 
-// 최소 날짜 계산
-for (let i = 0; i < N; i++) {
-  for (let j = 0; j < M; j++) {
-    if (box[i][j] === 0) {
-      console.log(-1);
-      process.exit();
+let days =0;
+
+const cal = (box)=>{
+  for(let i=0; i<N; i++){
+    for(let j=0; j<M; j++){
+      if(!box[i][j]){
+        return -1;
+      }
+
+      days = Math.max(days, box[i][j]);
     }
-    days = Math.max(days, box[i][j]);
-  }
+  }  
+  return days-1;
 }
 
-// 최초 익은 토마토가 1이므로 1을 빼줌
-console.log(days - 1);
+bfs(box, queue);
+console.log(cal(box))
