@@ -5,9 +5,6 @@
 //     this.items = [];
 //   }
 
-const { count } = require('console');
-const { grep } = require('jquery');
-
 //   push(element){
 //     this.items.push(element)
 //   }
@@ -1652,27 +1649,66 @@ const { grep } = require('jquery');
 // console.log(cal(box))
 
 //1697-숨바꼭질
-const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim();
-const [N, K] = input.split(' ').map(Number);
-const visited = Array(100001).fill(0); // 방문 체크할 배열
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim();
+// const [N, K] = input.split(' ').map(Number);
+// const visited = Array(100001).fill(0); // 방문 체크할 배열
 
-const bfs = (start, goal) => {
-  const queue =[[start, 0]];
+// const bfs = (start, goal) => {
+//   const queue =[[start, 0]];
 
-  while(queue.length){
-    const [cur, sec] = queue.shift();
-    const move = [cur-1, cur+1, cur*2];
+//   while(queue.length){
+//     const [cur, sec] = queue.shift();
+//     const move = [cur-1, cur+1, cur*2];
 
-    if(visited[cur])continue;
-    if(cur===goal) return sec;
-    visited[cur] = 1;
+//     if(visited[cur])continue;
+//     if(cur===goal) return sec;
+//     visited[cur] = 1;
 
-    for(const p of move){
-      if(!visited[p]&&p>=0&&p<=100000){
-        queue.push([p, sec+1])
-      }
-    }
-  }
-}
+//     for(const p of move){
+//       if(!visited[p]&&p>=0&&p<=100000){
+//         queue.push([p, sec+1])
+//       }
+//     }
+//   }
+// }
 
-console.log(bfs(N, K))
+// console.log(bfs(N, K))
+
+//11724-연결 요소의 개수
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [n, m]=input.shift().split(' ').map(Number);
+// const arr = input.map(v=>v.split(' ').map(Number));
+// const graph = Array.from({length: n+1}, ()=>[]);
+// let visited = Array(graph.length).fill(false);
+
+// arr.map(([from, to])=>{
+//   graph[from].push(to);
+//   graph[to].push(from)
+// })
+
+// const bfs = (start)=>{
+//   const queue = [start];
+//   visited[start]=true;
+
+//   while(queue.length){
+//     const node = queue.shift();
+
+//     for(const n of graph[node]){
+//       if(!visited[n]){
+//         visited[n]=true;
+//         queue.push([n])
+//       }
+//     }
+//   }
+// }
+
+// let count =0;
+
+// for(let i=1; i<=n; i++){
+//   if(!visited[i]){
+//     bfs(i);
+//     count++;    
+//   }
+// }
+
+// console.log(count)
