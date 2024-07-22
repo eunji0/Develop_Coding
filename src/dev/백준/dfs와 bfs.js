@@ -1718,77 +1718,72 @@ const input = require('fs').readFileSync(process.platform === "linux" ? "dev/std
 const [N, M] = input.shift().split(' ').map(Number);
 const lab = input.map(line => line.split(' ').map(Number));
 
-const directions = [
+const directions= [
   [0, 1], [0, -1], [1, 0], [-1, 0]
 ];
 
 const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < N && y < M;
 
 const bfs = (labCopy) => {
-  let queue = [];
-  for (let i = 0; i < N; i++) {
+  let queue = []; // BFS 탐색을 위한 큐 초기화
+  for (let i = 0; i < N; i++) { // 연구소 지도를 순회하면서
     for (let j = 0; j < M; j++) {
-      if (labCopy[i][j] === 2) {
+      if (labCopy[i][j] === 2) { // 바이러스 위치를 큐에 추가
         queue.push([i, j]);
       }
     }
   }
 
-  while (queue.length) {
-    const [x, y] = queue.shift();
-    for (const [dx, dy] of directions) {
+  while (queue.length) { // 큐가 빌 때까지 반복
+    const [x, y] = queue.shift(); // 큐에서 현재 위치를 꺼냄
+    for (const [dx, dy] of directions) { // 네 방향에 대해 반복
       const nx = x + dx;
       const ny = y + dy;
-      if (isValidPosition(nx, ny) && labCopy[nx][ny] === 0) {
-        labCopy[nx][ny] = 2;
-        queue.push([nx, ny]);
+      if (isValidPosition(nx, ny) && labCopy[nx][ny] === 0) { // 유효한 좌표이고 빈 칸인 경우
+        labCopy[nx][ny] = 2; // 바이러스를 확산
+        queue.push([nx, ny]); // 새로운 위치를 큐에 추가
       }
     }
   }
 };
 
 const countSafeArea = (labCopy) => {
-  let count = 0;
-  for (let i = 0; i < N; i++) {
+  let count = 0; // 안전 영역 크기를 저장할 변수 초기화
+  for (let i = 0; i < N; i++) { // 연구소 지도를 순회하면서
     for (let j = 0; j < M; j++) {
-      if (labCopy[i][j] === 0) count++;
+      if (labCopy[i][j] === 0) count++; // 빈 칸이면 안전 영역 크기 증가
     }
   }
-  return count;
+  return count; // 안전 영역 크기를 반환
 };
 
-const setWallsAndCalculateSafeArea = () => {
-  let maxSafeArea = 0;
+let maxSafeArea = 0; // 최대 안전 영역 크기를 저장할 변수 초기화
 
-  for (let i = 0; i < N * M; i++) {
-    const x1 = Math.floor(i / M);
-    const y1 = i % M;
-    if (lab[x1][y1] !== 0) continue;
+for (let i = 0; i < N * M; i++) { // 첫 번째 벽을 세울 위치를 선택
+  const x1 = Math.floor(i / M);
+  const y1 = i % M;
+  if (lab[x1][y1] !== 0) continue; // 빈 칸이 아니면 넘어감
 
-    for (let j = i + 1; j < N * M; j++) {
-      //이차원 배열을 일차원 배열로 순회하거나 그 반대로 할 때 유용
-      const x2 = Math.floor(j / M);
-      const y2 = j % M;
-      if (lab[x2][y2] !== 0) continue;
+  for (let j = i + 1; j < N * M; j++) { // 두 번째 벽을 세울 위치를 선택
+    const x2 = Math.floor(j / M);
+    const y2 = j % M;
+    if (lab[x2][y2] !== 0) continue; // 빈 칸이 아니면 넘어감
 
-      for (let k = j + 1; k < N * M; k++) {
-        const x3 = Math.floor(k / M);
-        const y3 = k % M;
-        if (lab[x3][y3] !== 0) continue;
+    for (let k = j + 1; k < N * M; k++) { // 세 번째 벽을 세울 위치를 선택
+      const x3 = Math.floor(k / M);
+      const y3 = k % M;
+      if (lab[x3][y3] !== 0) continue; // 빈 칸이 아니면 넘어감
 
-        const labCopy = lab.map(row => row.slice());
-        labCopy[x1][y1] = 1;
-        labCopy[x2][y2] = 1;
-        labCopy[x3][y3] = 1;
+      const labCopy = lab.map(row => row.slice()); // 연구소 지도를 복사
+      labCopy[x1][y1] = 1; // 첫 번째 벽 세우기
+      labCopy[x2][y2] = 1; // 두 번째 벽 세우기
+      labCopy[x3][y3] = 1; // 세 번째 벽 세우기
 
-        bfs(labCopy);
-        const safeArea = countSafeArea(labCopy);
-        maxSafeArea = Math.max(maxSafeArea, safeArea);
-      }
+      bfs(labCopy); // BFS를 사용해 바이러스 확산
+      const safeArea = countSafeArea(labCopy); // 안전 영역 크기 계산
+      maxSafeArea = Math.max(maxSafeArea, safeArea); // 최대 안전 영역 크기 갱신
     }
   }
+}
 
-  return maxSafeArea;
-};
-
-console.log(setWallsAndCalculateSafeArea());
+console.log(maxSafeArea); // 최대 안전 영역 크기를 반환
