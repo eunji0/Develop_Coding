@@ -1712,3 +1712,83 @@
 // }
 
 // console.log(count)
+
+//14502-연결요소의 개수
+const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+const [N, M] = input.shift().split(' ').map(Number);
+const lab = input.map(line => line.split(' ').map(Number));
+
+const directions = [
+  [0, 1], [0, -1], [1, 0], [-1, 0]
+];
+
+const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < N && y < M;
+
+const bfs = (labCopy) => {
+  let queue = [];
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < M; j++) {
+      if (labCopy[i][j] === 2) {
+        queue.push([i, j]);
+      }
+    }
+  }
+
+  while (queue.length) {
+    const [x, y] = queue.shift();
+    for (const [dx, dy] of directions) {
+      const nx = x + dx;
+      const ny = y + dy;
+      if (isValidPosition(nx, ny) && labCopy[nx][ny] === 0) {
+        labCopy[nx][ny] = 2;
+        queue.push([nx, ny]);
+      }
+    }
+  }
+};
+
+const countSafeArea = (labCopy) => {
+  let count = 0;
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < M; j++) {
+      if (labCopy[i][j] === 0) count++;
+    }
+  }
+  return count;
+};
+
+const setWallsAndCalculateSafeArea = () => {
+  let maxSafeArea = 0;
+
+  for (let i = 0; i < N * M; i++) {
+    const x1 = Math.floor(i / M);
+    const y1 = i % M;
+    if (lab[x1][y1] !== 0) continue;
+
+    for (let j = i + 1; j < N * M; j++) {
+      //이차원 배열을 일차원 배열로 순회하거나 그 반대로 할 때 유용
+      const x2 = Math.floor(j / M);
+      const y2 = j % M;
+      if (lab[x2][y2] !== 0) continue;
+
+      for (let k = j + 1; k < N * M; k++) {
+        const x3 = Math.floor(k / M);
+        const y3 = k % M;
+        if (lab[x3][y3] !== 0) continue;
+
+        const labCopy = lab.map(row => row.slice());
+        labCopy[x1][y1] = 1;
+        labCopy[x2][y2] = 1;
+        labCopy[x3][y3] = 1;
+
+        bfs(labCopy);
+        const safeArea = countSafeArea(labCopy);
+        maxSafeArea = Math.max(maxSafeArea, safeArea);
+      }
+    }
+  }
+
+  return maxSafeArea;
+};
+
+console.log(setWallsAndCalculateSafeArea());
