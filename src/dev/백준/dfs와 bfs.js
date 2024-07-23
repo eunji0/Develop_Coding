@@ -1714,79 +1714,131 @@
 // console.log(count)
 
 //14502-연구소
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [N, M] = input.shift().split(' ').map(Number);
+// const lab = input.map(line => line.split(' ').map(Number));
+
+// const directions= [
+//   [0, 1], [0, -1], [1, 0], [-1, 0]
+// ];
+
+// const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < N && y < M;
+
+// const bfs = (labCopy) => {
+//   let queue = []; // BFS 탐색을 위한 큐 초기화
+//   for (let i = 0; i < N; i++) { // 연구소 지도를 순회하면서
+//     for (let j = 0; j < M; j++) {
+//       if (labCopy[i][j] === 2) { // 바이러스 위치를 큐에 추가
+//         queue.push([i, j]);
+//       }
+//     }
+//   }
+
+//   while (queue.length) { // 큐가 빌 때까지 반복
+//     const [x, y] = queue.shift(); // 큐에서 현재 위치를 꺼냄
+//     for (const [dx, dy] of directions) { // 네 방향에 대해 반복
+//       const nx = x + dx;
+//       const ny = y + dy;
+//       if (isValidPosition(nx, ny) && labCopy[nx][ny] === 0) { // 유효한 좌표이고 빈 칸인 경우
+//         labCopy[nx][ny] = 2; // 바이러스를 확산
+//         queue.push([nx, ny]); // 새로운 위치를 큐에 추가
+//       }
+//     }
+//   }
+// };
+
+// const countSafeArea = (labCopy) => {
+//   let count = 0; // 안전 영역 크기를 저장할 변수 초기화
+//   for (let i = 0; i < N; i++) { // 연구소 지도를 순회하면서
+//     for (let j = 0; j < M; j++) {
+//       if (labCopy[i][j] === 0) count++; // 빈 칸이면 안전 영역 크기 증가
+//     }
+//   }
+//   return count; // 안전 영역 크기를 반환
+// };
+
+// let maxSafeArea = 0; // 최대 안전 영역 크기를 저장할 변수 초기화
+
+// for (let i = 0; i < N * M; i++) { // 첫 번째 벽을 세울 위치를 선택
+//   const x1 = Math.floor(i / M);
+//   const y1 = i % M;
+//   if (lab[x1][y1] !== 0) continue; // 빈 칸이 아니면 넘어감
+
+//   for (let j = i + 1; j < N * M; j++) { // 두 번째 벽을 세울 위치를 선택
+//     const x2 = Math.floor(j / M);
+//     const y2 = j % M;
+//     if (lab[x2][y2] !== 0) continue; // 빈 칸이 아니면 넘어감
+
+//     for (let k = j + 1; k < N * M; k++) { // 세 번째 벽을 세울 위치를 선택
+//       const x3 = Math.floor(k / M);
+//       const y3 = k % M;
+//       if (lab[x3][y3] !== 0) continue; // 빈 칸이 아니면 넘어감
+
+//       const labCopy = lab.map(row => row.slice()); // 연구소 지도를 복사
+//       labCopy[x1][y1] = 1; // 첫 번째 벽 세우기
+//       labCopy[x2][y2] = 1; // 두 번째 벽 세우기
+//       labCopy[x3][y3] = 1; // 세 번째 벽 세우기
+
+//       bfs(labCopy); // BFS를 사용해 바이러스 확산
+//       const safeArea = countSafeArea(labCopy); // 안전 영역 크기 계산
+//       maxSafeArea = Math.max(maxSafeArea, safeArea); // 최대 안전 영역 크기 갱신
+//     }
+//   }
+// }
+
+// console.log(maxSafeArea); // 최대 안전 영역 크기를 반환
+
+//10026-적록색약
 const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [N, M] = input.shift().split(' ').map(Number);
-const lab = input.map(line => line.split(' ').map(Number));
+const n = +(input.shift());
+let arr = input.map(v=>v.trim().split(''));
+const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+let visitedCan = Array.from({length: n+1}, ()=>Array(n+1).fill(false));
+let visitedCant = Array.from({length: n+1}, ()=>Array(n+1).fill(false));
+const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < n && y < n;
 
-const directions= [
-  [0, 1], [0, -1], [1, 0], [-1, 0]
-];
+let cantRedGreen = arr.map(v=>v.slice()).map(row => row.map(cell => (cell === 'G' ? 'R' : cell)));
 
-const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < N && y < M;
+const bfs = (graph, i, j, visited)=>{
+  let queue=[[i,j]];
+  visited[i][j]=true;
+  const color = graph[i][j];
 
-const bfs = (labCopy) => {
-  let queue = []; // BFS 탐색을 위한 큐 초기화
-  for (let i = 0; i < N; i++) { // 연구소 지도를 순회하면서
-    for (let j = 0; j < M; j++) {
-      if (labCopy[i][j] === 2) { // 바이러스 위치를 큐에 추가
-        queue.push([i, j]);
+  while(queue.length){
+    const [x, y] = queue.shift();
+
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny = y+dy;
+
+      if(isValidPosition(nx, ny)&&!visited[nx][ny]&&graph[nx][ny]===color){
+        visited[nx][ny]=true;
+        queue.push([nx, ny]);
       }
-    }
-  }
-
-  while (queue.length) { // 큐가 빌 때까지 반복
-    const [x, y] = queue.shift(); // 큐에서 현재 위치를 꺼냄
-    for (const [dx, dy] of directions) { // 네 방향에 대해 반복
-      const nx = x + dx;
-      const ny = y + dy;
-      if (isValidPosition(nx, ny) && labCopy[nx][ny] === 0) { // 유효한 좌표이고 빈 칸인 경우
-        labCopy[nx][ny] = 2; // 바이러스를 확산
-        queue.push([nx, ny]); // 새로운 위치를 큐에 추가
-      }
-    }
-  }
-};
-
-const countSafeArea = (labCopy) => {
-  let count = 0; // 안전 영역 크기를 저장할 변수 초기화
-  for (let i = 0; i < N; i++) { // 연구소 지도를 순회하면서
-    for (let j = 0; j < M; j++) {
-      if (labCopy[i][j] === 0) count++; // 빈 칸이면 안전 영역 크기 증가
-    }
-  }
-  return count; // 안전 영역 크기를 반환
-};
-
-let maxSafeArea = 0; // 최대 안전 영역 크기를 저장할 변수 초기화
-
-for (let i = 0; i < N * M; i++) { // 첫 번째 벽을 세울 위치를 선택
-  const x1 = Math.floor(i / M);
-  const y1 = i % M;
-  if (lab[x1][y1] !== 0) continue; // 빈 칸이 아니면 넘어감
-
-  for (let j = i + 1; j < N * M; j++) { // 두 번째 벽을 세울 위치를 선택
-    const x2 = Math.floor(j / M);
-    const y2 = j % M;
-    if (lab[x2][y2] !== 0) continue; // 빈 칸이 아니면 넘어감
-
-    for (let k = j + 1; k < N * M; k++) { // 세 번째 벽을 세울 위치를 선택
-      const x3 = Math.floor(k / M);
-      const y3 = k % M;
-      if (lab[x3][y3] !== 0) continue; // 빈 칸이 아니면 넘어감
-
-      const labCopy = lab.map(row => row.slice()); // 연구소 지도를 복사
-      labCopy[x1][y1] = 1; // 첫 번째 벽 세우기
-      labCopy[x2][y2] = 1; // 두 번째 벽 세우기
-      labCopy[x3][y3] = 1; // 세 번째 벽 세우기
-
-      bfs(labCopy); // BFS를 사용해 바이러스 확산
-      const safeArea = countSafeArea(labCopy); // 안전 영역 크기 계산
-      maxSafeArea = Math.max(maxSafeArea, safeArea); // 최대 안전 영역 크기 갱신
     }
   }
 }
 
-console.log(maxSafeArea); // 최대 안전 영역 크기를 반환
+let canResult=0;
+let cantResult=0;
+
+for(let i=0; i<n; i++){
+  for(let j=0; j<n; j++){
+    if(!visitedCan[i][j]){
+      bfs(arr, i, j, visitedCan);
+      canResult++;
+    }
+  }
+}
+
+for(let i=0; i<n; i++){
+  for(let j=0; j<n; j++){
+    if(!visitedCant[i][j]){
+      bfs(cantRedGreen, i, j, visitedCant);
+      cantResult++;
+    }
+  }
+}
 
 
-
+console.log(canResult, cantResult)
