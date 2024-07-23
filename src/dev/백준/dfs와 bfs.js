@@ -1789,56 +1789,65 @@
 // console.log(maxSafeArea); // 최대 안전 영역 크기를 반환
 
 //10026-적록색약
-const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const n = +(input.shift());
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const n = +(input.shift());
 let arr = input.map(v=>v.trim().split(''));
 const dir = [[0,1], [0,-1], [1,0], [-1,0]];
-let visitedCan = Array.from({length: n+1}, ()=>Array(n+1).fill(false));
-let visitedCant = Array.from({length: n+1}, ()=>Array(n+1).fill(false));
+
+// 방문 여부를 체크하기 위한 배열 초기화
+let visitedCan = Array.from({ length: n }, () => Array(n).fill(false));
+let visitedCant = Array.from({ length: n }, () => Array(n).fill(false));
+
+// 유효한 위치인지 확인하는 함수
 const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < n && y < n;
 
-let cantRedGreen = arr.map(v=>v.slice()).map(row => row.map(cell => (cell === 'G' ? 'R' : cell)));
+// 적록색약의 경우를 위한 배열 변환 (G를 R로 변경)
+let cantRedGreen = arr.map(v => v.slice()).map(row => row.map(cell => (cell === 'G' ? 'R' : cell)));
 
-const bfs = (graph, i, j, visited)=>{
-  let queue=[[i,j]];
-  visited[i][j]=true;
-  const color = graph[i][j];
+// BFS를 사용하여 영역을 탐색하는 함수
+const bfs = (graph, i, j, visited) => {
+  let queue = [[i, j]]; // BFS 탐색을 위한 큐 초기화
+  visited[i][j] = true; // 시작점 방문 처리
+  const color = graph[i][j]; // 시작점의 색상
 
-  while(queue.length){
-    const [x, y] = queue.shift();
+  while (queue.length) {
+    const [x, y] = queue.shift(); // 큐에서 현재 위치를 꺼냄
 
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny = y+dy;
+    // 네 방향으로 탐색
+    for (const [dx, dy] of dir) {
+      const nx = x + dx;
+      const ny = y + dy;
 
-      if(isValidPosition(nx, ny)&&!visited[nx][ny]&&graph[nx][ny]===color){
-        visited[nx][ny]=true;
-        queue.push([nx, ny]);
+      // 유효한 좌표이고 방문하지 않았으며 동일한 색상인 경우
+      if (isValidPosition(nx, ny) && !visited[nx][ny] && graph[nx][ny] === color) {
+        visited[nx][ny] = true; // 방문 처리
+        queue.push([nx, ny]); // 큐에 추가
       }
     }
   }
 }
 
-let canResult=0;
-let cantResult=0;
-
-for(let i=0; i<n; i++){
-  for(let j=0; j<n; j++){
-    if(!visitedCan[i][j]){
-      bfs(arr, i, j, visitedCan);
-      canResult++;
+// 적록색약이 아닌 사람의 구역 수를 계산
+let canResult = 0;
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < n; j++) {
+    if (!visitedCan[i][j]) { // 아직 방문하지 않은 경우
+      bfs(arr, i, j, visitedCan); // BFS 탐색
+      canResult++; // 구역 수 증가
     }
   }
 }
 
-for(let i=0; i<n; i++){
-  for(let j=0; j<n; j++){
-    if(!visitedCant[i][j]){
-      bfs(cantRedGreen, i, j, visitedCant);
-      cantResult++;
+// 적록색약인 사람의 구역 수를 계산
+let cantResult = 0;
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < n; j++) {
+    if (!visitedCant[i][j]) { // 아직 방문하지 않은 경우
+      bfs(cantRedGreen, i, j, visitedCant); // BFS 탐색
+      cantResult++; // 구역 수 증가
     }
   }
 }
-
 
 console.log(canResult, cantResult)
+
