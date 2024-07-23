@@ -1713,7 +1713,7 @@
 
 // console.log(count)
 
-//14502-연결요소의 개수
+//14502-연구소
 const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
 const [N, M] = input.shift().split(' ').map(Number);
 const lab = input.map(line => line.split(' ').map(Number));
@@ -1787,3 +1787,6 @@ for (let i = 0; i < N * M; i++) { // 첫 번째 벽을 세울 위치를 선택
 }
 
 console.log(maxSafeArea); // 최대 안전 영역 크기를 반환
+
+
+
