@@ -1791,63 +1791,132 @@
 //10026-적록색약
 // const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
 // const n = +(input.shift());
-let arr = input.map(v=>v.trim().split(''));
-const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+// let arr = input.map(v=>v.trim().split(''));
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
-// 방문 여부를 체크하기 위한 배열 초기화
-let visitedCan = Array.from({ length: n }, () => Array(n).fill(false));
-let visitedCant = Array.from({ length: n }, () => Array(n).fill(false));
+// // 방문 여부를 체크하기 위한 배열 초기화
+// let visitedCan = Array.from({ length: n }, () => Array(n).fill(false));
+// let visitedCant = Array.from({ length: n }, () => Array(n).fill(false));
 
-// 유효한 위치인지 확인하는 함수
-const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < n && y < n;
+// // 유효한 위치인지 확인하는 함수
+// const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < n && y < n;
 
-// 적록색약의 경우를 위한 배열 변환 (G를 R로 변경)
-let cantRedGreen = arr.map(v => v.slice()).map(row => row.map(cell => (cell === 'G' ? 'R' : cell)));
+// // 적록색약의 경우를 위한 배열 변환 (G를 R로 변경)
+// let cantRedGreen = arr.map(v => v.slice()).map(row => row.map(cell => (cell === 'G' ? 'R' : cell)));
 
-// BFS를 사용하여 영역을 탐색하는 함수
-const bfs = (graph, i, j, visited) => {
-  let queue = [[i, j]]; // BFS 탐색을 위한 큐 초기화
-  visited[i][j] = true; // 시작점 방문 처리
-  const color = graph[i][j]; // 시작점의 색상
+// // BFS를 사용하여 영역을 탐색하는 함수
+// const bfs = (graph, i, j, visited) => {
+//   let queue = [[i, j]]; // BFS 탐색을 위한 큐 초기화
+//   visited[i][j] = true; // 시작점 방문 처리
+//   const color = graph[i][j]; // 시작점의 색상
 
-  while (queue.length) {
-    const [x, y] = queue.shift(); // 큐에서 현재 위치를 꺼냄
+//   while (queue.length) {
+//     const [x, y] = queue.shift(); // 큐에서 현재 위치를 꺼냄
 
-    // 네 방향으로 탐색
-    for (const [dx, dy] of dir) {
-      const nx = x + dx;
-      const ny = y + dy;
+//     // 네 방향으로 탐색
+//     for (const [dx, dy] of dir) {
+//       const nx = x + dx;
+//       const ny = y + dy;
 
-      // 유효한 좌표이고 방문하지 않았으며 동일한 색상인 경우
-      if (isValidPosition(nx, ny) && !visited[nx][ny] && graph[nx][ny] === color) {
-        visited[nx][ny] = true; // 방문 처리
-        queue.push([nx, ny]); // 큐에 추가
+//       // 유효한 좌표이고 방문하지 않았으며 동일한 색상인 경우
+//       if (isValidPosition(nx, ny) && !visited[nx][ny] && graph[nx][ny] === color) {
+//         visited[nx][ny] = true; // 방문 처리
+//         queue.push([nx, ny]); // 큐에 추가
+//       }
+//     }
+//   }
+// }
+
+// // 적록색약이 아닌 사람의 구역 수를 계산
+// let canResult = 0;
+// for (let i = 0; i < n; i++) {
+//   for (let j = 0; j < n; j++) {
+//     if (!visitedCan[i][j]) { // 아직 방문하지 않은 경우
+//       bfs(arr, i, j, visitedCan); // BFS 탐색
+//       canResult++; // 구역 수 증가
+//     }
+//   }
+// }
+
+// // 적록색약인 사람의 구역 수를 계산
+// let cantResult = 0;
+// for (let i = 0; i < n; i++) {
+//   for (let j = 0; j < n; j++) {
+//     if (!visitedCant[i][j]) { // 아직 방문하지 않은 경우
+//       bfs(cantRedGreen, i, j, visitedCant); // BFS 탐색
+//       cantResult++; // 구역 수 증가
+//     }
+//   }
+// }
+
+// console.log(canResult, cantResult)
+
+//7569-토마토
+const fs = require('fs');
+const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+const [m, n, h] = input[0].split(' ').map(Number);
+const isValidPosition = (nz, nx, ny) => nz >= 0 && nz < h && nx >= 0 && nx < n && ny >= 0 && ny < m;
+
+// 상자 정보를 3차원 배열로 변환
+let arr = [];
+for (let i = 1; i < input.length; i += n) {
+  let box = [];
+  for (let j = i; j < i + n; j++) {
+    box.push(input[j].split(' ').map(Number));
+  }
+  arr.push(box);
+}
+
+// 익은 토마토의 자리를 큐에 추가
+const queue = [];
+const dir = [[0, 0, 1], [0, 0, -1], [0, 1, 0], [0, -1, 0], [1, 0, 0], [-1, 0, 0]];
+
+for (let k = 0; k < h; k++) {
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      if (arr[k][i][j] === 1) {
+        queue.push([k, i, j]);
       }
     }
   }
 }
 
-// 적록색약이 아닌 사람의 구역 수를 계산
-let canResult = 0;
-for (let i = 0; i < n; i++) {
-  for (let j = 0; j < n; j++) {
-    if (!visitedCan[i][j]) { // 아직 방문하지 않은 경우
-      bfs(arr, i, j, visitedCan); // BFS 탐색
-      canResult++; // 구역 수 증가
+// bfs
+const bfs = (graph, queue) => {
+  let index = 0;
+
+  while (index < queue.length) {
+    const [z, x, y] = queue[index++];
+
+    for (const [dz, dx, dy] of dir) {
+      const nz = z + dz;
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (isValidPosition(nz, nx, ny) && graph[nz][nx][ny] === 0) {
+        graph[nz][nx][ny] = graph[z][x][y] + 1;
+        queue.push([nz, nx, ny]);
+      }
     }
   }
 }
 
-// 적록색약인 사람의 구역 수를 계산
-let cantResult = 0;
-for (let i = 0; i < n; i++) {
-  for (let j = 0; j < n; j++) {
-    if (!visitedCant[i][j]) { // 아직 방문하지 않은 경우
-      bfs(cantRedGreen, i, j, visitedCant); // BFS 탐색
-      cantResult++; // 구역 수 증가
+// 계산
+const cal = (arr) => {
+  let result = 0;
+
+  for (let k = 0; k < h; k++) {
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < m; j++) {
+        if (arr[k][i][j] === 0) {
+          return -1; // 익지 않은 토마토가 남아있는 경우
+        }
+        result = Math.max(result, arr[k][i][j]);
+      }
     }
   }
+  return result - 1; // 처음 익은 토마토가 1이었으므로 1을 빼줌
 }
 
-console.log(canResult, cantResult)
-
+bfs(arr, queue);
+console.log(cal(arr));
