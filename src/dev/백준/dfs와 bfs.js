@@ -1923,32 +1923,83 @@
 
 
 //11725-트리의 부모 찾기
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const n = +(input.shift());
+// const arr = input.map(v=>v.split(' ').map(Number));
+// let parents = Array(n+1).fill(0);
+// let graph = Array.from({length: n+1}, ()=>[]);
+
+// arr.map(([from, to])=>{
+//   graph[from].push(to)
+//   graph[to].push(from)
+// })
+
+// const bfs = (start) =>{
+//   let queue = [start];
+
+//   while(queue.length){
+//     const node = queue.shift();
+
+//     for(const next of graph[node]){
+//       if(parents[next]===0&&next!==1){
+//         parents[next]=node;
+//         queue.push(next);
+//       }
+//     }
+//   }
+// }
+
+// bfs(1);
+// console.log(parents.slice(2).join('\n'))
+
+//2468-안전영역
 const fs = require('fs');
 const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const n = +(input.shift());
-const arr = input.map(v=>v.split(' ').map(Number));
-let parents = Array(n+1).fill(0);
-let graph = Array.from({length: n+1}, ()=>[]);
+const n = +input[0];
+let arr = input.slice(1).map(v=>v.split(' ').map(Number));
 
-arr.map(([from, to])=>{
-  graph[from].push(to)
-  graph[to].push(from)
-})
+const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+const isValidPosition = (x, y) => x >= 0 && x < n && y >= 0 && y < n;
 
-const bfs = (start) =>{
-  let queue = [start];
+const bfs = (status, i, j)=>{
+  const queue = [[i, j]];
+  status[i][j]=false;
 
   while(queue.length){
-    const node = queue.shift();
+    const [x, y]=queue.shift();
 
-    for(const next of graph[node]){
-      if(parents[next]===0&&next!==1){
-        parents[next]=node;
-        queue.push(next);
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny = y+dy;
+
+      if(isValidPosition(nx, ny)&&status[nx][ny]){
+        status[nx][ny]=false;
+        queue.push([nx, ny]);
       }
     }
   }
 }
 
-bfs(1);
-console.log(parents.slice(2).join('\n'))
+let safeArea = 0;
+let maxH = Math.max(...arr.flat());
+
+for(let h=0; h<=maxH; h++){
+  let status = Array.from({length: n}, (_, i)=>arr[i].map(v=>v>h));
+
+  let count = 0;
+
+
+  for(let i=0; i<n; i++){
+    for(let j=0; j<n; j++){
+      if(status[i][j]){
+        bfs(status, i, j);
+        count++;
+      }
+    }
+  }
+
+  safeArea = Math.max(safeArea, count);
+}
+
+console.log(safeArea)
