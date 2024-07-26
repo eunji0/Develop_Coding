@@ -1954,52 +1954,99 @@
 // console.log(parents.slice(2).join('\n'))
 
 //2468-안전영역
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const n = +input[0];
+// let arr = input.slice(1).map(v=>v.split(' ').map(Number));
+
+// const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+// const isValidPosition = (x, y) => x >= 0 && x < n && y >= 0 && y < n;
+
+// const bfs = (status, i, j)=>{
+//   const queue = [[i, j]];
+//   status[i][j]=false;
+
+//   while(queue.length){
+//     const [x, y]=queue.shift();
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny = y+dy;
+
+//       if(isValidPosition(nx, ny)&&status[nx][ny]){
+//         status[nx][ny]=false;
+//         queue.push([nx, ny]);
+//       }
+//     }
+//   }
+// }
+
+// let safeArea = 0;
+// let maxH = Math.max(...arr.flat());
+
+// for(let h=0; h<=maxH; h++){
+//   let status = Array.from({length: n}, (_, i)=>arr[i].map(v=>v>h));
+
+//   let count = 0;
+
+
+//   for(let i=0; i<n; i++){
+//     for(let j=0; j<n; j++){
+//       if(status[i][j]){
+//         bfs(status, i, j);
+//         count++;
+//       }
+//     }
+//   }
+
+//   safeArea = Math.max(safeArea, count);
+// }
+
+// console.log(safeArea)
+
+//4963-섬의 개수
 const fs = require('fs');
 const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const n = +input[0];
-let arr = input.slice(1).map(v=>v.split(' ').map(Number));
+const dir = [[0, 1], [0,-1], [1,0], [-1,0], [1, 1], [1,-1], [-1,1], [-1,-1]];
+let arr, w, h, visited;
 
-const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
-const isValidPosition = (x, y) => x >= 0 && x < n && y >= 0 && y < n;
-
-const bfs = (status, i, j)=>{
-  const queue = [[i, j]];
-  status[i][j]=false;
+const bfs=(j, i)=>{
+  const queue=[[j, i]];
 
   while(queue.length){
-    const [x, y]=queue.shift();
+    const [y, x] = queue.shift();
 
     for(const [dx, dy] of dir){
       const nx = x+dx;
-      const ny = y+dy;
+      const ny= y+dy;
 
-      if(isValidPosition(nx, ny)&&status[nx][ny]){
-        status[nx][ny]=false;
-        queue.push([nx, ny]);
+      if(nx>=0&&ny>=0&&nx<w&&ny<h&&!visited[ny][nx]&&arr[ny][nx]){
+        visited[ny][nx]=true;
+        queue.push([ny, nx]);
       }
     }
   }
 }
 
-let safeArea = 0;
-let maxH = Math.max(...arr.flat());
+const mapCal = ()=>{
+  let count =0;
 
-for(let h=0; h<=maxH; h++){
-  let status = Array.from({length: n}, (_, i)=>arr[i].map(v=>v>h));
-
-  let count = 0;
-
-
-  for(let i=0; i<n; i++){
-    for(let j=0; j<n; j++){
-      if(status[i][j]){
-        bfs(status, i, j);
+  for(let i=0; i<h; i++){
+    for(let j=0; j<w; j++){
+      if(!visited[i][j]&&arr[i][j]){
+        bfs(i, j);
         count++;
       }
     }
   }
 
-  safeArea = Math.max(safeArea, count);
+  console.log(count)
 }
 
-console.log(safeArea)
+for(let i=0; i<input.length-1; i++){
+  [w, h]=input[i].split(' ').map(Number);
+  arr = input.slice(i+1, i+h+1).map(v=>v.split(' ').map(Number));
+  i+=h;
+  visited=Array.from({length: h}, ()=>Array(w).fill(false))
+  mapCal();
+}
