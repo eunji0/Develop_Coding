@@ -2005,48 +2005,110 @@
 // console.log(safeArea)
 
 //4963-섬의 개수
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const dir = [[0, 1], [0,-1], [1,0], [-1,0], [1, 1], [1,-1], [-1,1], [-1,-1]];
+// let arr, w, h, visited;
+
+// const bfs=(j, i)=>{
+//   const queue=[[j, i]];
+
+//   while(queue.length){
+//     const [y, x] = queue.shift();
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny= y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<w&&ny<h&&!visited[ny][nx]&&arr[ny][nx]){
+//         visited[ny][nx]=true;
+//         queue.push([ny, nx]);
+//       }
+//     }
+//   }
+// }
+
+// const mapCal = ()=>{
+//   let count =0;
+
+//   for(let i=0; i<h; i++){
+//     for(let j=0; j<w; j++){
+//       if(!visited[i][j]&&arr[i][j]){
+//         bfs(i, j);
+//         count++;
+//       }
+//     }
+//   }
+
+//   console.log(count)
+// }
+
+// for(let i=0; i<input.length-1; i++){
+//   [w, h]=input[i].split(' ').map(Number);
+//   arr = input.slice(i+1, i+h+1).map(v=>v.split(' ').map(Number));
+//   i+=h;
+//   visited=Array.from({length: h}, ()=>Array(w).fill(false))
+//   mapCal();
+// }
+
+//
 const fs = require('fs');
 const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const dir = [[0, 1], [0,-1], [1,0], [-1,0], [1, 1], [1,-1], [-1,1], [-1,-1]];
-let arr, w, h, visited;
+const testCase = +input[0];
+const dir = [[0,1], [0,-1], [1,0], [-1,0], [1,1], [1,-1], [-1, 1], [-1, -1]];
 
-const bfs=(j, i)=>{
-  const queue=[[j, i]];
+let arr, visited, I;
+
+let isValidPosition = (nx, ny) => nx>=0&&ny>=0&&nx<I&&ny<I;
+
+const bfs = (i, j)=>{
+  const queue = [[i, j]];
 
   while(queue.length){
-    const [y, x] = queue.shift();
+    const [x, y] = queue.shift();
 
     for(const [dx, dy] of dir){
       const nx = x+dx;
-      const ny= y+dy;
+      const ny = y+dy;
 
-      if(nx>=0&&ny>=0&&nx<w&&ny<h&&!visited[ny][nx]&&arr[ny][nx]){
-        visited[ny][nx]=true;
-        queue.push([ny, nx]);
+      if(isValidPosition(nx, ny)&&!visited[nx][ny]){
+        visited[nx][ny]=true;
+        queue.push([nx, ny]);
       }
     }
   }
 }
 
-const mapCal = ()=>{
+const moveFromTo = (now, moveTo) =>{
+  visited = Array.from({length: I}, ()=>Array(I).fill(false));
+  
   let count =0;
+  console.log(visited)
+  console.log(now, moveTo)
 
-  for(let i=0; i<h; i++){
-    for(let j=0; j<w; j++){
-      if(!visited[i][j]&&arr[i][j]){
-        bfs(i, j);
-        count++;
-      }
-    }
-  }
+  // for(let i=now[0]; i<I; i++){
+  //   for(let j=now[1]; j<I; j++){
 
-  console.log(count)
+  //     if(i===moveTo[0]&&j===moveTo[1]){
+  //       return count
+  //     }
+
+  //     if(!visited[i][j]){
+  //       bfs(i, j);
+  //       count++;
+  //     }
+  //   }
+  // }
+
+  // return count
 }
 
-for(let i=0; i<input.length-1; i++){
-  [w, h]=input[i].split(' ').map(Number);
-  arr = input.slice(i+1, i+h+1).map(v=>v.split(' ').map(Number));
-  i+=h;
-  visited=Array.from({length: h}, ()=>Array(w).fill(false))
-  mapCal();
+for(let i=1; i<input.length; i+=3){
+  I = +input[i];
+  arr = input.slice(i+1, i+3).map(v=>v.split(' ').map(Number));
+  let now = arr[0];
+  let moveTo  = arr[1];
+
+  moveFromTo(now, moveTo)
 }
+
