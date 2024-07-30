@@ -2051,64 +2051,115 @@
 //   mapCal();
 // }
 
-//
-const fs = require('fs');
-const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const testCase = +input[0];
-const dir = [[0,1], [0,-1], [1,0], [-1,0], [1,1], [1,-1], [-1, 1], [-1, -1]];
+//7562-나이트의 이동
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const testCase = +input[0];
+// const dir = [[0,1], [0,-1], [1,0], [-1,0], [1,1], [1,-1], [-1, 1], [-1, -1]];
 
-let arr, visited, I;
+// let arr, visited, I;
 
-let isValidPosition = (nx, ny) => nx>=0&&ny>=0&&nx<I&&ny<I;
+// let isValidPosition = (nx, ny) => nx>=0&&ny>=0&&nx<I&&ny<I;
 
-const bfs = (i, j)=>{
-  const queue = [[i, j]];
+// const bfs = (i, j)=>{
+//   const queue = [[i, j]];
 
-  while(queue.length){
-    const [x, y] = queue.shift();
+//   while(queue.length){
+//     const [x, y] = queue.shift();
 
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny = y+dy;
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny = y+dy;
 
-      if(isValidPosition(nx, ny)&&!visited[nx][ny]){
-        visited[nx][ny]=true;
-        queue.push([nx, ny]);
-      }
-    }
+//       if(isValidPosition(nx, ny)&&!visited[nx][ny]){
+//         visited[nx][ny]=true;
+//         queue.push([nx, ny]);
+//       }
+//     }
+//   }
+// }
+
+// const moveFromTo = (now, moveTo) =>{
+//   visited = Array.from({length: I}, ()=>Array(I).fill(false));
+  
+//   let count =0;
+//   console.log(visited)
+//   console.log(now, moveTo)
+
+//   // for(let i=now[0]; i<I; i++){
+//   //   for(let j=now[1]; j<I; j++){
+
+//   //     if(i===moveTo[0]&&j===moveTo[1]){
+//   //       return count
+//   //     }
+
+//   //     if(!visited[i][j]){
+//   //       bfs(i, j);
+//   //       count++;
+//   //     }
+//   //   }
+//   // }
+
+//   // return count
+// }
+
+// for(let i=1; i<input.length; i+=3){
+//   I = +input[i];
+//   arr = input.slice(i+1, i+3).map(v=>v.split(' ').map(Number));
+//   let now = arr[0];
+//   let moveTo  = arr[1];
+
+//   moveFromTo(now, moveTo)
+// }
+
+
+//2206-벽 부수고 이동하기
+let fs = require("fs");
+let input = fs.readFileSync("/dev/stdin").toString().trim().split("\n");
+
+let [N, M] = input[0].split(" ").map(Number);
+input = input.slice(1).map((v) => v.split("").map(Number));
+const ch = Array.from(new Array(N), () => new Array());
+const dx = [1, 0, -1, 0];
+const dy = [0, 1, 0, -1];
+const queue = [];
+
+for (let i = 0; i < N; i++) {
+  for (let j = 0; j < M; j++) {
+    ch[i][j] = new Array(2).fill(0);
   }
 }
 
-const moveFromTo = (now, moveTo) =>{
-  visited = Array.from({length: I}, ()=>Array(I).fill(false));
-  
-  let count =0;
-  console.log(visited)
-  console.log(now, moveTo)
+queue.push([0, 0, 0]);
+ch[0][0][0] = 1;
 
-  // for(let i=now[0]; i<I; i++){
-  //   for(let j=now[1]; j<I; j++){
+function BFS() {
+  let idx = 0;
 
-  //     if(i===moveTo[0]&&j===moveTo[1]){
-  //       return count
-  //     }
+  while (idx !== queue.length) {
+    const [y, x, isBreak] = queue[idx];
 
-  //     if(!visited[i][j]){
-  //       bfs(i, j);
-  //       count++;
-  //     }
-  //   }
-  // }
+    if (x === M - 1 && y === N - 1) {
+      return ch[y][x][isBreak];
+    }
 
-  // return count
+    for (let i = 0; i < dx.length; i++) {
+      const [nx, ny] = [x + dx[i], y + dy[i]];
+
+      if (nx >= 0 && nx < M && ny >= 0 && ny < N) {
+        if (input[ny][nx] === 0 && ch[ny][nx][isBreak] === 0) {
+          ch[ny][nx][isBreak] = ch[y][x][isBreak] + 1;
+          queue.push([ny, nx, isBreak]);
+        } else if (input[ny][nx] === 1 && isBreak === 0) {
+          ch[ny][nx][isBreak + 1] = ch[y][x][isBreak] + 1;
+          queue.push([ny, nx, isBreak + 1]);
+        }
+      }
+    }
+    idx++;
+  }
+
+  return -1;
 }
 
-for(let i=1; i<input.length; i+=3){
-  I = +input[i];
-  arr = input.slice(i+1, i+3).map(v=>v.split(' ').map(Number));
-  let now = arr[0];
-  let moveTo  = arr[1];
-
-  moveFromTo(now, moveTo)
-}
-
+console.log(BFS());
