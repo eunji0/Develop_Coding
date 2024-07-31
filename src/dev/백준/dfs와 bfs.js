@@ -2114,52 +2114,110 @@
 
 
 //2206-벽 부수고 이동하기
-let fs = require("fs");
-let input = fs.readFileSync("/dev/stdin").toString().trim().split("\n");
+// let fs = require("fs");
+// let input = fs.readFileSync("/dev/stdin").toString().trim().split("\n");
 
-let [N, M] = input[0].split(" ").map(Number);
-input = input.slice(1).map((v) => v.split("").map(Number));
-const ch = Array.from(new Array(N), () => new Array());
-const dx = [1, 0, -1, 0];
-const dy = [0, 1, 0, -1];
-const queue = [];
+// let [N, M] = input[0].split(" ").map(Number);
+// input = input.slice(1).map((v) => v.split("").map(Number));
+// const ch = Array.from(new Array(N), () => new Array());
+// const dx = [1, 0, -1, 0];
+// const dy = [0, 1, 0, -1];
+// const queue = [];
 
-for (let i = 0; i < N; i++) {
-  for (let j = 0; j < M; j++) {
-    ch[i][j] = new Array(2).fill(0);
+// for (let i = 0; i < N; i++) {
+//   for (let j = 0; j < M; j++) {
+//     ch[i][j] = new Array(2).fill(0);
+//   }
+// }
+
+// queue.push([0, 0, 0]);
+// ch[0][0][0] = 1;
+
+// function BFS() {
+//   let idx = 0;
+
+//   while (idx !== queue.length) {
+//     const [y, x, isBreak] = queue[idx];
+
+//     if (x === M - 1 && y === N - 1) {
+//       return ch[y][x][isBreak];
+//     }
+
+//     for (let i = 0; i < dx.length; i++) {
+//       const [nx, ny] = [x + dx[i], y + dy[i]];
+
+//       if (nx >= 0 && nx < M && ny >= 0 && ny < N) {
+//         if (input[ny][nx] === 0 && ch[ny][nx][isBreak] === 0) {
+//           ch[ny][nx][isBreak] = ch[y][x][isBreak] + 1;
+//           queue.push([ny, nx, isBreak]);
+//         } else if (input[ny][nx] === 1 && isBreak === 0) {
+//           ch[ny][nx][isBreak + 1] = ch[y][x][isBreak] + 1;
+//           queue.push([ny, nx, isBreak + 1]);
+//         }
+//       }
+//     }
+//     idx++;
+//   }
+
+//   return -1;
+// }
+
+// console.log(BFS());
+
+//2583-영역 구하기
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+const [yLen, xLen, K] = input.shift().split(' ').map(Number);
+const graph = Array.from(Array(yLen), () => Array(xLen).fill(0));
+let answer = [];
+
+// 입력값 그래프로 정제하는 반복문
+for (let i = 0; i < K; i++) {
+
+  // 직사각형의 왼쪽 아래 꼭짓점 좌표 = (x1, y1), 오른쪽 위 꼭짓점 좌표 = (x2, y2)
+  const [x1, y1, x2, y2] = input[i].split(' ').map(Number);
+	
+  // 꼭짓점 좌표 기준으로 직사각형 영역엔 1로, 빈 영역은 0으로 채워진 그래프 만들기 
+  for (let y = yLen - y2; y < yLen - y1; y++) {
+    for (let x = x1; x < x2; x++) {
+      graph[y][x] = 1;
+    }
   }
 }
 
-queue.push([0, 0, 0]);
-ch[0][0][0] = 1;
+// BFS
+const bfs = (start) => {
+  const ds = [[-1, 0], [1, 0], [0, 1], [0, -1]]; // 현재 위치에서 인접한 좌표(좌우상하)
+  const queue = [start];
+  let cnt = 0; // 영역의 개수 카운트할 변수
 
-function BFS() {
-  let idx = 0;
+  while (queue.length) {
+    const [cy, cx] = queue.shift();
+    cnt++;
+		
+	// 현재 위치 기준 인접한 영역 탐색하기 위한 반복문
+    for (let i = 0; i < 4; i++) {
+      const ny = cy + ds[i][1];
+      const nx = cx + ds[i][0];
 
-  while (idx !== queue.length) {
-    const [y, x, isBreak] = queue[idx];
-
-    if (x === M - 1 && y === N - 1) {
-      return ch[y][x][isBreak];
-    }
-
-    for (let i = 0; i < dx.length; i++) {
-      const [nx, ny] = [x + dx[i], y + dy[i]];
-
-      if (nx >= 0 && nx < M && ny >= 0 && ny < N) {
-        if (input[ny][nx] === 0 && ch[ny][nx][isBreak] === 0) {
-          ch[ny][nx][isBreak] = ch[y][x][isBreak] + 1;
-          queue.push([ny, nx, isBreak]);
-        } else if (input[ny][nx] === 1 && isBreak === 0) {
-          ch[ny][nx][isBreak + 1] = ch[y][x][isBreak] + 1;
-          queue.push([ny, nx, isBreak + 1]);
-        }
+	  // 해당 위치가 그래프를 벗어나지 않았고, 빈 영역(0)이라면, 그래프 방문 처리하고 큐에 담기
+      if (ny >= 0 && ny < yLen && nx >= 0 && nx < xLen && !graph[ny][nx]) {
+        graph[ny][nx] = 1;
+        queue.push([ny, nx]);
       }
     }
-    idx++;
   }
+  return cnt;
+};
 
-  return -1;
+for (let i = 0; i < yLen; i++) {
+  for (let j = 0; j < xLen; j++) {
+	// 비어있는 영역(방문하지 않은 그래프)이라면
+    if (!graph[i][j]) {
+      graph[i][j] = 1; // 방문 처리
+      answer.push(bfs([i, j])); // bfs를 실행하여 영역의 개수를 배열에 담기
+    }
+  }
 }
-
-console.log(BFS());
+console.log(answer.length);
+console.log(answer.sort((a, b) => a - b).join(' '));
