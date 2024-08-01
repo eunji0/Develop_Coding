@@ -2052,47 +2052,89 @@
 // }
 
 //7562-나이트의 이동
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const c = +(input.shift());
+// const dir = [[2, 1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [-1, -2], [1, -2], [2, -1]];
+
+// const bfs = (h, start, goal)=>{
+//   const [startX, startY] = start;
+//   const [goalX, goalY] = goal;
+  
+//   const queue = [[startX, startY]];
+
+//   const visited = Array.from({length: h}, ()=>Array(h).fill(false));
+//   const dis = Array.from({length: h}, ()=>Array(h).fill(0));
+
+//   visited[startX][startY] = true;
+
+//   while(queue.length){
+//     const [x, y] = queue.shift();
+
+//     if(x === goalX&&y===goalY){
+//       return dis[x][y]
+//     }
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny = y+dy;
+
+//       if (nx >= 0 && ny >= 0 && nx < h && ny < h && !visited[nx][ny]){
+//         visited[nx][ny] = true;
+//         dis[nx][ny] = dis[x][y]+1;
+//         queue.push([nx, ny])
+//       } 
+//     }
+//   }
+
+//   return -1;
+// }
+
+// for(let i=0; i<input.length; i+=3){
+//   let h = +input[i];
+//   let map = input.slice(i+1, i+3).map(v=>v.split(' ').map(Number))
+
+//   console.log(bfs(h, map[0], map[1]));
+// }
+
+//2206-벽 부수고 이동하기
 const fs = require('fs');
 const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const c = +(input.shift());
-const dir = [[2, 1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [-1, -2], [1, -2], [2, -1]];
+const [n, m] = input[0].split(' ').map(Number);
+const arr = input.slice(1).map(v => v.split('').map(Number));
+const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
-const bfs = (h, start, goal)=>{
-  const [startX, startY] = start;
-  const [goalX, goalY] = goal;
-  
-  const queue = [[startX, startY]];
+const bfs = () => {
+    const queue = [[0, 0, 0]]; // [x, y, 벽을 부순 상태(0 또는 1)]
+    const visited = Array.from({ length: n }, () => Array.from({ length: m }, () => Array(2).fill(false)));
+    visited[0][0][0] = true;
+    let steps = 1;
 
-  const visited = Array.from({length: h}, ()=>Array(h).fill(false));
-  const dis = Array.from({length: h}, ()=>Array(h).fill(0));
-
-  visited[startX][startY] = true;
-
-  while(queue.length){
-    const [x, y] = queue.shift();
-
-    if(x === goalX&&y===goalY){
-      return dis[x][y]
+    while (queue.length) {
+        let size = queue.length;
+        while (size--) {
+            const [x, y, broken] = queue.shift();
+            if (x === n - 1 && y === m - 1) {
+                return steps;
+            }
+            for (const [dx, dy] of dir) {
+                const nx = x + dx;
+                const ny = y + dy;
+                if (nx >= 0 && ny >= 0 && nx < n && ny < m) {
+                    if (arr[nx][ny] === 0 && !visited[nx][ny][broken]) {
+                        visited[nx][ny][broken] = true;
+                        queue.push([nx, ny, broken]);
+                    }
+                    if (arr[nx][ny] === 1 && broken === 0 && !visited[nx][ny][1]) {
+                        visited[nx][ny][1] = true;
+                        queue.push([nx, ny, 1]);
+                    }
+                }
+            }
+        }
+        steps++;
     }
+    return -1;
+};
 
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny = y+dy;
-
-      if (nx >= 0 && ny >= 0 && nx < h && ny < h && !visited[nx][ny]){
-        visited[nx][ny] = true;
-        dis[nx][ny] = dis[x][y]+1;
-        queue.push([nx, ny])
-      } 
-    }
-  }
-
-  return -1;
-}
-
-for(let i=0; i<input.length; i+=3){
-  let h = +input[i];
-  let map = input.slice(i+1, i+3).map(v=>v.split(' ').map(Number))
-
-  console.log(bfs(h, map[0], map[1]));
-}
+console.log(bfs());
