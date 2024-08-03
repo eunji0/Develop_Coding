@@ -2104,16 +2104,45 @@ const [n, m] = input[0].split(' ').map(Number);
 const arr = input.slice(1).map(v => v.split('').map(Number));
 const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
+class Queue{
+    constructor(){
+        this.items = {};
+        this.head = 0;
+        this.tail=0
+    }
+
+    enqueue(element){
+        this.items[this.tail]=element;
+        this.tail++
+    }
+
+    dequeue(element){
+        let item = this.items[this.head];
+        delete this.items[this.head];
+        this.head++
+        return item
+    }
+
+    isEmpty(){
+        return this.head===this.tail
+    }
+
+    size(){
+        return this.tail-this.head
+    }
+}
+
 const bfs = () => {
-    const queue = [[0, 0, 0]]; // [x, y, 벽을 부순 상태(0 또는 1)]
+    const queue = new Queue();
+    queue.enqueue([0, 0, 0]); // [x, y, 벽을 부순 상태(0 또는 1)]
     const visited = Array.from({ length: n }, () => Array.from({ length: m }, () => Array(2).fill(false)));
     visited[0][0][0] = true;
     let steps = 1;
 
-    while (queue.length) {
-        let size = queue.length;
+    while (queue.size()) {
+        let size = queue.size();
         while (size--) {
-            const [x, y, broken] = queue.shift();
+            const [x, y, broken] = queue.dequeue();
             if (x === n - 1 && y === m - 1) {
                 return steps;
             }
@@ -2123,11 +2152,11 @@ const bfs = () => {
                 if (nx >= 0 && ny >= 0 && nx < n && ny < m) {
                     if (arr[nx][ny] === 0 && !visited[nx][ny][broken]) {
                         visited[nx][ny][broken] = true;
-                        queue.push([nx, ny, broken]);
+                        queue.enqueue([nx, ny, broken]);
                     }
                     if (arr[nx][ny] === 1 && broken === 0 && !visited[nx][ny][1]) {
                         visited[nx][ny][1] = true;
-                        queue.push([nx, ny, 1]);
+                        queue.enqueue([nx, ny, 1]);
                     }
                 }
             }
