@@ -2183,55 +2183,93 @@
 // console.log(bfs());
 
 //2583-영역 구하기
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [m, n, k] = input.shift().split(' ').map(Number);
+// let arr = Array.from({ length: m }, () => Array(n).fill(0));
+// let visited = Array.from({ length: m }, () => Array(n).fill(false));
+// const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+
+// input.forEach(v=>{
+//     let [x1, y1, x2, y2] = v.split(' ').map(Number);
+
+//     for(let i=x1; i<x2; i++){
+//         for(let j=y1; j<y2; j++){
+//             arr[j][i] = 1;
+//         }
+//     }
+// })
+
+// const bfs=(i, j)=>{
+//     const queue=[[i, j]];
+//     let area=0;
+//     visited[i][j]=true
+
+//     while(queue.length){
+//         const [x, y] = queue.shift();
+//         area++;
+
+//         for(const [dx, dy] of dir){
+//             const nx = x+dx;
+//             const ny = y+dy;
+
+//             if(nx>=0&&ny>=0&&nx<m&&ny<n&&!visited[nx][ny]&&!arr[nx][ny]){
+//                 visited[nx][ny]=true;
+//                 queue.push([nx, ny])
+//             }
+//         }
+//     }
+
+//     return area
+// }
+
+// let areas = [];
+
+// for(let i=0; i<m; i++){
+//     for(let j=0; j<n; j++){
+//         if(!visited[i][j]&&!arr[i][j]){
+//             areas.push(bfs(i, j))
+//         }
+//     }
+// }
+
+// console.log(areas.length);
+// console.log(areas.sort((a, b)=>a-b).join(' '))
+
+//2655-촌수계산
 const fs = require('fs');
-const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [m, n, k] = input.shift().split(' ').map(Number);
-let arr = Array.from({ length: m }, () => Array(n).fill(0));
-let visited = Array.from({ length: m }, () => Array(n).fill(false));
-const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+const n = parseInt(input.shift()); // 사람의 수
+const [a, b] = input.shift().split(' ').map(Number); // 촌수를 계산해야 하는 두 사람
+const m = parseInt(input.shift()); // 부모 자식 관계의 개수
+const relations = input.map(v => v.split(' ').map(Number));
 
-input.forEach(v=>{
-    let [x1, y1, x2, y2] = v.split(' ').map(Number);
+let graph = Array.from({length: n+1}, ()=>[]);
 
-    for(let i=x1; i<x2; i++){
-        for(let j=y1; j<y2; j++){
-            arr[j][i] = 1;
-        }
-    }
+relations.map(([from, to])=>{
+    graph[from].push(to);
+    graph[to].push(from);
 })
 
-const bfs=(i, j)=>{
-    const queue=[[i, j]];
-    let area=0;
-    visited[i][j]=true
+const bfs = (start, target) =>{
+    const queue =[[start, 0]];
+    let visited = Array(n+1).fill(false);
+    visited[start] = true;
 
     while(queue.length){
-        const [x, y] = queue.shift();
-        area++;
+        const [cur, dep] = queue.shift();
 
-        for(const [dx, dy] of dir){
-            const nx = x+dx;
-            const ny = y+dy;
+        if(cur===target) return dep
 
-            if(nx>=0&&ny>=0&&nx<m&&ny<n&&!visited[nx][ny]&&!arr[nx][ny]){
-                visited[nx][ny]=true;
-                queue.push([nx, ny])
+        for(const node of graph[cur]){
+            if(!visited[node]){
+                visited[node]=true;
+                queue.push([node, dep+1])
             }
         }
     }
 
-    return area
+    return -1;
 }
 
-let areas = [];
-
-for(let i=0; i<m; i++){
-    for(let j=0; j<n; j++){
-        if(!visited[i][j]&&!arr[i][j]){
-            areas.push(bfs(i, j))
-        }
-    }
-}
-
-console.log(areas.length);
-console.log(areas.sort((a, b)=>a-b).join(' '))
+console.log(bfs(a, b))
