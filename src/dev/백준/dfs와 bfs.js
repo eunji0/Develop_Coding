@@ -2237,39 +2237,122 @@
 // console.log(areas.sort((a, b)=>a-b).join(' '))
 
 //2655-촌수계산
+// const fs = require('fs');
+// let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const n = parseInt(input.shift()); // 사람의 수
+// const [a, b] = input.shift().split(' ').map(Number); // 촌수를 계산해야 하는 두 사람
+// const m = parseInt(input.shift()); // 부모 자식 관계의 개수
+// const relations = input.map(v => v.split(' ').map(Number));
+
+// let graph = Array.from({length: n+1}, ()=>[]);
+
+// relations.map(([from, to])=>{
+//     graph[from].push(to);
+//     graph[to].push(from);
+// })
+
+// const bfs = (start, target) =>{
+//     const queue =[[start, 0]];
+//     let visited = Array(n+1).fill(false);
+//     visited[start] = true;
+
+//     while(queue.length){
+//         const [cur, dep] = queue.shift();
+
+//         if(cur===target) return dep
+
+//         for(const node of graph[cur]){
+//             if(!visited[node]){
+//                 visited[node]=true;
+//                 queue.push([node, dep+1])
+//             }
+//         }
+//     }
+
+//     return -1;
+// }
+
+// console.log(bfs(a, b))
+
+//16236-아기 상어
 const fs = require('fs');
 let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const n = parseInt(input.shift()); // 사람의 수
-const [a, b] = input.shift().split(' ').map(Number); // 촌수를 계산해야 하는 두 사람
-const m = parseInt(input.shift()); // 부모 자식 관계의 개수
-const relations = input.map(v => v.split(' ').map(Number));
+const N = parseInt(input[0]);
+const space = input.slice(1).map(line => line.split(' ').map(Number));
+const directions = [
+    [-1, 0], // 위
+    [1, 0],  // 아래
+    [0, -1], // 왼쪽
+    [0, 1],  // 오른쪽
+];
 
-let graph = Array.from({length: n+1}, ()=>[]);
+let shark = {size:2, x:0, y:0, eaten:0};
 
-relations.map(([from, to])=>{
-    graph[from].push(to);
-    graph[to].push(from);
-})
+for(let i=0; i<N; i++){
+    for(let j=0; j<N; j++){
+        if(space[i][j]===9){
+            shark.x=i;
+            shark.y=j;
+            space[i][j]=0
+        }
+    }
+}
 
-const bfs = (start, target) =>{
-    const queue =[[start, 0]];
-    let visited = Array(n+1).fill(false);
-    visited[start] = true;
+const bfs= (startx, starty, size) => {
+    const queue = [[startx, starty, 0]];
+    const visited = Array.from({length: N}, ()=>Array(N).fill(false));
+    visited[startx][starty]=true;
+    let edi=[];
 
     while(queue.length){
-        const [cur, dep] = queue.shift();
+        const [x, y, dis] = queue.shift();
 
-        if(cur===target) return dep
+        for(const [dx, dy] of directions){
+            const nx = x+dx;
+            const ny= y+dy;
 
-        for(const node of graph[cur]){
-            if(!visited[node]){
-                visited[node]=true;
-                queue.push([node, dep+1])
+            if(nx>=0&&ny>=0&&nx<N&&ny<N&&!visited[nx][ny]&&space[nx][ny]<=size){
+                visited[nx][ny]=true;
+                if(space[nx][ny]>0&&space[nx][ny]<size){
+                    edi.push([nx, ny, dis+1])
+                }else{
+                    queue.push([nx, ny, dis+1])
+                }
             }
         }
     }
 
-    return -1;
+    if(edi.length){
+        edi.sort((a, b)=>{
+            if(a[2]===b[2]){
+                if(a[0]===b[0]) return a[1]-b[1]
+                return a[0]-b[0]
+            }
+            return a[2]-b[2]
+        })
+        return edi[0]
+    }
+
+    return null
 }
 
-console.log(bfs(a, b))
+let total = 0;
+while(true){
+    const fish = bfs(shark.x, shark.y, shark.size);
+    if(!fish) break;
+
+    const [fx, fy, dis] = fish;
+    total+=dis
+    shark.x = fx;
+    shark.y = fy;
+    shark.eaten++;
+
+    if(shark.eaten===shark.size){
+        shark.size++;
+        shark.eaten=0
+    }
+
+    space[fx][fy]=0
+}
+
+console.log(total)
