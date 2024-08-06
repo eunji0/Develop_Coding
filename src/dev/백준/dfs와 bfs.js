@@ -2489,45 +2489,101 @@
 // console.log(bfs(1))
 
 //2667-단지번호붙이기
-const fs = require('fs');
-let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const n = +input[0];
-const arr = input.slice(1).map(v=>v.split('').map(Number));
-let visited =Array.from({length: n+1}, ()=>Array(n+1).fill(false));
-const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+// const fs = require('fs');
+// let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const n = +input[0];
+// const arr = input.slice(1).map(v=>v.split('').map(Number));
+// let visited =Array.from({length: n+1}, ()=>Array(n+1).fill(false));
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
-const bfs = (i, j)=>{
-    const queue =[[i, j]];
-    visited[i][j]=true;
-    let count=0;
+// const bfs = (i, j)=>{
+//     const queue =[[i, j]];
+//     visited[i][j]=true;
+//     let count=0;
 
-    while(queue.length){
-        const [x, y] = queue.shift();
-        count++
+//     while(queue.length){
+//         const [x, y] = queue.shift();
+//         count++
 
-        for(const [dx, dy] of dir){
-            const nx = x+dx;
-            const ny = y+dy;
+//         for(const [dx, dy] of dir){
+//             const nx = x+dx;
+//             const ny = y+dy;
 
-            if(nx>=0&&ny>=0&&nx<n&&ny<n&&!visited[nx][ny]&&arr[nx][ny]===1){
-                visited[nx][ny]=true;
-                queue.push([nx, ny])
-            }
-        }
+//             if(nx>=0&&ny>=0&&nx<n&&ny<n&&!visited[nx][ny]&&arr[nx][ny]===1){
+//                 visited[nx][ny]=true;
+//                 queue.push([nx, ny])
+//             }
+//         }
+//     }
+
+//     return count
+// }
+
+// let result=[]
+
+// for(let i=0; i<n; i++){
+//     for(let j=0; j<n; j++){
+//         if(!visited[i][j]&&arr[i][j]){
+//             result.push(bfs(i, j))
+//         }
+//     }
+// }
+
+// console.log(result.length)
+// console.log(result.sort((a, b)=>a-b).join('\n'))
+
+//1012-유기농 배추
+const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+const t = +input[0];
+let index=1;
+const dir = [[0,1], [0,-1], [1,0], [-1,0]]
+let n, m, k, graph;
+
+const bfs = (graph, i, j) => {
+  const queue = [[i, j]];
+  let count =0;
+
+  while(queue.length){
+    const [x, y] = queue.shift();
+
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny = y+dy;
+
+      if(nx>=0&&ny>=0&&nx<n&&ny<m&&graph[nx][ny]){
+        graph[nx][ny]=0;
+        queue.push([nx, ny]);
+        count++;
+        
+      }
     }
+  }
 
-    return count
+  return count;
 }
 
-let result=[]
+for(let i=0; i<t; i++){
+  [n, m, k]=input[index].split(' ').map(Number);
+  const arr = input.slice(index+1, index+1+k).map(v=>v.split(' ').map(Number));
 
-for(let i=0; i<n; i++){
-    for(let j=0; j<n; j++){
-        if(!visited[i][j]&&arr[i][j]){
-            result.push(bfs(i, j))
-        }
+  const graph = Array.from({length: n}, ()=>Array(m).fill(0));
+
+  arr.map(([x, y])=>{
+    graph[x][y]=1
+  })
+
+
+  let result = [];
+  for(let i=0; i<n; i++){
+    for(let j=0; j<m; j++){
+      if(graph[i][j]){
+        result.push(bfs(graph, i, j))
+      }
     }
-}
+  }
 
-console.log(result.length)
-console.log(result.sort((a, b)=>a-b).join('\n'))
+  console.log(result.length)
+
+  index++;
+  index+=k
+}
