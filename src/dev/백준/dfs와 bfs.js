@@ -2275,84 +2275,147 @@
 // console.log(bfs(a, b))
 
 //16236-아기 상어
+// const fs = require('fs');
+// let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const N = parseInt(input[0]);
+// const space = input.slice(1).map(line => line.split(' ').map(Number));
+// const directions = [
+//     [-1, 0], // 위
+//     [1, 0],  // 아래
+//     [0, -1], // 왼쪽
+//     [0, 1],  // 오른쪽
+// ];
+
+// let shark = {size:2, x:0, y:0, eaten:0};
+
+// for(let i=0; i<N; i++){
+//     for(let j=0; j<N; j++){
+//         if(space[i][j]===9){
+//             shark.x=i;
+//             shark.y=j;
+//             space[i][j]=0
+//         }
+//     }
+// }
+
+// const bfs= (startx, starty, size) => {
+//     const queue = [[startx, starty, 0]];
+//     const visited = Array.from({length: N}, ()=>Array(N).fill(false));
+//     visited[startx][starty]=true;
+//     let edi=[];
+
+//     while(queue.length){
+//         const [x, y, dis] = queue.shift();
+
+//         for(const [dx, dy] of directions){
+//             const nx = x+dx;
+//             const ny= y+dy;
+
+//             if(nx>=0&&ny>=0&&nx<N&&ny<N&&!visited[nx][ny]&&space[nx][ny]<=size){
+//                 visited[nx][ny]=true;
+//                 if(space[nx][ny]>0&&space[nx][ny]<size){
+//                     edi.push([nx, ny, dis+1])
+//                 }else{
+//                     queue.push([nx, ny, dis+1])
+//                 }
+//             }
+//         }
+//     }
+
+//     if(edi.length){
+//         edi.sort((a, b)=>{
+//             if(a[2]===b[2]){
+//                 if(a[0]===b[0]) return a[1]-b[1]
+//                 return a[0]-b[0]
+//             }
+//             return a[2]-b[2]
+//         })
+//         return edi[0]
+//     }
+
+//     return null
+// }
+
+// let total = 0;
+// while(true){
+//     const fish = bfs(shark.x, shark.y, shark.size);
+//     if(!fish) break;
+
+//     const [fx, fy, dis] = fish;
+//     total+=dis
+//     shark.x = fx;
+//     shark.y = fy;
+//     shark.eaten++;
+
+//     if(shark.eaten===shark.size){
+//         shark.size++;
+//         shark.eaten=0
+//     }
+
+//     space[fx][fy]=0
+// }
+
+// console.log(total)
+
+//1260-dfs와 bfs
 const fs = require('fs');
 let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const N = parseInt(input[0]);
-const space = input.slice(1).map(line => line.split(' ').map(Number));
-const directions = [
-    [-1, 0], // 위
-    [1, 0],  // 아래
-    [0, -1], // 왼쪽
-    [0, 1],  // 오른쪽
-];
+const [n, m, v] = input[0].split(' ').map(Number);
+const arr = input.slice(1).map(v=>v.split(' ').map(Number));
+let graph = Array.from({length: n+1}, ()=>[]);
+let visited = Array(n+1).fill(false)
 
-let shark = {size:2, x:0, y:0, eaten:0};
+arr.map(([from, to])=>{
+    graph[from].push(to);
+    graph[to].push(from)
+});
 
-for(let i=0; i<N; i++){
-    for(let j=0; j<N; j++){
-        if(space[i][j]===9){
-            shark.x=i;
-            shark.y=j;
-            space[i][j]=0
-        }
-    }
+for(let i=1; i<=n; i++){
+    graph[i].sort((a, b)=>a-b)
 }
 
-const bfs= (startx, starty, size) => {
-    const queue = [[startx, starty, 0]];
-    const visited = Array.from({length: N}, ()=>Array(N).fill(false));
-    visited[startx][starty]=true;
-    let edi=[];
+const bfs = (start) =>{
+    const queue=[start];
+    let visited = Array(n).fill(false);
+    visited[start]=true;
+    let result= [];
 
     while(queue.length){
-        const [x, y, dis] = queue.shift();
+        const node= queue.shift();
+        result.push(node);
 
-        for(const [dx, dy] of directions){
-            const nx = x+dx;
-            const ny= y+dy;
-
-            if(nx>=0&&ny>=0&&nx<N&&ny<N&&!visited[nx][ny]&&space[nx][ny]<=size){
-                visited[nx][ny]=true;
-                if(space[nx][ny]>0&&space[nx][ny]<size){
-                    edi.push([nx, ny, dis+1])
-                }else{
-                    queue.push([nx, ny, dis+1])
-                }
+        for(const n of graph[node]){
+            if(!visited[n]){
+                visited[n]=true;
+                queue.push(n)
             }
         }
     }
+    return result
+}
 
-    if(edi.length){
-        edi.sort((a, b)=>{
-            if(a[2]===b[2]){
-                if(a[0]===b[0]) return a[1]-b[1]
-                return a[0]-b[0]
+const dfs = (start) => {
+    let result = [];
+    let visited = Array(n).fill(false);
+    let stack = [start];
+
+    while(stack.length){
+        const node = stack.pop();
+
+        if(visited[node]) continue
+        visited[node]=true;
+        result.push(node)
+
+        graph[node].sort((a, b)=>b-a).forEach(v=>{
+            if(!visited[v]){
+                stack.push(v)
             }
-            return a[2]-b[2]
         })
-        return edi[0]
     }
 
-    return null
-}
+    return result
+};
 
-let total = 0;
-while(true){
-    const fish = bfs(shark.x, shark.y, shark.size);
-    if(!fish) break;
 
-    const [fx, fy, dis] = fish;
-    total+=dis
-    shark.x = fx;
-    shark.y = fy;
-    shark.eaten++;
-
-    if(shark.eaten===shark.size){
-        shark.size++;
-        shark.eaten=0
-    }
-
-    space[fx][fy]=0
-}
-
-console.log(total)
+console.log(dfs(v).join(' '))
+console.log(bfs(v).join(' '))
