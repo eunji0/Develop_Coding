@@ -2358,64 +2358,176 @@
 // console.log(total)
 
 //1260-dfs와 bfs
+// const fs = require('fs');
+// let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [n, m, v] = input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(v=>v.split(' ').map(Number));
+// let graph = Array.from({length: n+1}, ()=>[]);
+// let visited = Array(n+1).fill(false)
+
+// arr.map(([from, to])=>{
+//     graph[from].push(to);
+//     graph[to].push(from)
+// });
+
+// for(let i=1; i<=n; i++){
+//     graph[i].sort((a, b)=>a-b)
+// }
+
+// const bfs = (start) =>{
+//     const queue=[start];
+//     let visited = Array(n).fill(false);
+//     visited[start]=true;
+//     let result= [];
+
+//     while(queue.length){
+//         const node= queue.shift();
+//         result.push(node);
+
+//         for(const n of graph[node]){
+//             if(!visited[n]){
+//                 visited[n]=true;
+//                 queue.push(n)
+//             }
+//         }
+//     }
+//     return result
+// }
+
+// const dfs = (start) => {
+//     let result = [];
+//     let visited = Array(n).fill(false);
+//     let stack = [start];
+
+//     while(stack.length){
+//         const node = stack.pop();
+
+//         if(visited[node]) continue
+//         visited[node]=true;
+//         result.push(node)
+
+//         graph[node].sort((a, b)=>b-a).forEach(v=>{
+//             if(!visited[v]){
+//                 stack.push(v)
+//             }
+//         })
+//     }
+
+//     return result
+// };
+
+
+// console.log(dfs(v).join(' '))
+// console.log(bfs(v).join(' '))
+
+//2178-미로탐색
+// const fs = require('fs');
+// let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(v=>v.split('').map(Number));
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+
+// const bfs = (startx, starty) =>{
+//     const queue=[[startx, starty]];
+//     let distance = Array.from({length:n}, ()=>Array(m).fill(0));
+//     distance[startx][starty]=1;
+
+//     while(queue.length){
+//         const [x, y] = queue.shift();
+
+//         for(const [dx, dy] of dir){
+//             const nx = x+dx;
+//             const ny = y+dy;
+
+//             if(nx>=0&&ny>=0&&nx<n&&ny<m&&arr[nx][ny]){
+//                 arr[nx][ny]=0;
+//                 distance[nx][ny]=distance[x][y]+1
+//                 queue.push([nx, ny])
+//             }
+//         }
+//     }
+
+//     return distance[n-1][m-1]
+// }
+
+// console.log(bfs(0, 0))
+
+//2606-바이러스
+// const fs = require('fs');
+// let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const n = +input[0];
+// const m = +input[1];
+// const arr = input.slice(2).map(v=>v.split(' ').map(Number));
+// let graph = Array.from({length:n+1}, ()=>[]);
+
+// arr.map(([from, to])=>{
+//     graph[from].push(to);;
+//     graph[to].push(from)
+// })
+
+// const bfs = (start) =>{
+//     const queue =[start];
+//     let visited = Array(n+1).fill(false);
+//     visited[start] = true;
+//     let count =0;
+
+//     while(queue.length){
+//         const node = queue.shift();
+
+//         for(const n of graph[node]){
+//             if(!visited[n]){
+//                 visited[n]=true;
+//                 count++;
+//                 queue.push(n)
+//             }
+//         }
+//     }
+
+//     return count
+// }
+
+// console.log(bfs(1))
+
+//2667-단지번호붙이기
 const fs = require('fs');
 let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [n, m, v] = input[0].split(' ').map(Number);
-const arr = input.slice(1).map(v=>v.split(' ').map(Number));
-let graph = Array.from({length: n+1}, ()=>[]);
-let visited = Array(n+1).fill(false)
+const n = +input[0];
+const arr = input.slice(1).map(v=>v.split('').map(Number));
+let visited =Array.from({length: n+1}, ()=>Array(n+1).fill(false));
+const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
-arr.map(([from, to])=>{
-    graph[from].push(to);
-    graph[to].push(from)
-});
-
-for(let i=1; i<=n; i++){
-    graph[i].sort((a, b)=>a-b)
-}
-
-const bfs = (start) =>{
-    const queue=[start];
-    let visited = Array(n).fill(false);
-    visited[start]=true;
-    let result= [];
+const bfs = (i, j)=>{
+    const queue =[[i, j]];
+    visited[i][j]=true;
+    let count=0;
 
     while(queue.length){
-        const node= queue.shift();
-        result.push(node);
+        const [x, y] = queue.shift();
+        count++
 
-        for(const n of graph[node]){
-            if(!visited[n]){
-                visited[n]=true;
-                queue.push(n)
+        for(const [dx, dy] of dir){
+            const nx = x+dx;
+            const ny = y+dy;
+
+            if(nx>=0&&ny>=0&&nx<n&&ny<n&&!visited[nx][ny]&&arr[nx][ny]===1){
+                visited[nx][ny]=true;
+                queue.push([nx, ny])
             }
         }
     }
-    return result
+
+    return count
 }
 
-const dfs = (start) => {
-    let result = [];
-    let visited = Array(n).fill(false);
-    let stack = [start];
+let result=[]
 
-    while(stack.length){
-        const node = stack.pop();
-
-        if(visited[node]) continue
-        visited[node]=true;
-        result.push(node)
-
-        graph[node].sort((a, b)=>b-a).forEach(v=>{
-            if(!visited[v]){
-                stack.push(v)
-            }
-        })
+for(let i=0; i<n; i++){
+    for(let j=0; j<n; j++){
+        if(!visited[i][j]&&arr[i][j]){
+            result.push(bfs(i, j))
+        }
     }
+}
 
-    return result
-};
-
-
-console.log(dfs(v).join(' '))
-console.log(bfs(v).join(' '))
+console.log(result.length)
+console.log(result.sort((a, b)=>a-b).join('\n'))
