@@ -2533,57 +2533,111 @@
 // console.log(result.sort((a, b)=>a-b).join('\n'))
 
 //1012-유기농 배추
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const t = +input[0];
+// let index=1;
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]]
+// let n, m, k, graph;
+
+// const bfs = (graph, i, j) => {
+//   const queue = [[i, j]];
+//   let count =0;
+
+//   while(queue.length){
+//     const [x, y] = queue.shift();
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny = y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<n&&ny<m&&graph[nx][ny]){
+//         graph[nx][ny]=0;
+//         queue.push([nx, ny]);
+//         count++;
+        
+//       }
+//     }
+//   }
+
+//   return count;
+// }
+
+// for(let i=0; i<t; i++){
+//   [n, m, k]=input[index].split(' ').map(Number);
+//   const arr = input.slice(index+1, index+1+k).map(v=>v.split(' ').map(Number));
+
+//   const graph = Array.from({length: n}, ()=>Array(m).fill(0));
+
+//   arr.map(([x, y])=>{
+//     graph[x][y]=1
+//   })
+
+
+//   let result = [];
+//   for(let i=0; i<n; i++){
+//     for(let j=0; j<m; j++){
+//       if(graph[i][j]){
+//         result.push(bfs(graph, i, j))
+//       }
+//     }
+//   }
+
+//   console.log(result.length)
+
+//   index++;
+//   index+=k
+// }
+
+//7576-토마토
 const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const t = +input[0];
-let index=1;
-const dir = [[0,1], [0,-1], [1,0], [-1,0]]
-let n, m, k, graph;
+const [M, N] = input[0].split(' ').map(Number);
+const box = input.slice(1).map(line => line.split(' ').map(Number));
 
-const bfs = (graph, i, j) => {
-  const queue = [[i, j]];
-  let count =0;
+const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
-  while(queue.length){
-    const [x, y] = queue.shift();
+let queue = [];
+
+for(let i=0; i<N; i++){
+  for(let j=0; j<M; j++){
+    if(box[i][j]===1){
+      queue.push([i, j])
+    }
+  }
+}
+
+const bfs=(box, queue)=>{
+  let index =0;
+
+  while(index<queue.length){
+    const [x, y] = queue[index];
+    index++;
 
     for(const [dx, dy] of dir){
       const nx = x+dx;
       const ny = y+dy;
 
-      if(nx>=0&&ny>=0&&nx<n&&ny<m&&graph[nx][ny]){
-        graph[nx][ny]=0;
-        queue.push([nx, ny]);
-        count++;
-        
+      if(nx>=0&&ny>=0&&nx<N&&ny<M&&!box[nx][ny]){
+        box[nx][ny]=box[x][y]+1;
+        queue.push([nx, ny])
       }
     }
   }
-
-  return count;
 }
 
-for(let i=0; i<t; i++){
-  [n, m, k]=input[index].split(' ').map(Number);
-  const arr = input.slice(index+1, index+1+k).map(v=>v.split(' ').map(Number));
+let days =0;
 
-  const graph = Array.from({length: n}, ()=>Array(m).fill(0));
-
-  arr.map(([x, y])=>{
-    graph[x][y]=1
-  })
-
-
-  let result = [];
-  for(let i=0; i<n; i++){
-    for(let j=0; j<m; j++){
-      if(graph[i][j]){
-        result.push(bfs(graph, i, j))
+const cal = (box) =>{
+  for(let i=0; i<N; i++){
+    for(let j=0; j<M; j++){
+      if(!box[i][j]){
+        return -1
       }
+      days=Math.max(days, box[i][j])
     }
   }
-
-  console.log(result.length)
-
-  index++;
-  index+=k
+  return days-1
 }
+
+bfs(box, queue);
+console.log(cal(box))
+
