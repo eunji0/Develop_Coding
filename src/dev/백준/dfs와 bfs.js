@@ -2589,55 +2589,81 @@
 // }
 
 //7576-토마토
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [M, N] = input[0].split(' ').map(Number);
+// const box = input.slice(1).map(line => line.split(' ').map(Number));
+
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+
+// let queue = [];
+
+// for(let i=0; i<N; i++){
+//   for(let j=0; j<M; j++){
+//     if(box[i][j]===1){
+//       queue.push([i, j])
+//     }
+//   }
+// }
+
+// const bfs=(box, queue)=>{
+//   let index =0;
+
+//   while(index<queue.length){
+//     const [x, y] = queue[index];
+//     index++;
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny = y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<N&&ny<M&&!box[nx][ny]){
+//         box[nx][ny]=box[x][y]+1;
+//         queue.push([nx, ny])
+//       }
+//     }
+//   }
+// }
+
+// let days =0;
+
+// const cal = (box) =>{
+//   for(let i=0; i<N; i++){
+//     for(let j=0; j<M; j++){
+//       if(!box[i][j]){
+//         return -1
+//       }
+//       days=Math.max(days, box[i][j])
+//     }
+//   }
+//   return days-1
+// }
+
+// bfs(box, queue);
+// console.log(cal(box))
+
+
+//1697-숨바꼭질
 const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [M, N] = input[0].split(' ').map(Number);
-const box = input.slice(1).map(line => line.split(' ').map(Number));
+const [n, k]=input[0].split(' ').map(Number);
+let visited = Array(100001).fill(false);
 
-const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+const bfs = (start, goal) => {
+  const queue = [[start, 0]];
 
-let queue = [];
+  while(queue.length){
+    const [cur, sec] = queue.shift();
+    const move = [cur-1, cur+1, cur*2];
 
-for(let i=0; i<N; i++){
-  for(let j=0; j<M; j++){
-    if(box[i][j]===1){
-      queue.push([i, j])
-    }
-  }
-}
+    if(visited[cur]) continue
+    if(cur===goal) return sec
+    visited[cur]=1;
 
-const bfs=(box, queue)=>{
-  let index =0;
-
-  while(index<queue.length){
-    const [x, y] = queue[index];
-    index++;
-
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny = y+dy;
-
-      if(nx>=0&&ny>=0&&nx<N&&ny<M&&!box[nx][ny]){
-        box[nx][ny]=box[x][y]+1;
-        queue.push([nx, ny])
+    for(const m of move){
+      if(!visited[m]&&m>=0&&m<=100000){
+        queue.push([m, sec+1])
       }
     }
   }
 }
 
-let days =0;
-
-const cal = (box) =>{
-  for(let i=0; i<N; i++){
-    for(let j=0; j<M; j++){
-      if(!box[i][j]){
-        return -1
-      }
-      days=Math.max(days, box[i][j])
-    }
-  }
-  return days-1
-}
-
-bfs(box, queue);
-console.log(cal(box))
-
+console.log(bfs(n, k))
