@@ -2669,39 +2669,124 @@
 // console.log(bfs(n, k))
 
 //11724-연결 요소의 개수
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(v=>v.split(' ').map(Number));
+// let graph = Array.from({length: n+1}, ()=>[]);
+// let visited = Array(n+1).fill(false);
+
+// arr.map(([from, to])=>{
+//   graph[from].push(to);
+//   graph[to].push(from)
+// })
+
+// const bfs = (start) =>{
+//   let queue = [start];
+//   visited[start]=true
+
+//   while(queue.length){
+//     let node = queue.shift();
+
+//     for(const n of graph[node]){
+//       if(!visited[n]){
+//         visited[n]=true;
+//         queue.push(n)
+//       }
+//     }
+//   }
+// }
+// let count =0;
+
+// for(let i=1; i<=n; i++){
+//   if(!visited[i]){
+//     bfs(i);
+//     count++
+//   }
+// }
+
+// console.log(count)
+
+//14502-연구소
 const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
 const [n, m] = input[0].split(' ').map(Number);
-const arr = input.slice(1).map(v=>v.split(' ').map(Number));
-let graph = Array.from({length: n+1}, ()=>[]);
-let visited = Array(n+1).fill(false);
+const lab = input.slice(1).map(v=>v.split(' ').map(Number));
 
-arr.map(([from, to])=>{
-  graph[from].push(to);
-  graph[to].push(from)
-})
+const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
-const bfs = (start) =>{
-  let queue = [start];
-  visited[start]=true
+const isValidPosition = (x, y)=> x>=0&&y>=0&&x<n&&y<m;
 
+const bfs = (labCopy) =>{
+  //큐에 바이러스 지역 넣기
+  const queue = [];
+  for(let i=0; i<n; i++){
+    for(let j=0; j<m; j++){
+      if(labCopy[i][j]===2){
+        queue.push([i, j])
+      }
+    }
+  }
+
+  //바이러스 옮기기
   while(queue.length){
-    let node = queue.shift();
+    const [x, y] = queue.shift();
 
-    for(const n of graph[node]){
-      if(!visited[n]){
-        visited[n]=true;
-        queue.push(n)
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny = y+dy;
+
+      if(isValidPosition(nx, ny)&&labCopy[nx][ny]===0){
+        labCopy[nx][ny]=2;
+        queue.push([nx, ny])
       }
     }
   }
 }
-let count =0;
 
-for(let i=1; i<=n; i++){
-  if(!visited[i]){
-    bfs(i);
-    count++
+//안전영역계산하기
+const safeArea = (labCopy) =>{
+  let count =0;
+
+  for(let i=0; i<n; i++){
+    for(let j=0; j<m; j++){
+      if(labCopy[i][j]===0){
+        count++
+      }
+    }
+  }
+
+  return count
+}
+
+let maxSafeArea=0;
+
+for(let i=0; i<n*m; i++){
+  let x1 = Math.floor(i/m);
+  let y1 = i%m;
+
+  if(lab[x1][y1]!==0) continue;
+
+  for(let j=i+1; j<n*m; j++){
+    let x2 = Math.floor(j/m);
+    let y2 = j%m;
+
+    if(lab[x2][y2]!==0) continue;
+
+    for(let k=j+1; k<n*m; k++){
+      let x3 = Math.floor(k/m);
+      let y3 = k%m;
+
+      if(lab[x3][y3]!==0) continue;
+
+      let labCopy = lab.map(v=>v.slice())
+      labCopy[x1][y1]=1
+      labCopy[x2][y2]=1
+      labCopy[x3][y3]=1
+
+      bfs(labCopy);
+      let max = safeArea(labCopy);
+      maxSafeArea = Math.max(max, maxSafeArea)
+    }
   }
 }
 
-console.log(count)
+console.log(maxSafeArea)
