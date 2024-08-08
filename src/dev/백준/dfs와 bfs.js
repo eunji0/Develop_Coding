@@ -2643,27 +2643,65 @@
 
 
 //1697-숨바꼭질
-const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [n, k]=input[0].split(' ').map(Number);
-let visited = Array(100001).fill(false);
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [n, k]=input[0].split(' ').map(Number);
+// let visited = Array(100001).fill(false);
 
-const bfs = (start, goal) => {
-  const queue = [[start, 0]];
+// const bfs = (start, goal) => {
+//   const queue = [[start, 0]];
+
+//   while(queue.length){
+//     const [cur, sec] = queue.shift();
+//     const move = [cur-1, cur+1, cur*2];
+
+//     if(visited[cur]) continue
+//     if(cur===goal) return sec
+//     visited[cur]=1;
+
+//     for(const m of move){
+//       if(!visited[m]&&m>=0&&m<=100000){
+//         queue.push([m, sec+1])
+//       }
+//     }
+//   }
+// }
+
+// console.log(bfs(n, k))
+
+//11724-연결 요소의 개수
+const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+const [n, m] = input[0].split(' ').map(Number);
+const arr = input.slice(1).map(v=>v.split(' ').map(Number));
+let graph = Array.from({length: n+1}, ()=>[]);
+let visited = Array(n+1).fill(false);
+
+arr.map(([from, to])=>{
+  graph[from].push(to);
+  graph[to].push(from)
+})
+
+const bfs = (start) =>{
+  let queue = [start];
+  visited[start]=true
 
   while(queue.length){
-    const [cur, sec] = queue.shift();
-    const move = [cur-1, cur+1, cur*2];
+    let node = queue.shift();
 
-    if(visited[cur]) continue
-    if(cur===goal) return sec
-    visited[cur]=1;
-
-    for(const m of move){
-      if(!visited[m]&&m>=0&&m<=100000){
-        queue.push([m, sec+1])
+    for(const n of graph[node]){
+      if(!visited[n]){
+        visited[n]=true;
+        queue.push(n)
       }
     }
   }
 }
+let count =0;
 
-console.log(bfs(n, k))
+for(let i=1; i<=n; i++){
+  if(!visited[i]){
+    bfs(i);
+    count++
+  }
+}
+
+console.log(count)
