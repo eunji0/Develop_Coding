@@ -2838,141 +2838,99 @@
 // console.log(cal(arr, visited), cal(noArr, noVisited));
 
 //7569-토마토
-const fs = require('fs');
-const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [m, n, h] = input[0].split(' ').map(Number);
-const isValidPosition = (nz, nx, ny) => nz >= 0 && nz < h && nx >= 0 && nx < n && ny >= 0 && ny < m;
-const dir = [[0, 0, 1], [0, 0, -1], [0, 1, 0], [0, -1, 0], [1, 0, 0], [-1, 0, 0]];
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [m, n, h] = input[0].split(' ').map(Number);
+// const isValidPosition = (nz, nx, ny) => nz >= 0 && nz < h && nx >= 0 && nx < n && ny >= 0 && ny < m;
+// const dir = [[0, 0, 1], [0, 0, -1], [0, 1, 0], [0, -1, 0], [1, 0, 0], [-1, 0, 0]];
 
-let arr = [];
-for(let i=1; i<input.length; i+=n){
-  let box = [];
-
-  for(let j=i; j<i+n; j++){
-    box.push(input[j].split(' ').map(Number))
-  }
-  arr.push(box)
-}
-
-//익은 토마토의 위치를 큐에 추가
-let queue = [];
-for(let k=0; k<h; k++){
-  for(let i=0; i<n; i++){
-    for(let j=0; j<m; j++){
-      if(arr[k][i][j]===1){
-        queue.push([k, i, j])
-      }
-    }
-  }
-}
-
-const bfs = (arr, queue) =>{
-  let index = 0;
-
-  while(index<queue.length){
-    const [z, x, y] =queue[index++];
-
-    for(const [dz, dx, dy] of dir){
-      const nz = z+dz;
-      const nx = x+dx;
-      const ny = y+dy;
-
-      //전이
-      if(isValidPosition(nz, nx, ny)&&arr[nz][nx][ny]===0){
-        arr[nz][nx][ny]=arr[z][x][y]+1;
-        queue.push([nz, nx, ny])
-      }
-    }
-  }
-}
-
-const cal = (arr) =>{
-  let result =0;
-
-  for(let k=0; k<h; k++){
-    for(let i=0; i<n; i++){
-      for(let j=0; j<m; j++){
-        //안 익은 토마토가 남아있다면 -1반환
-        if(arr[k][i][j]===0){
-          return -1
-        }
-        result = Math.max(result, arr[k][i][j])
-      }
-    }
-  }
-
-  return result-1
-}
-
-bfs(arr, queue);
-console.log(cal(arr))
-
-
-
-
-
-
-
-
-// // 상자 정보를 3차원 배열로 변환
 // let arr = [];
-// for (let i = 1; i < input.length; i += n) {
+// for(let i=1; i<input.length; i+=n){
 //   let box = [];
-//   for (let j = i; j < i + n; j++) {
-//     box.push(input[j].split(' ').map(Number));
+
+//   for(let j=i; j<i+n; j++){
+//     box.push(input[j].split(' ').map(Number))
 //   }
-//   arr.push(box);
+//   arr.push(box)
 // }
 
-// // 익은 토마토의 자리를 큐에 추가
-// const queue = [];
-
-// for (let k = 0; k < h; k++) {
-//   for (let i = 0; i < n; i++) {
-//     for (let j = 0; j < m; j++) {
-//       if (arr[k][i][j] === 1) {
-//         queue.push([k, i, j]);
+// //익은 토마토의 위치를 큐에 추가
+// let queue = [];
+// for(let k=0; k<h; k++){
+//   for(let i=0; i<n; i++){
+//     for(let j=0; j<m; j++){
+//       if(arr[k][i][j]===1){
+//         queue.push([k, i, j])
 //       }
 //     }
 //   }
 // }
 
-// // bfs
-// const bfs = (graph, queue) => {
+// const bfs = (arr, queue) =>{
 //   let index = 0;
 
-//   while (index < queue.length) {
-//     const [z, x, y] = queue[index++];
+//   while(index<queue.length){
+//     const [z, x, y] =queue[index++];
 
-//     for (const [dz, dx, dy] of dir) {
-//       const nz = z + dz;
-//       const nx = x + dx;
-//       const ny = y + dy;
+//     for(const [dz, dx, dy] of dir){
+//       const nz = z+dz;
+//       const nx = x+dx;
+//       const ny = y+dy;
 
-//       if (isValidPosition(nz, nx, ny) && graph[nz][nx][ny] === 0) {
-//         graph[nz][nx][ny] = graph[z][x][y] + 1;
-//         queue.push([nz, nx, ny]);
+//       //전이
+//       if(isValidPosition(nz, nx, ny)&&arr[nz][nx][ny]===0){
+//         arr[nz][nx][ny]=arr[z][x][y]+1;
+//         queue.push([nz, nx, ny])
 //       }
 //     }
 //   }
 // }
 
-// // 계산
-// const cal = (arr) => {
-//   let result = 0;
+// const cal = (arr) =>{
+//   let result =0;
 
-//   for (let k = 0; k < h; k++) {
-//     for (let i = 0; i < n; i++) {
-//       for (let j = 0; j < m; j++) {
-//         if (arr[k][i][j] === 0) {
-//           return -1; // 익지 않은 토마토가 남아있는 경우
+//   for(let k=0; k<h; k++){
+//     for(let i=0; i<n; i++){
+//       for(let j=0; j<m; j++){
+//         //안 익은 토마토가 남아있다면 -1반환
+//         if(arr[k][i][j]===0){
+//           return -1
 //         }
-//         result = Math.max(result, arr[k][i][j]);
+//         result = Math.max(result, arr[k][i][j])
 //       }
 //     }
 //   }
-//   return result - 1; // 처음 익은 토마토가 1이었으므로 1을 빼줌
+
+//   return result-1
 // }
 
 // bfs(arr, queue);
-// console.log(cal(arr));
+// console.log(cal(arr))
+
+//1697-숨바꼭질
+const fs = require('fs');
+const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+const [n, k] = input[0].split(' ').map(Number);
+let visited = Array(100001).fill(false);
+
+const bfs = (start, goal) =>{
+  const queue =[[start, 0]];
+
+  while(queue.length){
+    const [cur, sec] = queue.shift();
+    const move = [cur-1, cur+1, cur*2];
+
+    if(visited[cur]) continue;
+    if(cur === goal) return sec;
+
+    visited[cur] = true;
+
+    for(const m of move){
+      if(!visited[m]&&m>=0&&m<=100000){
+        queue.push([m, sec+1])
+      }
+    }
+  }
+}
+
+console.log(bfs(n, k))
