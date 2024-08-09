@@ -2908,29 +2908,60 @@
 // console.log(cal(arr))
 
 //1697-숨바꼭질
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [n, k] = input[0].split(' ').map(Number);
+// let visited = Array(100001).fill(false);
+
+// const bfs = (start, goal) =>{
+//   const queue =[[start, 0]];
+
+//   while(queue.length){
+//     const [cur, sec] = queue.shift();
+//     const move = [cur-1, cur+1, cur*2];
+
+//     if(visited[cur]) continue;
+//     if(cur === goal) return sec;
+
+//     visited[cur] = true;
+
+//     for(const m of move){
+//       if(!visited[m]&&m>=0&&m<=100000){
+//         queue.push([m, sec+1])
+//       }
+//     }
+//   }
+// }
+
+// console.log(bfs(n, k))
+
+//11725-트리의 부모찾기
 const fs = require('fs');
 const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [n, k] = input[0].split(' ').map(Number);
-let visited = Array(100001).fill(false);
+const n = +input[0];
+const arr = input.slice(1).map(v=>v.split(' ').map(Number))
+let graph = Array.from({length: n+1}, ()=>[]);
+let parent = Array(n+1).fill(0);
 
-const bfs = (start, goal) =>{
-  const queue =[[start, 0]];
+arr.map(([from, to])=>{
+  graph[from].push(to);
+  graph[to].push(from)
+})
+
+const bfs = (start) =>{
+  const queue = [start];
 
   while(queue.length){
-    const [cur, sec] = queue.shift();
-    const move = [cur-1, cur+1, cur*2];
+    const node = queue.shift();
 
-    if(visited[cur]) continue;
-    if(cur === goal) return sec;
-
-    visited[cur] = true;
-
-    for(const m of move){
-      if(!visited[m]&&m>=0&&m<=100000){
-        queue.push([m, sec+1])
+    for(const next of graph[node]){
+      if(parent[next]===0&&next!==1){
+        parent[next]=node;
+        queue.push(next)
       }
     }
   }
 }
 
-console.log(bfs(n, k))
+bfs(1)
+console.log(parent.slice(2).join('\n'))
