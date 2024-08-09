@@ -2936,32 +2936,83 @@
 // console.log(bfs(n, k))
 
 //11725-트리의 부모찾기
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const n = +input[0];
+// const arr = input.slice(1).map(v=>v.split(' ').map(Number))
+// let graph = Array.from({length: n+1}, ()=>[]);
+// let parent = Array(n+1).fill(0);
+
+// arr.map(([from, to])=>{
+//   graph[from].push(to);
+//   graph[to].push(from)
+// })
+
+// const bfs = (start) =>{
+//   const queue = [start];
+
+//   while(queue.length){
+//     const node = queue.shift();
+
+//     for(const next of graph[node]){
+//       if(parent[next]===0&&next!==1){
+//         parent[next]=node;
+//         queue.push(next)
+//       }
+//     }
+//   }
+// }
+
+// bfs(1)
+// console.log(parent.slice(2).join('\n'))
+
+
+//2468-안전 영역
 const fs = require('fs');
 const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
 const n = +input[0];
-const arr = input.slice(1).map(v=>v.split(' ').map(Number))
-let graph = Array.from({length: n+1}, ()=>[]);
-let parent = Array(n+1).fill(0);
+const arr= input.slice(1).map(v=>v.split(' ').map(Number));
+const dir = [[0,1], [0,-1], [1,0], [-1,0]]
 
-arr.map(([from, to])=>{
-  graph[from].push(to);
-  graph[to].push(from)
-})
-
-const bfs = (start) =>{
-  const queue = [start];
+//개수 세기
+const bfs = (state, i, j)=>{
+  const queue = [[i, j]];
 
   while(queue.length){
-    const node = queue.shift();
+    const [x, y] = queue.shift();
 
-    for(const next of graph[node]){
-      if(parent[next]===0&&next!==1){
-        parent[next]=node;
-        queue.push(next)
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny = y+dy;
+
+      if(nx>=0&&ny>=0&&nx<n&&ny<n&&state[nx][ny]===true){
+        //방문여부 대신 false로 체크
+        state[nx][ny]=false
+        queue.push([nx, ny])
       }
     }
   }
 }
 
-bfs(1)
-console.log(parent.slice(2).join('\n'))
+let maxSafeArea = 0;
+
+//h보다 낮은 지역의 상태 표시
+for(let h=0; h<=Math.max(...arr.flat()); h++){
+  let state = arr.map(row => row.map(value => value > h));
+
+  let count =0;
+
+  for(let i=0; i<n; i++){
+    for(let j=0; j<n; j++){
+      if(state[i][j]===true){
+        bfs(state, i, j);
+        count++;
+      }
+    }
+  }
+  
+  maxSafeArea=Math.max(maxSafeArea, count)
+}
+
+console.log(maxSafeArea)
+
