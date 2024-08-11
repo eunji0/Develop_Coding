@@ -3017,44 +3017,86 @@
 // console.log(maxSafeArea)
 
 //4963-섬의 개수
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const dir = [[0,1], [0,-1], [1,0], [-1,0], [1,-1], [-1,1], [-1,-1], [1,1]]
+// let arr, w, h;
+
+// const bfs = (i, j) =>{
+//   const queue = [[i, j]];
+
+//   while(queue.length){
+//     const [x, y] =queue.shift();
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny = y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<h&&ny<w&&arr[nx][ny]===1){
+//         queue.push([nx, ny]);
+//         arr[nx][ny]=true;
+//       }
+//     }
+//   }
+// }
+
+// for(let i=0; i<input.length-1; i++){
+//   [w, h] = input[i].split(' ').map(Number);
+//   arr = input.slice(i+1, i+h+1).map(v=>v.split(' ').map(Number));
+
+//   let count =0;
+
+//   for(let i=0; i<h; i++){
+//     for(let j=0; j<w; j++){
+//       if(arr[i][j]===1){
+//         bfs(i, j)
+//         count++;
+//       }
+//     }
+//   }
+
+//   console.log(count)
+//   i+=h
+// }
+
+//7562-나이트의 이동
 const fs = require('fs');
 const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const dir = [[0,1], [0,-1], [1,0], [-1,0], [1,-1], [-1,1], [-1,-1], [1,1]]
-let arr, w, h;
+const dir = [[2, 1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [-1, -2], [1, -2], [2, -1]];
+const t = +input[0];
 
-const bfs = (i, j) =>{
-  const queue = [[i, j]];
+const bfs = (start, goal, l) => {
+  const queue=[[start[0], start[1]]];
+  let visited = Array.from({length: l}, ()=>Array(l).fill(false));
+  visited[start[0]][start[1]] = true;
+  let graph = Array.from({length: l}, ()=>Array(l).fill(0));
 
   while(queue.length){
-    const [x, y] =queue.shift();
+    const [x, y]=queue.shift();
+
+    if(x===goal[0]&&y===goal[1]){
+      return graph[x][y]
+    }
 
     for(const [dx, dy] of dir){
       const nx = x+dx;
       const ny = y+dy;
 
-      if(nx>=0&&ny>=0&&nx<h&&ny<w&&arr[nx][ny]===1){
+      if(nx>=0&&ny>=0&&nx<l&&ny<l&&!visited[nx][ny]){
         queue.push([nx, ny]);
-        arr[nx][ny]=true;
+        visited[nx][ny]=true;
+        graph[nx][ny]= graph[x][y]+1
       }
     }
   }
+
+  return -1
 }
 
-for(let i=0; i<input.length-1; i++){
-  [w, h] = input[i].split(' ').map(Number);
-  arr = input.slice(i+1, i+h+1).map(v=>v.split(' ').map(Number));
+for(let i=1; i<input.length; i+=3){
+  const l = +input[i]
+  const now = input[i+1].split(' ').map(Number);
+  const moveTo = input[i+2].split(' ').map(Number);
 
-  let count =0;
-
-  for(let i=0; i<h; i++){
-    for(let j=0; j<w; j++){
-      if(arr[i][j]===1){
-        bfs(i, j)
-        count++;
-      }
-    }
-  }
-
-  console.log(count)
-  i+=h
+  console.log(bfs(now, moveTo, l))
 }
