@@ -3060,43 +3060,216 @@
 // }
 
 //7562-나이트의 이동
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const dir = [[2, 1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [-1, -2], [1, -2], [2, -1]];
+// const t = +input[0];
+
+// const bfs = (start, goal, l) => {
+//   const queue=[[start[0], start[1]]];
+//   let visited = Array.from({length: l}, ()=>Array(l).fill(false));
+//   visited[start[0]][start[1]] = true;
+//   let graph = Array.from({length: l}, ()=>Array(l).fill(0));
+
+//   while(queue.length){
+//     const [x, y]=queue.shift();
+
+//     if(x===goal[0]&&y===goal[1]){
+//       return graph[x][y]
+//     }
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny = y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<l&&ny<l&&!visited[nx][ny]){
+//         queue.push([nx, ny]);
+//         visited[nx][ny]=true;
+//         graph[nx][ny]= graph[x][y]+1
+//       }
+//     }
+//   }
+
+//   return -1
+// }
+
+// for(let i=1; i<input.length; i+=3){
+//   const l = +input[i]
+//   const now = input[i+1].split(' ').map(Number);
+//   const moveTo = input[i+2].split(' ').map(Number);
+
+//   console.log(bfs(now, moveTo, l))
+// }
+
+//2206-벽 부수고 이동하기
 const fs = require('fs');
 const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const dir = [[2, 1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [-1, -2], [1, -2], [2, -1]];
-const t = +input[0];
+const [n, m] = input[0].split(' ').map(Number);
+const arr = input.slice(1).map(v => v.split('').map(Number));
+const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
-const bfs = (start, goal, l) => {
-  const queue=[[start[0], start[1]]];
-  let visited = Array.from({length: l}, ()=>Array(l).fill(false));
-  visited[start[0]][start[1]] = true;
-  let graph = Array.from({length: l}, ()=>Array(l).fill(0));
-
-  while(queue.length){
-    const [x, y]=queue.shift();
-
-    if(x===goal[0]&&y===goal[1]){
-      return graph[x][y]
+class Queue {
+    constructor() {
+        this.items = {}; // 큐의 요소를 저장할 객체
+        this.head = 0;   // 큐의 앞쪽 포인터
+        this.tail = 0;   // 큐의 뒤쪽 포인터
     }
 
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny = y+dy;
-
-      if(nx>=0&&ny>=0&&nx<l&&ny<l&&!visited[nx][ny]){
-        queue.push([nx, ny]);
-        visited[nx][ny]=true;
-        graph[nx][ny]= graph[x][y]+1
-      }
+    // 큐의 뒤에 요소 추가
+    enqueue(element) {
+        this.items[this.tail] = element; // tail 위치에 요소를 추가
+        this.tail++; // tail 포인터를 증가시켜 다음 위치로 이동
     }
-  }
 
-  return -1
+    // 큐의 앞에서 요소 제거하고 반환
+    dequeue() {
+        const item = this.items[this.head]; // head 위치의 요소를 가져옴
+        delete this.items[this.head]; // head 위치의 요소를 삭제
+        this.head++; // head 포인터를 증가시켜 다음 위치로 이동
+        return item; // 삭제된 요소를 반환
+    }
+
+    // 큐의 크기 반환
+    size() {
+        return this.tail - this.head; // tail과 head의 차이로 큐의 크기 계산
+    }
+
+    // 큐가 비어 있는지 확인
+    isEmpty() {
+        return this.head === this.tail; // head와 tail이 같으면 큐가 비어 있음
+    }
 }
 
-for(let i=1; i<input.length; i+=3){
-  const l = +input[i]
-  const now = input[i+1].split(' ').map(Number);
-  const moveTo = input[i+2].split(' ').map(Number);
+// BFS 함수 정의
+const bfs = () => {
+    // 방문 여부를 저장하는 3차원 배열 생성
+    let visited = Array.from({ length: n }, () => Array.from({ length: m }, () => Array(2).fill(false)));
+    visited[0][0][0] = true; // 시작 위치를 방문 처리
 
-  console.log(bfs(now, moveTo, l))
+    let queue = new Queue(); // 큐 인스턴스 생성
+    queue.enqueue([0, 0, 0]); // 시작 위치를 큐에 추가
+    let steps = 1; // 초기 이동 횟수 설정
+
+    while (queue.size()) { // 큐가 비어있지 않은 동안 반복
+        let size = queue.size(); // 현재 큐의 크기를 저장
+
+        while (size--) { // 현재 큐의 크기만큼 반복
+            const [x, y, broken] = queue.dequeue(); // 큐의 앞에서 요소를 꺼냄
+
+            if (x === n - 1 && y === m - 1) { // 도착지에 도달한 경우
+                return steps; // 이동 횟수 반환
+            }
+
+            for (const [dx, dy] of dir) { // 상하좌우로 이동
+                const nx = x + dx;
+                const ny = y + dy;
+
+                // 다음 위치가 맵의 범위 안에 있는지 확인
+                if (nx >= 0 && ny >= 0 && nx < n && ny < m) {
+                    if (arr[nx][ny] === 0 && !visited[nx][ny][broken]) { // 이동 가능한 경우
+                        visited[nx][ny][broken] = true; // 방문 처리
+                        queue.enqueue([nx, ny, broken]); // 다음 위치를 큐에 추가
+                    }
+
+                    if (arr[nx][ny] === 1 && broken === 0 && !visited[nx][ny][1]) { // 벽을 부술 수 있는 경우
+                        visited[nx][ny][1] = true; // 벽을 부순 상태로 방문 처리
+                        queue.enqueue([nx, ny, 1]); // 다음 위치를 큐에 추가
+                    }
+                }
+            }
+        }
+        steps++; // 이동 횟수 증가
+    }
+
+    return -1; // 도착지에 도달할 수 없는 경우 -1 반환
 }
+console.log(bfs());
+
+
+// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [N, M] = input.shift().split(' ').map(Number);
+// const lab = input.map(line => line.split(' ').map(Number));
+
+// const directions= [
+//   [0, 1], [0, -1], [1, 0], [-1, 0]
+// ];
+
+// const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < N && y < M;
+
+// const bfs = (labCopy) =>{
+//   const queue=[];
+
+//   //바이러스 위치를 큐에 삽입
+//   for(let i=0; i<N; i++){
+//     for(let j=0; j<M; j++){
+//       if(labCopy[i][j]===2){
+//         queue.push([i, j])
+//       }
+//     }
+//   }
+
+//   //바이러스 옮기기
+//   while(queue.length){
+//     const [x, y] =queue.shift();
+
+//     for(const [dx, dy] of directions){
+//       const nx = x+dx;
+//       const ny = y+dy;
+
+//       if(isValidPosition(nx, ny)&&labCopy[nx][ny]===0){
+//         labCopy[nx][ny]=2;
+//         queue.push([nx, ny])
+//       }
+//     }
+//   }
+// }
+
+// //안전영역 계산하기
+// const safeArea=(labCopy)=>{
+//   let count =0;
+
+//   for(let i=0; i<N; i++){
+//     for(let j=0; j<M; j++){
+//       if(labCopy[i][j]===0){
+//         count++;
+//       }
+//     }
+//   }
+
+//   return count
+// }
+
+// //벽세우기
+// let maxSafeArea=0;
+
+// for(let i=0; i<N*M; i++){
+//   let x1 = Math.floor(i/M);
+//   let y1 = i%M;
+
+//   if(lab[x1][y1]!==0) continue
+
+//   for(let j=i+1; j<N*M; j++){
+//     let x2 = Math.floor(j/M);
+//     let y2 = j%M;
+
+//     if(lab[x2][y2]!==0) continue;
+
+//     for(let k=j+1; k<N*M; k++){
+//       let x3 = Math.floor(k/M);
+//       let y3 = k%M;
+
+//       if(lab[x3][y3]!==0) continue;
+
+//       let labCopy = lab.map(v=>v.slice());
+//       labCopy[x1][y1]=1;
+//       labCopy[x2][y2]=1;
+//       labCopy[x3][y3]=1;
+
+//       bfs(labCopy)
+//       let ss = safeArea(labCopy);
+//       maxSafeArea = Math.max(maxSafeArea, ss);
+//     }
+//   }
+// }
+
+// console.log(maxSafeArea)
