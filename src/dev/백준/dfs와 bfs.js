@@ -3101,12 +3101,57 @@
 //   console.log(bfs(now, moveTo, l))
 // }
 
+//2644-촌수계산
+const fs = require('fs');
+let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+const n = parseInt(input.shift()); // 사람의 수
+const [a, b] = input.shift().split(' ').map(Number); // 촌수를 계산해야 하는 두 사람
+const m = parseInt(input.shift()); // 부모 자식 관계의 개수
+const relations = input.map(v => v.split(' ').map(Number));
+
+let graph = Array.from({length: n+1}, ()=>[]);
+
+relations.map(([from, to])=>{
+    graph[from].push(to);
+    graph[to].push(from);
+})
+
+const bfs = (start, target) =>{
+    const queue =[[start, 0]];
+    let visited = Array(n+1).fill(false);
+    visited[start] = true;
+
+    while(queue.length){
+        const [cur, dep] = queue.shift();
+
+        if(cur===target) return dep
+
+        for(const node of graph[cur]){
+            if(!visited[node]){
+                visited[node]=true;
+                queue.push([node, dep+1])
+            }
+        }
+    }
+
+    return -1;
+}
+
+console.log(bfs(a, b))
+
 //2206-벽 부수고 이동하기
 // const fs = require('fs');
 // const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
 // const [n, m] = input[0].split(' ').map(Number);
 // const arr = input.slice(1).map(v => v.split('').map(Number));
 // const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+// let visited = Array.from({length: n}, ()=>Array(m).fill(false))
+
+// for(let i=0; i<n; i++){
+//     for(let j=0; j<m; j++){
+//         console.log(visited[i][j])
+//     }
+// }
 
 // class Queue {
 //     constructor() {
@@ -3184,61 +3229,6 @@
 //     return -1; // 도착지에 도달할 수 없는 경우 -1 반환
 // }
 // console.log(bfs());
-
-
-//2583-영역구하기
-const fs = require('fs');
-const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [m, n, k] = input.shift().split(' ').map(Number);
-let arr = Array.from({ length: m }, () => Array(n).fill(0));
-let visited = Array.from({ length: m }, () => Array(n).fill(false));
-const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
-
-input.forEach(v=>{
-    let [x1, y1, x2, y2] = v.split(' ').map(Number);
-
-    for(let i=x1; i<x2; i++){
-        for(let j=y1; j<y2; j++){
-            arr[j][i] = 1;
-        }
-    }
-})
-
-const bfs=(i, j)=>{
-    const queue=[[i, j]];
-    let area=0;
-    visited[i][j]=true
-
-    while(queue.length){
-        const [x, y] = queue.shift();
-        area++;
-
-        for(const [dx, dy] of dir){
-            const nx = x+dx;
-            const ny = y+dy;
-
-            if(nx>=0&&ny>=0&&nx<m&&ny<n&&!visited[nx][ny]&&!arr[nx][ny]){
-                visited[nx][ny]=true;
-                queue.push([nx, ny])
-            }
-        }
-    }
-
-    return area
-}
-
-let areas = [];
-
-for(let i=0; i<m; i++){
-    for(let j=0; j<n; j++){
-        if(!visited[i][j]&&!arr[i][j]){
-            areas.push(bfs(i, j))
-        }
-    }
-}
-
-console.log(areas.length);
-console.log(areas.sort((a, b)=>a-b).join(' '))
 
 
 // const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
