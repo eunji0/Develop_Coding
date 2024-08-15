@@ -3101,220 +3101,51 @@
 //   console.log(bfs(now, moveTo, l))
 // }
 
-//2644-촌수계산
+//2206-벽 부수고 이동하기
 const fs = require('fs');
-let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const n = parseInt(input.shift()); // 사람의 수
-const [a, b] = input.shift().split(' ').map(Number); // 촌수를 계산해야 하는 두 사람
-const m = parseInt(input.shift()); // 부모 자식 관계의 개수
-const relations = input.map(v => v.split(' ').map(Number));
+const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+const [N, M] = input.shift().split(' ').map(Number);
+const graph = input.map((v) => v.split('').map(Number));
+const visited = Array.from(Array(N), () => Array.from(Array(M), () => Array(2).fill(0)));
+const dir = [[-1, 0], [1, 0], [0, 1], [0, -1]]; // 인접 네방향 x,y좌표
 
-let graph = Array.from({length: n+1}, ()=>[]);
+const bfs = () => {
+  const queue = [[0, 0, 0]]; // 현재 위치 x,y좌표 및 벽이 부서진 횟수
+  visited[0][0][0] = 1; // 시작하는 칸 수도 세야 하므로 방문한 칸수는 1로 시작
+  let idx = 0;
 
-relations.map(([from, to])=>{
-    graph[from].push(to);
-    graph[to].push(from);
-})
+  while (idx < queue.length) {
+	// isBreak: 벽이 부서진 횟수 담는 변수 (1번만 벽을 부술 수 있음)
+	// shift() 대신 인덱스로 큐 배열의 값에 접근
+    const [x, y, isBreak] = queue[idx++];
 
-const bfs = (start, target) =>{
-    const queue =[[start, 0]];
-    let visited = Array(n+1).fill(false);
-    visited[start] = true;
-
-    while(queue.length){
-        const [cur, dep] = queue.shift();
-
-        if(cur===target) return dep
-
-        for(const node of graph[cur]){
-            if(!visited[node]){
-                visited[node]=true;
-                queue.push([node, dep+1])
-            }
-        }
+	// 목적지에 도달했으면 반환
+    if (x === N - 1 && y === M - 1) {
+      return visited[x][y][isBreak];
     }
 
-    return -1;
-}
-
-console.log(bfs(a, b))
-
-//2206-벽 부수고 이동하기
-// const fs = require('fs');
-// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-// const [n, m] = input[0].split(' ').map(Number);
-// const arr = input.slice(1).map(v => v.split('').map(Number));
-// const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
-// let visited = Array.from({length: n}, ()=>Array(m).fill(false))
-
-// for(let i=0; i<n; i++){
-//     for(let j=0; j<m; j++){
-//         console.log(visited[i][j])
-//     }
-// }
-
-// class Queue {
-//     constructor() {
-//         this.items = {}; // 큐의 요소를 저장할 객체
-//         this.head = 0;   // 큐의 앞쪽 포인터
-//         this.tail = 0;   // 큐의 뒤쪽 포인터
-//     }
-
-//     // 큐의 뒤에 요소 추가
-//     enqueue(element) {
-//         this.items[this.tail] = element; // tail 위치에 요소를 추가
-//         this.tail++; // tail 포인터를 증가시켜 다음 위치로 이동
-//     }
-
-//     // 큐의 앞에서 요소 제거하고 반환
-//     dequeue() {
-//         const item = this.items[this.head]; // head 위치의 요소를 가져옴
-//         delete this.items[this.head]; // head 위치의 요소를 삭제
-//         this.head++; // head 포인터를 증가시켜 다음 위치로 이동
-//         return item; // 삭제된 요소를 반환
-//     }
-
-//     // 큐의 크기 반환
-//     size() {
-//         return this.tail - this.head; // tail과 head의 차이로 큐의 크기 계산
-//     }
-
-//     // 큐가 비어 있는지 확인
-//     isEmpty() {
-//         return this.head === this.tail; // head와 tail이 같으면 큐가 비어 있음
-//     }
-// }
-
-// // BFS 함수 정의
-// const bfs = () => {
-//     // 방문 여부를 저장하는 3차원 배열 생성
-//     let visited = Array.from({ length: n }, () => Array.from({ length: m }, () => Array(2).fill(false)));
-//     visited[0][0][0] = true; // 시작 위치를 방문 처리
-
-//     let queue = new Queue(); // 큐 인스턴스 생성
-//     queue.enqueue([0, 0, 0]); // 시작 위치를 큐에 추가
-//     let steps = 1; // 초기 이동 횟수 설정
-
-//     while (queue.size()) { // 큐가 비어있지 않은 동안 반복
-//         let size = queue.size(); // 현재 큐의 크기를 저장
-
-//         while (size--) { // 현재 큐의 크기만큼 반복
-//             const [x, y, broken] = queue.dequeue(); // 큐의 앞에서 요소를 꺼냄
-
-//             if (x === n - 1 && y === m - 1) { // 도착지에 도달한 경우
-//                 return steps; // 이동 횟수 반환
-//             }
-
-//             for (const [dx, dy] of dir) { // 상하좌우로 이동
-//                 const nx = x + dx;
-//                 const ny = y + dy;
-
-//                 // 다음 위치가 맵의 범위 안에 있는지 확인
-//                 if (nx >= 0 && ny >= 0 && nx < n && ny < m) {
-//                     if (arr[nx][ny] === 0 && !visited[nx][ny][broken]) { // 이동 가능한 경우
-//                         visited[nx][ny][broken] = true; // 방문 처리
-//                         queue.enqueue([nx, ny, broken]); // 다음 위치를 큐에 추가
-//                     }
-
-//                     if (arr[nx][ny] === 1 && broken === 0 && !visited[nx][ny][1]) { // 벽을 부술 수 있는 경우
-//                         visited[nx][ny][1] = true; // 벽을 부순 상태로 방문 처리
-//                         queue.enqueue([nx, ny, 1]); // 다음 위치를 큐에 추가
-//                     }
-//                 }
-//             }
-//         }
-//         steps++; // 이동 횟수 증가
-//     }
-
-//     return -1; // 도착지에 도달할 수 없는 경우 -1 반환
-// }
-// console.log(bfs());
+    for(const [dx, dy] of dir){
+        const nx = x+dx;
+        const ny = y+dy;
 
 
-// const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-// const [N, M] = input.shift().split(' ').map(Number);
-// const lab = input.map(line => line.split(' ').map(Number));
+	  // 해당 위치 그래프 범위를 벗어나지 않았다면
+      if (nx >= 0 && nx < N && ny >= 0 && ny < M) {
 
-// const directions= [
-//   [0, 1], [0, -1], [1, 0], [-1, 0]
-// ];
-
-// const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < N && y < M;
-
-// const bfs = (labCopy) =>{
-//   const queue=[];
-
-//   //바이러스 위치를 큐에 삽입
-//   for(let i=0; i<N; i++){
-//     for(let j=0; j<M; j++){
-//       if(labCopy[i][j]===2){
-//         queue.push([i, j])
-//       }
-//     }
-//   }
-
-//   //바이러스 옮기기
-//   while(queue.length){
-//     const [x, y] =queue.shift();
-
-//     for(const [dx, dy] of directions){
-//       const nx = x+dx;
-//       const ny = y+dy;
-
-//       if(isValidPosition(nx, ny)&&labCopy[nx][ny]===0){
-//         labCopy[nx][ny]=2;
-//         queue.push([nx, ny])
-//       }
-//     }
-//   }
-// }
-
-// //안전영역 계산하기
-// const safeArea=(labCopy)=>{
-//   let count =0;
-
-//   for(let i=0; i<N; i++){
-//     for(let j=0; j<M; j++){
-//       if(labCopy[i][j]===0){
-//         count++;
-//       }
-//     }
-//   }
-
-//   return count
-// }
-
-// //벽세우기
-// let maxSafeArea=0;
-
-// for(let i=0; i<N*M; i++){
-//   let x1 = Math.floor(i/M);
-//   let y1 = i%M;
-
-//   if(lab[x1][y1]!==0) continue
-
-//   for(let j=i+1; j<N*M; j++){
-//     let x2 = Math.floor(j/M);
-//     let y2 = j%M;
-
-//     if(lab[x2][y2]!==0) continue;
-
-//     for(let k=j+1; k<N*M; k++){
-//       let x3 = Math.floor(k/M);
-//       let y3 = k%M;
-
-//       if(lab[x3][y3]!==0) continue;
-
-//       let labCopy = lab.map(v=>v.slice());
-//       labCopy[x1][y1]=1;
-//       labCopy[x2][y2]=1;
-//       labCopy[x3][y3]=1;
-
-//       bfs(labCopy)
-//       let ss = safeArea(labCopy);
-//       maxSafeArea = Math.max(maxSafeArea, ss);
-//     }
-//   }
-// }
-
-// console.log(maxSafeArea)
+		// 해당 위치가 빈 공간이고, 방문한적이 없는 칸이라면
+        if (!graph[nx][ny] && !visited[nx][ny][isBreak]) {
+		  // 이동 칸 수 = 이전까지 이동해온 칸 수에 +1하여 누적 증가
+          visited[nx][ny][isBreak] = visited[x][y][isBreak] + 1;
+          queue.push([nx, ny, isBreak]);
+				
+		// 해당 위치에 벽이 있고, 벽을 한 번도 부순적이 없다면(벽 부수는 기회를 아직 사용한적 없으면) 
+        } else if (graph[nx][ny] && !isBreak) {
+          visited[nx][ny][isBreak + 1] = visited[x][y][isBreak] + 1;
+          queue.push([nx, ny, isBreak + 1]); // 벽 부수기 1회권 사용
+        }
+      }
+    }
+  }
+  return -1;
+};
+console.log(bfs());
