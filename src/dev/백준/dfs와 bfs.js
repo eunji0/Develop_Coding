@@ -3151,58 +3151,95 @@
 // console.log(bfs());
 
 //2583-영역 구하기
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [m, n, k] = input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(v=>v.split(' ').map(Number));
+// let graph = Array.from({length:m}, ()=>Array(n).fill(0));
+// let visited = Array.from({length:m}, ()=>Array(n).fill(false));
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+
+// //눈금칠하기
+// arr.forEach(v=>{
+//   const [x1, y1, x2, y2] = v;
+
+//   for(let i=x1; i<x2; i++){
+//     for(let j=y1; j<y2; j++){
+//       graph[j][i]=1
+//     }
+//   }
+// })
+
+// const bfs = (i, j)=>{
+//   const queue=[[i, j]];
+//   visited[i][j]=true;
+//   let count =1;
+
+//   while(queue.length){
+//     const [x, y] =queue.shift();
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny = y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<m&&ny<n&&!visited[nx][ny]&&!graph[nx][ny]){
+//         visited[nx][ny] = true;
+//         queue.push([nx, ny]);
+//         count++
+//       }
+//     }
+//   }
+
+//   return count
+// }
+
+// let result = [];
+
+// for(let i=0; i<m; i++){
+//   for(let j=0; j<n; j++){
+//     if(!visited[i][j]&&!graph[i][j]){
+//       result.push(bfs(i, j))
+//     }
+//   }
+// }
+
+// result.sort((a, b)=>a-b)
+// console.log(result.length);
+// console.log(result.join(' '))
+
+//2644-촌수계산
 const fs = require('fs');
 const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [m, n, k] = input[0].split(' ').map(Number);
-const arr = input.slice(1).map(v=>v.split(' ').map(Number));
-let graph = Array.from({length:m}, ()=>Array(n).fill(0));
-let visited = Array.from({length:m}, ()=>Array(n).fill(false));
-const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+const n = +input[0];
+const [a, b] = input[1].split(' ').map(Number);
+const m = +input[2];
+const arr = input.slice(3).map(v=>v.split(' ').map(Number));
+let graph = Array.from({length:n+1}, ()=>[]);
+let visited = Array(n+1).fill(false);
 
-//눈금칠하기
-arr.forEach(v=>{
-  const [x1, y1, x2, y2] = v;
-
-  for(let i=x1; i<x2; i++){
-    for(let j=y1; j<y2; j++){
-      graph[j][i]=1
-    }
-  }
+arr.map(([from, to])=>{
+  graph[from].push(to);
+  graph[to].push(from)
 })
 
-const bfs = (i, j)=>{
-  const queue=[[i, j]];
-  visited[i][j]=true;
-  let count =1;
+const bfs = (start, goal) => {
+  const queue = [[start, 0]];
+  visited[start]=true;
 
   while(queue.length){
-    const [x, y] =queue.shift();
+    const [cur, dep] = queue.shift();
 
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny = y+dy;
+    if(cur === goal) return dep;
 
-      if(nx>=0&&ny>=0&&nx<m&&ny<n&&!visited[nx][ny]&&!graph[nx][ny]){
-        visited[nx][ny] = true;
-        queue.push([nx, ny]);
-        count++
+    for(const next of graph[cur]){
+      if(!visited[next]){
+        visited[next]=true;
+        queue.push([next, dep+1])
       }
     }
   }
 
-  return count
+  return -1
 }
 
-let result = [];
-
-for(let i=0; i<m; i++){
-  for(let j=0; j<n; j++){
-    if(!visited[i][j]&&!graph[i][j]){
-      result.push(bfs(i, j))
-    }
-  }
-}
-
-result.sort((a, b)=>a-b)
-console.log(result.length);
-console.log(result.join(' '))
+console.log(bfs(a, b))
