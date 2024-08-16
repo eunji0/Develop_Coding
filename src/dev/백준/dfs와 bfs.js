@@ -3102,50 +3102,107 @@
 // }
 
 //2206-벽 부수고 이동하기
+// const fs = require('fs');
+// const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [N, M] = input.shift().split(' ').map(Number);
+// const graph = input.map((v) => v.split('').map(Number));
+// const visited = Array.from(Array(N), () => Array.from(Array(M), () => Array(2).fill(0)));
+// const dir = [[-1, 0], [1, 0], [0, 1], [0, -1]]; // 인접 네방향 x,y좌표
+
+// const bfs = () => {
+//   const queue = [[0, 0, 0]]; // 현재 위치 x,y좌표 및 벽이 부서진 횟수
+//   visited[0][0][0] = 1; // 시작하는 칸 수도 세야 하므로 방문한 칸수는 1로 시작
+//   let idx = 0;
+
+//   while (idx < queue.length) {
+// 	// isBreak: 벽이 부서진 횟수 담는 변수 (1번만 벽을 부술 수 있음)
+// 	// shift() 대신 인덱스로 큐 배열의 값에 접근
+//     const [x, y, isBreak] = queue[idx++];
+
+// 	// 목적지에 도달했으면 반환
+//     if (x === N - 1 && y === M - 1) {
+//       return visited[x][y][isBreak];
+//     }
+
+//     for(const [dx, dy] of dir){
+//         const nx = x+dx;
+//         const ny = y+dy;
+
+
+// 	  // 해당 위치 그래프 범위를 벗어나지 않았다면
+//       if (nx >= 0 && nx < N && ny >= 0 && ny < M) {
+
+// 		// 해당 위치가 빈 공간이고, 방문한적이 없는 칸이라면
+//         if (!graph[nx][ny] && !visited[nx][ny][isBreak]) {
+// 		  // 이동 칸 수 = 이전까지 이동해온 칸 수에 +1하여 누적 증가
+//           visited[nx][ny][isBreak] = visited[x][y][isBreak] + 1;
+//           queue.push([nx, ny, isBreak]);
+				
+// 		// 해당 위치에 벽이 있고, 벽을 한 번도 부순적이 없다면(벽 부수는 기회를 아직 사용한적 없으면) 
+//         } else if (graph[nx][ny] && !isBreak) {
+//           visited[nx][ny][isBreak + 1] = visited[x][y][isBreak] + 1;
+//           queue.push([nx, ny, isBreak + 1]); // 벽 부수기 1회권 사용
+//         }
+//       }
+//     }
+//   }
+//   return -1;
+// };
+// console.log(bfs());
+
+//2583-영역 구하기
 const fs = require('fs');
 const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [N, M] = input.shift().split(' ').map(Number);
-const graph = input.map((v) => v.split('').map(Number));
-const visited = Array.from(Array(N), () => Array.from(Array(M), () => Array(2).fill(0)));
-const dir = [[-1, 0], [1, 0], [0, 1], [0, -1]]; // 인접 네방향 x,y좌표
+const [m, n, k] = input[0].split(' ').map(Number);
+const arr = input.slice(1).map(v=>v.split(' ').map(Number));
+let graph = Array.from({length:m}, ()=>Array(n).fill(0));
+let visited = Array.from({length:m}, ()=>Array(n).fill(false));
+const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
-const bfs = () => {
-  const queue = [[0, 0, 0]]; // 현재 위치 x,y좌표 및 벽이 부서진 횟수
-  visited[0][0][0] = 1; // 시작하는 칸 수도 세야 하므로 방문한 칸수는 1로 시작
-  let idx = 0;
+//눈금칠하기
+arr.forEach(v=>{
+  const [x1, y1, x2, y2] = v;
 
-  while (idx < queue.length) {
-	// isBreak: 벽이 부서진 횟수 담는 변수 (1번만 벽을 부술 수 있음)
-	// shift() 대신 인덱스로 큐 배열의 값에 접근
-    const [x, y, isBreak] = queue[idx++];
-
-	// 목적지에 도달했으면 반환
-    if (x === N - 1 && y === M - 1) {
-      return visited[x][y][isBreak];
+  for(let i=x1; i<x2; i++){
+    for(let j=y1; j<y2; j++){
+      graph[j][i]=1
     }
+  }
+})
+
+const bfs = (i, j)=>{
+  const queue=[[i, j]];
+  visited[i][j]=true;
+  let count =1;
+
+  while(queue.length){
+    const [x, y] =queue.shift();
 
     for(const [dx, dy] of dir){
-        const nx = x+dx;
-        const ny = y+dy;
+      const nx = x+dx;
+      const ny = y+dy;
 
-
-	  // 해당 위치 그래프 범위를 벗어나지 않았다면
-      if (nx >= 0 && nx < N && ny >= 0 && ny < M) {
-
-		// 해당 위치가 빈 공간이고, 방문한적이 없는 칸이라면
-        if (!graph[nx][ny] && !visited[nx][ny][isBreak]) {
-		  // 이동 칸 수 = 이전까지 이동해온 칸 수에 +1하여 누적 증가
-          visited[nx][ny][isBreak] = visited[x][y][isBreak] + 1;
-          queue.push([nx, ny, isBreak]);
-				
-		// 해당 위치에 벽이 있고, 벽을 한 번도 부순적이 없다면(벽 부수는 기회를 아직 사용한적 없으면) 
-        } else if (graph[nx][ny] && !isBreak) {
-          visited[nx][ny][isBreak + 1] = visited[x][y][isBreak] + 1;
-          queue.push([nx, ny, isBreak + 1]); // 벽 부수기 1회권 사용
-        }
+      if(nx>=0&&ny>=0&&nx<m&&ny<n&&!visited[nx][ny]&&!graph[nx][ny]){
+        visited[nx][ny] = true;
+        queue.push([nx, ny]);
+        count++
       }
     }
   }
-  return -1;
-};
-console.log(bfs());
+
+  return count
+}
+
+let result = [];
+
+for(let i=0; i<m; i++){
+  for(let j=0; j<n; j++){
+    if(!visited[i][j]&&!graph[i][j]){
+      result.push(bfs(i, j))
+    }
+  }
+}
+
+result.sort((a, b)=>a-b)
+console.log(result.length);
+console.log(result.join(' '))
