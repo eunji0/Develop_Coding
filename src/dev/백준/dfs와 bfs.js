@@ -3328,33 +3328,108 @@
 // console.log(total)
 
 //13549-숨바꼭질3
+// const fs = require('fs');
+// let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [n, k] = input[0].split(' ').map(Number);
+// let visited = Array(100001).fill(false);
+
+// const bfs = (start, goal) =>{
+//     const queue = [[start, 0]];
+//     visited[start]=true
+
+//     while(queue.length){
+//         const [cur, sec] = queue.shift();
+//         const move = [cur-1, cur+1, cur*2];
+
+//         if(cur===goal) return sec;
+
+//         for(const m of move){
+//             if(!visited[m]&&m>=0&&m<=100000){
+//                 visited[m]=true;
+//                 if(m===cur*2){
+//                     queue.unshift([m, sec])
+//                 }else{
+//                     queue.push([m, sec+1])
+//                 }
+//               }
+//         }
+//     }
+
+// }
+
+// console.log(bfs(n, k))
+
+//16953-A->B
+// const fs = require('fs');
+// let input = fs.readFileSync(process.platform === "linux" ? "/dev/stdin" : "input.txt").toString().trim().split(' ');
+// const [a, b] = input.map(Number);
+
+// const bfs = (start, target) =>{
+//     const queue = [[start, 1]];
+
+//     while(queue.length){
+//         const [cur, sec] = queue.shift();
+//         const move = [cur*2, parseInt(cur.toString()+'1')];
+
+//         if(cur===target) return sec
+
+//         for(const m of move){
+//             if(m<=target){
+//                 queue.push([m, sec+1])
+//             }
+//         }
+//     }
+//     return -1
+// }
+
+// console.log(bfs(a, b))
+
+//1389-케빈 베이컨의 6단계 법칙
 const fs = require('fs');
-let input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
-const [n, k] = input[0].split(' ').map(Number);
-let visited = Array(100001).fill(false);
+let input = fs.readFileSync(process.platform === "linux" ? "/dev/stdin" : "input.txt").toString().trim().split('\n');
+const [n, m] = input[0].split(' ').map(Number);
+const arr = input.slice(1).map(v=>v.split(' ').map(Number))
+let graph = Array.from({length: n+1}, ()=>[]);
 
-const bfs = (start, goal) =>{
-    const queue = [[start, 0]];
-    visited[start]=true
+arr.map(([from, to])=>{
+  graph[from].push(to);
+  graph[to].push(from)
+})
 
-    while(queue.length){
-        const [cur, sec] = queue.shift();
-        const move = [cur-1, cur+1, cur*2];
+const bfs = (start, target) =>{
+  const queue = [[start, 0]];
+  let visited = Array(n+1).fill(false);
+  visited[start]=true;
+  
+  while(queue.length){
+    const [cur, sec] = queue.shift();
 
-        if(cur===goal) return sec;
+    if(cur===target) return sec
 
-        for(const m of move){
-            if(!visited[m]&&m>=0&&m<=100000){
-                visited[m]=true;
-                if(m===cur*2){
-                    queue.unshift([m, sec])
-                }else{
-                    queue.push([m, sec+1])
-                }
-              }
-        }
+    for(const m of graph[cur]){
+      if(!visited[m]){
+        visited[m]=true;
+        queue.push([m, sec+1])
+      }
     }
-
+  }
 }
 
-console.log(bfs(n, k))
+let answer =[];
+
+for(let i=1; i<=n; i++){
+
+  let result = [];
+  for(let j=1; j<=n; j++){
+    result.push(bfs(i, j))    
+  }
+
+  answer.push([i, result.reduce((a, c)=>a+c, 0)])
+}
+
+answer.sort((a, b)=>{
+  if(a[1]===b[1]) return a[0]-b[0]
+  return a[1]-b[1]
+})
+
+console.log(answer[0][0])
