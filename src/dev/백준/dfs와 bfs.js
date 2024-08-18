@@ -3385,51 +3385,179 @@
 // console.log(bfs(a, b))
 
 //1389-케빈 베이컨의 6단계 법칙
+// const fs = require('fs');
+// let input = fs.readFileSync(process.platform === "linux" ? "/dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(v=>v.split(' ').map(Number))
+// let graph = Array.from({length: n+1}, ()=>[]);
+
+// arr.map(([from, to])=>{
+//   graph[from].push(to);
+//   graph[to].push(from)
+// })
+
+// const bfs = (start, target) =>{
+//   const queue = [[start, 0]];
+//   let visited = Array(n+1).fill(false);
+//   visited[start]=true;
+  
+//   while(queue.length){
+//     const [cur, sec] = queue.shift();
+
+//     if(cur===target) return sec
+
+//     for(const m of graph[cur]){
+//       if(!visited[m]){
+//         visited[m]=true;
+//         queue.push([m, sec+1])
+//       }
+//     }
+//   }
+// }
+
+// let answer =[];
+
+// for(let i=1; i<=n; i++){
+
+//   let result = [];
+//   for(let j=1; j<=n; j++){
+//     result.push(bfs(i, j))    
+//   }
+
+//   answer.push([i, result.reduce((a, c)=>a+c, 0)])
+// }
+
+// answer.sort((a, b)=>{
+//   if(a[1]===b[1]) return a[0]-b[0]
+//   return a[1]-b[1]
+// })
+
+// console.log(answer[0][0])
+
+//16234-인구 이동
 const fs = require('fs');
 let input = fs.readFileSync(process.platform === "linux" ? "/dev/stdin" : "input.txt").toString().trim().split('\n');
-const [n, m] = input[0].split(' ').map(Number);
-const arr = input.slice(1).map(v=>v.split(' ').map(Number))
-let graph = Array.from({length: n+1}, ()=>[]);
+const [N, L, R] = input[0].split(' ').map(Number);
+const arr = input.slice(1).map(v => v.split(' ').map(Number));
 
-arr.map(([from, to])=>{
-  graph[from].push(to);
-  graph[to].push(from)
-})
+const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
-const bfs = (start, target) =>{
-  const queue = [[start, 0]];
-  let visited = Array(n+1).fill(false);
-  visited[start]=true;
-  
+const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < N && y < N;
+
+const bfs = (i, j, visited) =>{
+  const queue=[[i, j]];
+  const union = [[i, j]];
+  visited[i][j]=true;
+  let sum = arr[i][j]
+
   while(queue.length){
-    const [cur, sec] = queue.shift();
+    const [x, y] = queue.shift();
 
-    if(cur===target) return sec
+    for(const [dx, dy] of dir){
+      const nx=x+dx;
+      const ny = y+dy;
 
-    for(const m of graph[cur]){
-      if(!visited[m]){
-        visited[m]=true;
-        queue.push([m, sec+1])
+      if(isValidPosition(nx, ny)&&!visited[nx][ny]){
+        let m = Math.abs(arr[nx][ny]-arr[x][y]);
+        if(m>=L&&m<=R){
+          queue.push([nx, ny]);
+          union.push([nx, ny]);
+          visited[nx][ny]=true;
+          sum+=arr[nx][ny];
+        }
       }
     }
   }
-}
 
-let answer =[];
+  let avg = Math.floor(sum/union.length);
 
-for(let i=1; i<=n; i++){
-
-  let result = [];
-  for(let j=1; j<=n; j++){
-    result.push(bfs(i, j))    
+  for(const [x, y] of union){
+    arr[x][y] = avg
   }
 
-  answer.push([i, result.reduce((a, c)=>a+c, 0)])
+  return union.length>1
 }
 
-answer.sort((a, b)=>{
-  if(a[1]===b[1]) return a[0]-b[0]
-  return a[1]-b[1]
-})
+let days =0;
 
-console.log(answer[0][0])
+while(true){
+  let visited = Array.from({length: N}, ()=>Array(N).fill(false));
+  let move = false;
+
+  for(let i=0; i<N; i++){
+    for(let j=0; j<N; j++){
+      if(!visited[i][j]){
+        if(bfs(i, j, visited)){
+          move = true;
+        }
+      }
+    }
+  }
+
+  if(!move) break;
+  days++
+}
+
+console.log(days)
+
+
+
+
+
+
+
+// const bfs = (i, j, visited) => {
+//     const queue = [[i, j]];
+//     const union = [[i, j]];
+//     let sum = arr[i][j];
+//     visited[i][j] = true;
+
+//     while (queue.length) {
+//         const [x, y] = queue.shift();
+
+//         for (const [dx, dy] of dir) {
+//             const nx = x + dx;
+//             const ny = y + dy;
+
+//             if (isValidPosition(nx, ny) && !visited[nx][ny]) {
+//                 const diff = Math.abs(arr[nx][ny] - arr[x][y]);
+//                 if (diff >= L && diff <= R) {
+//                     visited[nx][ny] = true;
+//                     queue.push([nx, ny]);
+//                     union.push([nx, ny]);
+//                     sum += arr[nx][ny];
+//                 }
+//             }
+//         }
+//     }
+
+//     const avg = Math.floor(sum / union.length);
+//     for (const [x, y] of union) {
+//         arr[x][y] = avg;
+//     }
+
+//     return union.length > 1; // 연합이 형성되면 true 반환
+// };
+
+// let days = 0;
+
+// while (true) {
+//     let visited = Array.from({ length: N }, () => Array(N).fill(false));
+//     let moved = false;
+
+//     for (let i = 0; i < N; i++) {
+//         for (let j = 0; j < N; j++) {
+//             if (!visited[i][j]) {
+//                 if (bfs(i, j, visited)) {
+//                     moved = true;
+//                 }
+//             }
+//         }
+//     }
+
+//     if (!moved) break; // 더 이상 인구 이동이 없으면 종료
+//     days++;
+// }
+
+// console.log(days);
+
