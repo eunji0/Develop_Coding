@@ -3509,106 +3509,48 @@ let input = fs.readFileSync(filePath).toString().trim().split('\n');
 let tc = +input.shift();
 let index = 0;
 
-while (tc--) {
-  const [V, E] = input[index++].split(' ').map(Number);
-  const graph = Array.from({ length: V + 1 }, () => []);
-  const colors = Array(V + 1).fill(0); // 0: 미방문, 1: 첫 번째 색상, -1: 두 번째 색상
+while(tc--){
+  const [v, e] = input[index++].split(' ').map(Number);
+  const graph = Array.from({length: v+1}, ()=>[]);
+  const colors =Array(v+1).fill(0)//이분 그래프 여부를 같은 색으로 구분
 
-  for (let i = 0; i < E; i++) {
-    const [from, to] = input[index + i].split(' ').map(Number);
+  for(let i=0; i<e; i++){
+    const [from, to]=input[index+i].split(' ').map(Number);
     graph[from].push(to);
     graph[to].push(from);
   }
 
-  const bfs = (start) => {
-    let queue = [start];
-    colors[start] = 1; // 시작 노드는 첫 번째 색상(1)으로 칠함
+  const bfs = (start) =>{
+    const queue = [start];
+    colors[start]=1;
 
-    while (queue.length) {
-      let cur = queue.shift();
+    while(queue.length){
+      const cur = queue.shift();
 
-      for (let next of graph[cur]) {
-        if (colors[next] === 0) {
-          // 아직 방문하지 않은 노드라면, 현재 노드와 다른 색상으로 칠함
-          colors[next] = -colors[cur];
-          queue.push(next);
-        } else if (colors[next] === colors[cur]) {
-          // 인접 노드가 현재 노드와 같은 색상이라면 이분 그래프가 아님
-          return false;
+      for(const node of graph[cur]){
+        if(!colors[node]){
+          colors[node]=-colors[cur];
+          queue.push(node)
+        }else if(colors[node]===colors[cur]){
+          return false
         }
       }
     }
+
     return true;
-  };
+  }
 
-  let isBipartite = true;
+  let isa = true;
 
-  for (let i = 1; i <= V; i++) {
-    if (colors[i] === 0) {
-      if (!bfs(i)) {
-        isBipartite = false;
+  for(let i=1; i<=v; i++){
+    if(!colors[i]){
+      if(!bfs(i)){
+        isa=false;
         break;
       }
     }
   }
 
-  console.log(isBipartite ? 'YES' : 'NO');
-  index += E;
+  console.log(isa?'YES':'NO');
+  index+=e
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// while(tc--){
-//   const [V, E] = input[index++].split(' ').map(Number);
-//   const graph = Array.from({length: V+1}, ()=>[]);
-//   const color = Array(V+1).fill(0);
-
-//   for(let i=0; i<E; i++){
-//     const [from, to] = input[index+i].split(' ').map(Number);
-//     graph[from].push(to);
-//     graph[to].push(from)
-//   }
-
-//   const bfs = (start) =>{
-//     let queue=[start];
-//     color[start] = 1;
-
-//     while(queue.length){
-//       let cur = queue.shift();
-
-//       for(let next of graph[cur]){
-//         if(!color[next]){
-//           color[next] = -color[cur];
-//           queue.push(next)
-//         }else if(color[next]===color[cur]){
-//           return false
-//         }
-//       }
-//     }
-
-//     return true
-//   }
-
-//   let isB = true;
-
-//   for(let i=1; i<=V; i++){
-//     if(!color[i]){
-//       if(!bfs(i)){
-//         isB = false
-//         break;
-//       }
-//     }
-//   }
-
-//   console.log(isB ? 'YES' : 'No');
-//   index+=E
-// }
