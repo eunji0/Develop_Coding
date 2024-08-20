@@ -3435,129 +3435,180 @@
 // console.log(answer[0][0])
 
 //16234-인구 이동
-const fs = require('fs');
-let input = fs.readFileSync(process.platform === "linux" ? "/dev/stdin" : "input.txt").toString().trim().split('\n');
-const [N, L, R] = input[0].split(' ').map(Number);
-const arr = input.slice(1).map(v => v.split(' ').map(Number));
+// const fs = require('fs');
+// let input = fs.readFileSync(process.platform === "linux" ? "/dev/stdin" : "input.txt").toString().trim().split('\n');
+// const [N, L, R] = input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(v => v.split(' ').map(Number));
 
-const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+// const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
-const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < N && y < N;
+// const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < N && y < N;
 
-const bfs = (i, j, visited) =>{
-  const queue=[[i, j]];
-  const union = [[i, j]];
-  visited[i][j]=true;
-  let sum = arr[i][j]
+// const bfs = (i, j, visited) =>{
+//   const queue=[[i, j]];
+//   const union = [[i, j]];
+//   visited[i][j]=true;
+//   let sum = arr[i][j]
 
-  while(queue.length){
-    const [x, y] = queue.shift();
+//   while(queue.length){
+//     const [x, y] = queue.shift();
 
-    for(const [dx, dy] of dir){
-      const nx=x+dx;
-      const ny = y+dy;
+//     for(const [dx, dy] of dir){
+//       const nx=x+dx;
+//       const ny = y+dy;
 
-      if(isValidPosition(nx, ny)&&!visited[nx][ny]){
-        let m = Math.abs(arr[nx][ny]-arr[x][y]);
-        if(m>=L&&m<=R){
-          queue.push([nx, ny]);
-          union.push([nx, ny]);
-          visited[nx][ny]=true;
-          sum+=arr[nx][ny];
-        }
-      }
-    }
-  }
-
-  let avg = Math.floor(sum/union.length);
-
-  for(const [x, y] of union){
-    arr[x][y] = avg
-  }
-
-  return union.length>1
-}
-
-let days =0;
-
-while(true){
-  let visited = Array.from({length: N}, ()=>Array(N).fill(false));
-  let move = false;
-
-  for(let i=0; i<N; i++){
-    for(let j=0; j<N; j++){
-      if(!visited[i][j]){
-        if(bfs(i, j, visited)){
-          move = true;
-        }
-      }
-    }
-  }
-
-  if(!move) break;
-  days++
-}
-
-console.log(days)
-
-
-
-
-
-
-
-// const bfs = (i, j, visited) => {
-//     const queue = [[i, j]];
-//     const union = [[i, j]];
-//     let sum = arr[i][j];
-//     visited[i][j] = true;
-
-//     while (queue.length) {
-//         const [x, y] = queue.shift();
-
-//         for (const [dx, dy] of dir) {
-//             const nx = x + dx;
-//             const ny = y + dy;
-
-//             if (isValidPosition(nx, ny) && !visited[nx][ny]) {
-//                 const diff = Math.abs(arr[nx][ny] - arr[x][y]);
-//                 if (diff >= L && diff <= R) {
-//                     visited[nx][ny] = true;
-//                     queue.push([nx, ny]);
-//                     union.push([nx, ny]);
-//                     sum += arr[nx][ny];
-//                 }
-//             }
+//       if(isValidPosition(nx, ny)&&!visited[nx][ny]){
+//         let m = Math.abs(arr[nx][ny]-arr[x][y]);
+//         if(m>=L&&m<=R){
+//           queue.push([nx, ny]);
+//           union.push([nx, ny]);
+//           visited[nx][ny]=true;
+//           sum+=arr[nx][ny];
 //         }
+//       }
 //     }
+//   }
 
-//     const avg = Math.floor(sum / union.length);
-//     for (const [x, y] of union) {
-//         arr[x][y] = avg;
-//     }
+//   let avg = Math.floor(sum/union.length);
 
-//     return union.length > 1; // 연합이 형성되면 true 반환
-// };
+//   for(const [x, y] of union){
+//     arr[x][y] = avg
+//   }
 
-// let days = 0;
-
-// while (true) {
-//     let visited = Array.from({ length: N }, () => Array(N).fill(false));
-//     let moved = false;
-
-//     for (let i = 0; i < N; i++) {
-//         for (let j = 0; j < N; j++) {
-//             if (!visited[i][j]) {
-//                 if (bfs(i, j, visited)) {
-//                     moved = true;
-//                 }
-//             }
-//         }
-//     }
-
-//     if (!moved) break; // 더 이상 인구 이동이 없으면 종료
-//     days++;
+//   return union.length>1
 // }
 
-// console.log(days);
+// let days =0;
 
+// while(true){
+//   let visited = Array.from({length: N}, ()=>Array(N).fill(false));
+//   let move = false;
+
+//   for(let i=0; i<N; i++){
+//     for(let j=0; j<N; j++){
+//       if(!visited[i][j]){
+//         if(bfs(i, j, visited)){
+//           move = true;
+//         }
+//       }
+//     }
+//   }
+
+//   if(!move) break;
+//   days++
+// }
+
+// console.log(days)
+
+
+//1707-이분 그래프
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+let tc = +input.shift();
+let index = 0;
+
+while (tc--) {
+  const [V, E] = input[index++].split(' ').map(Number);
+  const graph = Array.from({ length: V + 1 }, () => []);
+  const colors = Array(V + 1).fill(0); // 0: 미방문, 1: 첫 번째 색상, -1: 두 번째 색상
+
+  for (let i = 0; i < E; i++) {
+    const [from, to] = input[index + i].split(' ').map(Number);
+    graph[from].push(to);
+    graph[to].push(from);
+  }
+
+  const bfs = (start) => {
+    let queue = [start];
+    colors[start] = 1; // 시작 노드는 첫 번째 색상(1)으로 칠함
+
+    while (queue.length) {
+      let cur = queue.shift();
+
+      for (let next of graph[cur]) {
+        if (colors[next] === 0) {
+          // 아직 방문하지 않은 노드라면, 현재 노드와 다른 색상으로 칠함
+          colors[next] = -colors[cur];
+          queue.push(next);
+        } else if (colors[next] === colors[cur]) {
+          // 인접 노드가 현재 노드와 같은 색상이라면 이분 그래프가 아님
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  let isBipartite = true;
+
+  for (let i = 1; i <= V; i++) {
+    if (colors[i] === 0) {
+      if (!bfs(i)) {
+        isBipartite = false;
+        break;
+      }
+    }
+  }
+
+  console.log(isBipartite ? 'YES' : 'NO');
+  index += E;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// while(tc--){
+//   const [V, E] = input[index++].split(' ').map(Number);
+//   const graph = Array.from({length: V+1}, ()=>[]);
+//   const color = Array(V+1).fill(0);
+
+//   for(let i=0; i<E; i++){
+//     const [from, to] = input[index+i].split(' ').map(Number);
+//     graph[from].push(to);
+//     graph[to].push(from)
+//   }
+
+//   const bfs = (start) =>{
+//     let queue=[start];
+//     color[start] = 1;
+
+//     while(queue.length){
+//       let cur = queue.shift();
+
+//       for(let next of graph[cur]){
+//         if(!color[next]){
+//           color[next] = -color[cur];
+//           queue.push(next)
+//         }else if(color[next]===color[cur]){
+//           return false
+//         }
+//       }
+//     }
+
+//     return true
+//   }
+
+//   let isB = true;
+
+//   for(let i=1; i<=V; i++){
+//     if(!color[i]){
+//       if(!bfs(i)){
+//         isB = false
+//         break;
+//       }
+//     }
+//   }
+
+//   console.log(isB ? 'YES' : 'No');
+//   index+=E
+// }
