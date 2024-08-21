@@ -3502,55 +3502,79 @@
 
 
 //1707-이분 그래프
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let tc = +input.shift();
+// let index = 0;
+
+// while(tc--){
+//   const [v, e] = input[index++].split(' ').map(Number);
+//   const graph = Array.from({length: v+1}, ()=>[]);
+//   const colors =Array(v+1).fill(0)//이분 그래프 여부를 같은 색으로 구분
+
+//   for(let i=0; i<e; i++){
+//     const [from, to]=input[index+i].split(' ').map(Number);
+//     graph[from].push(to);
+//     graph[to].push(from);
+//   }
+
+//   const bfs = (start) =>{
+//     const queue = [start];
+//     colors[start]=1;
+
+//     while(queue.length){
+//       const cur = queue.shift();
+
+//       for(const node of graph[cur]){
+//         if(!colors[node]){
+//           colors[node]=-colors[cur];
+//           queue.push(node)
+//         }else if(colors[node]===colors[cur]){
+//           return false
+//         }
+//       }
+//     }
+
+//     return true;
+//   }
+
+//   let isa = true;
+
+//   for(let i=1; i<=v; i++){
+//     if(!colors[i]){
+//       if(!bfs(i)){
+//         isa=false;
+//         break;
+//       }
+//     }
+//   }
+
+//   console.log(isa?'YES':'NO');
+//   index+=e
+// }
+
+//13460-구슬탈출2
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const [N, M]= input.shift().split(' ').map(Number);
 
-let tc = +input.shift();
-let index = 0;
+//문제 해결과정
+// 1. bfs로 탐색하며, [빨간공 위치, 파란공 위치, 반복수 cnt] 배열을 큐에 넣는다.
+// 2. 큐가 비어있을 때 까지 탐색하면서 아래의 절차를 수행한다.
 
-while(tc--){
-  const [v, e] = input[index++].split(' ').map(Number);
-  const graph = Array.from({length: v+1}, ()=>[]);
-  const colors =Array(v+1).fill(0)//이분 그래프 여부를 같은 색으로 구분
+ 
 
-  for(let i=0; i<e; i++){
-    const [from, to]=input[index+i].split(' ').map(Number);
-    graph[from].push(to);
-    graph[to].push(from);
-  }
+// a. 상하좌우를 모두 탐색한다.
+// b. 탐색할 때 빨간공이 먼저 움직일지, 파란공이 먼저 움직일지를 이동할 방향과 각 공의 좌표에 따라 정한다.
+// c. 빨간공과 파란공을 정해진 순서대로 이동시킨다.
+// d. 파란공이 구멍에 빠졌다면 정답이 아니므로 넘어간다.
+// e. 빨간공만 구멍에 빠졌다면 정답이므로 탐색을 멈춘다.
+// f. 빨간공과 파란공이 빠지지 않았을 때 다음을 수행한다.
+//      i. 만약 cnt가 10회라면, 더이상 기울일 수 없으므로 다음 방향의 이동을 수행한다.
+//      ii. 빨간공과 파란공의 기울여서 움직인 좌표가 움직이기 전과 같다면, 큐에 넣지 않는다.
+//      iii. 움직인 좌표가 움직이기 전과 다르다면, 이후 좌표를 큐에 넣어주면서 기울인 횟수 cnt를 증가시킨다.
 
-  const bfs = (start) =>{
-    const queue = [start];
-    colors[start]=1;
-
-    while(queue.length){
-      const cur = queue.shift();
-
-      for(const node of graph[cur]){
-        if(!colors[node]){
-          colors[node]=-colors[cur];
-          queue.push(node)
-        }else if(colors[node]===colors[cur]){
-          return false
-        }
-      }
-    }
-
-    return true;
-  }
-
-  let isa = true;
-
-  for(let i=1; i<=v; i++){
-    if(!colors[i]){
-      if(!bfs(i)){
-        isa=false;
-        break;
-      }
-    }
-  }
-
-  console.log(isa?'YES':'NO');
-  index+=e
-}
+ 
