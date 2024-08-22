@@ -3556,16 +3556,10 @@
 // }
 
 //13460-구슬탈출2
-const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [N, M]= input.shift().split(' ').map(Number);
 
 //문제 해결과정
 // 1. bfs로 탐색하며, [빨간공 위치, 파란공 위치, 반복수 cnt] 배열을 큐에 넣는다.
 // 2. 큐가 비어있을 때 까지 탐색하면서 아래의 절차를 수행한다.
-
- 
 
 // a. 상하좌우를 모두 탐색한다.
 // b. 탐색할 때 빨간공이 먼저 움직일지, 파란공이 먼저 움직일지를 이동할 방향과 각 공의 좌표에 따라 정한다.
@@ -3576,5 +3570,141 @@ const [N, M]= input.shift().split(' ').map(Number);
 //      i. 만약 cnt가 10회라면, 더이상 기울일 수 없으므로 다음 방향의 이동을 수행한다.
 //      ii. 빨간공과 파란공의 기울여서 움직인 좌표가 움직이기 전과 같다면, 큐에 넣지 않는다.
 //      iii. 움직인 좌표가 움직이기 전과 다르다면, 이후 좌표를 큐에 넣어주면서 기울인 횟수 cnt를 증가시킨다.
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+let input = fs.readFileSync(filePath).toString().trim().split('\n').map(v=>v.trim());
 
- 
+const sol =(input)=>{
+  let redBallPos = null;
+  let blueBallPos = null;
+  let holePos = null;
+  const maxCnt = 10;
+  const boardObj = {
+    RED: 'R',
+    BLUE: 'B',
+    HOLE: 'O',
+    EMPTY: '.',
+  }; // 상수 객체
+  const dirObj = {
+    TOP: 0,
+    RIGHT: 1,
+    BOTTOM: 2,
+    LEFT: 3,
+  }; // 상하좌우 방향 객체
+
+  const dx = [-1, 0, 1, 0];
+  const dy = [0, 1, 0, -1];
+
+  const boards = input.slice(1).map((str, rowIdx)=>{
+    const row = str.split('');
+
+    if(!redBallPos||!blueBallPos||!holePos){
+      row.forEach((elem, colIdx) => {
+        if (elem === boardObj.RED) redBallPos = [rowIdx, colIdx];
+        else if (elem === boardObj.BLUE) blueBallPos = [rowIdx, colIdx];
+        else if (elem === boardObj.HOLE) holePos = [rowIdx, colIdx];
+      });
+    }
+
+    return row
+  })
+
+    // bfs 탐색을 수행해야 하므로, 보드에서 직접 이동시킨다면 매 수행마다 공의 위치가 바뀐다.
+  // 그래서 보드에서 공 위치를 빈칸으로 남기고, 매 이동마다 상대적으로 위치를 파악한다.
+  boards[redBallPos[0]][redBallPos[1]] = boardObj.EMPTY;
+  boards[blueBallPos[0]][blueBallPos[1]] = boardObj.EMPTY;
+
+   // 현재 이동시킬 공과 다른 공의 위치를 상대적으로 비교하며, 다른 공이 길을 막았을 때 넘어가지 않도록 한다.
+  const moveBall =(ball, otherBall, dir)=>{
+    while (1) {
+      const nx = ball[0] + dx[dir];
+      const ny = ball[1] + dy[dir];
+
+      //이동 중인 공이 다른 공의 위치에 도달하거나, 빈 칸이 아니라면 멈춤
+      if (nx === otherBall[0] && ny === otherBall[1]) {
+        break;
+      } else if (boards[nx][ny] === boardObj.EMPTY) {
+        ball[0] = nx;
+        ball[1] = ny;
+      } else if (boards[nx][ny] === boardObj.HOLE) {
+        //구멍에 도달하면 공의 위치를 (-1, -1)로 설정하여 구멍에 빠졌음을 표시
+        // 먼저 이동한 공이 구멍에 빠졌다면, 뒤에 이동할 공도 구멍에 빠질 수 있으므로, (-1,-1)좌표를 부여한다.
+        ball[0] = -1;
+        ball[1] = -1;
+        break;
+      } else break;
+    }
+  }
+
+  const checkEscape =(ball)=>{
+    // 공이 구멍에 빠졌다면 (-1, -1) 좌표를 가지므로 이를 확인한다.
+    if (ball[0] === -1 && ball[1] === -1) return true;
+    return false;
+  }
+
+  // 이동방향에 따라 이동방향과 더 가까운 공을 먼저 이동시킨다.(Ex.방향이 좌측이면 더 왼쪽에 위치한 공)
+  const checkMoveRedballFirst=(red, blue, dir)=>{
+    if (
+      (dir === dirObj.TOP && red[0] < blue[0]) ||
+      (dir === dirObj.RIGHT && red[1] > blue[1]) ||
+      (dir === dirObj.BOTTOM && red[0] > blue[0]) ||
+      (dir === dirObj.LEFT && red[1] < blue[1])
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  // 공의 이동 전과 이동 후의 위치가 동일한지 검사한다. 빨간공, 파란공 둘다 동일하다면 더이상 큐로 탐색할 필요가 없다.
+  const checkStop=(beforeBall, afterBall)=>{
+    if (beforeBall[0] === afterBall[0] && beforeBall[1] === afterBall[1])
+      return true;
+    return false;
+  }
+
+  let answer = -1;
+  let findAnswer = 0;//빨간 공이 구멍에 빠졌는지를 추적
+  const queue = [[...redBallPos, ...blueBallPos, 1]];
+  // 두 공의 처음 위치를 큐에 넣어주고 시작한다.
+
+  while (queue.length) {
+    if (findAnswer) break;
+    const [rx, ry, bx, by, cnt] = queue.shift();
+
+    for (let dir = 0; dir < 4; dir++) {
+      const reds = [rx, ry];
+      const blues = [bx, by];
+
+      if (checkMoveRedballFirst(reds, blues, dir)) {
+        // 빨간공을 먼저 이동시키고, 파란공을 나중에 이동시킨다.
+        // reds, blues 배열의 0,1번 인덱스 값은 moveBall 함수 수행에 따라 변화하게 된다.
+        moveBall(reds, blues, dir);
+        moveBall(blues, reds, dir);
+      } else {
+        moveBall(blues, reds, dir);
+        moveBall(reds, blues, dir);
+      }
+
+      // 파란공이 빠졌다면, 무조건 정답이 아니다.
+      if (checkEscape(blues)) continue;
+      if (checkEscape(reds)) {
+        // 빨간공만 빠졌다면 정답이다.
+        findAnswer = 1;
+        answer = cnt;
+        break;
+      }
+      // 빨간공과 파란공 둘 다 제자리라면, 이동한 좌표를 큐에 넣을 필요가 없다.
+      if (checkStop([rx, ry], reds) && checkStop([bx, by], blues)) continue;
+      // 10회의 이동까지 정답을 못찾았다면, 더이상 탐색하지 않는다.
+      if (cnt === maxCnt) continue;
+
+      // 더 탐색할 수 있다면 큐에 넣어준다.
+      queue.push([...reds, ...blues, cnt + 1]);
+    }
+  }
+
+  console.log(answer);
+
+}
+
+sol(input)
