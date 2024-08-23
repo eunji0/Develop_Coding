@@ -3570,129 +3570,239 @@
 //      i. 만약 cnt가 10회라면, 더이상 기울일 수 없으므로 다음 방향의 이동을 수행한다.
 //      ii. 빨간공과 파란공의 기울여서 움직인 좌표가 움직이기 전과 같다면, 큐에 넣지 않는다.
 //      iii. 움직인 좌표가 움직이기 전과 다르다면, 이후 좌표를 큐에 넣어주면서 기울인 횟수 cnt를 증가시킨다.
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n').map(v=>v.trim());
+
+// const sol =(input)=>{
+//   let redBallPos = null;
+//   let blueBallPos = null;
+//   let holePos = null;
+//   const maxCnt = 10;
+//   const boardObj = {
+//     RED: 'R',
+//     BLUE: 'B',
+//     HOLE: 'O',
+//     EMPTY: '.',
+//   }; // 상수 객체
+//   const dirObj = {
+//     TOP: 0,
+//     RIGHT: 1,
+//     BOTTOM: 2,
+//     LEFT: 3,
+//   }; // 상하좌우 방향 객체
+
+//   const dx = [-1, 0, 1, 0];
+//   const dy = [0, 1, 0, -1];
+
+//   //빨간공, 파란공, 구멍 위치 삽입
+//   //공들 위치 확인하며 이동
+//   //공이 구멍에 빠졌는지 확인
+//   //빨간공이 해당 방향에 앞에 위치했는지 확인
+//   //이전 공의 위치와 이후공의 위치 가 같으면 stop
+//   //cnt가 max와 같아이면 stop
+//   //파란공이 구멍에 빠져도 stop
+//   //빨간공이 빠지면 정답
+
+//   const boards = input.slice(1).map((str, rowIdx)=>{
+//     const row = str.split('');
+
+//     row.map((e, colIdx)=>{
+//       if(e===boardObj.BLUE) blueBallPos=[rowIdx, colIdx]
+//       else if(e===boardObj.RED) redBallPos=[rowIdx, colIdx]
+//       else if(e===boardObj.HOLE) holePos=[rowIdx, colIdx]
+//     })
+
+//     return row
+//   })
+
+//   const moveBall=(ball, otherBall, dir)=>{
+//     while(true){
+//       const nx = ball[0]+dx[dir];
+//       const ny = ball[1]+dy[dir];
+
+//       if(nx===otherBall[0]&&ny===otherBall[1]){
+//         break
+//       }else if(boards[nx][ny]===boardObj.EMPTY){
+//         ball[0]=nx;
+//         ball[1]=ny
+//       }else if(boards[nx][ny]===boardObj.HOLE){
+//         ball[0]=-1;
+//         ball[1]=-1;
+//         break
+//       }
+//       else break
+//     }
+//   }
+
+//   const checkEscape = (ball)=>{
+//     if(ball[0]===-1&&ball[1]===-1) return true;
+//     return false
+//   }
+
+//   const firstMoveRedBall = (red, blue, dir) =>{
+//     if(
+//       (dir===dirObj.TOP&&red[0]<blue[0])||
+//       (dir===dirObj.BOTTOM&&red[0]>blue[0])||
+//       (dir===dirObj.RIGHT&&red[1]>blue[1])||
+//       (dir===dirObj.LEFT&&red[1]<blue[1])
+//     ){
+//       return true
+//     }
+//     return false
+//   }
+
+//   const checkStop=(beforeBall, afterBall)=>{
+//     if (beforeBall[0] === afterBall[0] && beforeBall[1] === afterBall[1])
+//       return true;
+//     return false;
+//   }
+
+//   let answer = -1;
+//   let findAnswer = 0;
+//   const queue = [[...redBallPos, ...blueBallPos, 1]];
+
+//   while (queue.length) {
+//     if (findAnswer) break;
+//     const [rx, ry, bx, by, cnt] = queue.shift();
+
+//     for(let dir =0; dir<4; dir++){
+//       const reds = [rx, ry];
+//       const blues = [bx, by];
+
+//       if(firstMoveRedBall(reds, blues, dir)){
+//         moveBall(reds, blues, dir);
+//         moveBall(blues, reds, dir);
+//       }else{
+//         moveBall(blues, reds, dir);
+//         moveBall(reds, blues, dir);
+//       }
+
+//       if(checkEscape(blues)) continue
+//       if(checkEscape(reds)){
+//         findAnswer=1;
+//         answer=cnt;
+//         break
+//       }
+      
+//       if (checkStop([rx, ry], reds) && checkStop([bx, by], blues)) continue;
+//       if(cnt===maxCnt) continue
+
+//       queue.push([...reds, ...blues, cnt + 1]);
+//     }
+//   }
+
+//   console.log(answer)
+// }
+
+// sol(input)
+
+
+//2573-빙산
+
+//문제해결과정
+// 동서남북 네 방향으로 붙어있는 0이 저장된 칸의 개수만큼 줄어든다.
+//단, 각 칸에 저장된 높이는 0보다 더 줄어들지 않는다.
+//빙산이 두 덩어리 이상으로 분리되는 최초의 시간(년)
+//만일 전부 다 녹을 때까지 두 덩어리 이상으로 분리되지 않으면 프로그램은 0을 출력
+
+//덩어리 개수 확인하는 함수
+//a.0이 아니고, 방문한적이 없는 자리여야함
+//b.count=[]에 크기 별로 push
+//c.count개수가 2이상이면 결과값 출력
+//d. 만약 전부 다 0이라면(flat()과 every()로 확인) 0을 출력
+
+//높이 줄어드는 함수
+
+//전부 다 녹았는지 확인하는 함수
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n').map(v=>v.trim());
+let input = fs.readFileSync(filePath).toString().trim().split('\n').map(v => v.trim());
+const [n, m] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map(v => v.split(' ').map(Number));
+let dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < n && y < m;
 
-const sol =(input)=>{
-  let redBallPos = null;
-  let blueBallPos = null;
-  let holePos = null;
-  const maxCnt = 10;
-  const boardObj = {
-    RED: 'R',
-    BLUE: 'B',
-    HOLE: 'O',
-    EMPTY: '.',
-  }; // 상수 객체
-  const dirObj = {
-    TOP: 0,
-    RIGHT: 1,
-    BOTTOM: 2,
-    LEFT: 3,
-  }; // 상하좌우 방향 객체
+//빙산을 녹이는 함수
+//해당 부분이 0보다 커야 함
+//주변이 0이 몇개인지 count
+//그만큼 뺴서 0과 비교 Math.max
+//큰 값을 적용 후 반환
+const reduceHeight = () =>{
+  let newArr = JSON.parse(JSON.stringify(arr));
 
-  const dx = [-1, 0, 1, 0];
-  const dy = [0, 1, 0, -1];
+  for(let i=0; i<n; i++){
+    for(let j=0; j<m; j++){
+      if(arr[i][j]>0){
+        let reduceCount=0;
+        for(let [dx, dy] of dir){
+          const nx = i+dx;
+          const ny = j+dy;
 
-  //빨간공, 파란공, 구멍 위치 삽입
-  //공들 위치 확인하며 이동
-  //공이 구멍에 빠졌는지 확인
-  //빨간공이 해당 방향에 앞에 위치했는지 확인
-  //이전 공의 위치와 이후공의 위치 가 같으면 stop
-  //cnt가 max와 같아이면 stop
-  //파란공이 구멍에 빠져도 stop
-  //빨간공이 빠지면 정답
-
-  const boards = input.slice(1).map((str, rowIdx)=>{
-    const row = str.split('');
-
-    row.map((e, colIdx)=>{
-      if(e===boardObj.BLUE) blueBallPos=[rowIdx, colIdx]
-      else if(e===boardObj.RED) redBallPos=[rowIdx, colIdx]
-      else if(e===boardObj.HOLE) holePos=[rowIdx, colIdx]
-    })
-
-    return row
-  })
-
-  const moveBall=(ball, otherBall, dir)=>{
-    while(true){
-      const nx = ball[0]+dx[dir];
-      const ny = ball[1]+dy[dir];
-
-      if(nx===otherBall[0]&&ny===otherBall[1]){
-        break
-      }else if(boards[nx][ny]===boardObj.EMPTY){
-        ball[0]=nx;
-        ball[1]=ny
-      }else if(boards[nx][ny]===boardObj.HOLE){
-        ball[0]=-1;
-        ball[1]=-1;
-        break
+          if(isValidPosition(nx, ny)&&arr[nx][ny]===0){
+            reduceCount++;
+          }
+        }
+        newArr[i][j]=Math.max(0, arr[i][j]-reduceCount)
       }
-      else break
     }
   }
 
-  const checkEscape = (ball)=>{
-    if(ball[0]===-1&&ball[1]===-1) return true;
-    return false
-  }
-
-  const firstMoveRedBall = (red, blue, dir) =>{
-    if(
-      (dir===dirObj.TOP&&red[0]<blue[0])||
-      (dir===dirObj.BOTTOM&&red[0]>blue[0])||
-      (dir===dirObj.RIGHT&&red[1]>blue[1])||
-      (dir===dirObj.LEFT&&red[1]<blue[1])
-    ){
-      return true
-    }
-    return false
-  }
-
-  const checkStop=(beforeBall, afterBall)=>{
-    if (beforeBall[0] === afterBall[0] && beforeBall[1] === afterBall[1])
-      return true;
-    return false;
-  }
-
-  let answer = -1;
-  let findAnswer = 0;
-  const queue = [[...redBallPos, ...blueBallPos, 1]];
-
-  while (queue.length) {
-    if (findAnswer) break;
-    const [rx, ry, bx, by, cnt] = queue.shift();
-
-    for(let dir =0; dir<4; dir++){
-      const reds = [rx, ry];
-      const blues = [bx, by];
-
-      if(firstMoveRedBall(reds, blues, dir)){
-        moveBall(reds, blues, dir);
-        moveBall(blues, reds, dir);
-      }else{
-        moveBall(blues, reds, dir);
-        moveBall(reds, blues, dir);
-      }
-
-      if(checkEscape(blues)) continue
-      if(checkEscape(reds)){
-        findAnswer=1;
-        answer=cnt;
-        break
-      }
-      
-      if (checkStop([rx, ry], reds) && checkStop([bx, by], blues)) continue;
-      if(cnt===maxCnt) continue
-
-      queue.push([...reds, ...blues, cnt + 1]);
-    }
-  }
-
-  console.log(answer)
+  return newArr
 }
 
-sol(input)
+//분리된 섬이 몇개인 세는 함수
+const countIland = (arr, visited) =>{
+  let count =0;
+
+  for(let i=0; i<n; i++){
+    for(let j=0; j<m; j++){
+      if(arr[i][j]>0&&!visited[i][j]){
+        bfs(arr, visited, i, j);
+        count++;
+      }
+    }
+  }
+
+  return count
+}
+
+const bfs = (arr, visited, i, j) =>{
+  const queue=[[i, j]];
+  visited[i][j]=true;
+
+  while(queue.length){
+    const [x, y] =queue.shift();
+
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny = y+dy;
+
+      if(isValidPosition(nx, ny)&&!visited[nx][ny]&&arr[nx][ny]>0){
+        visited[nx][ny]=true;
+        queue.push([nx, ny])
+      }
+    }
+  }
+}
+
+let years =0;
+
+while(true){
+  let visited = Array.from({length: n}, ()=>Array(m).fill(false));
+  let ilands = countIland(arr, visited);
+
+  if(ilands>1){
+    console.log(years);
+    break
+  }
+
+  if(ilands===0){
+    console.log(0);
+    break
+  }
+
+  arr = reduceHeight();
+  years++;
+}
