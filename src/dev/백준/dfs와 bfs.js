@@ -3822,36 +3822,82 @@
 //층수를 올라거나 내려가는 함수
 //층수 범위를 벗어나는 지 확인하는 함수
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim();
+// const [F, S, G, U, D] = input.split(' ').map(Number);
+
+// // BFS를 사용하여 최소 버튼 수를 구하는 함수
+// const bfs = (start) =>{
+//   const queue=[[start, 0]];
+//   let visited = Array(F+1).fill(false);
+//   visited[start]=true;
+
+//   while(queue.length){
+//     const [now, count] = queue.shift();
+
+//     if(now===G) return count
+
+//     // U 버튼을 눌렀을 때
+//     if (U > 0 && now + U <= F && !visited[now + U]) {
+//       visited[now + U] = true;
+//       queue.push([now + U, count + 1]);
+//     }
+
+//     // D 버튼을 눌렀을 때
+//     if (D > 0 && now - D >= 1 && !visited[now - D]) {
+//       visited[now - D] = true;
+//       queue.push([now - D, count + 1]);
+//     }
+//   }
+
+//   return 'use the stairs'
+// }
+
+// console.log(bfs(S))
+
+
+//1926-그림
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim();
-const [F, S, G, U, D] = input.split(' ').map(Number);
+let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const [n, m] = input[0].split(' ').map(Number);
+const arr = input.slice(1).map(v=>v.split(' ').map(Number));
+let visited = Array.from({length:n}, ()=>Array(m).fill(false));
+const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
-// BFS를 사용하여 최소 버튼 수를 구하는 함수
-const bfs = (start) =>{
-  const queue=[[start, 0]];
-  let visited = Array(F+1).fill(false);
-  visited[start]=true;
+const bfs = (i, j)=>{
+  const queue =[[i, j]];
+  visited[i][j]=true;
+  let count =1;
 
   while(queue.length){
-    const [now, count] = queue.shift();
+    const [x, y] =queue.shift();
 
-    if(now===G) return count
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny = y+dy;
 
-    // U 버튼을 눌렀을 때
-    if (U > 0 && now + U <= F && !visited[now + U]) {
-      visited[now + U] = true;
-      queue.push([now + U, count + 1]);
-    }
-
-    // D 버튼을 눌렀을 때
-    if (D > 0 && now - D >= 1 && !visited[now - D]) {
-      visited[now - D] = true;
-      queue.push([now - D, count + 1]);
+      if(nx>=0&ny>=0&&nx<n&&ny<m&&!visited[nx][ny]&&arr[nx][ny]){
+        visited[nx][ny]=true;
+        queue.push([nx, ny]);
+        count++;
+      }
     }
   }
 
-  return 'use the stairs'
+  return count
 }
 
-console.log(bfs(S))
+let result = [];
+
+for(let i=0; i<n; i++){
+  for(let j=0; j<m; j++){
+    if(!visited[i][j]&&arr[i][j]){
+      result.push(bfs(i, j))
+    }
+  }
+}
+
+console.log(result.length)
+console.log(result.length>0?Math.max(...result):0)
