@@ -3903,63 +3903,162 @@
 // console.log(result.length>0?Math.max(...result):0)
 
 //9019-DSLR
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const t = +input[0];
+
+// const dMove = (num) => {
+//   return num * 2 % 10000;
+// }
+
+// const sMove = (num) => {
+//   return num === 0 ? 9999 : num - 1;
+// }
+
+// const lMove = (num) => {
+//   return (num % 1000) * 10 + Math.floor(num / 1000);
+// }
+
+// const rMove = (num) => {
+//   return (num % 10) * 1000 + Math.floor(num / 10);
+// }
+
+// const bfs = (start, goal) => {
+//   const queue = [[start, ""]];
+//   const visited = Array(10000).fill(false);
+//   visited[start] = true;
+
+//   while (queue.length) {
+//     const [current, commands] = queue.shift();
+
+//     if (current === goal) return commands;
+
+//     const nextD = dMove(current);
+//     const nextS = sMove(current);
+//     const nextL = lMove(current);
+//     const nextR = rMove(current);
+
+//     if (!visited[nextD]) {
+//       visited[nextD] = true;
+//       queue.push([nextD, commands + 'D']);
+//     }
+//     if (!visited[nextS]) {
+//       visited[nextS] = true;
+//       queue.push([nextS, commands + 'S']);
+//     }
+//     if (!visited[nextL]) {
+//       visited[nextL] = true;
+//       queue.push([nextL, commands + 'L']);
+//     }
+//     if (!visited[nextR]) {
+//       visited[nextR] = true;
+//       queue.push([nextR, commands + 'R']);
+//     }
+//   }
+// }
+
+// for (let i = 1; i <= t; i++) {
+//   const [a, b] = input[i].split(' ').map(Number);
+//   console.log(bfs(a, b));
+// }
+
+
+//3055-탈출
+
+//비어있는 곳은 '.'
+//물이 차있는 지역은 '*'
+//돌은 'X' 
+//비버의 굴은 'D'
+//고슴도치의 위치는 'S'
+
+//물이 있는 칸과 인접해있는 비어있는 칸(적어도 한 변을 공유)은 물이 차게 된다.
+//물과 고슴도치는 돌을 통과할 수 없다.
+//고슴도치는 물로 차있는 구역으로 이동할 수 없다 
+//물도 비버의 소굴로 이동할 수 없다.
+//고슴도치가 안전하게 비버의 굴로 이동하기 위해 필요한 최소 시간
+
+//고슴도치는 물이 찰 예정인 칸으로 이동할 수 없다
+//다음 시간에 물이 찰 예정인 칸으로 고슴도치는 이동할 수 없다.
+
+
+//비버의 굴 위치, 고슴도치의 위치 삽입
+//고슴 도치가 이동한 후 고슴도치 위치를 빈칸으로 만들어줘야 함.
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const t = +input[0];
+const [r, c] = input[0].split(' ').map(Number);
+const forest = input.slice(1).map(line => line.split(''));
+const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
-const dMove = (num) => {
-  return num * 2 % 10000;
-}
+let startPosition = null;
+let holePosition = null;
+let waterQueue = [];
+let waterTime = Array.from({ length: r }, () => Array(c).fill(Infinity));
 
-const sMove = (num) => {
-  return num === 0 ? 9999 : num - 1;
-}
-
-const lMove = (num) => {
-  return (num % 1000) * 10 + Math.floor(num / 1000);
-}
-
-const rMove = (num) => {
-  return (num % 10) * 1000 + Math.floor(num / 10);
-}
-
-const bfs = (start, goal) => {
-  const queue = [[start, ""]];
-  const visited = Array(10000).fill(false);
-  visited[start] = true;
-
-  while (queue.length) {
-    const [current, commands] = queue.shift();
-
-    if (current === goal) return commands;
-
-    const nextD = dMove(current);
-    const nextS = sMove(current);
-    const nextL = lMove(current);
-    const nextR = rMove(current);
-
-    if (!visited[nextD]) {
-      visited[nextD] = true;
-      queue.push([nextD, commands + 'D']);
-    }
-    if (!visited[nextS]) {
-      visited[nextS] = true;
-      queue.push([nextS, commands + 'S']);
-    }
-    if (!visited[nextL]) {
-      visited[nextL] = true;
-      queue.push([nextL, commands + 'L']);
-    }
-    if (!visited[nextR]) {
-      visited[nextR] = true;
-      queue.push([nextR, commands + 'R']);
+// 초기 위치 찾기
+for (let i = 0; i < r; i++) {
+  for (let j = 0; j < c; j++) {
+    if (forest[i][j] === 'S') {
+      startPosition = [i, j];
+    } else if (forest[i][j] === 'D') {
+      holePosition = [i, j];
+    } else if (forest[i][j] === '*') {
+      waterQueue.push([i, j]);
+      waterTime[i][j] = 0;
     }
   }
 }
 
-for (let i = 1; i <= t; i++) {
-  const [a, b] = input[i].split(' ').map(Number);
-  console.log(bfs(a, b));
+// 물 퍼뜨리기
+const fillWater = () => {
+  while (waterQueue.length) {
+    const [x, y] = waterQueue.shift();
+
+    for (const [dx, dy] of directions) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < r && ny < c) {
+        if (forest[nx][ny] === '.' && waterTime[nx][ny] === Infinity) {
+          waterTime[nx][ny] = waterTime[x][y] + 1;
+          waterQueue.push([nx, ny]);
+        }
+      }
+    }
+  }
 }
+
+// 고슴도치 이동
+const moveHedgehog = () => {
+  const queue = [[...startPosition, 0]];
+  const visited = Array.from({ length: r }, () => Array(c).fill(false));
+  visited[startPosition[0]][startPosition[1]] = true;
+
+  while (queue.length) {
+    const [x, y, time] = queue.shift();
+
+    if (x === holePosition[0] && y === holePosition[1]) {
+      return time;
+    }
+
+    for (const [dx, dy] of directions) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < r && ny < c && !visited[nx][ny]) {
+        if ((forest[nx][ny] === '.' || forest[nx][ny] === 'D') && time + 1 < waterTime[nx][ny]) {
+          visited[nx][ny] = true;
+          queue.push([nx, ny, time + 1]);
+        }
+      }
+    }
+  }
+
+  return "KAKTUS";
+}
+
+fillWater();
+console.log(moveHedgehog());
