@@ -3716,93 +3716,142 @@
 
 //전부 다 녹았는지 확인하는 함수
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n').map(v => v.trim());
+// const [n, m] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map(v => v.split(' ').map(Number));
+// let dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+// const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < n && y < m;
+
+// //빙산을 녹이는 함수
+// const reduceHeight = () =>{
+//   let newArr = JSON.parse(JSON.stringify(arr));
+
+//   for(let i=0; i<n; i++){
+//     for(let j=0; j<m; j++){
+//       if(arr[i][j]>0){
+//         let reduceCount=0;
+//         for(let [dx, dy] of dir){
+//           const nx = i+dx;
+//           const ny = j+dy;
+
+//           if(isValidPosition(nx, ny)&&arr[nx][ny]===0){
+//             reduceCount++;
+//           }
+//         }
+//         newArr[i][j]=Math.max(0, arr[i][j]-reduceCount)
+//       }
+//     }
+//   }
+
+//   return newArr
+// }
+
+// //분리된 섬이 몇개인 세는 함수
+// const countIland = (arr, visited) =>{
+//   let count =0;
+
+//   for(let i=0; i<n; i++){
+//     for(let j=0; j<m; j++){
+//       if(arr[i][j]>0&&!visited[i][j]){
+//         bfs(arr, visited, i, j);
+//         count++;
+//       }
+//     }
+//   }
+
+//   return count
+// }
+
+// const bfs = (arr, visited, i, j) =>{
+//   const queue=[[i, j]];
+//   visited[i][j]=true;
+
+//   while(queue.length){
+//     const [x, y] =queue.shift();
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny = y+dy;
+
+//       if(isValidPosition(nx, ny)&&!visited[nx][ny]&&arr[nx][ny]>0){
+//         visited[nx][ny]=true;
+//         queue.push([nx, ny])
+//       }
+//     }
+//   }
+// }
+
+// let years =0;
+
+// while(true){
+//   let visited = Array.from({length: n}, ()=>Array(m).fill(false));
+//   let ilands = countIland(arr, visited);
+
+//   if(ilands>1){
+//     console.log(years);
+//     break
+//   }
+
+//   if(ilands===0){
+//     console.log(0);
+//     break
+//   }
+
+//   arr = reduceHeight();
+//   years++;
+// }
+
+//5014-스타트링크
+
+//1층부터 가장 높은 층은 F층
+// 강호가 지금 있는 곳은 S층
+//스타트링크가 있는 곳의 위치는 G층(목적지)
+//U버튼은 위로 U층을 가는 버튼
+//D버튼은 아래로 D층을 가는 버튼
+
+//만약, U층 위, 또는 D층 아래에 해당하는 층이 없을 때는, 엘리베이터는 움직이지 않는다
+//만약, 엘리베이터를 이용해서 G층에 갈 수 없다면, "use the stairs"를 출력
+
+//출력: G층에 도착하려면, 버튼을 적어도 몇 번 눌러야 하는지
+
+// 층수 정렬: 1,2,3,4,5,6,7,8,9,10(1부터 f까지 나열)
+//1 3 5 7 9 8 10
+
+//층수를 올라거나 내려가는 함수
+//층수 범위를 벗어나는 지 확인하는 함수
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n').map(v => v.trim());
-const [n, m] = input[0].split(' ').map(Number);
-let arr = input.slice(1).map(v => v.split(' ').map(Number));
-let dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
-const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < n && y < m;
+let input = fs.readFileSync(filePath).toString().trim();
+const [F, S, G, U, D] = input.split(' ').map(Number);
 
-//빙산을 녹이는 함수
-//해당 부분이 0보다 커야 함
-//주변이 0이 몇개인지 count
-//그만큼 뺴서 0과 비교 Math.max
-//큰 값을 적용 후 반환
-const reduceHeight = () =>{
-  let newArr = JSON.parse(JSON.stringify(arr));
-
-  for(let i=0; i<n; i++){
-    for(let j=0; j<m; j++){
-      if(arr[i][j]>0){
-        let reduceCount=0;
-        for(let [dx, dy] of dir){
-          const nx = i+dx;
-          const ny = j+dy;
-
-          if(isValidPosition(nx, ny)&&arr[nx][ny]===0){
-            reduceCount++;
-          }
-        }
-        newArr[i][j]=Math.max(0, arr[i][j]-reduceCount)
-      }
-    }
-  }
-
-  return newArr
-}
-
-//분리된 섬이 몇개인 세는 함수
-const countIland = (arr, visited) =>{
-  let count =0;
-
-  for(let i=0; i<n; i++){
-    for(let j=0; j<m; j++){
-      if(arr[i][j]>0&&!visited[i][j]){
-        bfs(arr, visited, i, j);
-        count++;
-      }
-    }
-  }
-
-  return count
-}
-
-const bfs = (arr, visited, i, j) =>{
-  const queue=[[i, j]];
-  visited[i][j]=true;
+// BFS를 사용하여 최소 버튼 수를 구하는 함수
+const bfs = (start) =>{
+  const queue=[[start, 0]];
+  let visited = Array(F+1).fill(false);
+  visited[start]=true;
 
   while(queue.length){
-    const [x, y] =queue.shift();
+    const [now, count] = queue.shift();
 
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny = y+dy;
+    if(now===G) return count
 
-      if(isValidPosition(nx, ny)&&!visited[nx][ny]&&arr[nx][ny]>0){
-        visited[nx][ny]=true;
-        queue.push([nx, ny])
-      }
+    // U 버튼을 눌렀을 때
+    if (U > 0 && now + U <= F && !visited[now + U]) {
+      visited[now + U] = true;
+      queue.push([now + U, count + 1]);
+    }
+
+    // D 버튼을 눌렀을 때
+    if (D > 0 && now - D >= 1 && !visited[now - D]) {
+      visited[now - D] = true;
+      queue.push([now - D, count + 1]);
     }
   }
+
+  return 'use the stairs'
 }
 
-let years =0;
-
-while(true){
-  let visited = Array.from({length: n}, ()=>Array(m).fill(false));
-  let ilands = countIland(arr, visited);
-
-  if(ilands>1){
-    console.log(years);
-    break
-  }
-
-  if(ilands===0){
-    console.log(0);
-    break
-  }
-
-  arr = reduceHeight();
-  years++;
-}
+console.log(bfs(S))
