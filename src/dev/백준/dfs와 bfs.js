@@ -3858,46 +3858,108 @@
 
 
 //1926-그림
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(v=>v.split(' ').map(Number));
+// let visited = Array.from({length:n}, ()=>Array(m).fill(false));
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+
+// const bfs = (i, j)=>{
+//   const queue =[[i, j]];
+//   visited[i][j]=true;
+//   let count =1;
+
+//   while(queue.length){
+//     const [x, y] =queue.shift();
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny = y+dy;
+
+//       if(nx>=0&ny>=0&&nx<n&&ny<m&&!visited[nx][ny]&&arr[nx][ny]){
+//         visited[nx][ny]=true;
+//         queue.push([nx, ny]);
+//         count++;
+//       }
+//     }
+//   }
+
+//   return count
+// }
+
+// let result = [];
+
+// for(let i=0; i<n; i++){
+//   for(let j=0; j<m; j++){
+//     if(!visited[i][j]&&arr[i][j]){
+//       result.push(bfs(i, j))
+//     }
+//   }
+// }
+
+// console.log(result.length)
+// console.log(result.length>0?Math.max(...result):0)
+
+//9019-DSLR
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [n, m] = input[0].split(' ').map(Number);
-const arr = input.slice(1).map(v=>v.split(' ').map(Number));
-let visited = Array.from({length:n}, ()=>Array(m).fill(false));
-const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
-const bfs = (i, j)=>{
-  const queue =[[i, j]];
-  visited[i][j]=true;
-  let count =1;
+const t = +input[0];
 
-  while(queue.length){
-    const [x, y] =queue.shift();
-
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny = y+dy;
-
-      if(nx>=0&ny>=0&&nx<n&&ny<m&&!visited[nx][ny]&&arr[nx][ny]){
-        visited[nx][ny]=true;
-        queue.push([nx, ny]);
-        count++;
-      }
-    }
-  }
-
-  return count
+const dMove = (num) => {
+  return num * 2 % 10000;
 }
 
-let result = [];
+const sMove = (num) => {
+  return num === 0 ? 9999 : num - 1;
+}
 
-for(let i=0; i<n; i++){
-  for(let j=0; j<m; j++){
-    if(!visited[i][j]&&arr[i][j]){
-      result.push(bfs(i, j))
+const lMove = (num) => {
+  return (num % 1000) * 10 + Math.floor(num / 1000);
+}
+
+const rMove = (num) => {
+  return (num % 10) * 1000 + Math.floor(num / 10);
+}
+
+const bfs = (start, goal) => {
+  const queue = [[start, ""]];
+  const visited = Array(10000).fill(false);
+  visited[start] = true;
+
+  while (queue.length) {
+    const [current, commands] = queue.shift();
+
+    if (current === goal) return commands;
+
+    const nextD = dMove(current);
+    const nextS = sMove(current);
+    const nextL = lMove(current);
+    const nextR = rMove(current);
+
+    if (!visited[nextD]) {
+      visited[nextD] = true;
+      queue.push([nextD, commands + 'D']);
+    }
+    if (!visited[nextS]) {
+      visited[nextS] = true;
+      queue.push([nextS, commands + 'S']);
+    }
+    if (!visited[nextL]) {
+      visited[nextL] = true;
+      queue.push([nextL, commands + 'L']);
+    }
+    if (!visited[nextR]) {
+      visited[nextR] = true;
+      queue.push([nextR, commands + 'R']);
     }
   }
 }
 
-console.log(result.length)
-console.log(result.length>0?Math.max(...result):0)
+for (let i = 1; i <= t; i++) {
+  const [a, b] = input[i].split(' ').map(Number);
+  console.log(bfs(a, b));
+}
