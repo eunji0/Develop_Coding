@@ -3985,80 +3985,156 @@
 
 //비버의 굴 위치, 고슴도치의 위치 삽입
 //고슴 도치가 이동한 후 고슴도치 위치를 빈칸으로 만들어줘야 함.
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [r, c] = input[0].split(' ').map(Number);
+// const forest = input.slice(1).map(line => line.split(''));
+// const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+
+// let startPosition = null;
+// let holePosition = null;
+// let waterQueue = [];
+// let waterTime = Array.from({ length: r }, () => Array(c).fill(Infinity));
+
+// // 초기 위치 찾기
+// for (let i = 0; i < r; i++) {
+//   for (let j = 0; j < c; j++) {
+//     if (forest[i][j] === 'S') {
+//       startPosition = [i, j];
+//     } else if (forest[i][j] === 'D') {
+//       holePosition = [i, j];
+//     } else if (forest[i][j] === '*') {
+//       waterQueue.push([i, j]);
+//       waterTime[i][j] = 0;
+//     }
+//   }
+// }
+
+// // 물 퍼뜨리기
+// const fillWater = () => {
+//   while (waterQueue.length) {
+//     const [x, y] = waterQueue.shift();
+
+//     for (const [dx, dy] of directions) {
+//       const nx = x + dx;
+//       const ny = y + dy;
+
+//       if (nx >= 0 && ny >= 0 && nx < r && ny < c) {
+//         if (forest[nx][ny] === '.' && waterTime[nx][ny] === Infinity) {
+//           waterTime[nx][ny] = waterTime[x][y] + 1;
+//           waterQueue.push([nx, ny]);
+//         }
+//       }
+//     }
+//   }
+// }
+
+// // 고슴도치 이동
+// const moveHedgehog = () => {
+//   const queue = [[...startPosition, 0]];
+//   const visited = Array.from({ length: r }, () => Array(c).fill(false));
+//   visited[startPosition[0]][startPosition[1]] = true;
+
+//   while (queue.length) {
+//     const [x, y, time] = queue.shift();
+
+//     if (x === holePosition[0] && y === holePosition[1]) {
+//       return time;
+//     }
+
+//     for (const [dx, dy] of directions) {
+//       const nx = x + dx;
+//       const ny = y + dy;
+
+//       if (nx >= 0 && ny >= 0 && nx < r && ny < c && !visited[nx][ny]) {
+//         if ((forest[nx][ny] === '.' || forest[nx][ny] === 'D') && time + 1 < waterTime[nx][ny]) {
+//           visited[nx][ny] = true;
+//           queue.push([nx, ny, time + 1]);
+//         }
+//       }
+//     }
+//   }
+
+//   return "KAKTUS";
+// }
+
+// fillWater();
+// console.log(moveHedgehog());
+
+
+//2636-치즈
+
+//출력해야하는 부분
+//a.치즈가 모두 녹아 없어지는 데 걸리는 시간(noneTime)
+//b.모두 녹기 한 시간 전에 남아있는 치즈조각이 놓여 있는 칸의 개수(lastHourCheeseCount)
+
+//함수
+//a.녹아없어지는 함수(meltCheese)
+//b. 치즈 개수 세는 함수(countCheese)
+
+//문제해결과정
+//치즈 있는 칸을 큐에 넣는다.
+//bfs를 통해 공기와 접촉한 칸(0)은 녹인다.
+//방문한 칸은 표시한다.
+//치즈가 하나도 없는지 확인하는 함수
+//치즈가 하나도 없으면 count를 return 한다.
+
+//point:안쪽이 고립되어 있으면 안녹음(공기와 접촉되어 있지 않는 부분)
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const [rows, cols] = input[0].split(' ').map(Number);
+let cheese = input.slice(1).map(v=>v.split(' ').map(Number));
+const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
 
-const [r, c] = input[0].split(' ').map(Number);
-const forest = input.slice(1).map(line => line.split(''));
-const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+const meltCheese = () =>{
+  let visited = Array.from({length:rows}, ()=>Array(cols).fill(false));
+  let melt = [];
+  let queue = [[0,0]];
+  visited[0][0]=true
 
-let startPosition = null;
-let holePosition = null;
-let waterQueue = [];
-let waterTime = Array.from({ length: r }, () => Array(c).fill(Infinity));
+  while(queue.length){
+    const [x, y] = queue.shift();
 
-// 초기 위치 찾기
-for (let i = 0; i < r; i++) {
-  for (let j = 0; j < c; j++) {
-    if (forest[i][j] === 'S') {
-      startPosition = [i, j];
-    } else if (forest[i][j] === 'D') {
-      holePosition = [i, j];
-    } else if (forest[i][j] === '*') {
-      waterQueue.push([i, j]);
-      waterTime[i][j] = 0;
-    }
-  }
-}
+    for(const [dx, dy] of directions){
+      const nx = x+dx;
+      const ny = y+dy;
 
-// 물 퍼뜨리기
-const fillWater = () => {
-  while (waterQueue.length) {
-    const [x, y] = waterQueue.shift();
+      if(nx>=0&&ny>=0&&nx<rows&&ny<cols&&!visited[nx][ny]){
+        visited[nx][ny]=true;
 
-    for (const [dx, dy] of directions) {
-      const nx = x + dx;
-      const ny = y + dy;
-
-      if (nx >= 0 && ny >= 0 && nx < r && ny < c) {
-        if (forest[nx][ny] === '.' && waterTime[nx][ny] === Infinity) {
-          waterTime[nx][ny] = waterTime[x][y] + 1;
-          waterQueue.push([nx, ny]);
-        }
-      }
-    }
-  }
-}
-
-// 고슴도치 이동
-const moveHedgehog = () => {
-  const queue = [[...startPosition, 0]];
-  const visited = Array.from({ length: r }, () => Array(c).fill(false));
-  visited[startPosition[0]][startPosition[1]] = true;
-
-  while (queue.length) {
-    const [x, y, time] = queue.shift();
-
-    if (x === holePosition[0] && y === holePosition[1]) {
-      return time;
-    }
-
-    for (const [dx, dy] of directions) {
-      const nx = x + dx;
-      const ny = y + dy;
-
-      if (nx >= 0 && ny >= 0 && nx < r && ny < c && !visited[nx][ny]) {
-        if ((forest[nx][ny] === '.' || forest[nx][ny] === 'D') && time + 1 < waterTime[nx][ny]) {
-          visited[nx][ny] = true;
-          queue.push([nx, ny, time + 1]);
+        if(cheese[nx][ny]===1){
+          melt.push([nx, ny])
+        }else{
+          queue.push([nx, ny])
         }
       }
     }
   }
 
-  return "KAKTUS";
+  melt.forEach(([x, y])=>{
+    cheese[x][y]=0
+  })
+
+  return melt.length
 }
 
-fillWater();
-console.log(moveHedgehog());
+const simulate = () =>{
+  let time =0;
+  let beforeMelt =0;
+
+  while(true){
+    let count = meltCheese();
+    if(count===0) break
+    beforeMelt = count
+    time++
+  }
+
+  return [time, beforeMelt]
+}
+
+const [a, b] = simulate();
+console.log(a);
+console.log(b)
