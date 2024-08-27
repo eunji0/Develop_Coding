@@ -4082,59 +4082,173 @@
 //치즈가 하나도 없으면 count를 return 한다.
 
 //point:안쪽이 고립되어 있으면 안녹음(공기와 접촉되어 있지 않는 부분)
-const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [rows, cols] = input[0].split(' ').map(Number);
-let cheese = input.slice(1).map(v=>v.split(' ').map(Number));
-const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [rows, cols] = input[0].split(' ').map(Number);
+// let cheese = input.slice(1).map(v=>v.split(' ').map(Number));
+// const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
 
-const meltCheese = () =>{
-  let visited = Array.from({length:rows}, ()=>Array(cols).fill(false));
-  let melt = [];
-  let queue = [[0,0]];
-  visited[0][0]=true
+// const meltCheese = () =>{
+//   let visited = Array.from({length:rows}, ()=>Array(cols).fill(false));
+//   let melt = [];
+//   let queue = [[0,0]];
+//   visited[0][0]=true
 
-  while(queue.length){
-    const [x, y] = queue.shift();
+//   while(queue.length){
+//     const [x, y] = queue.shift();
 
-    for(const [dx, dy] of directions){
-      const nx = x+dx;
-      const ny = y+dy;
+//     for(const [dx, dy] of directions){
+//       const nx = x+dx;
+//       const ny = y+dy;
 
-      if(nx>=0&&ny>=0&&nx<rows&&ny<cols&&!visited[nx][ny]){
-        visited[nx][ny]=true;
+//       if(nx>=0&&ny>=0&&nx<rows&&ny<cols&&!visited[nx][ny]){
+//         visited[nx][ny]=true;
 
-        if(cheese[nx][ny]===1){
-          melt.push([nx, ny])
-        }else{
-          queue.push([nx, ny])
-        }
-      }
+//         if(cheese[nx][ny]===1){
+//           melt.push([nx, ny])
+//         }else{
+//           queue.push([nx, ny])
+//         }
+//       }
+//     }
+//   }
+
+//   melt.forEach(([x, y])=>{
+//     cheese[x][y]=0
+//   })
+
+//   return melt.length
+// }
+
+// const simulate = () =>{
+//   let time =0;
+//   let beforeMelt =0;
+
+//   while(true){
+//     let count = meltCheese();
+//     if(count===0) break
+//     beforeMelt = count
+//     time++
+//   }
+
+//   return [time, beforeMelt]
+// }
+
+// const [a, b] = simulate();
+// console.log(a);
+// console.log(b)
+
+
+//2589-보물섬
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(v=>v.trim().split(''));
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+
+// const bfs = (i, j)=>{
+//   const queue=[[i, j, 0]];
+//   let visited = Array.from({length: n}, ()=>Array(m).fill(false));
+//   visited[i][j]=true;
+//   let maxD =0;
+
+//   while(queue.length){
+//     const [x, y, dist] = queue.shift();
+//     maxD = Math.max(dist, maxD)
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny =y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<n&&ny<m&&!visited[nx][ny]&&arr[nx][ny]==='L'){
+//         queue.push([nx, ny, dist+1]);
+//         visited[nx][ny]=true
+//       }
+//     }
+//   }
+
+//   return maxD
+// }
+
+// let max = 0;
+
+// for(let i=0; i<n; i++){
+//   for(let j=0; j<m; j++){
+//     if(arr[i][j]==='L'){
+//       max = Math.max(max, bfs(i, j))
+//     }
+//   }
+// }
+
+// console.log(max)
+
+
+//뱀과 사다리 게임
+
+
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// const ladders = input.slice(1, n+1).map(v=>v.split(' ').map(Number));
+// const snakes = input.slice(n+1).map(v=>v.split(' ').map(Number));
+// let visited = Array(101).fill(false);
+
+// let queue =[[1, 0]]//현재 위치와 이동횟수
+
+// const bfs = ()=>{
+//   while(queue.length){
+//     const [now, count] = queue.shift();
+//     const move = [now+1, now+2, now+3, now+4, now+5, now+6];
+//     const inClude = [...ladders, ...snakes];
+  
+//     if(now===100) return count
+  
+//     for(const m of move){
+//       if(!visited[m]&&m<101){
+//         visited[m]=true 
+//         inClude.forEach(([from, to])=>{
+//           if(m===from) m=to;
+//         })
+        
+//         queue.push([m, count+1])
+//       }
+//     }
+//   }
+// }
+
+
+
+const solve = (input) => {
+  input.shift();
+  const temp = [...new Array(101)].map((_, i) => i);
+  for (const i of input) {
+    const [ start, end ] = i.split(' ').map(v => +v);
+    temp[start] = end;
+  }
+  const graph = [...new Array(101)]
+    .map((_, i) => [...new Array(6)]
+      .map((_, ii) => temp[i + ii + 1])
+      .filter(v => v <= 100)
+    );
+  console.log(BFS(1, graph));
+};
+
+const BFS = (start, graph) => {
+  const visited = new Array(101).fill(false);
+  const queue = [[start, 0]];
+  while (queue.length) {
+    const [ node, count ] = queue.shift();
+    if (node === 100) return count;
+    if (!visited[node]) {
+      visited[node] = true;
+      queue.push(...graph[node].map(v => [v, count + 1]));
     }
   }
-
-  melt.forEach(([x, y])=>{
-    cheese[x][y]=0
-  })
-
-  return melt.length
 }
 
-const simulate = () =>{
-  let time =0;
-  let beforeMelt =0;
+const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
+solve(input);
 
-  while(true){
-    let count = meltCheese();
-    if(count===0) break
-    beforeMelt = count
-    time++
-  }
-
-  return [time, beforeMelt]
-}
-
-const [a, b] = simulate();
-console.log(a);
-console.log(b)
