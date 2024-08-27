@@ -4249,4 +4249,3 @@ const BFS = (start, graph) => {
 
 const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
 solve(input);
-
