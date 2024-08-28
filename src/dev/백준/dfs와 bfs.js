@@ -4186,79 +4186,35 @@
 
 
 //뱀과 사다리 게임
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const [n, m] = input[0].split(' ').map(Number);
+const ladders = input.slice(1, n+1).map(v=>v.split(' ').map(Number));
+const snakes = input.slice(n+1).map(v=>v.split(' ').map(Number));
+let visited = Array(101).fill(false);
 
+const bfs = ()=>{
+  let queue =[[1, 0]]//현재 위치와 이동횟수
 
-// const fs = require('fs');
-// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-// let input = fs.readFileSync(filePath).toString().trim().split('\n');
-// const [n, m] = input[0].split(' ').map(Number);
-// const ladders = input.slice(1, n+1).map(v=>v.split(' ').map(Number));
-// const snakes = input.slice(n+1).map(v=>v.split(' ').map(Number));
-// let visited = Array(101).fill(false);
-
-// let queue =[[1, 0]]//현재 위치와 이동횟수
-
-// const bfs = ()=>{
-//   while(queue.length){
-//     const [now, count] = queue.shift();
-//     const move = [now+1, now+2, now+3, now+4, now+5, now+6];
-//     const inClude = [...ladders, ...snakes];
+  while(queue.length){
+    const [now, count] = queue.shift();
+    const move = [now+1, now+2, now+3, now+4, now+5, now+6];
+    const inClude = [...ladders, ...snakes];
   
-//     if(now===100) return count
+    if(now===100) return count
   
-//     for(const m of move){
-//       if(!visited[m]&&m<101){
-//         visited[m]=true 
-//         inClude.forEach(([from, to])=>{
-//           if(m===from) m=to;
-//         })
+    for(let m of move){
+      if(!visited[m]&&m<101){
+        visited[m]=true 
+        inClude.forEach(([from, to])=>{
+          if(m===from) m=to;
+        })
         
-//         queue.push([m, count+1])
-//       }
-//     }
-//   }
-// }
-
-
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './Javascript/input.txt';
-const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
-const [N, M] = input[0].split(' ').map(Number);
-const ladder = input.slice(1, N + 1).map((e) => e.split(' ').map(Number));
-const snake = input.slice(N + 1).map((e) => e.split(' ').map(Number));
-const visited = Array(101).fill(false);
-const arr = Array(101).fill(0);
-
-// 사다리
-for (let [x, y] of ladder) {
-    arr[x] = y;
-}
-// 뱀
-for (let [u, v] of snake) {
-    arr[u] = v;
-}
-
-let answer = bfs(1, 0);
-console.log(answer);
-
-function bfs(start, count) {
-    const queue = [[start, count]];
-    let front = 0;
-    visited[start] = true;
-    while (queue.length > front) {
-        const [v, diceCount] = queue[front++];
-        for (let i = 1; i <= 6; i++) {
-            let next = v + i;
-            if (next === 100) return diceCount + 1;
-            else if (next < 100) {
-                // 사다리 혹은 뱀일 경우 해당 위치로 이동 (카운트는 증가하지 않음)
-                if (arr[next] !== 0) {
-                    next = arr[next];
-                }
-                if (!visited[next]) {
-                    queue.push([next, diceCount + 1]);
-                    visited[next] = true;
-                }
-            }
-        }
+        queue.push([m, count+1])
+      }
     }
+  }
 }
+
+console.log(bfs())
