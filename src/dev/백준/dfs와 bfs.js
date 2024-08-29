@@ -4186,35 +4186,78 @@
 
 
 //뱀과 사다리 게임
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// const ladders = input.slice(1, n+1).map(v=>v.split(' ').map(Number));
+// const snakes = input.slice(n+1).map(v=>v.split(' ').map(Number));
+// let visited = Array(101).fill(false);
+
+// const bfs = ()=>{
+//   let queue =[[1, 0]]//현재 위치와 이동횟수
+
+//   while(queue.length){
+//     const [now, count] = queue.shift();
+//     const move = [now+1, now+2, now+3, now+4, now+5, now+6];
+//     const inClude = [...ladders, ...snakes];
+  
+//     if(now===100) return count
+  
+//     for(let m of move){
+//       if(!visited[m]&&m<101){
+//         visited[m]=true 
+//         inClude.forEach(([from, to])=>{
+//           if(m===from) m=to;
+//         })
+        
+//         queue.push([m, count+1])
+//       }
+//     }
+//   }
+// }
+
+// console.log(bfs())
+
+
+//18352-특정 거리의 도시 찾기
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [n, m] = input[0].split(' ').map(Number);
-const ladders = input.slice(1, n+1).map(v=>v.split(' ').map(Number));
-const snakes = input.slice(n+1).map(v=>v.split(' ').map(Number));
-let visited = Array(101).fill(false);
 
-const bfs = ()=>{
-  let queue =[[1, 0]]//현재 위치와 이동횟수
+const [n, m, k, x]=input[0].split(' ').map(Number);
+const arr = input.slice(1).map(v=>v.split(' ').map(Number))
+
+let graph = Array.from({length: n+1}, ()=>[]);
+
+arr.forEach(([from, to])=>{
+  graph[from].push(to)
+})
+
+const bfs = (start, goalCount) =>{
+  let visited = Array(n+1).fill(false)
+  const queue = [[start, 0]];
+  visited[start]=true
+  let result = [];
 
   while(queue.length){
     const [now, count] = queue.shift();
-    const move = [now+1, now+2, now+3, now+4, now+5, now+6];
-    const inClude = [...ladders, ...snakes];
-  
-    if(now===100) return count
-  
-    for(let m of move){
-      if(!visited[m]&&m<101){
-        visited[m]=true 
-        inClude.forEach(([from, to])=>{
-          if(m===from) m=to;
-        })
-        
+
+    if(count === goalCount){
+      result.push(now)
+      continue
+    }
+
+    for(const m of graph[now]){
+      if(!visited[m]){
+        visited[m]=true;
         queue.push([m, count+1])
       }
     }
   }
+
+  return result
 }
 
-console.log(bfs())
+let answer = bfs(x, k)
+console.log(answer.length > 0 ? answer.join('\n'):-1)
