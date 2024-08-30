@@ -4305,41 +4305,134 @@
 // bfs(n, m)
 
 //12851-숨바꼭질2
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [N, K] = input[0].split(' ').map(Number)
+
+// const MAX = 100000; // 문제에서 주어진 최대 위치
+// const visited = Array(MAX + 1).fill(false); // 방문 여부를 기록하는 배열
+// const dist = Array(MAX + 1).fill(0); // 각 위치까지의 최단 시간을 기록하는 배열
+// const ways = Array(MAX + 1).fill(0); // 각 위치까지 도달하는 방법의 수를 기록하는 배열
+
+// // BFS 큐 초기화
+// const queue = [];
+// queue.push(N);
+// visited[N] = true;
+// dist[N] = 0;
+// ways[N] = 1;
+
+// while (queue.length > 0) {
+//     const current = queue.shift();
+
+//     // 다음 위치로 이동하는 세 가지 경우를 모두 확인
+//     for (let next of [current - 1, current + 1, current * 2]) {
+//         if (next < 0 || next > MAX) continue; // 범위를 벗어나면 무시
+
+//         if (!visited[next]) { // 방문하지 않은 위치라면
+//             visited[next] = true;
+//             dist[next] = dist[current] + 1; // 현재 위치에서 1초 증가
+//             ways[next] = ways[current]; // 현재 위치까지 오는 방법 수와 같음
+//             queue.push(next);
+//         } else if (dist[next] === dist[current] + 1) { // 이미 방문했지만 같은 시간이 걸린다면
+//             ways[next] += ways[current]; // 현재 위치에서 오는 방법 수를 추가
+//         }
+//     }
+// }
+
+// // 결과 출력
+// console.log(dist[K]); // 동생을 찾는 가장 빠른 시간
+// console.log(ways[K]); // 그 방법의 수
+
+//2146-다리만들기
+
+//문제 풀이과정
+//bfs로 각 섬마다 육지 번호 다르게 표시하기
+//각 섬에서 동시에 BFS를 진행하면서 다른 섬에 처음 도달하는 순간의 다리 길이를 기록
+//모든 섬에 대해 BFS를 진행하면서 다른 섬에 도달하는 순간의 다리 길이를 최소화
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [N, K] = input[0].split(' ').map(Number)
+const n = +input[0];
+const arr = input.slice(1).map(v=>v.split(' ').map(Number))
+let visited = Array.from({length: n}, ()=>Array(n).fill(false))
+const dir = [[0,1], [0,-1], [1,0], [-1,0]]
 
-const MAX = 100000; // 문제에서 주어진 최대 위치
-const visited = Array(MAX + 1).fill(false); // 방문 여부를 기록하는 배열
-const dist = Array(MAX + 1).fill(0); // 각 위치까지의 최단 시간을 기록하는 배열
-const ways = Array(MAX + 1).fill(0); // 각 위치까지 도달하는 방법의 수를 기록하는 배열
+const bfs = (i, j, index) =>{
+  const queue = [[i, j]];
+  visited[i][j]=true;
+  arr[i][j]=index;
 
-// BFS 큐 초기화
-const queue = [];
-queue.push(N);
-visited[N] = true;
-dist[N] = 0;
-ways[N] = 1;
+  while(queue.length){
+    const [x, y] = queue.shift();
 
-while (queue.length > 0) {
-    const current = queue.shift();
-
-    // 다음 위치로 이동하는 세 가지 경우를 모두 확인
-    for (let next of [current - 1, current + 1, current * 2]) {
-        if (next < 0 || next > MAX) continue; // 범위를 벗어나면 무시
-
-        if (!visited[next]) { // 방문하지 않은 위치라면
-            visited[next] = true;
-            dist[next] = dist[current] + 1; // 현재 위치에서 1초 증가
-            ways[next] = ways[current]; // 현재 위치까지 오는 방법 수와 같음
-            queue.push(next);
-        } else if (dist[next] === dist[current] + 1) { // 이미 방문했지만 같은 시간이 걸린다면
-            ways[next] += ways[current]; // 현재 위치에서 오는 방법 수를 추가
-        }
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny=y+dy;
+  
+      if(nx>=0&&ny>=0&&nx<n&&ny<n&&!visited[nx][ny]&&arr[nx][ny]===1){
+        visited[nx][ny]=true;
+        queue.push([nx, ny]);
+        arr[nx][ny]=index
+      }
     }
+  }
 }
 
-// 결과 출력
-console.log(dist[K]); // 동생을 찾는 가장 빠른 시간
-console.log(ways[K]); // 그 방법의 수
+let index =2;
+
+for(let i=0; i<n; i++){
+  for(let j=0; j<n; j++){
+    if(!visited[i][j]&&arr[i][j]===1){
+      bfs(i, j, index)
+      index++
+    }
+  }
+}
+let minBridgeLength = Infinity;
+
+const bfsForBridge = (index) => {
+  let queue = [];
+
+  let dist = Array.from({length:n}, ()=>Array(n).fill(-1));
+
+  //육지 부분 거리를 0으로
+  for(let i=0; i<n; i++){
+    for(let j=0; j<n; j++){
+      if(arr[i][j]===index){
+        queue.push([i, j])
+        dist[i][j]=0;
+      }
+    }
+  }
+
+  while(queue.length){
+    const [x, y] =queue.shift();
+
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny =y+dy;
+
+      if(nx>=0&&ny>=0&&nx<n&&ny<n){
+        //0이 아니고 다른 육지에 도달한다면 return
+        if (arr[nx][ny] > 0 && arr[nx][ny] !== index) {
+          minBridgeLength = Math.min(minBridgeLength, dist[x][y]);
+          return;
+        }
+
+        //바다이고 방문하지 않은 곳이라면
+        if (arr[nx][ny] === 0 && dist[nx][ny] === -1) {
+          dist[nx][ny] = dist[x][y] + 1;
+          queue.push([nx, ny]);
+        }
+      }
+    }
+  }
+}
+
+for(let i=2; i<=index; i++){
+  bfsForBridge(i)
+}
+
+console.log(minBridgeLength)
