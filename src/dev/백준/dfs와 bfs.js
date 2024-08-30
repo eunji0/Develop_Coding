@@ -4221,43 +4221,85 @@
 
 
 //18352-특정 거리의 도시 찾기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [n, m, k, x]=input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(v=>v.split(' ').map(Number))
+
+// let graph = Array.from({length: n+1}, ()=>[]);
+
+// arr.forEach(([from, to])=>{
+//   graph[from].push(to)
+// })
+
+// const bfs = (start, goalCount) =>{
+//   let visited = Array(n+1).fill(false)
+//   const queue = [[start, 0]];
+//   visited[start]=true
+//   let result = [];
+
+//   while(queue.length){
+//     const [now, count] = queue.shift();
+
+//     if(count === goalCount){
+//       result.push(now)
+//       continue
+//     }
+
+//     for(const m of graph[now]){
+//       if(!visited[m]){
+//         visited[m]=true;
+//         queue.push([m, count+1])
+//       }
+//     }
+//   }
+
+//   return result
+// }
+
+// let answer = bfs(x, k)
+// console.log(answer.length > 0 ? answer.join('\n'):-1)
+
+//13913-숨바꼭질4
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const [n, m] = input[0].split(' ').map(Number);
+let visited = Array(100001).fill(false);
+let from = Array(100001).fill(-1);
 
-const [n, m, k, x]=input[0].split(' ').map(Number);
-const arr = input.slice(1).map(v=>v.split(' ').map(Number))
-
-let graph = Array.from({length: n+1}, ()=>[]);
-
-arr.forEach(([from, to])=>{
-  graph[from].push(to)
-})
-
-const bfs = (start, goalCount) =>{
-  let visited = Array(n+1).fill(false)
-  const queue = [[start, 0]];
-  visited[start]=true
-  let result = [];
+const bfs=(start, goal)=>{
+  const queue=[[start, 0]];
+  visited[start]=true;
 
   while(queue.length){
     const [now, count] = queue.shift();
+    const move = [now-1, now+1, now*2];
 
-    if(count === goalCount){
-      result.push(now)
-      continue
+    if(now===goal){
+      console.log(count);
+
+      let path=[];
+      let cur = goal
+      while(cur!=-1){
+        path.push(cur);
+        cur = from[cur]
+      }
+
+      console.log(path.reverse().join(' '));
+      return
     }
 
-    for(const m of graph[now]){
-      if(!visited[m]){
-        visited[m]=true;
-        queue.push([m, count+1])
+    for(const next of move){
+      if(!visited[next]){
+        visited[next]=true;
+        queue.push([next, count+1]);
+        from[next]=now
       }
     }
   }
-
-  return result
 }
 
-let answer = bfs(x, k)
-console.log(answer.length > 0 ? answer.join('\n'):-1)
+bfs(n, m)
