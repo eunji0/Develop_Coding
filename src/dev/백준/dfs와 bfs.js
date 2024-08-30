@@ -4263,43 +4263,83 @@
 // console.log(answer.length > 0 ? answer.join('\n'):-1)
 
 //13913-숨바꼭질4
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// let visited = Array(100001).fill(false);
+// let from = Array(100001).fill(-1);
+
+// const bfs=(start, goal)=>{
+//   const queue=[[start, 0]];
+//   visited[start]=true;
+
+//   while(queue.length){
+//     const [now, count] = queue.shift();
+//     const move = [now-1, now+1, now*2];
+
+//     if(now===goal){
+//       console.log(count);
+
+//       let path=[];
+//       let cur = goal
+//       while(cur!=-1){
+//         path.push(cur);
+//         cur = from[cur]
+//       }
+
+//       console.log(path.reverse().join(' '));
+//       return
+//     }
+
+//     for(const next of move){
+//       if(!visited[next]){
+//         visited[next]=true;
+//         queue.push([next, count+1]);
+//         from[next]=now
+//       }
+//     }
+//   }
+// }
+
+// bfs(n, m)
+
+//12851-숨바꼭질2
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [n, m] = input[0].split(' ').map(Number);
-let visited = Array(100001).fill(false);
-let from = Array(100001).fill(-1);
+const [N, K] = input[0].split(' ').map(Number)
 
-const bfs=(start, goal)=>{
-  const queue=[[start, 0]];
-  visited[start]=true;
+const MAX = 100000; // 문제에서 주어진 최대 위치
+const visited = Array(MAX + 1).fill(false); // 방문 여부를 기록하는 배열
+const dist = Array(MAX + 1).fill(0); // 각 위치까지의 최단 시간을 기록하는 배열
+const ways = Array(MAX + 1).fill(0); // 각 위치까지 도달하는 방법의 수를 기록하는 배열
 
-  while(queue.length){
-    const [now, count] = queue.shift();
-    const move = [now-1, now+1, now*2];
+// BFS 큐 초기화
+const queue = [];
+queue.push(N);
+visited[N] = true;
+dist[N] = 0;
+ways[N] = 1;
 
-    if(now===goal){
-      console.log(count);
+while (queue.length > 0) {
+    const current = queue.shift();
 
-      let path=[];
-      let cur = goal
-      while(cur!=-1){
-        path.push(cur);
-        cur = from[cur]
-      }
+    // 다음 위치로 이동하는 세 가지 경우를 모두 확인
+    for (let next of [current - 1, current + 1, current * 2]) {
+        if (next < 0 || next > MAX) continue; // 범위를 벗어나면 무시
 
-      console.log(path.reverse().join(' '));
-      return
+        if (!visited[next]) { // 방문하지 않은 위치라면
+            visited[next] = true;
+            dist[next] = dist[current] + 1; // 현재 위치에서 1초 증가
+            ways[next] = ways[current]; // 현재 위치까지 오는 방법 수와 같음
+            queue.push(next);
+        } else if (dist[next] === dist[current] + 1) { // 이미 방문했지만 같은 시간이 걸린다면
+            ways[next] += ways[current]; // 현재 위치에서 오는 방법 수를 추가
+        }
     }
-
-    for(const next of move){
-      if(!visited[next]){
-        visited[next]=true;
-        queue.push([next, count+1]);
-        from[next]=now
-      }
-    }
-  }
 }
 
-bfs(n, m)
+// 결과 출력
+console.log(dist[K]); // 동생을 찾는 가장 빠른 시간
+console.log(ways[K]); // 그 방법의 수
