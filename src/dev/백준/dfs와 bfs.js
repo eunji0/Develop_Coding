@@ -4351,88 +4351,149 @@
 //각 섬에서 동시에 BFS를 진행하면서 다른 섬에 처음 도달하는 순간의 다리 길이를 기록
 //모든 섬에 대해 BFS를 진행하면서 다른 섬에 도달하는 순간의 다리 길이를 최소화
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const n = +input[0];
+// const arr = input.slice(1).map(v=>v.split(' ').map(Number))
+// let visited = Array.from({length: n}, ()=>Array(n).fill(false))
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]]
+
+// const bfs = (i, j, index) =>{
+//   const queue = [[i, j]];
+//   visited[i][j]=true;
+//   arr[i][j]=index;
+
+//   while(queue.length){
+//     const [x, y] = queue.shift();
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny=y+dy;
+  
+//       if(nx>=0&&ny>=0&&nx<n&&ny<n&&!visited[nx][ny]&&arr[nx][ny]===1){
+//         visited[nx][ny]=true;
+//         queue.push([nx, ny]);
+//         arr[nx][ny]=index
+//       }
+//     }
+//   }
+// }
+
+// let index =2;
+
+// for(let i=0; i<n; i++){
+//   for(let j=0; j<n; j++){
+//     if(!visited[i][j]&&arr[i][j]===1){
+//       bfs(i, j, index)
+//       index++
+//     }
+//   }
+// }
+// let minBridgeLength = Infinity;
+
+// const bfsForBridge = (index) => {
+//   let queue = [];
+
+//   let dist = Array.from({length:n}, ()=>Array(n).fill(-1));
+
+//   //육지 부분 거리를 0으로
+//   for(let i=0; i<n; i++){
+//     for(let j=0; j<n; j++){
+//       if(arr[i][j]===index){
+//         queue.push([i, j])
+//         dist[i][j]=0;
+//       }
+//     }
+//   }
+
+//   while(queue.length){
+//     const [x, y] =queue.shift();
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny =y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<n&&ny<n){
+//         //0이 아니고 다른 육지에 도달한다면 return
+//         if (arr[nx][ny] > 0 && arr[nx][ny] !== index) {
+//           minBridgeLength = Math.min(minBridgeLength, dist[x][y]);
+//           return;
+//         }
+
+//         //바다이고 방문하지 않은 곳이라면
+//         if (arr[nx][ny] === 0 && dist[nx][ny] === -1) {
+//           dist[nx][ny] = dist[x][y] + 1;
+//           queue.push([nx, ny]);
+//         }
+//       }
+//     }
+//   }
+// }
+
+// for(let i=2; i<=index; i++){
+//   bfsForBridge(i)
+// }
+
+// console.log(minBridgeLength)
+
+//9205-맥주 마시면서 걸어가기
+
+//문제풀이과정
+//맥주 한 박스에는 20으로 시작
+//50미터 당 맥주 한병씩 감소
+//편의점에 도착하면 20에서 빈 만큼 맥주 사서 채우기
+
+//현재 위치가 페스티벌 위치에 도착하면, 상태 return
+//현재 위치부터 편의점들까지 bfs로 전진
+// 두 좌표 사이의 거리는 x 좌표의 차이 + y 좌표의 차이
+//거리가 1000미터 이하인 경우에만 이동이 가능(맥주 최댓 개수 20)
+//BFS를 종료했는데도 페스티벌에 도달하지 못했다면 "sad"
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const n = +input[0];
-const arr = input.slice(1).map(v=>v.split(' ').map(Number))
-let visited = Array.from({length: n}, ()=>Array(n).fill(false))
-const dir = [[0,1], [0,-1], [1,0], [-1,0]]
 
-const bfs = (i, j, index) =>{
-  const queue = [[i, j]];
-  visited[i][j]=true;
-  arr[i][j]=index;
+const T = +input[0];
+let idx = 1;
 
-  while(queue.length){
-    const [x, y] = queue.shift();
+for (let i = 0; i < T; i++) {
 
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny=y+dy;
+  const N = +input[idx];
+  idx += 1;
+  const visited = Array.from({ length: N }).fill(false);
+  const start = input[idx].split(' ').map(Number);
+  let place = [];
+  let check = false;
+  for (let j = 1; j <= N; j++) {
+    place.push(input[idx + j].split(' ').map(Number));
+  }
+  idx += N + 1;
+  const festival = input[idx].split(' ').map(Number);
+  idx += 1;
+
+  const bfs = (X, Y) => {
+    const deque = [[X, Y]];
+    while (deque.length) {
+      const [x, y] = deque[0];
+      deque.shift();
+      if (Math.abs(x - festival[0]) + Math.abs(y - festival[1]) <= 1000) {
+        check = true;
+        return;
+      }
+      for (let k = 0; k < N; k++) {
+        if (!visited[k]) {
+          if (Math.abs(x - place[k][0]) + Math.abs(y - place[k][1]) <= 1000) {
+            visited[k] = true;
+            deque.push([place[k][0], place[k][1]]);
+          }
+        }
+      }
+    }
+    return;
+  };
   
-      if(nx>=0&&ny>=0&&nx<n&&ny<n&&!visited[nx][ny]&&arr[nx][ny]===1){
-        visited[nx][ny]=true;
-        queue.push([nx, ny]);
-        arr[nx][ny]=index
-      }
-    }
-  }
+  bfs(...start);
+
+  console.log(check ? 'happy' : 'sad');
 }
-
-let index =2;
-
-for(let i=0; i<n; i++){
-  for(let j=0; j<n; j++){
-    if(!visited[i][j]&&arr[i][j]===1){
-      bfs(i, j, index)
-      index++
-    }
-  }
-}
-let minBridgeLength = Infinity;
-
-const bfsForBridge = (index) => {
-  let queue = [];
-
-  let dist = Array.from({length:n}, ()=>Array(n).fill(-1));
-
-  //육지 부분 거리를 0으로
-  for(let i=0; i<n; i++){
-    for(let j=0; j<n; j++){
-      if(arr[i][j]===index){
-        queue.push([i, j])
-        dist[i][j]=0;
-      }
-    }
-  }
-
-  while(queue.length){
-    const [x, y] =queue.shift();
-
-    for(const [dx, dy] of dir){
-      const nx = x+dx;
-      const ny =y+dy;
-
-      if(nx>=0&&ny>=0&&nx<n&&ny<n){
-        //0이 아니고 다른 육지에 도달한다면 return
-        if (arr[nx][ny] > 0 && arr[nx][ny] !== index) {
-          minBridgeLength = Math.min(minBridgeLength, dist[x][y]);
-          return;
-        }
-
-        //바다이고 방문하지 않은 곳이라면
-        if (arr[nx][ny] === 0 && dist[nx][ny] === -1) {
-          dist[nx][ny] = dist[x][y] + 1;
-          queue.push([nx, ny]);
-        }
-      }
-    }
-  }
-}
-
-for(let i=2; i<=index; i++){
-  bfsForBridge(i)
-}
-
-console.log(minBridgeLength)
