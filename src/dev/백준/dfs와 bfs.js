@@ -4449,51 +4449,57 @@
 // 두 좌표 사이의 거리는 x 좌표의 차이 + y 좌표의 차이
 //거리가 1000미터 이하인 경우에만 이동이 가능(맥주 최댓 개수 20)
 //BFS를 종료했는데도 페스티벌에 도달하지 못했다면 "sad"
-
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
-
 const T = +input[0];
 let idx = 1;
 
 for (let i = 0; i < T; i++) {
+  const bfs = (x, y) => {
+    const dep = [[x, y]];
+    while (dep.length) {
+      const [x, y] = dep.shift();
 
-  const N = +input[idx];
-  idx += 1;
-  const visited = Array.from({ length: N }).fill(false);
-  const start = input[idx].split(' ').map(Number);
-  let place = [];
-  let check = false;
-  for (let j = 1; j <= N; j++) {
-    place.push(input[idx + j].split(' ').map(Number));
-  }
-  idx += N + 1;
-  const festival = input[idx].split(' ').map(Number);
-  idx += 1;
-
-  const bfs = (X, Y) => {
-    const deque = [[X, Y]];
-    while (deque.length) {
-      const [x, y] = deque[0];
-      deque.shift();
+      // 도착지점까지의 거리가 1000m 이하라면 도착 가능
       if (Math.abs(x - festival[0]) + Math.abs(y - festival[1]) <= 1000) {
         check = true;
         return;
       }
+
+      // 모든 편의점을 돌면서 방문 여부와 거리를 체크
       for (let k = 0; k < N; k++) {
         if (!visited[k]) {
+          // 편의점까지의 거리가 1000m 이하라면
           if (Math.abs(x - place[k][0]) + Math.abs(y - place[k][1]) <= 1000) {
-            visited[k] = true;
-            deque.push([place[k][0], place[k][1]]);
+            visited[k] = true; // 방문 체크
+            dep.push([place[k][0], place[k][1]]); // 다음 방문지 추가
           }
         }
       }
     }
+
     return;
   };
-  
-  bfs(...start);
 
-  console.log(check ? 'happy' : 'sad');
+  let N = +input[idx];
+  idx += 1;
+
+  let visited = Array.from({ length: N }).fill(false); // 방문 배열 초기화
+  const start = input[idx].split(' ').map(Number); // 시작점 (집의 좌표)
+
+  let place = [];
+  let check = false; // 도착 가능 여부를 체크하는 변수
+
+  // 편의점 좌표 입력 받기
+  for (let j = 0; j < N; j++) {
+    place.push(input[idx + j + 1].split(' ').map(Number));
+  }
+
+  idx += N + 1;
+  const festival = input[idx].split(' ').map(Number); // 페스티벌 좌표 입력
+  idx += 1;
+
+  bfs(...start); // BFS 실행
+  console.log(check ? "happy" : "sad"); // 결과 출력
 }
