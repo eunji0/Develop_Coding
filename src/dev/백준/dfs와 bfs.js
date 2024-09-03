@@ -4449,57 +4449,74 @@
 // 두 좌표 사이의 거리는 x 좌표의 차이 + y 좌표의 차이
 //거리가 1000미터 이하인 경우에만 이동이 가능(맥주 최댓 개수 20)
 //BFS를 종료했는데도 페스티벌에 도달하지 못했다면 "sad"
-const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const T = +input[0];
-let idx = 1;
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const T = +input[0];
+// let idx = 1;
 
-for (let i = 0; i < T; i++) {
-  const bfs = (x, y) => {
-    const dep = [[x, y]];
-    while (dep.length) {
-      const [x, y] = dep.shift();
+// for (let i = 0; i < T; i++) {
+//   const bfs = (x, y) => {
+//     const dep = [[x, y]];
+//     while (dep.length) {
+//       const [x, y] = dep.shift();
 
-      // 도착지점까지의 거리가 1000m 이하라면 도착 가능
-      if (Math.abs(x - festival[0]) + Math.abs(y - festival[1]) <= 1000) {
-        check = true;
-        return;
-      }
+//       // 도착지점까지의 거리가 1000m 이하라면 도착 가능
+//       if (Math.abs(x - festival[0]) + Math.abs(y - festival[1]) <= 1000) {
+//         check = true;
+//         return;
+//       }
 
-      // 모든 편의점을 돌면서 방문 여부와 거리를 체크
-      for (let k = 0; k < N; k++) {
-        if (!visited[k]) {
-          // 편의점까지의 거리가 1000m 이하라면
-          if (Math.abs(x - place[k][0]) + Math.abs(y - place[k][1]) <= 1000) {
-            visited[k] = true; // 방문 체크
-            dep.push([place[k][0], place[k][1]]); // 다음 방문지 추가
-          }
-        }
-      }
-    }
+//       // 모든 편의점을 돌면서 방문 여부와 거리를 체크
+//       for (let k = 0; k < N; k++) {
+//         if (!visited[k]) {
+//           // 편의점까지의 거리가 1000m 이하라면
+//           if (Math.abs(x - place[k][0]) + Math.abs(y - place[k][1]) <= 1000) {
+//             visited[k] = true; // 방문 체크
+//             dep.push([place[k][0], place[k][1]]); // 다음 방문지 추가
+//           }
+//         }
+//       }
+//     }
 
-    return;
-  };
+//     return;
+//   };
 
-  let N = +input[idx];
-  idx += 1;
+//   let N = +input[idx];
+//   idx += 1;
 
-  let visited = Array.from({ length: N }).fill(false); // 방문 배열 초기화
-  const start = input[idx].split(' ').map(Number); // 시작점 (집의 좌표)
+//   let visited = Array.from({ length: N }).fill(false); // 방문 배열 초기화
+//   const start = input[idx].split(' ').map(Number); // 시작점 (집의 좌표)
 
-  let place = [];
-  let check = false; // 도착 가능 여부를 체크하는 변수
+//   let place = [];
+//   let check = false; // 도착 가능 여부를 체크하는 변수
 
-  // 편의점 좌표 입력 받기
-  for (let j = 0; j < N; j++) {
-    place.push(input[idx + j + 1].split(' ').map(Number));
-  }
+//   // 편의점 좌표 입력 받기
+//   for (let j = 0; j < N; j++) {
+//     place.push(input[idx + j + 1].split(' ').map(Number));
+//   }
 
-  idx += N + 1;
-  const festival = input[idx].split(' ').map(Number); // 페스티벌 좌표 입력
-  idx += 1;
+//   idx += N + 1;
+//   const festival = input[idx].split(' ').map(Number); // 페스티벌 좌표 입력
+//   idx += 1;
 
-  bfs(...start); // BFS 실행
-  console.log(check ? "happy" : "sad"); // 결과 출력
-}
+//   bfs(...start); // BFS 실행
+//   console.log(check ? "happy" : "sad"); // 결과 출력
+// }
+
+
+//2638-치즈
+
+//치즈가 모두 녹아 없어지는데 걸리는 정확한 시간
+
+//외부 공기 접촉(bfs사용)
+//a.가장자리부터 BFS를 이용하여 외부 공기와 연결된 모든 격자를 탐색
+//b.외부 공기로 연결된 0들을 찾아 방문 표시
+
+//치즈 녹이기
+//탐색을 통해 모든 치즈 격자에 대해 인접한 격자(상, 하, 좌, 우) 중에서 외부 공기와 접촉한 면의 수를 계산
+//녹는 기준: 2변 이상이 실내온도의 공기와 접촉한 것
+//해당 치즈는 한 시간 후에 녹음
+//치즈가 녹는 과정을 관리하기 위해 큐에 녹을 치즈의 좌표를 저장해두고, 해당 치즈를 제거(0으로 변경)
+
+//모든 치즈가 다 녹을 때까지 이 과정을 반복
