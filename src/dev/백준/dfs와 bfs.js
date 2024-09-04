@@ -4520,3 +4520,81 @@
 //치즈가 녹는 과정을 관리하기 위해 큐에 녹을 치즈의 좌표를 저장해두고, 해당 치즈를 제거(0으로 변경)
 
 //모든 치즈가 다 녹을 때까지 이 과정을 반복
+
+const { time } = require('console');
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+const [N, M] = input.shift().split(' ').map(Number);
+const grid = input.map(line => line.split(' ').map(Number));
+const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+
+//공기와 접촉 여부
+const bfs = (grid) =>{
+  const queue=[[0,0]];
+  let contact = Array.from({length: N}, ()=>Array(M).fill(false));
+  contact[0][0]=true;
+
+  while(queue.length){
+    const [x, y] =queue.shift();
+
+    for(const [dx, dy] of dir){
+      const nx = x+dx;
+      const ny =y+dy;
+
+      if(nx >= 0 && nx < N && ny >= 0 && ny < M && !contact[nx][ny] && grid[nx][ny] === 0){
+        contact[nx][ny]=true;
+        queue.push([nx, ny])
+      }
+    }
+  }
+
+  return contact
+}
+
+//치즈 녹이기
+const meltCheese=()=>{
+  let time = 0;
+
+  while(true){
+    let airContact = bfs(grid);
+    let melt = [];
+
+    for(let i=0; i<N; i++){
+      for(let j=0; j<M; j++){
+        if(grid[i][j]===1){
+          let airCount =0;
+
+          for(const [dx, dy] of dir){
+            const nx = i+dx;
+            const ny =j+dy;
+
+            //공기와 접촉했다면
+            if(nx >= 0 && nx < N && ny >= 0 && ny < M&&airContact[nx][ny]){
+              airCount++
+            }
+          }
+
+          if(airCount>1){
+            melt.push([i, j])
+          }
+        }
+      }
+    }
+
+    if(melt.length===0){
+      break
+    }
+
+    melt.forEach(([x, y])=>{
+      grid[x][y]=0
+    })
+
+    time++
+  }
+
+  return time
+}
+
+console.log(meltCheese())
