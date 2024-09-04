@@ -4521,80 +4521,154 @@
 
 //모든 치즈가 다 녹을 때까지 이 과정을 반복
 
-const { time } = require('console');
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [N, M] = input.shift().split(' ').map(Number);
+// const grid = input.map(line => line.split(' ').map(Number));
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]];
+
+// //공기와 접촉 여부
+// const bfs = (grid) =>{
+//   const queue=[[0,0]];
+//   let contact = Array.from({length: N}, ()=>Array(M).fill(false));
+//   contact[0][0]=true;
+
+//   while(queue.length){
+//     const [x, y] =queue.shift();
+
+//     for(const [dx, dy] of dir){
+//       const nx = x+dx;
+//       const ny =y+dy;
+
+//       if(nx >= 0 && nx < N && ny >= 0 && ny < M && !contact[nx][ny] && grid[nx][ny] === 0){
+//         contact[nx][ny]=true;
+//         queue.push([nx, ny])
+//       }
+//     }
+//   }
+
+//   return contact
+// }
+
+// //치즈 녹이기
+// const meltCheese=()=>{
+//   let time = 0;
+
+//   while(true){
+//     let airContact = bfs(grid);
+//     let melt = [];
+
+//     for(let i=0; i<N; i++){
+//       for(let j=0; j<M; j++){
+//         if(grid[i][j]===1){
+//           let airCount =0;
+
+//           for(const [dx, dy] of dir){
+//             const nx = i+dx;
+//             const ny =j+dy;
+
+//             //공기와 접촉했다면
+//             if(nx >= 0 && nx < N && ny >= 0 && ny < M&&airContact[nx][ny]){
+//               airCount++
+//             }
+//           }
+
+//           if(airCount>1){
+//             melt.push([i, j])
+//           }
+//         }
+//       }
+//     }
+
+//     if(melt.length===0){
+//       break
+//     }
+
+//     melt.forEach(([x, y])=>{
+//       grid[x][y]=0
+//     })
+
+//     time++
+//   }
+
+//   return time
+// }
+
+// console.log(meltCheese())
+
+
+//14940-쉬운 최단거리
+
+//문제 풀이 과정
+
+//0은 갈 수 없는 땅
+//1은 갈 수 있는 땅
+//2는 목표지점
+
+//출력: 모든 지점에 대해서 목표지점까지의 거리
+
+//2인 구간 목표지점으로 설정
+//bfs(출발지점, 목표지점)으로 거리 구하기 
+
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const [n, m] = input.shift().split(' ').map(Number)
+const arr = input.map(v=>v.split(' ').map(Number));
 
-const [N, M] = input.shift().split(' ').map(Number);
-const grid = input.map(line => line.split(' ').map(Number));
 const dir = [[0,1], [0,-1], [1,0], [-1,0]];
 
-//공기와 접촉 여부
-const bfs = (grid) =>{
-  const queue=[[0,0]];
-  let contact = Array.from({length: N}, ()=>Array(M).fill(false));
-  contact[0][0]=true;
+let goal = [];
+for(let i=0; i<n; i++){
+  for(let j=0; j<m; j++){
+    if(arr[i][j]===2){
+      goal=[i, j]
+      break;
+    }
+  }
+
+  if(goal){
+    break;
+  }
+}
+
+const bfs = (start)=>{
+  let distance = Array.from({length: n}, ()=>Array(m).fill(-1));
+  const [startx, starty] =start;
+  const queue=[[startx, starty]];
+  distance[startx][starty]=0;
 
   while(queue.length){
     const [x, y] =queue.shift();
 
     for(const [dx, dy] of dir){
-      const nx = x+dx;
+      const nx =x+dx;
       const ny =y+dy;
-
-      if(nx >= 0 && nx < N && ny >= 0 && ny < M && !contact[nx][ny] && grid[nx][ny] === 0){
-        contact[nx][ny]=true;
+      
+      if(nx >= 0 && nx < n && ny >= 0 && ny < m&&arr[nx][ny]!=0&&distance[nx][ny]===-1){
+        distance[nx][ny]=distance[x][y]+1;
         queue.push([nx, ny])
       }
     }
   }
 
-  return contact
+  return distance
 }
 
-//치즈 녹이기
-const meltCheese=()=>{
-  let time = 0;
+const distances = bfs(goal);
 
-  while(true){
-    let airContact = bfs(grid);
-    let melt = [];
-
-    for(let i=0; i<N; i++){
-      for(let j=0; j<M; j++){
-        if(grid[i][j]===1){
-          let airCount =0;
-
-          for(const [dx, dy] of dir){
-            const nx = i+dx;
-            const ny =j+dy;
-
-            //공기와 접촉했다면
-            if(nx >= 0 && nx < N && ny >= 0 && ny < M&&airContact[nx][ny]){
-              airCount++
-            }
-          }
-
-          if(airCount>1){
-            melt.push([i, j])
-          }
-        }
-      }
+for(let i=0; i<n; i++){
+  let r = [];
+  for(let j=0; j<m; j++){
+    if(arr[i][j]===0){
+      r.push(0)
+    }else{
+      r.push(distances[i][j])
     }
-
-    if(melt.length===0){
-      break
-    }
-
-    melt.forEach(([x, y])=>{
-      grid[x][y]=0
-    })
-
-    time++
   }
 
-  return time
+  console.log(r.join(' '))
 }
-
-console.log(meltCheese())
