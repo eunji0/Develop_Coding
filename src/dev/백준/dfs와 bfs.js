@@ -4675,52 +4675,136 @@
 
 
 //1325-효율적인 해킹
-const fs = require("fs");
-const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-const [input, ...arr] = fs.readFileSync(filePath).toString().trim().split("\n");
-const [N, M] = input.split(" ").map(Number);
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// const [input, ...arr] = fs.readFileSync(filePath).toString().trim().split("\n");
+// const [N, M] = input.split(" ").map(Number);
 
-// 그래프를 만듦.
-const graph = Array.from({ length: N + 1 }, () => []);
+// // 그래프를 만듦.
+// const graph = Array.from({ length: N + 1 }, () => []);
 
-// 각 노드에 대한 간선 정보를 저장
-for (let i = 0; i < M; i++) {
-  const [front, back] = arr[i].split(" ");
-  graph[+back].push(+front);
-}
+// // 각 노드에 대한 간선 정보를 저장
+// for (let i = 0; i < M; i++) {
+//   const [front, back] = arr[i].split(" ");
+//   graph[+back].push(+front);
+// }
 
-// 각 노드에 대한 DFS
-function dfs(start) {
-  const stack = [start];
-  const visited = new Array(N + 1).fill(false);
-  let count = 0; // 해킹 가능한 컴퓨터 수
-  visited[start] = true; // 시작 노드 방문 처리
+// // 각 노드에 대한 DFS
+// function dfs(start) {
+//   const stack = [start];
+//   const visited = new Array(N + 1).fill(false);
+//   let count = 0; // 해킹 가능한 컴퓨터 수
+//   visited[start] = true; // 시작 노드 방문 처리
 
-  while (stack.length) {
-    const node = stack.pop();
-    // 해당 노드와 연결된 노드들을 탐색
-    for (let next of graph[node]) {
-      if (visited[next]) continue;
-      stack.push(next);
-      visited[next] = true;
-      count++;
-    }
+//   while (stack.length) {
+//     const node = stack.pop();
+//     // 해당 노드와 연결된 노드들을 탐색
+//     for (let next of graph[node]) {
+//       if (visited[next]) continue;
+//       stack.push(next);
+//       visited[next] = true;
+//       count++;
+//     }
+//   }
+
+//   return count;
+// }
+
+// let max = -1;
+// let answer = [];
+
+// for (let i = 1; i <= N; i++) {
+//   let count = dfs(i);
+//   if (count > max) {
+//     max = count;
+//     answer = [i];
+//   } else if (count === max) {
+//     answer.push(i);
+//   }
+// }
+
+// console.log(answer.join(" "));
+
+//1600-말이 되고픈 원숭이
+class Q {
+  l = 0;
+  r = 0;
+  q = {};
+  isEmpty = () => this.l === this.r;
+  push(d) {
+    this.q[this.r++] = d;
   }
-
-  return count;
-}
-
-let max = -1;
-let answer = [];
-
-for (let i = 1; i <= N; i++) {
-  let count = dfs(i);
-  if (count > max) {
-    max = count;
-    answer = [i];
-  } else if (count === max) {
-    answer.push(i);
+  pop() {
+    if (this.isEmpty()) return undefined;
+    const r = this.q[this.l];
+    delete this.q[this.l++];
+    return r;
   }
 }
+//const stdin = require('fs').readFileSync(0, 'utf-8').trim().split('\n');
+//prettier-ignore
+const stdin = `
+2
+5 2
+0 0 1 1 0
+0 0 1 1 0
+`.trim().split('\n');
+//prettier-ignore
+const input = (() => { let l = 0; return () => stdin[l++].split(' ').map(Number);})();
 
-console.log(answer.join(" "));
+const K = +input();
+const [W, H] = input();
+const board = Array.from({ length: H }, () => input());
+const visited = Array.from({ length: H }, () =>
+  Array.from({ length: W }, () => Array.from({ length: K }, () => false)),
+);
+
+const moveHorse = [
+  [-2, 1],
+  [-2, -1],
+  [-1, 2],
+  [-1, -2],
+  [1, 2],
+  [1, -2],
+  [2, 1],
+  [2, -1],
+];
+const moveMonkey = [
+  [-1, 0],
+  [1, 0],
+  [0, -1],
+  [0, 1],
+];
+const canGo = (y, x) => y >= 0 && y < H && x >= 0 && x < W && board[y][x] !== 1;
+
+const queue = new Q();
+queue.push([0, 0, 0, 0]);
+
+while (!queue.isEmpty()) {
+  const [y, x, k, m] = queue.pop();
+
+  if (y === H - 1 && x === W - 1) {
+    console.log(m);
+    return;
+  }
+  // 말처럼 가보는 경우
+  for (const [yy, xx] of moveHorse) {
+    const [ny, nx] = [y + yy, x + xx];
+    if (!canGo(ny, nx)) continue;
+    if (k + 1 > K) continue;
+    if (visited[ny][nx][k + 1]) continue;
+
+    queue.push([ny, nx, k + 1, m + 1]);
+    visited[ny][nx][k + 1] = true;
+  }
+  // 원숭이처럼 가보는 경우
+  for (const [yy, xx] of moveMonkey) {
+    const [ny, nx] = [y + yy, x + xx];
+    if (!canGo(ny, nx)) continue;
+    if (visited[ny][nx][k]) continue;
+
+    queue.push([ny, nx, k, m + 1]);
+    visited[ny][nx][k] = true;
+  }
+}
+console.log(-1);
