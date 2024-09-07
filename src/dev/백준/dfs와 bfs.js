@@ -4726,85 +4726,61 @@
 // console.log(answer.join(" "));
 
 //1600-말이 되고픈 원숭이
-class Q {
-  l = 0;
-  r = 0;
-  q = {};
-  isEmpty = () => this.l === this.r;
-  push(d) {
-    this.q[this.r++] = d;
-  }
-  pop() {
-    if (this.isEmpty()) return undefined;
-    const r = this.q[this.l];
-    delete this.q[this.l++];
-    return r;
-  }
-}
-//const stdin = require('fs').readFileSync(0, 'utf-8').trim().split('\n');
-//prettier-ignore
-const stdin = `
-2
-5 2
-0 0 1 1 0
-0 0 1 1 0
-`.trim().split('\n');
-//prettier-ignore
-const input = (() => { let l = 0; return () => stdin[l++].split(' ').map(Number);})();
 
-const K = +input();
-const [W, H] = input();
-const board = Array.from({ length: H }, () => input());
+//문제풀이과정
+//구해야 할것: (0, 0)**에서 시작하여 (H-1, W-1) 지점까지 가는 데 필요한 최소 동작 수
+//0은 이동 가능한 곳(평지)을 나타내며, 1은 이동할 수 없는 장애물
+//도착할 수 없을 경우 -1
+
+
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+const K = Number(input[0]); // 말처럼 이동할 수 있는 최대 횟수
+const [W, H] = input[1].split(' ').map(Number); // 격자 크기 W(가로), H(세로)
+const grid = input.slice(2).map(line => line.split(' ').map(Number)); // 격자 정보
+
+const directionsMonkey = [[0, 1], [1, 0], [0, -1], [-1, 0]]; // 원숭이의 상하좌우 이동
+const directionsHorse = [[-2, -1], [-1, -2], [1, -2], [2, -1], [2, 1], [1, 2], [-1, 2], [-2, 1]]; // 말의 나이트 이동
+
 const visited = Array.from({ length: H }, () =>
-  Array.from({ length: W }, () => Array.from({ length: K }, () => false)),
+  Array.from({ length: W }, () => Array(K + 1).fill(false))
 );
 
-const moveHorse = [
-  [-2, 1],
-  [-2, -1],
-  [-1, 2],
-  [-1, -2],
-  [1, 2],
-  [1, -2],
-  [2, 1],
-  [2, -1],
-];
-const moveMonkey = [
-  [-1, 0],
-  [1, 0],
-  [0, -1],
-  [0, 1],
-];
-const canGo = (y, x) => y >= 0 && y < H && x >= 0 && x < W && board[y][x] !== 1;
+const bfs = ()=>{
+  const queue = [[0,0,0,0]]
+  visited[0][0][0]=true;
 
-const queue = new Q();
-queue.push([0, 0, 0, 0]);
+  while(queue.length){
+    const [x, y, horse, total] = queue.shift();
 
-while (!queue.isEmpty()) {
-  const [y, x, k, m] = queue.pop();
+    if (x === H - 1 && y === W - 1) return total;
 
-  if (y === H - 1 && x === W - 1) {
-    console.log(m);
-    return;
+    for(const [dx, dy] of directionsMonkey){
+      const nx = x+dx;
+      const ny =y+dy;
+
+      if(nx >= 0 && nx < H && ny >= 0 && ny < W &&grid[nx][ny]===0&&!visited[nx][ny][horse]){
+        visited[nx][ny][horse]=true;
+        queue.push([nx, ny, horse, total+1])
+      }
+    }
+
+    if (horse < K) {
+      for (const [dx, dy] of directionsHorse) {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx >= 0 && nx < H && ny >= 0 && ny < W && grid[nx][ny] === 0 && !visited[nx][ny][horse + 1]) {
+          visited[nx][ny][horse + 1] = true;
+          queue.push([nx, ny, horse + 1, total + 1]);
+        }
+      }
+    }
   }
-  // 말처럼 가보는 경우
-  for (const [yy, xx] of moveHorse) {
-    const [ny, nx] = [y + yy, x + xx];
-    if (!canGo(ny, nx)) continue;
-    if (k + 1 > K) continue;
-    if (visited[ny][nx][k + 1]) continue;
 
-    queue.push([ny, nx, k + 1, m + 1]);
-    visited[ny][nx][k + 1] = true;
-  }
-  // 원숭이처럼 가보는 경우
-  for (const [yy, xx] of moveMonkey) {
-    const [ny, nx] = [y + yy, x + xx];
-    if (!canGo(ny, nx)) continue;
-    if (visited[ny][nx][k]) continue;
+  // 목표 지점에 도달하지 못하면 -1 반환
+  return -1;
+};
 
-    queue.push([ny, nx, k, m + 1]);
-    visited[ny][nx][k] = true;
-  }
-}
-console.log(-1);
+console.log(bfs());
