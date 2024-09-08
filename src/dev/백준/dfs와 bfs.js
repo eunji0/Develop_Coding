@@ -4733,54 +4733,188 @@
 //도착할 수 없을 경우 -1
 
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const K = Number(input[0]); // 말처럼 이동할 수 있는 최대 횟수
+// const [W, H] = input[1].split(' ').map(Number); // 격자 크기 W(가로), H(세로)
+// const grid = input.slice(2).map(line => line.split(' ').map(Number)); // 격자 정보
+
+// const directionsMonkey = [[0, 1], [1, 0], [0, -1], [-1, 0]]; // 원숭이의 상하좌우 이동
+// const directionsHorse = [[-2, -1], [-1, -2], [1, -2], [2, -1], [2, 1], [1, 2], [-1, 2], [-2, 1]]; // 말의 나이트 이동
+
+// const visited = Array.from({ length: H }, () =>
+//   Array.from({ length: W }, () => Array(K + 1).fill(false))
+// );
+
+// const bfs = ()=>{
+//   const queue = [[0,0,0,0]]
+//   visited[0][0][0]=true;
+
+//   while(queue.length){
+//     const [x, y, horse, total] = queue.shift();
+
+//     if (x === H - 1 && y === W - 1) return total;
+
+//     for(const [dx, dy] of directionsMonkey){
+//       const nx = x+dx;
+//       const ny =y+dy;
+
+//       if(nx >= 0 && nx < H && ny >= 0 && ny < W &&grid[nx][ny]===0&&!visited[nx][ny][horse]){
+//         visited[nx][ny][horse]=true;
+//         queue.push([nx, ny, horse, total+1])
+//       }
+//     }
+
+//     if (horse < K) {
+//       for (const [dx, dy] of directionsHorse) {
+//         const nx = x + dx;
+//         const ny = y + dy;
+//         if (nx >= 0 && nx < H && ny >= 0 && ny < W && grid[nx][ny] === 0 && !visited[nx][ny][horse + 1]) {
+//           visited[nx][ny][horse + 1] = true;
+//           queue.push([nx, ny, horse + 1, total + 1]);
+//         }
+//       }
+//     }
+//   }
+
+//   // 목표 지점에 도달하지 못하면 -1 반환
+//   return -1;
+// };
+
+// console.log(bfs());
+
+
+//4179-불!
+
+// #: 벽
+// .: 지나갈 수 있는 공간
+// J: 지훈이의 미로에서의 초기위치 (지나갈 수 있는 공간)
+// F: 불이 난 공간
+
+//불이 도달하기 전에 미로를 탈출 할 수 없는 경우 IMPOSSIBLE
+//미로를 탈출할 수 있는 경우에는 가장 빠른 탈출시간
+
+
+//그래프 0으로 두르기
+//bfs로 탈출하는 시간 반환(0에 닿으면 탈출)
+//불보다 지훈이 먼저 탈출 가능시 시간 반환
+
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [r, c] = input.shift().split(' ').map(Number);
+// const graph = input.map(v => v.trim().split(''));
+
+// const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+
+// // 불의 BFS와 지훈의 BFS를 위해 큐를 따로 관리
+// let jihoonQueue = [];
+// let fireQueue = [];
+// let fireVisited = Array.from({ length: r }, () => Array(c).fill(-1));  // 불의 전파 시간
+// let jihoonVisited = Array.from({ length: r }, () => Array(c).fill(-1));  // 지훈의 이동 시간
+
+// // 초기 불과 지훈의 위치를 찾아서 큐에 넣고 시작
+// for (let i = 0; i < r; i++) {
+//   for (let j = 0; j < c; j++) {
+//     if (graph[i][j] === 'J') {
+//       jihoonQueue.push([i, j]);
+//       jihoonVisited[i][j] = 0;  // 지훈 시작점 방문
+//     }
+//     if (graph[i][j] === 'F') {
+//       fireQueue.push([i, j]);
+//       fireVisited[i][j] = 0;  // 불 시작점 방문
+//     }
+//   }
+// }
+
+// // 불의 전파 BFS
+// while (fireQueue.length) {
+//   const [x, y] = fireQueue.shift();
+//   for (const [dx, dy] of dir) {
+//     const nx = x + dx;
+//     const ny = y + dy;
+
+//     if (nx >= 0 && ny >= 0 && nx < r && ny < c && fireVisited[nx][ny] === -1 && graph[nx][ny] !== '#') {
+//       fireQueue.push([nx, ny]);
+//       fireVisited[nx][ny] = fireVisited[x][y] + 1;  // 불이 전파되는 시간을 기록
+//     }
+//   }
+// }
+
+// // 지훈의 이동 BFS
+// while (jihoonQueue.length) {
+//   const [x, y] = jihoonQueue.shift();
+
+//   // 지훈이 경계에 도달하면 즉시 탈출 가능
+//   if (x === 0 || y === 0 || x === r - 1 || y === c - 1) {
+//     console.log(jihoonVisited[x][y] + 1);  // 시작점 포함해서 1을 더해줌
+//     return;
+//   }
+
+//   for (const [dx, dy] of dir) {
+//     const nx = x + dx;
+//     const ny = y + dy;
+
+//     // 다음 위치가 유효하고, 벽이 아니며, 아직 방문하지 않은 경우
+//     if (nx >= 0 && ny >= 0 && nx < r && ny < c && jihoonVisited[nx][ny] === -1 && graph[nx][ny] !== '#') {
+//       // 불이 도달하지 않았거나, 지훈이 불보다 먼저 도착할 수 있는 경우만 이동
+//       if (fireVisited[nx][ny] === -1 || jihoonVisited[x][y] + 1 < fireVisited[nx][ny]) {
+//         jihoonVisited[nx][ny] = jihoonVisited[x][y] + 1;
+//         jihoonQueue.push([nx, ny]);
+//       }
+//     }
+//   }
+// }
+
+// console.log('IMPOSSIBLE');  // 탈출할 수 없는 경우
+
+//1743-음식물 피하기
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const [n, m, k] = input.shift().split(' ').map(Number);
+const arr = input.map(v=>v.split(' ').map(Number));
+const dir = [[0,1], [0,-1], [1,0], [-1,0]]
+const graph = Array.from({length: n}, ()=>Array(m).fill(0));
+let visited = Array.from({length: n}, ()=>Array(m).fill(false));
 
-const K = Number(input[0]); // 말처럼 이동할 수 있는 최대 횟수
-const [W, H] = input[1].split(' ').map(Number); // 격자 크기 W(가로), H(세로)
-const grid = input.slice(2).map(line => line.split(' ').map(Number)); // 격자 정보
+arr.map(([x, y])=>{
+  graph[x-1][y-1]=1
+})
 
-const directionsMonkey = [[0, 1], [1, 0], [0, -1], [-1, 0]]; // 원숭이의 상하좌우 이동
-const directionsHorse = [[-2, -1], [-1, -2], [1, -2], [2, -1], [2, 1], [1, 2], [-1, 2], [-2, 1]]; // 말의 나이트 이동
-
-const visited = Array.from({ length: H }, () =>
-  Array.from({ length: W }, () => Array(K + 1).fill(false))
-);
-
-const bfs = ()=>{
-  const queue = [[0,0,0,0]]
-  visited[0][0][0]=true;
+const bfs = (i, j)=>{
+  const queue = [[i, j]];
+  visited[i][j]=true
+  let count =1
 
   while(queue.length){
-    const [x, y, horse, total] = queue.shift();
+    const [x, y] =queue.shift();
 
-    if (x === H - 1 && y === W - 1) return total;
-
-    for(const [dx, dy] of directionsMonkey){
-      const nx = x+dx;
+    for(const [dx, dy] of dir){
+      const nx =x+dx;
       const ny =y+dy;
 
-      if(nx >= 0 && nx < H && ny >= 0 && ny < W &&grid[nx][ny]===0&&!visited[nx][ny][horse]){
-        visited[nx][ny][horse]=true;
-        queue.push([nx, ny, horse, total+1])
-      }
-    }
-
-    if (horse < K) {
-      for (const [dx, dy] of directionsHorse) {
-        const nx = x + dx;
-        const ny = y + dy;
-        if (nx >= 0 && nx < H && ny >= 0 && ny < W && grid[nx][ny] === 0 && !visited[nx][ny][horse + 1]) {
-          visited[nx][ny][horse + 1] = true;
-          queue.push([nx, ny, horse + 1, total + 1]);
-        }
+      if(nx>=0&&ny>=0&&nx<n&&ny<m&&!visited[nx][ny]&&graph[nx][ny]===1){
+        visited[nx][ny]=true;
+        queue.push([nx, ny])
+        count++
       }
     }
   }
 
-  // 목표 지점에 도달하지 못하면 -1 반환
-  return -1;
-};
+  return count
+}
 
-console.log(bfs());
+let result =[];
+
+for(let i=0; i<n; i++){
+  for(let j=0; j<m; j++){
+    if(graph[i][j]===1&&!visited[i][j]){
+      result.push(bfs(i, j))
+    }
+  }
+}
+
+console.log(Math.max(...result))
