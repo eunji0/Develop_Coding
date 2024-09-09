@@ -4871,50 +4871,220 @@
 // console.log('IMPOSSIBLE');  // 탈출할 수 없는 경우
 
 //1743-음식물 피하기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [n, m, k] = input.shift().split(' ').map(Number);
+// const arr = input.map(v=>v.split(' ').map(Number));
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]]
+// const graph = Array.from({length: n}, ()=>Array(m).fill(0));
+// let visited = Array.from({length: n}, ()=>Array(m).fill(false));
+
+// arr.map(([x, y])=>{
+//   graph[x-1][y-1]=1
+// })
+
+// const bfs = (i, j)=>{
+//   const queue = [[i, j]];
+//   visited[i][j]=true
+//   let count =1
+
+//   while(queue.length){
+//     const [x, y] =queue.shift();
+
+//     for(const [dx, dy] of dir){
+//       const nx =x+dx;
+//       const ny =y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<n&&ny<m&&!visited[nx][ny]&&graph[nx][ny]===1){
+//         visited[nx][ny]=true;
+//         queue.push([nx, ny])
+//         count++
+//       }
+//     }
+//   }
+
+//   return count
+// }
+
+// let result =[];
+
+// for(let i=0; i<n; i++){
+//   for(let j=0; j<m; j++){
+//     if(graph[i][j]===1&&!visited[i][j]){
+//       result.push(bfs(i, j))
+//     }
+//   }
+// }
+
+// console.log(Math.max(...result))
+
+//5427-불
+
+// '.': 빈 공간
+// '#': 벽
+// '@': 상근이의 시작 위치
+// '*': 불
+
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const dir = [[0,1], [0,-1], [1,0], [-1,0]]
+// const t = Number(input.shift())
+
+// const bfs = (w, h, graph)=>{
+//   let fireVisited=Array.from({length:w}, ()=>Array(h).fill(-1));
+//   let startVisited=Array.from({length:w}, ()=>Array(h).fill(-1));
+//   let fire = []
+//   let start = []
+
+//   for(let i=0; i<w; i++){
+//     for(let j=0; j<h; j++){
+//       console.log(i, j, graph[i][j])
+//       if(graph[i][j]==='*'){
+//         fire = [i, j]
+//         break
+//       }
+
+//       if(graph[i][j]==='@'){
+//         start = [i, j]
+//         break
+//       }
+//     }
+//   }
+
+//   // while(fire.length){
+//   //   const [x, y] = fire.shift();
+
+//   //   for(const [dx, dy] of dir){
+//   //     const nx = x+dx;
+//   //     const ny =y+dy;
+
+//   //     if(nx>=0&&ny>=0&&nx<w&&ny<h&&fireVisited[nx][ny]!=-1&&graph[nx][ny]!=='#'){
+//   //       fireVisited[nx][ny]=fireVisited[x][y]+1
+//   //       fire.push([nx, ny])
+//   //     }
+//   //   }
+//   // }
+
+//   // while(start.length){
+//   //   const [x, y] = start.shift();
+
+//   //   if(x===w-1||y===h-1||x===0||y===0){
+//   //     console.log(startVisited[x][y]+1)
+//   //     return
+//   //   }
+
+//   //   for(const [dx, dy] of dir){
+//   //     const nx = x+dx;
+//   //     const ny = y+dy;
+
+//   //     if(nx>=0&&ny>=0&&nx<w&&ny<h&&startVisited[nx][ny]!=-1&&graph[nx][ny]!=='#'){
+//   //       startVisited[nx][ny]=startVisited[x][y]+1
+//   //       start.push([nx, ny])
+//   //     }
+//   //   }
+//   // }
+
+//   // return "IMPOSSIBLE"
+// }
+
+// for(let i=0; i<input.length; i++){
+//   const [w, h] = input[i].split(' ').map(Number)
+//   let arr = input.slice(i+1, i+h+1).map(v=>v.trim().split(''));
+//   console.log(bfs(w, h, arr))
+//   i+=h
+// }
+
 const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [n, m, k] = input.shift().split(' ').map(Number);
-const arr = input.map(v=>v.split(' ').map(Number));
-const dir = [[0,1], [0,-1], [1,0], [-1,0]]
-const graph = Array.from({length: n}, ()=>Array(m).fill(0));
-let visited = Array.from({length: n}, ()=>Array(m).fill(false));
+const input = fs.readFileSync('./dev/stdin').toString().trim().split('\n');
 
-arr.map(([x, y])=>{
-  graph[x-1][y-1]=1
-})
+// '.': 빈 공간
+// '#': 벽
+// '@': 상근이의 시작 위치
+// '*': 불
 
-const bfs = (i, j)=>{
-  const queue = [[i, j]];
-  visited[i][j]=true
-  let count =1
+const T = +input.shift();
 
-  while(queue.length){
-    const [x, y] =queue.shift();
+const dx = [0, 0, -1, 1];
+const dy = [1, -1, 0, 0];
 
-    for(const [dx, dy] of dir){
-      const nx =x+dx;
-      const ny =y+dy;
-
-      if(nx>=0&&ny>=0&&nx<n&&ny<m&&!visited[nx][ny]&&graph[nx][ny]===1){
-        visited[nx][ny]=true;
-        queue.push([nx, ny])
-        count++
-      }
-    }
-  }
-
-  return count
+const answer = [];
+for (let i = 0; i < T; i++) {
+	const [M, N] = input.shift().split(' ').map(Number);
+	let board = input.splice(0, N).map((v) => v.split(''));
+	const result = sol(M, N, board);
+	answer.push(result);
 }
 
-let result =[];
+console.log(answer.join('\n'));
 
-for(let i=0; i<n; i++){
-  for(let j=0; j<m; j++){
-    if(graph[i][j]===1&&!visited[i][j]){
-      result.push(bfs(i, j))
-    }
-  }
+function sol(M, N, board) {
+	let fullTime = [];
+	let fire = [];
+	let time = 1;
+	let visited = Array.from(Array(N), () => Array(M).fill(false));
+	for (let i = 0; i < N; i++) {
+		for (let j = 0; j < M; j++) {
+			if (board[i][j] == '@') {
+				fullTime.push([i, j]);
+				board[i][j] = '.';
+				visited[i][j] = true;
+			} else if (board[i][j] == '*') {
+				fire.push([i, j]);
+			}
+		}
+	}
+
+	while (fullTime.length > 0) {
+		// 상근이 이동하기
+		const newFullTime = [];
+		while (fullTime.length > 0) {
+			const [x, y] = fullTime.pop();
+			if (board[x][y] == '*') continue;
+			for (let l = 0; l < 4; l++) {
+				const nx = x + dx[l];
+				const ny = y + dy[l];
+				if (nx < 0 || nx >= N || ny < 0 || ny >= M) {
+					return time;
+				}
+
+				if (board[nx][ny] == '.' && !visited[nx][ny]) {
+					visited[nx][ny] = true;
+					newFullTime.push([nx, ny]);
+				}
+			}
+		}
+		fullTime = newFullTime;
+
+		// 불!!!!
+		const newFire = [];
+		while (fire.length > 0) {
+			const [x, y] = fire.pop();
+			for (let l = 0; l < 4; l++) {
+				const nx = x + dx[l];
+				const ny = y + dy[l];
+				if (
+					nx < 0 ||
+					nx >= N ||
+					ny < 0 ||
+					ny >= M ||
+					board[nx][ny] == '*' ||
+					board[nx][ny] == '#'
+				)
+					continue;
+
+				if (board[nx][ny] == '.') {
+					board[nx][ny] = '*';
+					newFire.push([nx, ny]);
+				}
+			}
+		}
+		fire = newFire;
+
+		//시간++
+		time++;
+	}
+
+	return 'IMPOSSIBLE';
 }
-
-console.log(Math.max(...result))
