@@ -4996,95 +4996,80 @@
 //   i+=h
 // }
 
-const fs = require('fs');
-const input = fs.readFileSync('./dev/stdin').toString().trim().split('\n');
+//17136-캐슬 디펜스
+const fs = require("fs");
+const input = fs
+  .readFileSync("./dev/stdin")
+  .toString()
+  .trim()
+  .split("\n")
+  .map((v) => v.split(" ").map(Number));
+const [N, M, D] = input.shift();
 
-// '.': 빈 공간
-// '#': 벽
-// '@': 상근이의 시작 위치
-// '*': 불
+const board = input;
+let max = 0;
 
-const T = +input.shift();
+const archers = [];
 
-const dx = [0, 0, -1, 1];
-const dy = [1, -1, 0, 0];
-
-const answer = [];
-for (let i = 0; i < T; i++) {
-	const [M, N] = input.shift().split(' ').map(Number);
-	let board = input.splice(0, N).map((v) => v.split(''));
-	const result = sol(M, N, board);
-	answer.push(result);
+for (let i = 0; i < 1 << M; i++) {
+  let j = i;
+  let archer = [];
+  let cnt = 0;
+  while (j > 0) {
+    if (j & 1) {
+      archer.push(cnt);
+    }
+    cnt++;
+    j = j >> 1;
+  }
+  if (archer.length == 3) {
+    archers.push(archer);
+  }
 }
 
-console.log(answer.join('\n'));
+const enemySort = (a, b) => {
+  if (a[2] > b[2]) return 1;
+  else if (a[2] < b[2]) return -1;
+  else {
+    return a[1] - b[1];
+  }
+};
 
-function sol(M, N, board) {
-	let fullTime = [];
-	let fire = [];
-	let time = 1;
-	let visited = Array.from(Array(N), () => Array(M).fill(false));
-	for (let i = 0; i < N; i++) {
-		for (let j = 0; j < M; j++) {
-			if (board[i][j] == '@') {
-				fullTime.push([i, j]);
-				board[i][j] = '.';
-				visited[i][j] = true;
-			} else if (board[i][j] == '*') {
-				fire.push([i, j]);
-			}
-		}
-	}
+archers.forEach((group) => {
+  let field = board.map((v) => [...v]).reverse();
+  let cnt = 0;
 
-	while (fullTime.length > 0) {
-		// 상근이 이동하기
-		const newFullTime = [];
-		while (fullTime.length > 0) {
-			const [x, y] = fullTime.pop();
-			if (board[x][y] == '*') continue;
-			for (let l = 0; l < 4; l++) {
-				const nx = x + dx[l];
-				const ny = y + dy[l];
-				if (nx < 0 || nx >= N || ny < 0 || ny >= M) {
-					return time;
-				}
+  for (let i = 0; i < N; i++) {
+    // kill
+    const temp = [];
+    group.forEach((a) => {
+      const enemy = [];
+      for (let x = 1; x <= D; x++) {
+        for (let y = a - D + x; y < a + D - x + 1; y++) {
+          if (x - 1 < 0 || y < 0 || x - 1 >= N || y >= M) continue;
+          if (field[x - 1][y] == 1) {
+            const dist = x + Math.abs(a - y);
+            enemy.push([x - 1, y, dist]);
+          }
+        }
+      }
+      if (enemy.length > 0) {
+        const [ex, ey] = enemy.sort(enemySort)[0];
+        temp.push(JSON.stringify([ex, ey]));
+      }
+    });
+    const target = [...new Set(temp)].map((v) => JSON.parse(v));
+    target.forEach((v) => {
+      const [tx, ty] = v;
+      field[tx][ty] = 0;
+      cnt++;
+    });
 
-				if (board[nx][ny] == '.' && !visited[nx][ny]) {
-					visited[nx][ny] = true;
-					newFullTime.push([nx, ny]);
-				}
-			}
-		}
-		fullTime = newFullTime;
+    //move
+    field.shift();
+    field.push(new Array(M).fill(0));
+  }
+  max = Math.max(max, cnt);
+});
 
-		// 불!!!!
-		const newFire = [];
-		while (fire.length > 0) {
-			const [x, y] = fire.pop();
-			for (let l = 0; l < 4; l++) {
-				const nx = x + dx[l];
-				const ny = y + dy[l];
-				if (
-					nx < 0 ||
-					nx >= N ||
-					ny < 0 ||
-					ny >= M ||
-					board[nx][ny] == '*' ||
-					board[nx][ny] == '#'
-				)
-					continue;
-
-				if (board[nx][ny] == '.') {
-					board[nx][ny] = '*';
-					newFire.push([nx, ny]);
-				}
-			}
-		}
-		fire = newFire;
-
-		//시간++
-		time++;
-	}
-
-	return 'IMPOSSIBLE';
-}
+console.log(max);
