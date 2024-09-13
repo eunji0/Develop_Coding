@@ -4926,150 +4926,84 @@
 // '@': 상근이의 시작 위치
 // '*': 불
 
-// const fs = require('fs');
-// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-// let input = fs.readFileSync(filePath).toString().trim().split('\n');
-// const dir = [[0,1], [0,-1], [1,0], [-1,0]]
-// const t = Number(input.shift())
+//point-여러개의 불을 처리
 
-// const bfs = (w, h, graph)=>{
-//   let fireVisited=Array.from({length:w}, ()=>Array(h).fill(-1));
-//   let startVisited=Array.from({length:w}, ()=>Array(h).fill(-1));
-//   let fire = []
-//   let start = []
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+let input = fs.readFileSync(filePath).toString().trim().split('\n').map(v => v.trim());
+const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+const t = Number(input.shift());
 
-//   for(let i=0; i<w; i++){
-//     for(let j=0; j<h; j++){
-//       console.log(i, j, graph[i][j])
-//       if(graph[i][j]==='*'){
-//         fire = [i, j]
-//         break
-//       }
+const bfs = (fires, own, graph) => {
+  let n = graph.length;
+  let m = graph[0].length;
+  let fireVisited = Array.from({ length: n }, () => Array(m).fill(-1));
+  let ownVisited = Array.from({ length: n }, () => Array(m).fill(-1));
 
-//       if(graph[i][j]==='@'){
-//         start = [i, j]
-//         break
-//       }
-//     }
-//   }
+  const fireQueue = [...fires];
+  const ownQueue = [own];
 
-//   // while(fire.length){
-//   //   const [x, y] = fire.shift();
+  for (const [fx, fy] of fires) {
+    fireVisited[fx][fy] = 0;
+  }
+  ownVisited[own[0]][own[1]] = 0;
 
-//   //   for(const [dx, dy] of dir){
-//   //     const nx = x+dx;
-//   //     const ny =y+dy;
+  while (fireQueue.length) {
+    const [x, y] = fireQueue.shift();
 
-//   //     if(nx>=0&&ny>=0&&nx<w&&ny<h&&fireVisited[nx][ny]!=-1&&graph[nx][ny]!=='#'){
-//   //       fireVisited[nx][ny]=fireVisited[x][y]+1
-//   //       fire.push([nx, ny])
-//   //     }
-//   //   }
-//   // }
+    for (const [dx, dy] of dir) {
+      const nx = x + dx;
+      const ny = y + dy;
 
-//   // while(start.length){
-//   //   const [x, y] = start.shift();
-
-//   //   if(x===w-1||y===h-1||x===0||y===0){
-//   //     console.log(startVisited[x][y]+1)
-//   //     return
-//   //   }
-
-//   //   for(const [dx, dy] of dir){
-//   //     const nx = x+dx;
-//   //     const ny = y+dy;
-
-//   //     if(nx>=0&&ny>=0&&nx<w&&ny<h&&startVisited[nx][ny]!=-1&&graph[nx][ny]!=='#'){
-//   //       startVisited[nx][ny]=startVisited[x][y]+1
-//   //       start.push([nx, ny])
-//   //     }
-//   //   }
-//   // }
-
-//   // return "IMPOSSIBLE"
-// }
-
-// for(let i=0; i<input.length; i++){
-//   const [w, h] = input[i].split(' ').map(Number)
-//   let arr = input.slice(i+1, i+h+1).map(v=>v.trim().split(''));
-//   console.log(bfs(w, h, arr))
-//   i+=h
-// }
-
-//17136-캐슬 디펜스
-const fs = require("fs");
-const input = fs
-  .readFileSync("./dev/stdin")
-  .toString()
-  .trim()
-  .split("\n")
-  .map((v) => v.split(" ").map(Number));
-const [N, M, D] = input.shift();
-
-const board = input;
-let max = 0;
-
-const archers = [];
-
-for (let i = 0; i < 1 << M; i++) {
-  let j = i;
-  let archer = [];
-  let cnt = 0;
-  while (j > 0) {
-    if (j & 1) {
-      archer.push(cnt);
+      if (nx >= 0 && ny >= 0 && nx < n && ny < m && fireVisited[nx][ny] === -1 && graph[nx][ny] !== '#') {
+        fireQueue.push([nx, ny]);
+        fireVisited[nx][ny] = fireVisited[x][y] + 1;
+      }
     }
-    cnt++;
-    j = j >> 1;
   }
-  if (archer.length == 3) {
-    archers.push(archer);
-  }
-}
 
-const enemySort = (a, b) => {
-  if (a[2] > b[2]) return 1;
-  else if (a[2] < b[2]) return -1;
-  else {
-    return a[1] - b[1];
-  }
-};
+  while (ownQueue.length) {
+    const [x, y] = ownQueue.shift();
 
-archers.forEach((group) => {
-  let field = board.map((v) => [...v]).reverse();
-  let cnt = 0;
+    if (x === 0 || y === 0 || x === n - 1 || y === m - 1) {
+      console.log(ownVisited[x][y] + 1);
+      return;
+    }
 
-  for (let i = 0; i < N; i++) {
-    // kill
-    const temp = [];
-    group.forEach((a) => {
-      const enemy = [];
-      for (let x = 1; x <= D; x++) {
-        for (let y = a - D + x; y < a + D - x + 1; y++) {
-          if (x - 1 < 0 || y < 0 || x - 1 >= N || y >= M) continue;
-          if (field[x - 1][y] == 1) {
-            const dist = x + Math.abs(a - y);
-            enemy.push([x - 1, y, dist]);
-          }
+    for (const [dx, dy] of dir) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < n && ny < m && ownVisited[nx][ny] === -1 && graph[nx][ny] !== '#') {
+        if (fireVisited[nx][ny] === -1 || ownVisited[x][y] + 1 < fireVisited[nx][ny]) {
+          ownVisited[nx][ny] = ownVisited[x][y] + 1;
+          ownQueue.push([nx, ny]);
         }
       }
-      if (enemy.length > 0) {
-        const [ex, ey] = enemy.sort(enemySort)[0];
-        temp.push(JSON.stringify([ex, ey]));
-      }
-    });
-    const target = [...new Set(temp)].map((v) => JSON.parse(v));
-    target.forEach((v) => {
-      const [tx, ty] = v;
-      field[tx][ty] = 0;
-      cnt++;
-    });
-
-    //move
-    field.shift();
-    field.push(new Array(M).fill(0));
+    }
   }
-  max = Math.max(max, cnt);
-});
 
-console.log(max);
+  console.log('IMPOSSIBLE');
+};
+
+let idx = 0;
+for (let i = 0; i < t; i++) {
+  const [w, h] = input[idx].split(' ').map(Number);
+  const graph = input.slice(idx + 1, idx + h + 1).map(v => v.split(''));
+  let fires = [];
+  let own = [];
+
+  for (let j = 0; j < h; j++) {
+    for (let k = 0; k < w; k++) {
+      if (graph[j][k] === '*') {
+        fires.push([j, k]); 
+      }
+      if (graph[j][k] === '@') {
+        own = [j, k]; 
+      }
+    }
+  }
+
+  bfs(fires, own, graph);
+  idx += h + 1; 
+}
