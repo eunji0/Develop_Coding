@@ -4928,82 +4928,33 @@
 
 //point-여러개의 불을 처리
 
-const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n').map(v => v.trim());
-const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
-const t = Number(input.shift());
+//덱 사용
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n').map(v => v.trim());
+// const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+// const t = Number(input.shift());
 
-const bfs = (fires, own, graph) => {
-  let n = graph.length;
-  let m = graph[0].length;
-  let fireVisited = Array.from({ length: n }, () => Array(m).fill(-1));
-  let ownVisited = Array.from({ length: n }, () => Array(m).fill(-1));
+// class Deque{
+//   constructor(){
+//     this.queue=[];
+//     this.front = 0;
+//     this.rear=0;
+//   }
 
-  const fireQueue = [...fires];
-  const ownQueue = [own];
+//   push(item){
+//     this.queue[this.rear++]=item
+//   }
 
-  for (const [fx, fy] of fires) {
-    fireVisited[fx][fy] = 0;
-  }
-  ownVisited[own[0]][own[1]] = 0;
+//   shift(){
+//     if(this.front===this.rear) return undefined
+//     this.item = this.queue[this.front];
+//     this.front++
+//     return item;
+//   }
 
-  while (fireQueue.length) {
-    const [x, y] = fireQueue.shift();
+//   length() {
+//     return this.rear - this.front;
+//   }
+// }
 
-    for (const [dx, dy] of dir) {
-      const nx = x + dx;
-      const ny = y + dy;
-
-      if (nx >= 0 && ny >= 0 && nx < n && ny < m && fireVisited[nx][ny] === -1 && graph[nx][ny] !== '#') {
-        fireQueue.push([nx, ny]);
-        fireVisited[nx][ny] = fireVisited[x][y] + 1;
-      }
-    }
-  }
-
-  while (ownQueue.length) {
-    const [x, y] = ownQueue.shift();
-
-    if (x === 0 || y === 0 || x === n - 1 || y === m - 1) {
-      console.log(ownVisited[x][y] + 1);
-      return;
-    }
-
-    for (const [dx, dy] of dir) {
-      const nx = x + dx;
-      const ny = y + dy;
-
-      if (nx >= 0 && ny >= 0 && nx < n && ny < m && ownVisited[nx][ny] === -1 && graph[nx][ny] !== '#') {
-        if (fireVisited[nx][ny] === -1 || ownVisited[x][y] + 1 < fireVisited[nx][ny]) {
-          ownVisited[nx][ny] = ownVisited[x][y] + 1;
-          ownQueue.push([nx, ny]);
-        }
-      }
-    }
-  }
-
-  console.log('IMPOSSIBLE');
-};
-
-let idx = 0;
-for (let i = 0; i < t; i++) {
-  const [w, h] = input[idx].split(' ').map(Number);
-  const graph = input.slice(idx + 1, idx + h + 1).map(v => v.split(''));
-  let fires = [];
-  let own = [];
-
-  for (let j = 0; j < h; j++) {
-    for (let k = 0; k < w; k++) {
-      if (graph[j][k] === '*') {
-        fires.push([j, k]); 
-      }
-      if (graph[j][k] === '@') {
-        own = [j, k]; 
-      }
-    }
-  }
-
-  bfs(fires, own, graph);
-  idx += h + 1; 
-}
