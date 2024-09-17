@@ -112,44 +112,186 @@
 
 
 //1916-최소비용 구하기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const n = +input[0];
+// const m= +input[1];
+// const [start, goal] = input[m+2].split(' ').map(Number)
+// const graph = Array.from({length: n+1}, ()=>[]);
+
+// for(let i=2; i<m+2; i++){
+//   const [a, b, c] = input[i].split(' ').map(Number);
+//   graph[a].push([b, c])
+// }
+
+// const dijstra = (start)=>{
+//   const dist = Array(n+1).fill(Infinity);
+//   dist[start]=0;
+
+//   const pq = [[0, start]];
+
+//   while(pq.length){
+//     pq.sort((a, b)=>a[0]-b[0])
+//     const [curDist, curNode] = pq.shift();
+
+//     //현재 노드에서 더 짧은 경로가 있다면 pass
+//     if(dist[curNode]<curDist) continue
+
+//     for(const [nextNode, nextDist] of graph[curNode]){
+//       let totalDist = nextDist+curDist;
+
+//       if(totalDist<dist[nextNode]){
+//         dist[nextNode]=totalDist
+//         pq.push([totalDist, nextNode])
+//       }
+//     }
+//   }
+
+//   return dist
+// }
+
+// const result = dijstra(start);
+// console.log(result[goal])
+
+//1238-파티
+
+//n: 학생수
+//m: 단방향 도로
+//x: 파티 장소
+
+//경로: 자신의 마을 -> 파티 장소 ->자신의 마을
+//이 도로들은 단방향이기 때문에 아마 그들이 오고 가는 길이 다를지도 모른다. 
+//출력: . N명의 학생들 중 오고 가는데 가장 많은 시간을 소비하는 학생(번호)
+
+//문제풀이과정
+//자신의 마을 -> 파티 장소의 최단경로
+//파티 장소 ->자신의 마을의 최단경로
+//각 마을에 대해 왕복하는 데 걸리는 시간을 계산
+//그 중 가장 오래 걸리는 시간
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const n = +input[0];
-const m= +input[1];
-const [start, goal] = input[m+2].split(' ').map(Number)
-const graph = Array.from({length: n+1}, ()=>[]);
 
-for(let i=2; i<m+2; i++){
-  const [a, b, c] = input[i].split(' ').map(Number);
-  graph[a].push([b, c])
+const [n, m, x] = input[0].split(' ').map(Number);
+const graph = Array.from({ length: n + 1 }, () => []);
+
+// 그래프 입력 처리
+for (let i = 1; i <= m; i++) {
+  const [start, end, time] = input[i].split(' ').map(Number);
+  graph[start].push([end, time]);
 }
 
-const dijstra = (start)=>{
-  const dist = Array(n+1).fill(Infinity);
-  dist[start]=0;
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
 
-  const pq = [[0, start]];
+  push(value) {
+    this.heap.push(value);
+    this.bubbleUp();
+  }
 
-  while(pq.length){
-    pq.sort((a, b)=>a[0]-b[0])
-    const [curDist, curNode] = pq.shift();
+  bubbleUp() {
+    let index = this.heap.length - 1;
+    while (index > 0) {
+      let parentIndex = Math.floor((index - 1) / 2);
+      if (this.heap[parentIndex][0] <= this.heap[index][0]) break;
+      [this.heap[parentIndex], this.heap[index]] = [this.heap[index], this.heap[parentIndex]];
+      index = parentIndex;
+    }
+  }
 
-    //현재 노드에서 더 짧은 경로가 있다면 pass
-    if(dist[curNode]<curDist) continue
+  pop() {
+    const min = this.heap[0];
+    const end = this.heap.pop();
+    if (this.heap.length > 0) {
+      this.heap[0] = end;
+      this.sinkDown(0);
+    }
+    return min;
+  }
 
-    for(const [nextNode, nextDist] of graph[curNode]){
-      let totalDist = nextDist+curDist;
+  sinkDown(index) {
+    const length = this.heap.length;
+    const element = this.heap[index];
+    while (true) {
+      let leftChildIndex = 2 * index + 1;
+      let rightChildIndex = 2 * index + 2;
+      let leftChild, rightChild;
+      let swap = null;
 
-      if(totalDist<dist[nextNode]){
-        dist[nextNode]=totalDist
-        pq.push([totalDist, nextNode])
+      if (leftChildIndex < length) {
+        leftChild = this.heap[leftChildIndex];
+        if (leftChild[0] < element[0]) swap = leftChildIndex;
+      }
+      if (rightChildIndex < length) {
+        rightChild = this.heap[rightChildIndex];
+        if (
+          (swap === null && rightChild[0] < element[0]) ||
+          (swap !== null && rightChild[0] < leftChild[0])
+        ) {
+          swap = rightChildIndex;
+        }
+      }
+
+      if (swap === null) break;
+      [this.heap[index], this.heap[swap]] = [this.heap[swap], this.heap[index]];
+      index = swap;
+    }
+  }
+
+  size() {
+    return this.heap.length;
+  }
+}
+
+// 다익스트라 알고리즘
+const dijkstra = (start, graph) => {
+  const dist = Array(n + 1).fill(Infinity);
+  dist[start] = 0;
+
+  const pq = new MinHeap();
+  pq.push([0, start]);
+
+  while (pq.size() > 0) {
+    const [curDist, curNode] = pq.pop();
+
+    if (dist[curNode] < curDist) continue;
+
+    for (const [nextNode, nextDist] of graph[curNode]) {
+      const totalDist = curDist + nextDist;
+
+      if (totalDist < dist[nextNode]) {
+        dist[nextNode] = totalDist;
+        pq.push([totalDist, nextNode]);
       }
     }
   }
 
-  return dist
+  return dist;
+};
+
+// X 마을로 가는 최단 거리 계산
+const distanceToX = dijkstra(x, graph);
+
+// 그래프 반전
+const reverseGraph = Array.from({ length: n + 1 }, () => []);
+for (let i = 1; i <= n; i++) {
+  for (const [to, time] of graph[i]) {
+    reverseGraph[to].push([i, time]);
+  }
 }
 
-const result = dijstra(start);
-console.log(result[goal])
+// X 마을에서 각 마을로 돌아가는 최단 거리 계산
+const distanceFromX = dijkstra(x, reverseGraph);
+
+// 왕복 시간을 계산하여 최대값을 찾음
+let maxTime = 0;
+for (let i = 1; i <= n; i++) {
+  const totalTime = distanceToX[i] + distanceFromX[i];
+  maxTime = Math.max(maxTime, totalTime);
+}
+
+console.log(maxTime);
