@@ -320,41 +320,90 @@
 // 벽을 부수지 않고 이동할 수 있으면 덱의 앞쪽에 넣고, 벽을 부수어야 한다면 덱의 뒤쪽에 넣음.
 // (N, M)에 도착하면 그때까지 부순 벽의 개수를 출력.
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [m, n] = input[0].split(' ').map(Number);
+// const maze = input.slice(1).map(line => line.split('').map(Number));
+
+// const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];  // 상하좌우 방향 벡터
+
+// const bfs = ()=>{
+//   const deq = [[0,0]];
+//   const dist = Array.from({length:n}, ()=>Array(m).fill(Infinity))
+//   dist[0][0]=0
+
+//   while(deq.length){
+//     const [x, y] = deq.shift();
+
+//     for(const [dx, dy] of dir){
+//       const nx=x+dx;
+//       const ny=y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<n&&ny<m){
+//         const nextDist =dist[x][y]+maze[nx][ny]
+//         if(nextDist<dist[nx][ny]){
+//           dist[nx][ny]=nextDist
+//           if(maze[nx][ny]===1){
+//             deq.push([nx, ny])
+//           }else{
+//             deq.unshift([nx, ny])
+//           }
+//         }
+//       }
+//     }
+//   }
+
+//   return dist[n-1][m-1]
+// }
+
+// console.log(bfs())
+
+
+//4485-녹색 옷 입은 애가 젤다지?
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [m, n] = input[0].split(' ').map(Number);
-const maze = input.slice(1).map(line => line.split('').map(Number));
 
-const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];  // 상하좌우 방향 벡터
+const dir = [[0, 1], [1, 0], [0, -1], [-1, 0]];  // 우, 하, 좌, 상
+let idx = 0;
+let problemNum = 1;
 
-const bfs = ()=>{
-  const deq = [[0,0]];
-  const dist = Array.from({length:n}, ()=>Array(m).fill(Infinity))
-  dist[0][0]=0
+const dijkstra = (n, cave) =>{
+  const dist = Array.from({length:n}, ()=>Array(n).fill(Infinity))
+  let pq = [[0,0,cave[0][0]]]
+  dist[0][0]=cave[0][0]
 
-  while(deq.length){
-    const [x, y] = deq.shift();
+  while(pq.length){
+    pq.sort((a, b)=>b[2]-a[2]);
+    const [x, y, cost] = pq.pop();
+
+    if(x===n-1&&y===n-1) return cost
 
     for(const [dx, dy] of dir){
       const nx=x+dx;
       const ny=y+dy;
 
-      if(nx>=0&&ny>=0&&nx<n&&ny<m){
-        const nextDist =dist[x][y]+maze[nx][ny]
-        if(nextDist<dist[nx][ny]){
-          dist[nx][ny]=nextDist
-          if(maze[nx][ny]===1){
-            deq.push([nx, ny])
-          }else{
-            deq.unshift([nx, ny])
-          }
+      if(nx>=0&&ny>=0&&nx<n&&ny<n){
+        const nextCost = cost+cave[nx][ny]
+        if(nextCost<dist[nx][ny]){
+          dist[nx][ny]=nextCost
+          pq.push([nx, ny, nextCost])
         }
       }
     }
   }
-
-  return dist[n-1][m-1]
 }
 
-console.log(bfs())
+while(true){
+  const N = +input[idx++]
+
+  if(N===0) break
+  let cave = [];
+  for(let i=0; i<N; i++){
+    cave.push(input[idx++].split(' ').map(Number))
+  }
+
+  const r = dijkstra(N, cave);
+  console.log(`Problem ${problemNum++}: ${r}`)
+}
