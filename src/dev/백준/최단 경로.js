@@ -66,109 +66,109 @@
 
 
 //1916-최소비용 구하기
-const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const n = +input[0];
-const m = +input[1];
-const [start, goal] = input[m+2].split(' ').map(Number);
-const graph = Array.from({length: n+1}, () => []);
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const n = +input[0];
+// const m = +input[1];
+// const [start, goal] = input[m+2].split(' ').map(Number);
+// const graph = Array.from({length: n+1}, () => []);
 
-for (let i = 2; i < m+2; i++) {
-  const [a, b, c] = input[i].split(' ').map(Number);
-  graph[a].push([b, c]);
-}
+// for (let i = 2; i < m+2; i++) {
+//   const [a, b, c] = input[i].split(' ').map(Number);
+//   graph[a].push([b, c]);
+// }
 
-class MinHeap {
-  constructor() {
-    this.heap = [];
-  }
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
 
-  push(value) {
-    this.heap.push(value);
-    this.bubbleUp();
-  }
+//   push(value) {
+//     this.heap.push(value);
+//     this.bubbleUp();
+//   }
 
-  bubbleUp() {
-    let index = this.heap.length - 1;
-    while (index > 0) {
-      let parentIndex = Math.floor((index - 1) / 2);
-      if (this.heap[parentIndex][0] <= this.heap[index][0]) break;
-      [this.heap[parentIndex], this.heap[index]] = [this.heap[index], this.heap[parentIndex]];
-      index = parentIndex;
-    }
-  }
+//   bubbleUp() {
+//     let index = this.heap.length - 1;
+//     while (index > 0) {
+//       let parentIndex = Math.floor((index - 1) / 2);
+//       if (this.heap[parentIndex][0] <= this.heap[index][0]) break;
+//       [this.heap[parentIndex], this.heap[index]] = [this.heap[index], this.heap[parentIndex]];
+//       index = parentIndex;
+//     }
+//   }
 
-  pop() {
-    const min = this.heap[0];
-    const end = this.heap.pop();
-    if (this.heap.length > 0) {
-      this.heap[0] = end;
-      this.sinkDown(0);
-    }
-    return min;
-  }
+//   pop() {
+//     const min = this.heap[0];
+//     const end = this.heap.pop();
+//     if (this.heap.length > 0) {
+//       this.heap[0] = end;
+//       this.sinkDown(0);
+//     }
+//     return min;
+//   }
 
-  sinkDown(index) {
-    const length = this.heap.length;
-    const element = this.heap[index];
-    while (true) {
-      let leftChildIndex = 2 * index + 1;
-      let rightChildIndex = 2 * index + 2;
-      let leftChild, rightChild;
-      let swap = null;
+//   sinkDown(index) {
+//     const length = this.heap.length;
+//     const element = this.heap[index];
+//     while (true) {
+//       let leftChildIndex = 2 * index + 1;
+//       let rightChildIndex = 2 * index + 2;
+//       let leftChild, rightChild;
+//       let swap = null;
 
-      if (leftChildIndex < length) {
-        leftChild = this.heap[leftChildIndex];
-        if (leftChild[0] < element[0]) swap = leftChildIndex;
-      }
-      if (rightChildIndex < length) {
-        rightChild = this.heap[rightChildIndex];
-        if (
-          (swap === null && rightChild[0] < element[0]) ||
-          (swap !== null && rightChild[0] < leftChild[0])
-        ) {
-          swap = rightChildIndex;
-        }
-      }
+//       if (leftChildIndex < length) {
+//         leftChild = this.heap[leftChildIndex];
+//         if (leftChild[0] < element[0]) swap = leftChildIndex;
+//       }
+//       if (rightChildIndex < length) {
+//         rightChild = this.heap[rightChildIndex];
+//         if (
+//           (swap === null && rightChild[0] < element[0]) ||
+//           (swap !== null && rightChild[0] < leftChild[0])
+//         ) {
+//           swap = rightChildIndex;
+//         }
+//       }
 
-      if (swap === null) break;
-      [this.heap[index], this.heap[swap]] = [this.heap[swap], this.heap[index]];
-      index = swap;
-    }
-  }
+//       if (swap === null) break;
+//       [this.heap[index], this.heap[swap]] = [this.heap[swap], this.heap[index]];
+//       index = swap;
+//     }
+//   }
 
-  size() {
-    return this.heap.length;
-  }
-}
+//   size() {
+//     return this.heap.length;
+//   }
+// }
 
-const dijkstra = (start) => {
-  const dist = Array(n + 1).fill(Infinity);
-  dist[start] = 0;
+// const dijkstra = (start) => {
+//   const dist = Array(n + 1).fill(Infinity);
+//   dist[start] = 0;
 
-  const pq = new MinHeap();
-  pq.push([0, start]);
+//   const pq = new MinHeap();
+//   pq.push([0, start]);
 
-  while (pq.size()) {
-    const [curDist, curNode] = pq.pop();
+//   while (pq.size()) {
+//     const [curDist, curNode] = pq.pop();
 
-    if (dist[curNode] < curDist) continue;
+//     if (dist[curNode] < curDist) continue;
 
-    for (const [nextNode, nextDist] of graph[curNode]) {
-      const totalDist = curDist + nextDist;
-      if (totalDist < dist[nextNode]) {
-        dist[nextNode] = totalDist;
-        pq.push([totalDist, nextNode]);
-      }
-    }
-  }
+//     for (const [nextNode, nextDist] of graph[curNode]) {
+//       const totalDist = curDist + nextDist;
+//       if (totalDist < dist[nextNode]) {
+//         dist[nextNode] = totalDist;
+//         pq.push([totalDist, nextNode]);
+//       }
+//     }
+//   }
 
-  return dist;
-};
+//   return dist;
+// };
 
-const result = dijkstra(start);
-console.log(result[goal]);
+// const result = dijkstra(start);
+// console.log(result[goal]);
 
 
 //1238-파티
@@ -312,3 +312,49 @@ console.log(result[goal]);
 // }
 
 // console.log(maxTime);
+
+
+//1261-알고스팟
+
+// 시작점 (1, 1)에서 BFS를 시작, 방문한 방마다 부순 벽의 개수를 기록.
+// 벽을 부수지 않고 이동할 수 있으면 덱의 앞쪽에 넣고, 벽을 부수어야 한다면 덱의 뒤쪽에 넣음.
+// (N, M)에 도착하면 그때까지 부순 벽의 개수를 출력.
+
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const [m, n] = input[0].split(' ').map(Number);
+const maze = input.slice(1).map(line => line.split('').map(Number));
+
+const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];  // 상하좌우 방향 벡터
+
+const bfs = ()=>{
+  const deq = [[0,0]];
+  const dist = Array.from({length:n}, ()=>Array(m).fill(Infinity))
+  dist[0][0]=0
+
+  while(deq.length){
+    const [x, y] = deq.shift();
+
+    for(const [dx, dy] of dir){
+      const nx=x+dx;
+      const ny=y+dy;
+
+      if(nx>=0&&ny>=0&&nx<n&&ny<m){
+        const nextDist =dist[x][y]+maze[nx][ny]
+        if(nextDist<dist[nx][ny]){
+          dist[nx][ny]=nextDist
+          if(maze[nx][ny]===1){
+            deq.push([nx, ny])
+          }else{
+            deq.unshift([nx, ny])
+          }
+        }
+      }
+    }
+  }
+
+  return dist[n-1][m-1]
+}
+
+console.log(bfs())
