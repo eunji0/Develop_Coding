@@ -419,50 +419,70 @@
 //n-1번 반복
 //N-1번 반복 후에도 최단 경로가 갱신될 수 있다면 -1출력
 
-const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-// 입력 처리
-const [n, m] = input[0].split(' ').map(Number);
-const edges = [];
+// const [n, m] = input[0].split(' ').map(Number);
+// const edges = [];
 
-for(let i=1; i<=m; i++){
-  const [a, b, c] = input[i].split(' ').map(Number)
-  edges.push([a-1, b-1, c])
-}
+// for(let i=1; i<=m; i++){
+//   const [a, b, c] = input[i].split(' ').map(Number)
+//   edges.push([a-1, b-1, c])
+// }
 
-const dist = Array(n).fill(Infinity)
-dist[0]=0
+// const dist = Array(n).fill(Infinity)
+// dist[0]=0
 
-const bell = ()=>{
-  let check = false
+// const bell = ()=>{
+//   let check = false
 
-  for(let i=0; i<n-1; i++){
-    check=false
-    for(const [u, v, w] of edges){
-      if(dist[u]!==Infinity && dist[u]+w<dist[v]){
-        dist[v]=dist[u]+w
-        check=true
-      }
-    }
+//   for(let i=0; i<n-1; i++){
+//     check=false
+//     for(const [u, v, w] of edges){
+//       if(dist[u]!==Infinity && dist[u]+w<dist[v]){
+//         dist[v]=dist[u]+w
+//         check=true
+//       }
+//     }
     
-    if(!check) break
-  }
+//     if(!check) break
+//   }
 
-  for(const [u, v, w] of edges){
-    if(dist[u]!==Infinity && dist[u]+w<dist[v]){
-      return false
-    }
-  }
+//   for(const [u, v, w] of edges){
+//     if(dist[u]!==Infinity && dist[u]+w<dist[v]){
+//       return false
+//     }
+//   }
   
-  return true
-}
+//   return true
+// }
 
-if(!bell()){
-  console.log(-1)
-}else{
-  for(let i=1; i<n; i++){
-    console.log(dist[i]===Infinity?-1:dist[i])
-  }
-}
+// if(!bell()){
+//   console.log(-1)
+// }else{
+//   for(let i=1; i<n; i++){
+//     console.log(dist[i]===Infinity?-1:dist[i])
+//   }
+// }
+
+//11779-최소비용 구하기 2 
+
+//output: A번째 도시에서 B번째 도시 까지 가는데 드는 최소비용과 경로
+//detail:
+//출발 도시에서 도착 도시까지 가는데 드는 최소 비용
+//최소 비용을 갖는 경로에 포함되어있는 도시의 개수(출발 도시와 도착 도시포함)
+//최소 비용을 갖는 경로를 방문하는 도시 순서대로 출력(아무거나)
+
+//문제풀이과정
+// 그래프 모델링:
+// 도시를 노드로 보고, 각 버스 경로를 간선으로 모델링합니다. 간선의 가중치는 버스 비용입니다.
+// 주어진 도시 수와 버스 경로를 이용하여 그래프를 만듭니다.
+// 다익스트라 알고리즘:
+// 다익스트라 알고리즘을 사용하여 출발 도시에서 도착 도시까지의 최소 비용을 구합니다.
+// 우선순위 큐(힙)을 사용하여 시간 복잡도를 줄여야 합니다.
+// 경로 추적:
+// 다익스트라 알고리즘을 수행하면서, 각 도시로 도달하기 직전의 도시를 기록해둡니다.
+// 도착 도시에 도달했을 때, 이 정보를 이용하여 경로를 역추적합니다.
+// 출력:
+// 최소 비용을 출력하고, 경로에 포함된 도시의 개수와 경로를 출력합니다.
