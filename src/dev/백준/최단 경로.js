@@ -361,49 +361,108 @@
 
 
 //4485-녹색 옷 입은 애가 젤다지?
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const dir = [[0, 1], [1, 0], [0, -1], [-1, 0]];  // 우, 하, 좌, 상
+// let idx = 0;
+// let problemNum = 1;
+
+// const dijkstra = (n, cave) =>{
+//   const dist = Array.from({length:n}, ()=>Array(n).fill(Infinity))
+//   let pq = [[0,0,cave[0][0]]]
+//   dist[0][0]=cave[0][0]
+
+//   while(pq.length){
+//     pq.sort((a, b)=>b[2]-a[2]);
+//     const [x, y, cost] = pq.pop();
+
+//     if(x===n-1&&y===n-1) return cost
+
+//     for(const [dx, dy] of dir){
+//       const nx=x+dx;
+//       const ny=y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<n&&ny<n){
+//         const nextCost = cost+cave[nx][ny]
+//         if(nextCost<dist[nx][ny]){
+//           dist[nx][ny]=nextCost
+//           pq.push([nx, ny, nextCost])
+//         }
+//       }
+//     }
+//   }
+// }
+
+// while(true){
+//   const N = +input[idx++]
+
+//   if(N===0) break
+//   let cave = [];
+//   for(let i=0; i<N; i++){
+//     cave.push(input[idx++].split(' ').map(Number))
+//   }
+
+//   const r = dijkstra(N, cave);
+//   console.log(`Problem ${problemNum++}: ${r}`)
+// }
+
+//11657-타임머신
+
+//음수 사이클이 되는지 확인
+//최소값 출력
+
+//문제 풀이과정
+//출발 도시(1번 도시)의 최단 거리를 0으로 설정하고, 나머지 도시는 무한대로 설정
+//거리가 더 줄어들 수 있는지 확인하고, 줄어들 수 있다면 갱신
+//n-1번 반복
+//N-1번 반복 후에도 최단 경로가 갱신될 수 있다면 -1출력
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const dir = [[0, 1], [1, 0], [0, -1], [-1, 0]];  // 우, 하, 좌, 상
-let idx = 0;
-let problemNum = 1;
+// 입력 처리
+const [n, m] = input[0].split(' ').map(Number);
+const edges = [];
 
-const dijkstra = (n, cave) =>{
-  const dist = Array.from({length:n}, ()=>Array(n).fill(Infinity))
-  let pq = [[0,0,cave[0][0]]]
-  dist[0][0]=cave[0][0]
-
-  while(pq.length){
-    pq.sort((a, b)=>b[2]-a[2]);
-    const [x, y, cost] = pq.pop();
-
-    if(x===n-1&&y===n-1) return cost
-
-    for(const [dx, dy] of dir){
-      const nx=x+dx;
-      const ny=y+dy;
-
-      if(nx>=0&&ny>=0&&nx<n&&ny<n){
-        const nextCost = cost+cave[nx][ny]
-        if(nextCost<dist[nx][ny]){
-          dist[nx][ny]=nextCost
-          pq.push([nx, ny, nextCost])
-        }
-      }
-    }
-  }
+for(let i=1; i<=m; i++){
+  const [a, b, c] = input[i].split(' ').map(Number)
+  edges.push([a-1, b-1, c])
 }
 
-while(true){
-  const N = +input[idx++]
+const dist = Array(n).fill(Infinity)
+dist[0]=0
 
-  if(N===0) break
-  let cave = [];
-  for(let i=0; i<N; i++){
-    cave.push(input[idx++].split(' ').map(Number))
+const bell = ()=>{
+  let check = false
+
+  for(let i=0; i<n-1; i++){
+    check=false
+    for(const [u, v, w] of edges){
+      if(dist[u]!==Infinity && dist[u]+w<dist[v]){
+        dist[v]=dist[u]+w
+        check=true
+      }
+    }
+    
+    if(!check) break
   }
 
-  const r = dijkstra(N, cave);
-  console.log(`Problem ${problemNum++}: ${r}`)
+  for(const [u, v, w] of edges){
+    if(dist[u]!==Infinity && dist[u]+w<dist[v]){
+      return false
+    }
+  }
+  
+  return true
+}
+
+if(!bell()){
+  console.log(-1)
+}else{
+  for(let i=1; i<n; i++){
+    console.log(dist[i]===Infinity?-1:dist[i])
+  }
 }
