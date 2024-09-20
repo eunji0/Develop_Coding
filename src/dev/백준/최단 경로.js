@@ -491,132 +491,208 @@
 //최소 비용을 갖는 경로를 방문하는 도시 순서대로 출력
 
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const n = +input[0]
+// const m = +input[1];
+// const [start, goal] = input[m+2].split(' ').map(Number)
+// const edges = Array.from({length:n+1}, ()=>[])//버스 정보
+// const prev = Array(n+1).fill(-1)//경로 기록
+// const dist = Array(n+1).fill(Infinity)//거리 정보
+
+// for(let i=2; i<m+2; i++){
+//   const [a, b, c] = input[i].split(' ').map(Number)
+//   edges[a].push([b, c])
+// }
+
+// //다익스트라 알고리즘을 위한 최소힙구현(우선순위 큐기능)
+// class MinHeap{
+//   constructor(){
+//     this.heap = []
+//   }
+
+//   push([city, cost]){
+//     this.heap.push([city, cost])
+//     //비교하며 자리를 찾는 메서드
+//     this.bubbleUp()
+//   }
+
+//   //제일 뒤에서 위로 자리를 찾아 비교하면 올라오는 메서드
+//   bubbleUp(){
+//     //제일 뒤의 자리와 내용물
+//     let index = this.heap.length-1;
+//     let last  = this.heap[index]
+
+//     //힙이 비어있지 않는다면
+//     while(index>0){
+//       //현재 위치의 부모의 번호와 내용
+//       let parentIndex = Math.floor((index-1)/2);
+//       let parent = this.heap[parentIndex]
+
+//       //만약 부모 비용이 더 작다면, 최소힙 구조에 맞는 상태이므로 break
+//       if(last[1]>=parent[1]) break
+
+//       //아니라면 부모와 위치를 바꿈
+//       //자식과 부모의 값을 교환
+//       this.heap[index] = parent
+//       //부모의 위치로 이동해 다음 비교를 준비
+//       index=parentIndex
+//     }
+//     // 교환이 완료된 후 마지막으로 남은 값(last)을 최종 위치에 배치
+//     this.heap[index]=last
+//   }
+
+//   pop(){
+//     if(this.heap.length===1) return this.heap.pop()
+//       //제일 뒤에 있는 걸 꺼내 top으로 올려둔 뒤 내려가며 자리를 찾음
+//       const top = this.heap[0]
+//       this.heap[0] = this.heap.pop() 
+//       this.bubbleDown()
+//       return top
+//   }
+
+//   //위에서 아래로 비교하며 내려오는 메서드
+//   bubbleDown(){
+//     let index =0;
+//     let length = this.heap.length
+//     const top = this.heap[index];
+
+//     while(true){
+//       let leftChildIndex = index*2+1;
+//       let rightChildIndex = index*2+2;
+//       let smallest = index; //현재 비교 중인 노드와 자식 노드들 중에서 가장 작은 값을 가진 노드의 인덱스
+
+//       if(leftChildIndex<length && this.heap[leftChildIndex][1] < this.heap[smallest][1]){
+//         smallest = leftChildIndex
+//       }
+
+//       if(rightChildIndex<length && this.heap[rightChildIndex][1] < this.heap[smallest][1]){
+//         smallest = rightChildIndex
+//       }
+
+//       if(smallest === index) break
+
+//       this.heap[index] = this.heap[smallest]
+//       index=smallest
+//     }
+
+//     this.heap[index] = top
+//   }
+
+//   isEmpty(){
+//     return this.heap.length===0
+//   }
+// }
+
+// const dijkstra = (start) =>{
+//   dist[start]=0
+//   const pq = new MinHeap();
+//   pq.push([start, 0])
+
+//   while(!pq.isEmpty()){
+//     const [curCity, curDist] = pq.pop()
+
+//     if(dist[curCity]<curDist) continue
+
+//     for(const [nextCity, nextDist] of edges[curCity]){
+//       const total = curDist+nextDist
+
+//       if(total<dist[nextCity]){
+//         dist[nextCity]=total
+//         prev[nextCity]=curCity
+//         pq.push([nextCity, total])
+//       }
+//     }
+//   }
+// }
+
+// dijkstra(start)
+
+// console.log(dist[goal])
+
+// const path = []
+// let city = goal
+// while(city!==-1){
+//   path.push(city)
+//   city=prev[city]
+// }
+
+// console.log(path.length)
+// console.log(path.reverse().join(' '))
+
+//1865-웜홀
+
+//문제풀이과정
+
+//입력받기:
+//테스트케이스의 개수 TC
+//첫번째줄: 지점의 수 N, 도로의 개수 M, 웜홀의 개수 W
+//두 번째 줄부터 M+1번째 줄에 도로의 정보 
+// M+2번째 줄부터 M+W+1번째 줄: S와 E는 연결된 지점의 번호, T는 이 도로를 통해 이동하는데 걸리는 시간
+
+//알고리즘 구현:
+//특정 경로를 따라 이동할 때 시간이 줄어들며 순환하는 경우(음수 사이클) ->벨만 포드 알고리즘
+//모든 거리 배열 초기화(Infinity)
+//출발점은 거리 0으로 설정
+//그래프의 모든 간선에 대해 총 V-1번의 반복을 수행
+//각 간선 (u, v)를 통해 v까지의 최단 거리를 갱신
+//음수 사이클 탐지
+
+//출력:
+//TC개의 줄에 걸쳐서 만약에 시간이 줄어들면서 출발 위치로 돌아오는 것이 가능하면 YES, 불가능하면 NO
+
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
-const n = +input[0]
-const m = +input[1];
-const [start, goal] = input[m+2].split(' ').map(Number)
-const edges = Array.from({length:n+1}, ()=>[])//버스 정보
-const prev = Array(n+1).fill(-1)//경로 기록
-const dist = Array(n+1).fill(Infinity)//거리 정보
+let t = +input[0];
+let index = 1;
 
-for(let i=2; i<m+2; i++){
-  const [a, b, c] = input[i].split(' ').map(Number)
-  edges[a].push([b, c])
-}
 
-//다익스트라 알고리즘을 위한 최소힙구현(우선순위 큐기능)
-class MinHeap{
-  constructor(){
-    this.heap = []
-  }
+//벨만 포드 알고리즘
+const bellmanFord = (vertices, edges, start) =>{
+  const dist = Array(vertices+1).fill(false)
+  dist[start]=0;
 
-  push([city, cost]){
-    this.heap.push([city, cost])
-    //비교하며 자리를 찾는 메서드
-    this.bubbleUp()
-  }
-
-  //제일 뒤에서 위로 자리를 찾아 비교하면 올라오는 메서드
-  bubbleUp(){
-    //제일 뒤의 자리와 내용물
-    let index = this.heap.length-1;
-    let last  = this.heap[index]
-
-    //힙이 비어있지 않는다면
-    while(index>0){
-      //현재 위치의 부모의 번호와 내용
-      let parentIndex = Math.floor((index-1)/2);
-      let parent = this.heap[parentIndex]
-
-      //만약 부모 비용이 더 작다면, 최소힙 구조에 맞는 상태이므로 break
-      if(last[1]>=parent[1]) break
-
-      //아니라면 부모와 위치를 바꿈
-      //자식과 부모의 값을 교환
-      this.heap[index] = parent
-      //부모의 위치로 이동해 다음 비교를 준비
-      index=parentIndex
-    }
-    // 교환이 완료된 후 마지막으로 남은 값(last)을 최종 위치에 배치
-    this.heap[index]=last
-  }
-
-  pop(){
-    if(this.heap.length===1) return this.heap.pop()
-      //제일 뒤에 있는 걸 꺼내 top으로 올려둔 뒤 내려가며 자리를 찾음
-      const top = this.heap[0]
-      this.heap[0] = this.heap.pop() 
-      this.bubbleDown()
-      return top
-  }
-
-  //위에서 아래로 비교하며 내려오는 메서드
-  bubbleDown(){
-    let index =0;
-    let length = this.heap.length
-    const top = this.heap[index];
-
-    while(true){
-      let leftChildIndex = index*2+1;
-      let rightChildIndex = index*2+2;
-      let smallest = index; //현재 비교 중인 노드와 자식 노드들 중에서 가장 작은 값을 가진 노드의 인덱스
-
-      if(leftChildIndex<length && this.heap[leftChildIndex][1] < this.heap[smallest][1]){
-        smallest = leftChildIndex
-      }
-
-      if(rightChildIndex<length && this.heap[rightChildIndex][1] < this.heap[smallest][1]){
-        smallest = rightChildIndex
-      }
-
-      if(smallest === index) break
-
-      this.heap[index] = this.heap[smallest]
-      index=smallest
-    }
-
-    this.heap[index] = top
-  }
-
-  isEmpty(){
-    return this.heap.length===0
-  }
-}
-
-const dijkstra = (start) =>{
-  dist[start]=0
-  const pq = new MinHeap();
-  pq.push([start, 0])
-
-  while(!pq.isEmpty()){
-    const [curCity, curDist] = pq.pop()
-
-    if(dist[curCity]<curDist) continue
-
-    for(const [nextCity, nextDist] of edges[curCity]){
-      const total = curDist+nextDist
-
-      if(total<dist[nextCity]){
-        dist[nextCity]=total
-        prev[nextCity]=curCity
-        pq.push([nextCity, total])
+  for(let i=1; i<vertices; i++){
+    for(const [u, v, w] of edges){
+      if(dist[u]!==Infinity&&dist[v]>dist[u]+w){
+        dist[v]=dist[u]+w
       }
     }
   }
+
+  for(const [u, v, w] of edges){
+    if(dist[u]!==Infinity&&dist[v]>dist[u]+w){
+      return true
+    }
+  }
+
+  return false
 }
 
-dijkstra(start)
+for(let i=0; i<t; i++){
+  const [n, m, w] = input[index++].split(' ').map(Number)
+  const edges =[]
 
-console.log(dist[goal])
+  //도로정보
+  for(let j=0; j<m; j++){
+    const [s, e, t] = input[index++].split(' ').map(Number)
+    edges.push([s, e, t])
+    edges.push([e, s, t])
+  }
 
-const path = []
-let city = goal
-while(city!==-1){
-  path.push(city)
-  city=prev[city]
+  for(let j=0; j<w; j++){
+    const [s, e, t] = input[index++].split(' ').map(Number)
+    edges.push([s, e, -t])
+  }
+
+  const h= bellmanFord(n, edges, 1) // 1번 정점을 기준으로 탐색
+
+  if(h){
+    console.log('YES')
+  }else{
+    console.log('NO')
+  }
 }
-
-console.log(path.length)
-console.log(path.reverse().join(' '))
