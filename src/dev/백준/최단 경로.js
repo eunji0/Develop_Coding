@@ -466,23 +466,157 @@
 //   }
 // }
 
+
+
 //11779-최소비용 구하기 2 
 
-//output: A번째 도시에서 B번째 도시 까지 가는데 드는 최소비용과 경로
-//detail:
-//출발 도시에서 도착 도시까지 가는데 드는 최소 비용
-//최소 비용을 갖는 경로에 포함되어있는 도시의 개수(출발 도시와 도착 도시포함)
-//최소 비용을 갖는 경로를 방문하는 도시 순서대로 출력(아무거나)
-
 //문제풀이과정
-// 그래프 모델링:
-// 도시를 노드로 보고, 각 버스 경로를 간선으로 모델링합니다. 간선의 가중치는 버스 비용입니다.
-// 주어진 도시 수와 버스 경로를 이용하여 그래프를 만듭니다.
-// 다익스트라 알고리즘:
-// 다익스트라 알고리즘을 사용하여 출발 도시에서 도착 도시까지의 최소 비용을 구합니다.
-// 우선순위 큐(힙)을 사용하여 시간 복잡도를 줄여야 합니다.
-// 경로 추적:
-// 다익스트라 알고리즘을 수행하면서, 각 도시로 도달하기 직전의 도시를 기록해둡니다.
-// 도착 도시에 도달했을 때, 이 정보를 이용하여 경로를 역추적합니다.
-// 출력:
-// 최소 비용을 출력하고, 경로에 포함된 도시의 개수와 경로를 출력합니다.
+
+//입력받기:
+//도시의 개수 n, 버스의 개수 m, 셋째 줄부터 m+2줄까지 다음과 같은 버스의 정보, 출발점의 도시번호와 도착점의 도시번호
+
+//알고리즘 구현:
+//하나의 시작 노드에서 다른 모든 노드로 가는 최단 경로 -> 다익스트라 알고리즘 사용
+//다익스트라 알고리즘
+//시작점을 기준으로 한 노드에서 다른 노드로 가는 최소비용을 저장하는 배열을 생성 (무한대로 초기화)
+//출발점에서 출발, 다른 도시로 가는 최소비용 업데이트(최소힙)
+//각 노드로부터 인접한 노드로 이동할 때 비용을 계산하고, 만약 더 저렴한 경로가 발견되면 업데이트
+
+//경로 복원:
+//경로추적 배열 사용
+
+//출력:
+//출발 도시에서 도착 도시까지 가는데 드는 최소 비용
+// 경로에 포함되어있는 도시의 개수
+//최소 비용을 갖는 경로를 방문하는 도시 순서대로 출력
+
+
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+const input = fs.readFileSync(filePath).toString().trim().split('\n');
+const n = +input[0]
+const m = +input[1];
+const [start, goal] = input[m+2].split(' ').map(Number)
+const edges = Array.from({length:n+1}, ()=>[])//버스 정보
+const prev = Array(n+1).fill(-1)//경로 기록
+const dist = Array(n+1).fill(Infinity)//거리 정보
+
+for(let i=2; i<m+2; i++){
+  const [a, b, c] = input[i].split(' ').map(Number)
+  edges[a].push([b, c])
+}
+
+//다익스트라 알고리즘을 위한 최소힙구현(우선순위 큐기능)
+class MinHeap{
+  constructor(){
+    this.heap = []
+  }
+
+  push([city, cost]){
+    this.heap.push([city, cost])
+    //비교하며 자리를 찾는 메서드
+    this.bubbleUp()
+  }
+
+  //제일 뒤에서 위로 자리를 찾아 비교하면 올라오는 메서드
+  bubbleUp(){
+    //제일 뒤의 자리와 내용물
+    let index = this.heap.length-1;
+    let last  = this.heap[index]
+
+    //힙이 비어있지 않는다면
+    while(index>0){
+      //현재 위치의 부모의 번호와 내용
+      let parentIndex = Math.floor((index-1)/2);
+      let parent = this.heap[parentIndex]
+
+      //만약 부모 비용이 더 작다면, 최소힙 구조에 맞는 상태이므로 break
+      if(last[1]>=parent[1]) break
+
+      //아니라면 부모와 위치를 바꿈
+      //자식과 부모의 값을 교환
+      this.heap[index] = parent
+      //부모의 위치로 이동해 다음 비교를 준비
+      index=parentIndex
+    }
+    // 교환이 완료된 후 마지막으로 남은 값(last)을 최종 위치에 배치
+    this.heap[index]=last
+  }
+
+  pop(){
+    if(this.heap.length===1) return this.heap.pop()
+      //제일 뒤에 있는 걸 꺼내 top으로 올려둔 뒤 내려가며 자리를 찾음
+      const top = this.heap[0]
+      this.heap[0] = this.heap.pop() 
+      this.bubbleDown()
+      return top
+  }
+
+  //위에서 아래로 비교하며 내려오는 메서드
+  bubbleDown(){
+    let index =0;
+    let length = this.heap.length
+    const top = this.heap[index];
+
+    while(true){
+      let leftChildIndex = index*2+1;
+      let rightChildIndex = index*2+2;
+      let smallest = index; //현재 비교 중인 노드와 자식 노드들 중에서 가장 작은 값을 가진 노드의 인덱스
+
+      if(leftChildIndex<length && this.heap[leftChildIndex][1] < this.heap[smallest][1]){
+        smallest = leftChildIndex
+      }
+
+      if(rightChildIndex<length && this.heap[rightChildIndex][1] < this.heap[smallest][1]){
+        smallest = rightChildIndex
+      }
+
+      if(smallest === index) break
+
+      this.heap[index] = this.heap[smallest]
+      index=smallest
+    }
+
+    this.heap[index] = top
+  }
+
+  isEmpty(){
+    return this.heap.length===0
+  }
+}
+
+const dijkstra = (start) =>{
+  dist[start]=0
+  const pq = new MinHeap();
+  pq.push([start, 0])
+
+  while(!pq.isEmpty()){
+    const [curCity, curDist] = pq.pop()
+
+    if(dist[curCity]<curDist) continue
+
+    for(const [nextCity, nextDist] of edges[curCity]){
+      const total = curDist+nextDist
+
+      if(total<dist[nextCity]){
+        dist[nextCity]=total
+        prev[nextCity]=curCity
+        pq.push([nextCity, total])
+      }
+    }
+  }
+}
+
+dijkstra(start)
+
+console.log(dist[goal])
+
+const path = []
+let city = goal
+while(city!==-1){
+  path.push(city)
+  city=prev[city]
+}
+
+console.log(path.length)
+console.log(path.reverse().join(' '))
