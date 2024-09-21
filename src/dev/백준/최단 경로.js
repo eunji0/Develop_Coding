@@ -643,56 +643,116 @@
 //TC개의 줄에 걸쳐서 만약에 시간이 줄어들면서 출발 위치로 돌아오는 것이 가능하면 YES, 불가능하면 NO
 
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// let t = +input[0];
+// let index = 1;
+
+
+// //벨만 포드 알고리즘
+// const bellmanFord = (vertices, edges, start) =>{
+//   const dist = Array(vertices+1).fill(false)
+//   dist[start]=0;
+
+//   for(let i=1; i<vertices; i++){
+//     for(const [u, v, w] of edges){
+//       if(dist[u]!==Infinity&&dist[v]>dist[u]+w){
+//         dist[v]=dist[u]+w
+//       }
+//     }
+//   }
+
+//   for(const [u, v, w] of edges){
+//     if(dist[u]!==Infinity&&dist[v]>dist[u]+w){
+//       return true
+//     }
+//   }
+
+//   return false
+// }
+
+// for(let i=0; i<t; i++){
+//   const [n, m, w] = input[index++].split(' ').map(Number)
+//   const edges =[]
+
+//   //도로정보
+//   for(let j=0; j<m; j++){
+//     const [s, e, t] = input[index++].split(' ').map(Number)
+//     edges.push([s, e, t])
+//     edges.push([e, s, t])
+//   }
+
+//   for(let j=0; j<w; j++){
+//     const [s, e, t] = input[index++].split(' ').map(Number)
+//     edges.push([s, e, -t])
+//   }
+
+//   const h= bellmanFord(n, edges, 1) // 1번 정점을 기준으로 탐색
+
+//   if(h){
+//     console.log('YES')
+//   }else{
+//     console.log('NO')
+//   }
+// }
+
+
+//2458-키 순서
+
+//문제 풀이 과정
+
+//입력: 학생들의 수 N, 두 학생 키를 비교한 횟수 M
+//M개의 줄에  N보다 작거나 같은 서로 다른 양의 정수 a와 b( 번호가 a인 학생이 번호가 b인 학생보다 키가 작은 것을 의미)
+
+//알고리즘: 그래프 탐색-bfs
+
+//출력: 자신이 키가 몇 번째인지 알 수 있는 학생이 모두 몇 명인지
+//자기보다 작은 학생들의 수 + 자기보다 큰 학생들의 수 = N-1
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
-let t = +input[0];
-let index = 1;
+const [n, m]=input[0].split(' ').map(Number)
+const larger = Array.from({length: n+1}, ()=>[])//자신보다 큰 거
+const smaller = Array.from({length: n+1}, ()=>[])//자신보다 작은거
 
+for(let i=1; i<=m; i++){
+  const [a, b]=input[i].split(' ').map(Number)
+  larger[a].push(b)
+  smaller[b].push(a)
+}
 
-//벨만 포드 알고리즘
-const bellmanFord = (vertices, edges, start) =>{
-  const dist = Array(vertices+1).fill(false)
-  dist[start]=0;
+const bfs=(start, graph)=>{
+  const queue= [start]
+  const visited = Array(n+1).fill(false)
+  visited[start]=true
+  let count = 0
 
-  for(let i=1; i<vertices; i++){
-    for(const [u, v, w] of edges){
-      if(dist[u]!==Infinity&&dist[v]>dist[u]+w){
-        dist[v]=dist[u]+w
+  while(queue.length){
+    const node = queue.shift();
+
+    for(const next of graph[node]){
+      if(!visited[next]){
+        visited[next]=true
+        queue.push(next)
+        count++
       }
     }
   }
 
-  for(const [u, v, w] of edges){
-    if(dist[u]!==Infinity&&dist[v]>dist[u]+w){
-      return true
-    }
-  }
-
-  return false
+  return count
 }
 
-for(let i=0; i<t; i++){
-  const [n, m, w] = input[index++].split(' ').map(Number)
-  const edges =[]
+let reuslt = 0;
 
-  //도로정보
-  for(let j=0; j<m; j++){
-    const [s, e, t] = input[index++].split(' ').map(Number)
-    edges.push([s, e, t])
-    edges.push([e, s, t])
-  }
+for(let i=1; i<=n; i++){
+  const largerN = bfs(i, larger)
+  const smallerN = bfs(i, smaller)
 
-  for(let j=0; j<w; j++){
-    const [s, e, t] = input[index++].split(' ').map(Number)
-    edges.push([s, e, -t])
-  }
-
-  const h= bellmanFord(n, edges, 1) // 1번 정점을 기준으로 탐색
-
-  if(h){
-    console.log('YES')
-  }else{
-    console.log('NO')
+  if(largerN+smallerN===n-1){
+    reuslt++
   }
 }
+
+console.log(reuslt)
