@@ -759,38 +759,125 @@
 // console.log(reuslt)
 
 
-//1956-운동
+
+//1753-최단경로
+
+//문제풀이과정
+
+//입력:
+//정점의 개수 V와 간선의 개수 E
+//시작 정점의 번호 K
+//E개의 줄에 걸쳐 각 간선을 나타내는 세 개의 정수 (u, v, w)
+
+//문제풀이과정:
+//한 정점에서 다른 모든 정점까지의 최단 경로 -> 다익스트라 알고리즘
+
+//출력:
+//주어진 시작점에서 다른 모든 정점으로의 최단 경로
+
 const fs = require('fs');
-const input = fs.readFileSync("./dev/stdin").toString().trim().split("\n").map(str => str.split(' ').map(Number));
-const [N, _] = input.shift();
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+const input = fs.readFileSync(filePath).toString().trim().split('\n');
+const [v, e] = input[0].split(' ').map(Number)
+const k = +input[1]; //시작점
+const graph =Array.from({length: v+1}, ()=>[])
 
-let answer = Infinity;
+for(let i=2; i<2+e; i++){
+  const [u, v, w] = input[i].split(' ').map(Number)
+  graph[u].push([v, w])
+}
 
-const cost = Array.from(Array(N), () => Array(N).fill(Infinity));
+class MinHeap{
+  constructor(){
+    this.heap=[]
+  }
 
-input.forEach((v, i) => {
-  const [s, e, c] = v; //start end cost
-  cost[s - 1][e - 1] = c
-})
-for (let mid = 0; mid < N; mid++) {//거쳐가는 지점.
-  for (let start = 0; start < N; start++) {
-    for (let end = 0; end < N; end++) {
-      if (cost[start][mid] + cost[mid][end] < cost[start][end]) {
-        cost[start][end] = cost[start][mid] + cost[mid][end];
+  push([node, dist]){
+    this.heap.push([node, dist])
+    this.bubbleUp()
+  }
+
+  bubbleUp(){
+    let index = this.heap.length-1;
+    let last = this.heap[index]
+
+    while(index>0){
+      let parentIndex = Math.floor((index-1)/2);
+
+      if(this.heap[parentIndex][1]<last[1]) break
+
+      this.heap[index]=this.heap[parentIndex]
+      index=parentIndex
+    }
+
+    this.heap[index]=last
+  }
+
+  pop(){
+    if(this.heap.length===1) return this.heap.pop()
+      const top = this.heap[0]
+    this.heap[0] = this.heap.pop()
+    this.bubbleDown()
+    return top
+  }
+
+  bubbleDown(){
+    let index =0;
+    let length = this.heap.length
+    const top = this.heap[index];
+
+    while(true){
+      let leftChildIndex = index*2+1;
+      let rightChildIndex = index*2+2;
+      let smallest = index; 
+
+      if(leftChildIndex<length && this.heap[leftChildIndex][1] < this.heap[smallest][1]){
+        smallest = leftChildIndex
+      }
+
+      if(rightChildIndex<length && this.heap[rightChildIndex][1] < this.heap[smallest][1]){
+        smallest = rightChildIndex
+      }
+
+      if(smallest === index) break
+
+      this.heap[index] = this.heap[smallest]
+      index=smallest
+    }
+
+    this.heap[index] = top
+  }
+
+  isEmpty(){
+    return this.heap.length===0
+  }
+}
+
+const dijkstra = (start, graph, n) =>{
+  const dist = Array(n+1).fill(Infinity)
+  dist[start]=0
+  const pq = new MinHeap()
+  pq.push([start, 0])
+
+  while(!pq.isEmpty()){
+    const [curNode, curDist] = pq.pop()
+
+    if(dist[curNode] < curDist) continue
+
+    for(const [nextNode, nextDist] of graph[curNode]){
+      const totalDist = nextDist+curDist;
+      if(totalDist<dist[nextNode]){
+        dist[nextNode] = totalDist
+        pq.push([nextNode, totalDist])
       }
     }
   }
+
+  return dist
 }
 
+const r = dijkstra(k, graph, v)
 
-for (let start = 0; start < N; start++) {
-  for (let end = 0; end < N; end++) {
-    if (start == end) continue;
-    if (cost[start][end] != Infinity && cost[end][start] != Infinity) {
-      answer = Math.min(cost[start][end] + cost[end][start], answer)
-    }
-  }
+for(let i=1; i<=v; i++){
+  console.log(r[i]===Infinity? 'INF':r[i])
 }
-
-if (answer == Infinity) console.log(-1);
-else console.log(answer);
