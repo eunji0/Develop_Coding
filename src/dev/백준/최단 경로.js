@@ -710,49 +710,87 @@
 //출력: 자신이 키가 몇 번째인지 알 수 있는 학생이 모두 몇 명인지
 //자기보다 작은 학생들의 수 + 자기보다 큰 학생들의 수 = N-1
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [n, m]=input[0].split(' ').map(Number)
+// const larger = Array.from({length: n+1}, ()=>[])//자신보다 큰 거
+// const smaller = Array.from({length: n+1}, ()=>[])//자신보다 작은거
+
+// for(let i=1; i<=m; i++){
+//   const [a, b]=input[i].split(' ').map(Number)
+//   larger[a].push(b)
+//   smaller[b].push(a)
+// }
+
+// const bfs=(start, graph)=>{
+//   const queue= [start]
+//   const visited = Array(n+1).fill(false)
+//   visited[start]=true
+//   let count = 0
+
+//   while(queue.length){
+//     const node = queue.shift();
+
+//     for(const next of graph[node]){
+//       if(!visited[next]){
+//         visited[next]=true
+//         queue.push(next)
+//         count++
+//       }
+//     }
+//   }
+
+//   return count
+// }
+
+// let reuslt = 0;
+
+// for(let i=1; i<=n; i++){
+//   const largerN = bfs(i, larger)
+//   const smallerN = bfs(i, smaller)
+
+//   if(largerN+smallerN===n-1){
+//     reuslt++
+//   }
+// }
+
+// console.log(reuslt)
+
+
+//1956-운동
 const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [n, m]=input[0].split(' ').map(Number)
-const larger = Array.from({length: n+1}, ()=>[])//자신보다 큰 거
-const smaller = Array.from({length: n+1}, ()=>[])//자신보다 작은거
+const input = fs.readFileSync("./dev/stdin").toString().trim().split("\n").map(str => str.split(' ').map(Number));
+const [N, _] = input.shift();
 
-for(let i=1; i<=m; i++){
-  const [a, b]=input[i].split(' ').map(Number)
-  larger[a].push(b)
-  smaller[b].push(a)
-}
+let answer = Infinity;
 
-const bfs=(start, graph)=>{
-  const queue= [start]
-  const visited = Array(n+1).fill(false)
-  visited[start]=true
-  let count = 0
+const cost = Array.from(Array(N), () => Array(N).fill(Infinity));
 
-  while(queue.length){
-    const node = queue.shift();
-
-    for(const next of graph[node]){
-      if(!visited[next]){
-        visited[next]=true
-        queue.push(next)
-        count++
+input.forEach((v, i) => {
+  const [s, e, c] = v; //start end cost
+  cost[s - 1][e - 1] = c
+})
+for (let mid = 0; mid < N; mid++) {//거쳐가는 지점.
+  for (let start = 0; start < N; start++) {
+    for (let end = 0; end < N; end++) {
+      if (cost[start][mid] + cost[mid][end] < cost[start][end]) {
+        cost[start][end] = cost[start][mid] + cost[mid][end];
       }
     }
   }
-
-  return count
 }
 
-let reuslt = 0;
 
-for(let i=1; i<=n; i++){
-  const largerN = bfs(i, larger)
-  const smallerN = bfs(i, smaller)
-
-  if(largerN+smallerN===n-1){
-    reuslt++
+for (let start = 0; start < N; start++) {
+  for (let end = 0; end < N; end++) {
+    if (start == end) continue;
+    if (cost[start][end] != Infinity && cost[end][start] != Infinity) {
+      answer = Math.min(cost[start][end] + cost[end][start], answer)
+    }
   }
 }
 
-console.log(reuslt)
+if (answer == Infinity) console.log(-1);
+else console.log(answer);
