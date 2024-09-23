@@ -775,109 +775,150 @@
 //출력:
 //주어진 시작점에서 다른 모든 정점으로의 최단 경로
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [v, e] = input[0].split(' ').map(Number)
+// const k = +input[1]; //시작점
+// const graph =Array.from({length: v+1}, ()=>[])
+
+// for(let i=2; i<2+e; i++){
+//   const [u, v, w] = input[i].split(' ').map(Number)
+//   graph[u].push([v, w])
+// }
+
+// class MinHeap{
+//   constructor(){
+//     this.heap=[]
+//   }
+
+//   push([node, dist]){
+//     this.heap.push([node, dist])
+//     this.bubbleUp()
+//   }
+
+//   bubbleUp(){
+//     let index = this.heap.length-1;
+//     let last = this.heap[index]
+
+//     while(index>0){
+//       let parentIndex = Math.floor((index-1)/2);
+
+//       if(this.heap[parentIndex][1]<last[1]) break
+
+//       this.heap[index]=this.heap[parentIndex]
+//       index=parentIndex
+//     }
+
+//     this.heap[index]=last
+//   }
+
+//   pop(){
+//     if(this.heap.length===1) return this.heap.pop()
+//       const top = this.heap[0]
+//     this.heap[0] = this.heap.pop()
+//     this.bubbleDown()
+//     return top
+//   }
+
+//   bubbleDown(){
+//     let index =0;
+//     let length = this.heap.length
+//     const top = this.heap[index];
+
+//     while(true){
+//       let leftChildIndex = index*2+1;
+//       let rightChildIndex = index*2+2;
+//       let smallest = index; 
+
+//       if(leftChildIndex<length && this.heap[leftChildIndex][1] < this.heap[smallest][1]){
+//         smallest = leftChildIndex
+//       }
+
+//       if(rightChildIndex<length && this.heap[rightChildIndex][1] < this.heap[smallest][1]){
+//         smallest = rightChildIndex
+//       }
+
+//       if(smallest === index) break
+
+//       this.heap[index] = this.heap[smallest]
+//       index=smallest
+//     }
+
+//     this.heap[index] = top
+//   }
+
+//   isEmpty(){
+//     return this.heap.length===0
+//   }
+// }
+
+// const dijkstra = (start, graph, n) =>{
+//   const dist = Array(n+1).fill(Infinity)
+//   dist[start]=0
+//   const pq = new MinHeap()
+//   pq.push([start, 0])
+
+//   while(!pq.isEmpty()){
+//     const [curNode, curDist] = pq.pop()
+
+//     if(dist[curNode] < curDist) continue
+
+//     for(const [nextNode, nextDist] of graph[curNode]){
+//       const totalDist = nextDist+curDist;
+//       if(totalDist<dist[nextNode]){
+//         dist[nextNode] = totalDist
+//         pq.push([nextNode, totalDist])
+//       }
+//     }
+//   }
+
+//   return dist
+// }
+
+// const r = dijkstra(k, graph, v)
+
+// for(let i=1; i<=v; i++){
+//   console.log(r[i]===Infinity? 'INF':r[i])
+// }
+
+
+//11403-경로찾기
+
+//입력:
+//정점의 개수 N 
+//그래프의 인접 행렬(1 or 0)
+
+//알고리즘:
+//모든 정점에서 다른 모든 정점으로 -> 플로이드 워셜 알고리즘
+//i에서 j로 가는 직접 경로가 없더라도, i에서 k로 가고, k에서 j로 가는 경로가 있을 경우 i에서 j로 가는 경로가 있다고 판단할 수 있음
+//i에서 j로 경로가 존재하면 해당 위치의 값을 1로 업데이트.
+
+//출력:
+//정점 i에서 j로 가는 길이가 양수인 경로가 있으면 i번째 줄의 j번째 숫자를 1로, 없으면 0으로 출력
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [v, e] = input[0].split(' ').map(Number)
-const k = +input[1]; //시작점
-const graph =Array.from({length: v+1}, ()=>[])
+const n = +input[0]
+const arr = input.slice(1).map(v=>v.split(' ').map(Number))
 
-for(let i=2; i<2+e; i++){
-  const [u, v, w] = input[i].split(' ').map(Number)
-  graph[u].push([v, w])
-}
-
-class MinHeap{
-  constructor(){
-    this.heap=[]
-  }
-
-  push([node, dist]){
-    this.heap.push([node, dist])
-    this.bubbleUp()
-  }
-
-  bubbleUp(){
-    let index = this.heap.length-1;
-    let last = this.heap[index]
-
-    while(index>0){
-      let parentIndex = Math.floor((index-1)/2);
-
-      if(this.heap[parentIndex][1]<last[1]) break
-
-      this.heap[index]=this.heap[parentIndex]
-      index=parentIndex
-    }
-
-    this.heap[index]=last
-  }
-
-  pop(){
-    if(this.heap.length===1) return this.heap.pop()
-      const top = this.heap[0]
-    this.heap[0] = this.heap.pop()
-    this.bubbleDown()
-    return top
-  }
-
-  bubbleDown(){
-    let index =0;
-    let length = this.heap.length
-    const top = this.heap[index];
-
-    while(true){
-      let leftChildIndex = index*2+1;
-      let rightChildIndex = index*2+2;
-      let smallest = index; 
-
-      if(leftChildIndex<length && this.heap[leftChildIndex][1] < this.heap[smallest][1]){
-        smallest = leftChildIndex
-      }
-
-      if(rightChildIndex<length && this.heap[rightChildIndex][1] < this.heap[smallest][1]){
-        smallest = rightChildIndex
-      }
-
-      if(smallest === index) break
-
-      this.heap[index] = this.heap[smallest]
-      index=smallest
-    }
-
-    this.heap[index] = top
-  }
-
-  isEmpty(){
-    return this.heap.length===0
-  }
-}
-
-const dijkstra = (start, graph, n) =>{
-  const dist = Array(n+1).fill(Infinity)
-  dist[start]=0
-  const pq = new MinHeap()
-  pq.push([start, 0])
-
-  while(!pq.isEmpty()){
-    const [curNode, curDist] = pq.pop()
-
-    if(dist[curNode] < curDist) continue
-
-    for(const [nextNode, nextDist] of graph[curNode]){
-      const totalDist = nextDist+curDist;
-      if(totalDist<dist[nextNode]){
-        dist[nextNode] = totalDist
-        pq.push([nextNode, totalDist])
+const floydWarshall = (graph, n) => {
+  for(let k=0; k<n; k++){
+    for(let i=0; i<n; i++){
+      for(let j=0; j<n; j++){
+        if(graph[i][k]===1&&graph[k][j]===1){
+          graph[i][j]=1
+        }
       }
     }
   }
 
-  return dist
+  return graph
 }
 
-const r = dijkstra(k, graph, v)
+const result = floydWarshall(arr, n)
 
-for(let i=1; i<=v; i++){
-  console.log(r[i]===Infinity? 'INF':r[i])
+for(let i=0; i<n; i++){
+  console.log(result[i].join(' '))
 }
