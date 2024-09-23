@@ -897,28 +897,78 @@
 //출력:
 //정점 i에서 j로 가는 길이가 양수인 경로가 있으면 i번째 줄의 j번째 숫자를 1로, 없으면 0으로 출력
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const n = +input[0]
+// const arr = input.slice(1).map(v=>v.split(' ').map(Number))
+
+// const floydWarshall = (graph, n) => {
+//   for(let k=0; k<n; k++){
+//     for(let i=0; i<n; i++){
+//       for(let j=0; j<n; j++){
+//         if(graph[i][k]===1&&graph[k][j]===1){
+//           graph[i][j]=1
+//         }
+//       }
+//     }
+//   }
+
+//   return graph
+// }
+
+// const result = floydWarshall(arr, n)
+
+// for(let i=0; i<n; i++){
+//   console.log(result[i].join(' '))
+// }
+
+
+//11404-플로이드
+
+//입력:
+//도시의 개수 n
+//버스의 개수 m
+//버스의 정보(시작 도시 a, 도착 도시 b, 한 번 타는데 필요한 비용 c)
+
+//알고리즘:
+//모든 정점에서 다른 모든 정점으로 -> 플로이드 워셜 알고리즘
+//* 만약, i에서 j로 갈 수 없는 경우에는 그 자리에 0을 출력
+
+//출력:
+//모든 도시의 쌍 (A, B)에 대해서 도시 A에서 B로 가는데 필요한 비용의 최솟값
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 const n = +input[0]
-const arr = input.slice(1).map(v=>v.split(' ').map(Number))
+const m = +input[1]
+const dist = Array.from({length: n}, ()=>Array(n).fill(Infinity))//거리정보
 
-const floydWarshall = (graph, n) => {
+for(let i=0; i<n; i++){
+  dist[i][i]=0
+}
+
+for(let i=2; i<2+m; i++){
+  const [a, b, c] = input[i].split(' ').map(Number)
+  dist[a-1][b-1]=Math.min(dist[a-1][b-1], c)
+}
+
+const floydWarshall = (dist, n)=>{
+
   for(let k=0; k<n; k++){
     for(let i=0; i<n; i++){
       for(let j=0; j<n; j++){
-        if(graph[i][k]===1&&graph[k][j]===1){
-          graph[i][j]=1
-        }
+        dist[i][j] = Math.min(dist[i][j], dist[i][k]+dist[k][j])
       }
     }
   }
 
-  return graph
+  return dist
 }
 
-const result = floydWarshall(arr, n)
+const result = floydWarshall(dist, n)
 
 for(let i=0; i<n; i++){
-  console.log(result[i].join(' '))
+  console.log(result[i].map(v=>v===Infinity?0:v).join(' '))
 }
