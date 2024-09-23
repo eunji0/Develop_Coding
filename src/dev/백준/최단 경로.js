@@ -938,28 +938,156 @@
 //출력:
 //모든 도시의 쌍 (A, B)에 대해서 도시 A에서 B로 가는데 필요한 비용의 최솟값
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const n = +input[0]
+// const m = +input[1]
+// const dist = Array.from({length: n}, ()=>Array(n).fill(Infinity))//거리정보
+
+// for(let i=0; i<n; i++){
+//   dist[i][i]=0
+// }
+
+// for(let i=2; i<2+m; i++){
+//   const [a, b, c] = input[i].split(' ').map(Number)
+//   dist[a-1][b-1]=Math.min(dist[a-1][b-1], c)
+// }
+
+// const floydWarshall = (dist, n)=>{
+
+//   for(let k=0; k<n; k++){
+//     for(let i=0; i<n; i++){
+//       for(let j=0; j<n; j++){
+//         dist[i][j] = Math.min(dist[i][j], dist[i][k]+dist[k][j])
+//       }
+//     }
+//   }
+
+//   return dist
+// }
+
+// const result = floydWarshall(dist, n)
+
+// for(let i=0; i<n; i++){
+//   console.log(result[i].map(v=>v===Infinity?0:v).join(' '))
+// }
+
+
+//1916-최소비용 구하기
+
+//입력:
+//도시의 개수 n
+//버스의 개수 m
+//버스의 정보(시작 도시 a, 도착 도시 b, 한 번 타는데 필요한 비용 c)
+//출발점의 도시번호와 도착점의 도시번호
+
+//알고리즘:
+//하나의 노드에서 다른 노드로 이동 -> 다익스트라 알고리즘
+//거리배열을 생성 후 무한대로 초기화
+//시작도시의 거리배열을 업데이트
+//최소힙을 통해 pq배열 생성 후 시작 도시와 비용 업데이트
+//현재 도시와 비용을 pq배열에서 꺼냄
+//연결된 도시와 거리비교 후 업데이트
+
+//출력:
+// 출발 도시에서 도착 도시까지 가는데 드는 최소 비용
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
-const n = +input[0]
-const m = +input[1]
-const dist = Array.from({length: n}, ()=>Array(n).fill(Infinity))//거리정보
+const n = +input[0];
+const m = +input[1];
+const graph = Array.from({length:n+1}, ()=>[])
+const [start, goal] = input[m+2].split(' ').map(Number)
 
-for(let i=0; i<n; i++){
-  dist[i][i]=0
+class MinHeap{
+  constructor(){
+    this.heap = []
+  }
+
+  push([city, cost]){
+    this.heap.push([city, cost])
+    this.bubbleUp()
+  }
+
+  bubbleUp(){
+    let index = this.heap.length-1;
+    let last = this.heap[index]
+
+    while(index>0){
+      let parentIndex = Math.floor((index-1)/2)
+
+      if(this.heap[parentIndex][1] < last[1]) break
+
+      this.heap[index] = this.heap[parentIndex]
+      index=parentIndex
+    }
+
+    this.heap[index] = last
+  }
+
+  pop(){
+    if(this.heap.length===1) return this.heap.pop()
+    const top = this.heap[0]
+    this.heap[0]=this.heap.pop()
+    this.bubbleDown()
+    return top
+  }
+
+  bubbleDown(){
+    let index = 0;
+    let length = this.heap.length
+    let top = this.heap[index]
+
+    while(true){
+      let leftChildIndex = index*2+1;
+      let rightChildIndex = index*2+2;
+      let smallest = index
+
+      if(leftChildIndex<length&&this.heap[leftChildIndex][1]<this.heap[smallest][1]){
+        smallest=leftChildIndex
+      }
+
+      if(rightChildIndex<length&&this.heap[rightChildIndex][1]<this.heap[smallest][1]){
+        smallest=rightChildIndex
+      }
+
+      if(smallest===index) break
+      this.heap[index]=this.heap[smallest]
+      index=smallest;
+    }
+
+    this.heap[index] = top
+  }
+
+  isEmpty(){
+    return this.heap.length===0
+  }
 }
 
-for(let i=2; i<2+m; i++){
+for(let i=2; i<m+2; i++){
   const [a, b, c] = input[i].split(' ').map(Number)
-  dist[a-1][b-1]=Math.min(dist[a-1][b-1], c)
+  graph[a].push([b, c])
 }
 
-const floydWarshall = (dist, n)=>{
+const dijkstra = (graph ,start, n) =>{
+  const dist = Array(n+1).fill(Infinity)
+  dist[start]=0;
+  const pq= new MinHeap()
+  pq.push([start, 0])
 
-  for(let k=0; k<n; k++){
-    for(let i=0; i<n; i++){
-      for(let j=0; j<n; j++){
-        dist[i][j] = Math.min(dist[i][j], dist[i][k]+dist[k][j])
+  while(!pq.isEmpty()){
+    const [curCity, curCost] = pq.pop()
+
+    if(dist[curCity]<curCost) continue
+
+    for(const [nextCity, nextCost] of graph[curCity]){
+      const totalCost = curCost+nextCost
+
+      if(totalCost<dist[nextCity]){
+        dist[nextCity]=totalCost
+        pq.push([nextCity, totalCost])
       }
     }
   }
@@ -967,8 +1095,5 @@ const floydWarshall = (dist, n)=>{
   return dist
 }
 
-const result = floydWarshall(dist, n)
-
-for(let i=0; i<n; i++){
-  console.log(result[i].map(v=>v===Infinity?0:v).join(' '))
-}
+const result = dijkstra(graph ,start, n)
+console.log(result[goal])
