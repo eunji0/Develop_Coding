@@ -993,107 +993,202 @@
 //출력:
 // 출발 도시에서 도착 도시까지 가는데 드는 최소 비용
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const n = +input[0];
+// const m = +input[1];
+// const graph = Array.from({length:n+1}, ()=>[])
+// const [start, goal] = input[m+2].split(' ').map(Number)
+
+// class MinHeap{
+//   constructor(){
+//     this.heap = []
+//   }
+
+//   push([city, cost]){
+//     this.heap.push([city, cost])
+//     this.bubbleUp()
+//   }
+
+//   bubbleUp(){
+//     let index = this.heap.length-1;
+//     let last = this.heap[index]
+
+//     while(index>0){
+//       let parentIndex = Math.floor((index-1)/2)
+
+//       if(this.heap[parentIndex][1] < last[1]) break
+
+//       this.heap[index] = this.heap[parentIndex]
+//       index=parentIndex
+//     }
+
+//     this.heap[index] = last
+//   }
+
+//   pop(){
+//     if(this.heap.length===1) return this.heap.pop()
+//     const top = this.heap[0]
+//     this.heap[0]=this.heap.pop()
+//     this.bubbleDown()
+//     return top
+//   }
+
+//   bubbleDown(){
+//     let index = 0;
+//     let length = this.heap.length
+//     let top = this.heap[index]
+
+//     while(true){
+//       let leftChildIndex = index*2+1;
+//       let rightChildIndex = index*2+2;
+//       let smallest = index
+
+//       if(leftChildIndex<length&&this.heap[leftChildIndex][1]<this.heap[smallest][1]){
+//         smallest=leftChildIndex
+//       }
+
+//       if(rightChildIndex<length&&this.heap[rightChildIndex][1]<this.heap[smallest][1]){
+//         smallest=rightChildIndex
+//       }
+
+//       if(smallest===index) break
+//       this.heap[index]=this.heap[smallest]
+//       index=smallest;
+//     }
+
+//     this.heap[index] = top
+//   }
+
+//   isEmpty(){
+//     return this.heap.length===0
+//   }
+// }
+
+// for(let i=2; i<m+2; i++){
+//   const [a, b, c] = input[i].split(' ').map(Number)
+//   graph[a].push([b, c])
+// }
+
+// const dijkstra = (graph ,start, n) =>{
+//   const dist = Array(n+1).fill(Infinity)
+//   dist[start]=0;
+//   const pq= new MinHeap()
+//   pq.push([start, 0])
+
+//   while(!pq.isEmpty()){
+//     const [curCity, curCost] = pq.pop()
+
+//     if(dist[curCity]<curCost) continue
+
+//     for(const [nextCity, nextCost] of graph[curCity]){
+//       const totalCost = curCost+nextCost
+
+//       if(totalCost<dist[nextCity]){
+//         dist[nextCity]=totalCost
+//         pq.push([nextCity, totalCost])
+//       }
+//     }
+//   }
+
+//   return dist
+// }
+
+// const result = dijkstra(graph ,start, n)
+// console.log(result[goal])
+
+
+//13549-숨바꼭질3
+
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [n, m] = input[0].split(' ').map(Number)
+// const visited = Array(100001).fill(false)
+
+// const bfs = (start, goal)=>{
+//   const queue=[[start, 0]];
+//   visited[start]=true;
+
+//   while(queue.length){
+//     const [cur, sec] = queue.shift()
+//     const move = [cur-1, cur+1, cur*2]
+
+//     if(cur===goal) return sec
+
+//     for(const m of move){
+//       if(m>=0&&m<=100000&&!visited[m]){
+//         visited[m]=true
+//         if(m===cur*2){
+//           queue.unshift([m, sec])
+//         }else{
+//           queue.push([m, sec+1])
+//         }
+//       }
+//     }
+//   }
+// }
+
+// console.log(bfs(n, m))
+
+//1389-케빈베이컨의 6단계 법칙
+
+//입력:
+// 유저의 수 N
+//친구 관계의 수 M
+//친구 관계
+
+//알고리즘:
+//모든 정점 간의 최단 경로를 구해야 함 -> 플로이드 워셜
+//n만큼 케빈 베이컨 수를 구해야 함
+//거리배열생성
+//입력받은 친구관계처리
+//최단거리계산
+//케빈베이컨최소합 계산
+
+//출력:
+//BOJ의 유저 중에서 케빈 베이컨의 수가 가장 작은 사람
+//여러 명일 경우에는 번호가 가장 작은 사람
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
-const n = +input[0];
-const m = +input[1];
-const graph = Array.from({length:n+1}, ()=>[])
-const [start, goal] = input[m+2].split(' ').map(Number)
+const [n, m] = input[0].split(' ').map(Number)
 
-class MinHeap{
-  constructor(){
-    this.heap = []
-  }
+const dist= Array.from({length:n}, ()=>Array(n).fill(Infinity))
 
-  push([city, cost]){
-    this.heap.push([city, cost])
-    this.bubbleUp()
-  }
-
-  bubbleUp(){
-    let index = this.heap.length-1;
-    let last = this.heap[index]
-
-    while(index>0){
-      let parentIndex = Math.floor((index-1)/2)
-
-      if(this.heap[parentIndex][1] < last[1]) break
-
-      this.heap[index] = this.heap[parentIndex]
-      index=parentIndex
-    }
-
-    this.heap[index] = last
-  }
-
-  pop(){
-    if(this.heap.length===1) return this.heap.pop()
-    const top = this.heap[0]
-    this.heap[0]=this.heap.pop()
-    this.bubbleDown()
-    return top
-  }
-
-  bubbleDown(){
-    let index = 0;
-    let length = this.heap.length
-    let top = this.heap[index]
-
-    while(true){
-      let leftChildIndex = index*2+1;
-      let rightChildIndex = index*2+2;
-      let smallest = index
-
-      if(leftChildIndex<length&&this.heap[leftChildIndex][1]<this.heap[smallest][1]){
-        smallest=leftChildIndex
-      }
-
-      if(rightChildIndex<length&&this.heap[rightChildIndex][1]<this.heap[smallest][1]){
-        smallest=rightChildIndex
-      }
-
-      if(smallest===index) break
-      this.heap[index]=this.heap[smallest]
-      index=smallest;
-    }
-
-    this.heap[index] = top
-  }
-
-  isEmpty(){
-    return this.heap.length===0
-  }
+for(let i=0; i<n; i++){
+  dist[i][i]=0
 }
 
-for(let i=2; i<m+2; i++){
-  const [a, b, c] = input[i].split(' ').map(Number)
-  graph[a].push([b, c])
+for(let i=1; i<=m; i++){
+  const [a, b] = input[i].split(' ').map(Number)
+  dist[a-1][b-1]=1
+  dist[b-1][a-1]=1
 }
 
-const dijkstra = (graph ,start, n) =>{
-  const dist = Array(n+1).fill(Infinity)
-  dist[start]=0;
-  const pq= new MinHeap()
-  pq.push([start, 0])
-
-  while(!pq.isEmpty()){
-    const [curCity, curCost] = pq.pop()
-
-    if(dist[curCity]<curCost) continue
-
-    for(const [nextCity, nextCost] of graph[curCity]){
-      const totalCost = curCost+nextCost
-
-      if(totalCost<dist[nextCity]){
-        dist[nextCity]=totalCost
-        pq.push([nextCity, totalCost])
+for(let k=0; k<n; k++){
+  for(let i=0; i<n; i++){
+    for(let j=0; j<n; j++){
+      if(dist[i][j]>dist[i][k]+dist[k][j]){
+        dist[i][j]=dist[i][k]+dist[k][j]
       }
     }
   }
-
-  return dist
 }
 
-const result = dijkstra(graph ,start, n)
-console.log(result[goal])
+let minSum = Infinity
+let result = 0;
+
+for(let i=0; i<n; i++){
+  let sum = dist[i].reduce((a, c)=>a+c, 0)
+  if(sum<minSum){
+    minSum=sum
+    result=i+1
+  }
+}
+
+console.log(result)
