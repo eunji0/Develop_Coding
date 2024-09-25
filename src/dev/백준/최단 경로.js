@@ -1153,42 +1153,182 @@
 //BOJ의 유저 중에서 케빈 베이컨의 수가 가장 작은 사람
 //여러 명일 경우에는 번호가 가장 작은 사람
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [n, m] = input[0].split(' ').map(Number)
+
+// const dist= Array.from({length:n}, ()=>Array(n).fill(Infinity))
+
+// for(let i=0; i<n; i++){
+//   dist[i][i]=0
+// }
+
+// for(let i=1; i<=m; i++){
+//   const [a, b] = input[i].split(' ').map(Number)
+//   dist[a-1][b-1]=1
+//   dist[b-1][a-1]=1
+// }
+
+// for(let k=0; k<n; k++){
+//   for(let i=0; i<n; i++){
+//     for(let j=0; j<n; j++){
+//       if(dist[i][j]>dist[i][k]+dist[k][j]){
+//         dist[i][j]=dist[i][k]+dist[k][j]
+//       }
+//     }
+//   }
+// }
+
+// let minSum = Infinity
+// let result = 0;
+
+// for(let i=0; i<n; i++){
+//   let sum = dist[i].reduce((a, c)=>a+c, 0)
+//   if(sum<minSum){
+//     minSum=sum
+//     result=i+1
+//   }
+// }
+
+// console.log(result)
+
+
+//1238-파티
+
+//입력:
+//N명의 학생, M개의 단방향 도로, X번 마을
+//도로의 시작점, 끝점, 소요시간
+
+//알고리즘: 다익스트라 알고리즘(단방향 도로)
+//각 학생이 자신의 마을에서 X 마을까지 가는 최단 거리
+// X 마을에서 다시 자신의 마을로 돌아오는 최단 거리
+
+//출력:
+//N명의 학생들 중 오고 가는데 가장 오래 걸리는 학생의 소요시간
+
+
 const fs = require('fs');
+const { start } = require('repl');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [n, m] = input[0].split(' ').map(Number)
 
-const dist= Array.from({length:n}, ()=>Array(n).fill(Infinity))
-
-for(let i=0; i<n; i++){
-  dist[i][i]=0
-}
+const [n, m, x] = input[0].split(' ').map(Number)//학생, 도로, 마을
+const graph = Array.from({length:n+1}, ()=>[])
 
 for(let i=1; i<=m; i++){
-  const [a, b] = input[i].split(' ').map(Number)
-  dist[a-1][b-1]=1
-  dist[b-1][a-1]=1
+  const [start, goal, time] = input[i].split(' ').map(Number)
+  graph[start].push([goal, time])
 }
 
-for(let k=0; k<n; k++){
-  for(let i=0; i<n; i++){
-    for(let j=0; j<n; j++){
-      if(dist[i][j]>dist[i][k]+dist[k][j]){
-        dist[i][j]=dist[i][k]+dist[k][j]
+class MinHeap{
+  constructor(){
+    this.heap=[]
+  }
+
+  push([city, time]){
+    this.heap.push([city, time])
+    this.bubbleUp()
+  }
+
+  bubbleUp(){
+    let index = this.heap.length-1;
+    let last = this.heap[index]
+
+    while(index>0){
+      let parentIndex = Math.floor((index-1)/2);
+
+      if(this.heap[parentIndex][1]<last[1]) break
+
+      this.heap[index] = this.heap[parentIndex]
+      index=parentIndex
+    }
+
+    this.heap[index]=last
+  }
+
+  pop(){
+    if(this.heap.length===1)
+      return this.heap.pop()
+
+    const top = this.heap[0]
+    this.heap[0]=this.heap.pop()
+    this.bubbleDown()
+    return top
+  }
+
+  bubbleDown(){
+    let index=0;
+    let top=this.heap[index]
+    let length=this.heap.length
+
+    while(true){
+      let leftChildIndex = index*2+1;
+      let rightChildIndex= index*2+2;
+      let smallest= index
+
+      if(leftChildIndex<length&&this.heap[leftChildIndex][1]<this.heap[smallest][1]){
+        smallest=leftChildIndex
+      }
+
+      if(rightChildIndex<length&&this.heap[rightChildIndex][1]<this.heap[smallest][1]){
+        smallest=rightChildIndex
+      }
+
+      if(smallest===index) break
+      this.heap[index]=this.heap[smallest]
+      index=smallest
+    }
+
+    this.heap[index]=top
+  }
+
+  isEmpty(){
+    return this.heap.length===0
+  }
+}
+
+const dijkstra = (start, graph)=>{
+  const dist = Array(n+1).fill(Infinity)
+  dist[start]=0
+
+  const pq = new MinHeap()
+  pq.push([start, 0])
+
+  while(!pq.isEmpty()){
+    const [curCity, curCost] = pq.pop()
+
+    if(dist[curCity]<curCost) continue
+
+    for(const [nextCity, nextCost] of graph[curCity]){
+      const totalCost = curCost+nextCost
+      if(totalCost<dist[nextCity]){
+        dist[nextCity]=totalCost
+        pq.push([nextCity, totalCost])
       }
     }
   }
+
+  return dist
 }
 
-let minSum = Infinity
-let result = 0;
+const rx = dijkstra(x, graph)
 
-for(let i=0; i<n; i++){
-  let sum = dist[i].reduce((a, c)=>a+c, 0)
-  if(sum<minSum){
-    minSum=sum
-    result=i+1
+const reverseGraph = Array.from({length:n+1}, ()=>[])
+for(let i=1; i<=n; i++){
+  for(const [to, time] of graph[i]){
+    reverseGraph[to].push([i, time])
   }
 }
 
-console.log(result)
+const ry = dijkstra(x, reverseGraph)
+
+let max = 0;
+
+for(let i=1; i<=n; i++){
+  const total = rx[i]+ry[i]
+  max = Math.max(max, total)
+}
+
+console.log(max)
