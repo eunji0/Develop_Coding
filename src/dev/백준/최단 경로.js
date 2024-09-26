@@ -1208,18 +1208,161 @@
 //출력:
 //N명의 학생들 중 오고 가는데 가장 오래 걸리는 학생의 소요시간
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [n, m, x] = input[0].split(' ').map(Number)//학생, 도로, 마을
+// const graph = Array.from({length:n+1}, ()=>[])
+
+// for(let i=1; i<=m; i++){
+//   const [start, goal, time] = input[i].split(' ').map(Number)
+//   graph[start].push([goal, time])
+// }
+
+// class MinHeap{
+//   constructor(){
+//     this.heap=[]
+//   }
+
+//   push([city, time]){
+//     this.heap.push([city, time])
+//     this.bubbleUp()
+//   }
+
+//   bubbleUp(){
+//     let index = this.heap.length-1;
+//     let last = this.heap[index]
+
+//     while(index>0){
+//       let parentIndex = Math.floor((index-1)/2);
+
+//       if(this.heap[parentIndex][1]<last[1]) break
+
+//       this.heap[index] = this.heap[parentIndex]
+//       index=parentIndex
+//     }
+
+//     this.heap[index]=last
+//   }
+
+//   pop(){
+//     if(this.heap.length===1)
+//       return this.heap.pop()
+
+//     const top = this.heap[0]
+//     this.heap[0]=this.heap.pop()
+//     this.bubbleDown()
+//     return top
+//   }
+
+//   bubbleDown(){
+//     let index=0;
+//     let top=this.heap[index]
+//     let length=this.heap.length
+
+//     while(true){
+//       let leftChildIndex = index*2+1;
+//       let rightChildIndex= index*2+2;
+//       let smallest= index
+
+//       if(leftChildIndex<length&&this.heap[leftChildIndex][1]<this.heap[smallest][1]){
+//         smallest=leftChildIndex
+//       }
+
+//       if(rightChildIndex<length&&this.heap[rightChildIndex][1]<this.heap[smallest][1]){
+//         smallest=rightChildIndex
+//       }
+
+//       if(smallest===index) break
+//       this.heap[index]=this.heap[smallest]
+//       index=smallest
+//     }
+
+//     this.heap[index]=top
+//   }
+
+//   isEmpty(){
+//     return this.heap.length===0
+//   }
+// }
+
+// const dijkstra = (start, graph)=>{
+//   const dist = Array(n+1).fill(Infinity)
+//   dist[start]=0
+
+//   const pq = new MinHeap()
+//   pq.push([start, 0])
+
+//   while(!pq.isEmpty()){
+//     const [curCity, curCost] = pq.pop()
+
+//     if(dist[curCity]<curCost) continue
+
+//     for(const [nextCity, nextCost] of graph[curCity]){
+//       const totalCost = curCost+nextCost
+//       if(totalCost<dist[nextCity]){
+//         dist[nextCity]=totalCost
+//         pq.push([nextCity, totalCost])
+//       }
+//     }
+//   }
+
+//   return dist
+// }
+
+// const rx = dijkstra(x, graph)
+
+// const reverseGraph = Array.from({length:n+1}, ()=>[])
+// for(let i=1; i<=n; i++){
+//   for(const [to, time] of graph[i]){
+//     reverseGraph[to].push([i, time])
+//   }
+// }
+
+// const ry = dijkstra(x, reverseGraph)
+
+// let max = 0;
+
+// for(let i=1; i<=n; i++){
+//   const total = rx[i]+ry[i]
+//   max = Math.max(max, total)
+// }
+
+// console.log(max)
+
+
+//1504-특정한 최단 경로
+
+//입력:
+//정점의 개수 N과 간선의 개수 E
+//a번 정점에서 b번 정점까지 양방향 길이 존재하며, 그 거리가 c
+//반드시 거쳐야 하는 두 개의 서로 다른 정점 번호 v1과 v2
+
+//알고리즘:
+//경유지가 있어 플로이드 워셜알고리즘이 적합한 듯 보이나
+//N의 수가 큼에 따라 다익스트라가 나을 수 있음
+//1->v1->v2->n 과 1->v2->v1->n중 더 짧은 거리여야 함
+
+//즉 다익스트라 3번 사용
+//1번 정점에서 v1, v2로 가는 최단 경로
+// v1에서 v2로 가는 최단 경로
+// v1, v2에서 N번 정점으로 가는 최단 경로
+
+//출력: 두 개의 정점을 지나는 최단 경로의 길이, 없을때는 -1
 
 const fs = require('fs');
-const { start } = require('repl');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const [n, m, x] = input[0].split(' ').map(Number)//학생, 도로, 마을
-const graph = Array.from({length:n+1}, ()=>[])
+const [n, e] = input[0].split(' ').map(Number)
+const [v1, v2] = input[e+1].split(' ').map(Number)
+const graph = Array.from({length: n+1}, ()=>[])
 
-for(let i=1; i<=m; i++){
-  const [start, goal, time] = input[i].split(' ').map(Number)
-  graph[start].push([goal, time])
+for(let i=1; i<=e; i++){
+  const [a, b, c] = input[i].split(' ').map(Number)
+  graph[a].push([b, c])
+  graph[b].push([a, c])
 }
 
 class MinHeap{
@@ -1227,21 +1370,21 @@ class MinHeap{
     this.heap=[]
   }
 
-  push([city, time]){
-    this.heap.push([city, time])
+  push([node, dist]){
+    this.heap.push([node, dist])
     this.bubbleUp()
   }
 
   bubbleUp(){
-    let index = this.heap.length-1;
-    let last = this.heap[index]
+    let index =this.heap.length-1
+    let last =this.heap[index]
 
     while(index>0){
-      let parentIndex = Math.floor((index-1)/2);
+      let parentIndex = Math.floor((index-1)/2)
 
       if(this.heap[parentIndex][1]<last[1]) break
 
-      this.heap[index] = this.heap[parentIndex]
+      this.heap[index]=this.heap[parentIndex]
       index=parentIndex
     }
 
@@ -1249,24 +1392,23 @@ class MinHeap{
   }
 
   pop(){
-    if(this.heap.length===1)
+    if(this.heap.length===1) 
       return this.heap.pop()
-
     const top = this.heap[0]
-    this.heap[0]=this.heap.pop()
+    this.heap[0]=this.heap.pop();
     this.bubbleDown()
     return top
   }
 
   bubbleDown(){
     let index=0;
-    let top=this.heap[index]
-    let length=this.heap.length
+    let top = this.heap[index]
+    let length = this.heap.length
 
     while(true){
       let leftChildIndex = index*2+1;
-      let rightChildIndex= index*2+2;
-      let smallest= index
+      let rightChildIndex = index*2+2
+      let smallest = index
 
       if(leftChildIndex<length&&this.heap[leftChildIndex][1]<this.heap[smallest][1]){
         smallest=leftChildIndex
@@ -1277,7 +1419,7 @@ class MinHeap{
       }
 
       if(smallest===index) break
-      this.heap[index]=this.heap[smallest]
+      this.heap[index] = this.heap[smallest]
       index=smallest
     }
 
@@ -1289,23 +1431,24 @@ class MinHeap{
   }
 }
 
-const dijkstra = (start, graph)=>{
+const dijkstra = (start, n)=>{
   const dist = Array(n+1).fill(Infinity)
   dist[start]=0
 
   const pq = new MinHeap()
-  pq.push([start, 0])
+  pq.push([start, 0]);
 
   while(!pq.isEmpty()){
-    const [curCity, curCost] = pq.pop()
+    const [curNode, curDist] = pq.pop()
 
-    if(dist[curCity]<curCost) continue
+    if(dist[curNode]<curDist) continue
 
-    for(const [nextCity, nextCost] of graph[curCity]){
-      const totalCost = curCost+nextCost
-      if(totalCost<dist[nextCity]){
-        dist[nextCity]=totalCost
-        pq.push([nextCity, totalCost])
+    for(const [nextNode, nextDist] of graph[curNode]){
+      const totalDist = curDist+nextDist
+
+      if(totalDist<dist[nextNode]){
+        dist[nextNode]=totalDist
+        pq.push([nextNode, totalDist])
       }
     }
   }
@@ -1313,22 +1456,26 @@ const dijkstra = (start, graph)=>{
   return dist
 }
 
-const rx = dijkstra(x, graph)
+// 1. 1에서 각 정점까지의 최단 경로
+const distFrom1 = dijkstra(1, n);
 
-const reverseGraph = Array.from({length:n+1}, ()=>[])
-for(let i=1; i<=n; i++){
-  for(const [to, time] of graph[i]){
-    reverseGraph[to].push([i, time])
-  }
+// 2. v1에서 각 정점까지의 최단 경로
+const distFromV1 = dijkstra(v1, n);
+
+// 3. v2에서 각 정점까지의 최단 경로
+const distFromV2 = dijkstra(v2, n);
+
+// 경로 1: 1 -> v1 -> v2 -> N
+const path1 = distFrom1[v1] + distFromV1[v2] + distFromV2[n];
+
+// 경로 2: 1 -> v2 -> v1 -> N
+const path2 = distFrom1[v2] + distFromV2[v1] + distFromV1[n];
+
+
+// 두 경로 중 더 작은 값을 선택, 불가능하면 -1
+const result = Math.min(path1, path2);
+if (result >= Infinity) {
+  console.log(-1);
+} else {
+  console.log(result);
 }
-
-const ry = dijkstra(x, reverseGraph)
-
-let max = 0;
-
-for(let i=1; i<=n; i++){
-  const total = rx[i]+ry[i]
-  max = Math.max(max, total)
-}
-
-console.log(max)
