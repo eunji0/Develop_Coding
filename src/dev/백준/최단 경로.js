@@ -1351,131 +1351,241 @@
 
 //출력: 두 개의 정점을 지나는 최단 경로의 길이, 없을때는 -1
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [n, e] = input[0].split(' ').map(Number)
+// const [v1, v2] = input[e+1].split(' ').map(Number)
+// const graph = Array.from({length: n+1}, ()=>[])
+
+// for(let i=1; i<=e; i++){
+//   const [a, b, c] = input[i].split(' ').map(Number)
+//   graph[a].push([b, c])
+//   graph[b].push([a, c])
+// }
+
+// class MinHeap{
+//   constructor(){
+//     this.heap=[]
+//   }
+
+//   push([node, dist]){
+//     this.heap.push([node, dist])
+//     this.bubbleUp()
+//   }
+
+//   bubbleUp(){
+//     let index =this.heap.length-1
+//     let last =this.heap[index]
+
+//     while(index>0){
+//       let parentIndex = Math.floor((index-1)/2)
+
+//       if(this.heap[parentIndex][1]<last[1]) break
+
+//       this.heap[index]=this.heap[parentIndex]
+//       index=parentIndex
+//     }
+
+//     this.heap[index]=last
+//   }
+
+//   pop(){
+//     if(this.heap.length===1) 
+//       return this.heap.pop()
+//     const top = this.heap[0]
+//     this.heap[0]=this.heap.pop();
+//     this.bubbleDown()
+//     return top
+//   }
+
+//   bubbleDown(){
+//     let index=0;
+//     let top = this.heap[index]
+//     let length = this.heap.length
+
+//     while(true){
+//       let leftChildIndex = index*2+1;
+//       let rightChildIndex = index*2+2
+//       let smallest = index
+
+//       if(leftChildIndex<length&&this.heap[leftChildIndex][1]<this.heap[smallest][1]){
+//         smallest=leftChildIndex
+//       }
+
+//       if(rightChildIndex<length&&this.heap[rightChildIndex][1]<this.heap[smallest][1]){
+//         smallest=rightChildIndex
+//       }
+
+//       if(smallest===index) break
+//       this.heap[index] = this.heap[smallest]
+//       index=smallest
+//     }
+
+//     this.heap[index]=top
+//   }
+
+//   isEmpty(){
+//     return this.heap.length===0
+//   }
+// }
+
+// const dijkstra = (start, n)=>{
+//   const dist = Array(n+1).fill(Infinity)
+//   dist[start]=0
+
+//   const pq = new MinHeap()
+//   pq.push([start, 0]);
+
+//   while(!pq.isEmpty()){
+//     const [curNode, curDist] = pq.pop()
+
+//     if(dist[curNode]<curDist) continue
+
+//     for(const [nextNode, nextDist] of graph[curNode]){
+//       const totalDist = curDist+nextDist
+
+//       if(totalDist<dist[nextNode]){
+//         dist[nextNode]=totalDist
+//         pq.push([nextNode, totalDist])
+//       }
+//     }
+//   }
+
+//   return dist
+// }
+
+// // 1. 1에서 각 정점까지의 최단 경로
+// const distFrom1 = dijkstra(1, n);
+
+// // 2. v1에서 각 정점까지의 최단 경로
+// const distFromV1 = dijkstra(v1, n);
+
+// // 3. v2에서 각 정점까지의 최단 경로
+// const distFromV2 = dijkstra(v2, n);
+
+// // 경로 1: 1 -> v1 -> v2 -> N
+// const path1 = distFrom1[v1] + distFromV1[v2] + distFromV2[n];
+
+// // 경로 2: 1 -> v2 -> v1 -> N
+// const path2 = distFrom1[v2] + distFromV2[v1] + distFromV1[n];
+
+
+// // 두 경로 중 더 작은 값을 선택, 불가능하면 -1
+// const result = Math.min(path1, path2);
+// if (result >= Infinity) {
+//   console.log(-1);
+// } else {
+//   console.log(result);
+// }
+
+
+//1261-알고스팟
+
+//입력:
+//가로 크기 M, 세로 크기 N
+//미로의 상태
+
+//알고리즘: bfs와 덱
+//가중치가 0인 이동(벽을 부수지 않는 이동)은 덱의 앞쪽에
+//가중치가 1인 이동(벽을 부수는 이동)은 덱의 뒤쪽
+
+//출력:
+//(N, M)으로 이동하기 위해 벽을 최소 몇 개 부수어야 하는지
+
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+// const [m, n] = input[0].split(' ').map(Number);
+// const maze = input.slice(1).map(v => v.split('').map(Number));
+
+// const bfs = ()=>{
+//   const deq=[[0,0]]
+//   const dist = Array.from({length:n}, ()=>Array(m).fill(Infinity))
+//   dist[0][0]=0;
+
+//   while(deq.length){
+//     const [x, y] =deq.shift()
+
+//     for(const [dx, dy] of dir){
+//       const nx=x+dx;
+//       const ny=y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<n&&ny<m){
+//         const next = dist[x][y]+maze[nx][ny]
+//         if(next<dist[nx][ny]){
+//           dist[nx][ny]=next
+//           if(maze[nx][ny]===1){
+//             deq.push([nx, ny])
+//           }else{
+//             deq.unshift([nx, ny])
+//           }
+//         }
+//       }
+//     }
+//   }
+
+//   return dist[n - 1][m - 1];
+// }
+
+// console.log(bfs())
+
+//18352-특정 거리의 도시 찾기
+
+//입력:
+//도시의 개수 N, 도로의 개수 M, 거리 정보 K, 출발 도시의 번호 X
+//A번 도시에서 B번 도시
+
+//알고리즘: 출발도시에서 다른 도시 -> 다익스트라
+//but 가중치가 1로 통일되어 있으므로 -> bfs가 나음
+
+//출력:
+//X로부터 출발하여 도달할 수 있는 도시
+//최단 거리가 K인 모든 도시의 번호
+//한 줄에 하나씩 오름차순
+//최단 거리가 K인 도시가 하나도 존재하지 않으면 -1을 출력
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const [n, e] = input[0].split(' ').map(Number)
-const [v1, v2] = input[e+1].split(' ').map(Number)
-const graph = Array.from({length: n+1}, ()=>[])
+const [N, M, K, X] = input[0].split(' ').map(Number);
 
-for(let i=1; i<=e; i++){
-  const [a, b, c] = input[i].split(' ').map(Number)
-  graph[a].push([b, c])
-  graph[b].push([a, c])
+const graph = Array.from({length:N+1}, ()=>[])
+
+for(let i=1; i<=M; i++){
+  const [a, b] = input[i].split(' ').map(Number)
+  graph[a].push(b)
 }
 
-class MinHeap{
-  constructor(){
-    this.heap=[]
-  }
+const dist = Array(N+1).fill(Infinity)
+dist[X]=0
 
-  push([node, dist]){
-    this.heap.push([node, dist])
-    this.bubbleUp()
-  }
+const queue=[X]
 
-  bubbleUp(){
-    let index =this.heap.length-1
-    let last =this.heap[index]
+while(queue.length){
+  const cur = queue.shift()
 
-    while(index>0){
-      let parentIndex = Math.floor((index-1)/2)
-
-      if(this.heap[parentIndex][1]<last[1]) break
-
-      this.heap[index]=this.heap[parentIndex]
-      index=parentIndex
+  for(const next of graph[cur]){
+    if(dist[next]===Infinity){
+      dist[next]=dist[cur]+1
+      queue.push(next)
     }
-
-    this.heap[index]=last
-  }
-
-  pop(){
-    if(this.heap.length===1) 
-      return this.heap.pop()
-    const top = this.heap[0]
-    this.heap[0]=this.heap.pop();
-    this.bubbleDown()
-    return top
-  }
-
-  bubbleDown(){
-    let index=0;
-    let top = this.heap[index]
-    let length = this.heap.length
-
-    while(true){
-      let leftChildIndex = index*2+1;
-      let rightChildIndex = index*2+2
-      let smallest = index
-
-      if(leftChildIndex<length&&this.heap[leftChildIndex][1]<this.heap[smallest][1]){
-        smallest=leftChildIndex
-      }
-
-      if(rightChildIndex<length&&this.heap[rightChildIndex][1]<this.heap[smallest][1]){
-        smallest=rightChildIndex
-      }
-
-      if(smallest===index) break
-      this.heap[index] = this.heap[smallest]
-      index=smallest
-    }
-
-    this.heap[index]=top
-  }
-
-  isEmpty(){
-    return this.heap.length===0
   }
 }
 
-const dijkstra = (start, n)=>{
-  const dist = Array(n+1).fill(Infinity)
-  dist[start]=0
+const r = [];
 
-  const pq = new MinHeap()
-  pq.push([start, 0]);
-
-  while(!pq.isEmpty()){
-    const [curNode, curDist] = pq.pop()
-
-    if(dist[curNode]<curDist) continue
-
-    for(const [nextNode, nextDist] of graph[curNode]){
-      const totalDist = curDist+nextDist
-
-      if(totalDist<dist[nextNode]){
-        dist[nextNode]=totalDist
-        pq.push([nextNode, totalDist])
-      }
-    }
+for(let i=1; i<=N; i++){
+  if(dist[i]===K){
+    r.push(i)
   }
-
-  return dist
 }
 
-// 1. 1에서 각 정점까지의 최단 경로
-const distFrom1 = dijkstra(1, n);
-
-// 2. v1에서 각 정점까지의 최단 경로
-const distFromV1 = dijkstra(v1, n);
-
-// 3. v2에서 각 정점까지의 최단 경로
-const distFromV2 = dijkstra(v2, n);
-
-// 경로 1: 1 -> v1 -> v2 -> N
-const path1 = distFrom1[v1] + distFromV1[v2] + distFromV2[n];
-
-// 경로 2: 1 -> v2 -> v1 -> N
-const path2 = distFrom1[v2] + distFromV2[v1] + distFromV1[n];
-
-
-// 두 경로 중 더 작은 값을 선택, 불가능하면 -1
-const result = Math.min(path1, path2);
-if (result >= Infinity) {
-  console.log(-1);
-} else {
-  console.log(result);
+if(r.length===0){
+  console.log(-1)
+}else{
+  console.log(r.sort((a, b) => a - b).join('\n'))
 }
