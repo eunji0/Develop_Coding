@@ -1547,45 +1547,104 @@
 //최단 거리가 K인 모든 도시의 번호
 //한 줄에 하나씩 오름차순
 //최단 거리가 K인 도시가 하나도 존재하지 않으면 -1을 출력
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [N, M, K, X] = input[0].split(' ').map(Number);
+
+// const graph = Array.from({length:N+1}, ()=>[])
+
+// for(let i=1; i<=M; i++){
+//   const [a, b] = input[i].split(' ').map(Number)
+//   graph[a].push(b)
+// }
+
+// const dist = Array(N+1).fill(Infinity)
+// dist[X]=0
+
+// const queue=[X]
+
+// while(queue.length){
+//   const cur = queue.shift()
+
+//   for(const next of graph[cur]){
+//     if(dist[next]===Infinity){
+//       dist[next]=dist[cur]+1
+//       queue.push(next)
+//     }
+//   }
+// }
+
+// const r = [];
+
+// for(let i=1; i<=N; i++){
+//   if(dist[i]===K){
+//     r.push(i)
+//   }
+// }
+
+// if(r.length===0){
+//   console.log(-1)
+// }else{
+//   console.log(r.sort((a, b) => a - b).join('\n'))
+// }
+
+
+
+//4485-녹색 옷 입은 애가 젤다지?
+
+//입력:
+//동굴의 크기를 나타내는 정수 N
+//N = 0인 입력이 주어지면 전체 입력이 종료
+
+//알고리즘: 
+//가중치가 있는 최단 경로 -> 다익스트라
+//BFS는 가중치가 모두 동일한 경우에 적합
+
+//출력: 링크가 잃을 수밖에 없는 최소 금액
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const [N, M, K, X] = input[0].split(' ').map(Number);
+const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
-const graph = Array.from({length:N+1}, ()=>[])
+let idx = 0;
+let problemNum = 1;
 
-for(let i=1; i<=M; i++){
-  const [a, b] = input[i].split(' ').map(Number)
-  graph[a].push(b)
-}
+while(true){
+  const n = +input[idx];
+  if(n===0) break
 
-const dist = Array(N+1).fill(Infinity)
-dist[X]=0
+  const cave = input.slice(idx+1, idx+1+n).map(v=>v.split(' ').map(Number))
+  idx+=(n+1)
+  
+  const pq = [[0,0,cave[0][0]]]
+  const dist = Array.from({length: n}, ()=>Array(n).fill(Infinity));
+  dist[0][0]=cave[0][0]
 
-const queue=[X]
+  while(pq.length){
+    pq.sort((a, b)=>a[2]-b[2])
+    const [x, y, cost] = pq.shift()
 
-while(queue.length){
-  const cur = queue.shift()
+    if(dist[x][y]<cost) continue
 
-  for(const next of graph[cur]){
-    if(dist[next]===Infinity){
-      dist[next]=dist[cur]+1
-      queue.push(next)
+    for(const [dx, dy] of dir){
+      const nx =x+dx;
+      const ny =y+dy;
+
+      if(nx>=0&&ny>=0&&nx<n&&ny<n){
+        const nextCost = cost+cave[nx][ny]
+
+        if(nextCost<dist[nx][ny]){
+          dist[nx][ny]=nextCost
+          pq.push([nx, ny, nextCost])
+        }
+      }
     }
   }
-}
 
-const r = [];
-
-for(let i=1; i<=N; i++){
-  if(dist[i]===K){
-    r.push(i)
-  }
-}
-
-if(r.length===0){
-  console.log(-1)
-}else{
-  console.log(r.sort((a, b) => a - b).join('\n'))
+  console.log(`Problem ${problemNum}: ${dist[n - 1][n - 1]}`);
+  problemNum++
 }
