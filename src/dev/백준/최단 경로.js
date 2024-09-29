@@ -1604,47 +1604,105 @@
 
 //출력: 링크가 잃을 수밖에 없는 최소 금액
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+
+// let idx = 0;
+// let problemNum = 1;
+
+// while(true){
+//   const n = +input[idx];
+//   if(n===0) break
+
+//   const cave = input.slice(idx+1, idx+1+n).map(v=>v.split(' ').map(Number))
+//   idx+=(n+1)
+  
+//   const pq = [[0,0,cave[0][0]]]
+//   const dist = Array.from({length: n}, ()=>Array(n).fill(Infinity));
+//   dist[0][0]=cave[0][0]
+
+//   while(pq.length){
+//     pq.sort((a, b)=>a[2]-b[2])
+//     const [x, y, cost] = pq.shift()
+
+//     if(dist[x][y]<cost) continue
+
+//     for(const [dx, dy] of dir){
+//       const nx =x+dx;
+//       const ny =y+dy;
+
+//       if(nx>=0&&ny>=0&&nx<n&&ny<n){
+//         const nextCost = cost+cave[nx][ny]
+
+//         if(nextCost<dist[nx][ny]){
+//           dist[nx][ny]=nextCost
+//           pq.push([nx, ny, nextCost])
+//         }
+//       }
+//     }
+//   }
+
+//   console.log(`Problem ${problemNum}: ${dist[n - 1][n - 1]}`);
+//   problemNum++
+// }
+
+
+//11657-타임머신
+
+//입력:
+// 도시의 개수 N, 버스 노선의 개수 M
+//A는 시작도시, B는 도착도시, C는 버스를 타고 이동하는데 걸리는 시간
+
+//알고리즘: 음수인 가중치가 있으므로 -> 벨만 포드 알고리즘
+//. C = 0인 경우는 순간 이동을 하는 경우
+//C < 0인 경우는 타임머신으로 시간을 되돌아가는 경우
+
+//출력:
+//1번 도시에서 출발해서 나머지 도시로 가는 가장 빠른 시간
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+function bellmanFord(start, edges, n) {
+  const distances = Array(n).fill(Infinity);
+  distances[start] = 0;
 
-let idx = 0;
-let problemNum = 1;
-
-while(true){
-  const n = +input[idx];
-  if(n===0) break
-
-  const cave = input.slice(idx+1, idx+1+n).map(v=>v.split(' ').map(Number))
-  idx+=(n+1)
-  
-  const pq = [[0,0,cave[0][0]]]
-  const dist = Array.from({length: n}, ()=>Array(n).fill(Infinity));
-  dist[0][0]=cave[0][0]
-
-  while(pq.length){
-    pq.sort((a, b)=>a[2]-b[2])
-    const [x, y, cost] = pq.shift()
-
-    if(dist[x][y]<cost) continue
-
-    for(const [dx, dy] of dir){
-      const nx =x+dx;
-      const ny =y+dy;
-
-      if(nx>=0&&ny>=0&&nx<n&&ny<n){
-        const nextCost = cost+cave[nx][ny]
-
-        if(nextCost<dist[nx][ny]){
-          dist[nx][ny]=nextCost
-          pq.push([nx, ny, nextCost])
-        }
+  for (let i = 0; i < n - 1; i++) {
+    for (const [u, v, weight] of edges) {
+      if (distances[u] !== Infinity && distances[u] + weight < distances[v]) {
+        distances[v] = distances[u] + weight;
       }
     }
   }
 
-  console.log(`Problem ${problemNum}: ${dist[n - 1][n - 1]}`);
-  problemNum++
+  for (const [u, v, weight] of edges) {
+    if (distances[u] !== Infinity && distances[u] + weight < distances[v]) {
+      return false
+    }
+  }
+
+  return distances;
+}
+
+const [n, m] = input[0].split(' ').map(Number)
+
+const edges = [];
+
+for (let i = 1; i <= m; i++) {
+  const [a, b, c] = input[i].split(' ').map(Number);
+  edges.push([a - 1, b - 1, c]);  // 간선 리스트에 저장
+}
+
+const r = bellmanFord(0, edges, n);
+
+if(!r){
+  console.log(-1)
+}else{
+  for(let i=1; i<n; i++){
+    console.log(r[i]===Infinity? -1 : r[i])
+  }
 }
