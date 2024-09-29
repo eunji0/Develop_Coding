@@ -1663,46 +1663,189 @@
 //출력:
 //1번 도시에서 출발해서 나머지 도시로 가는 가장 빠른 시간
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// function bellmanFord(start, edges, n) {
+//   const distances = Array(n).fill(Infinity);
+//   distances[start] = 0;
+
+//   for (let i = 0; i < n - 1; i++) {
+//     for (const [u, v, weight] of edges) {
+//       if (distances[u] !== Infinity && distances[u] + weight < distances[v]) {
+//         distances[v] = distances[u] + weight;
+//       }
+//     }
+//   }
+
+//   for (const [u, v, weight] of edges) {
+//     if (distances[u] !== Infinity && distances[u] + weight < distances[v]) {
+//       return false
+//     }
+//   }
+
+//   return distances;
+// }
+
+// const [n, m] = input[0].split(' ').map(Number)
+
+// const edges = [];
+
+// for (let i = 1; i <= m; i++) {
+//   const [a, b, c] = input[i].split(' ').map(Number);
+//   edges.push([a - 1, b - 1, c]);  // 간선 리스트에 저장
+// }
+
+// const r = bellmanFord(0, edges, n);
+
+// if(!r){
+//   console.log(-1)
+// }else{
+//   for(let i=1; i<n; i++){
+//     console.log(r[i]===Infinity? -1 : r[i])
+//   }
+// }
+
+
+//11779-최소비용 구하기2
+
+//입력:
+//도시의 개수 n 버스의 개수 m
+//셋째 줄부터 m+2줄까지 다음과 같은 버스의 정보
+//m+3째 줄에는 우리가 구하고자 하는 구간 출발점의 도시번호와 도착점의 도시번호
+
+//알고리즘: 
+//한 노드에서 다른 노드까지 -> 다익스트라 알고리즘
+
+//출력:
+//출발 도시에서 도착 도시까지 가는데 드는 최소 비용
+//최소 비용을 갖는 경로에 포함되어있는 도시의 개수
+// 최소 비용을 갖는 경로를 방문하는 도시 순서대로 출력
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-function bellmanFord(start, edges, n) {
-  const distances = Array(n).fill(Infinity);
-  distances[start] = 0;
+const n = +input[0]
+const m = +input[1]
+const arr = input.slice(2, m+2).map(v=>v.split(' ').map(Number))
+const [start, goal] = input[m+2].split(' ').map(Number)
 
-  for (let i = 0; i < n - 1; i++) {
-    for (const [u, v, weight] of edges) {
-      if (distances[u] !== Infinity && distances[u] + weight < distances[v]) {
-        distances[v] = distances[u] + weight;
+const graph=Array.from({length: n+1}, ()=>[])
+const prev = Array(n + 1).fill(null); 
+
+for(let i=0; i<arr.length; i++){
+  const [a, b, c] = arr[i]
+  graph[a].push([b, c])
+}
+
+class MinHeap{
+  constructor(){
+    this.heap=[]
+  }
+
+  push([node, dist]){
+    this.heap.push([node, dist])
+    this.bubbleUp()
+  }
+
+  bubbleUp(){
+    let index =this.heap.length-1
+    let last =this.heap[index]
+
+    while(index>0){
+      let parentIndex = Math.floor((index-1)/2)
+
+      if(this.heap[parentIndex][1]<last[1]) break
+
+      this.heap[index]=this.heap[parentIndex]
+      index=parentIndex
+    }
+
+    this.heap[index]=last
+  }
+
+  pop(){
+    if(this.heap.length===1) 
+      return this.heap.pop()
+    const top = this.heap[0]
+    this.heap[0]=this.heap.pop();
+    this.bubbleDown()
+    return top
+  }
+
+  bubbleDown(){
+    let index=0;
+    let top = this.heap[index]
+    let length = this.heap.length
+
+    while(true){
+      let leftChildIndex = index*2+1;
+      let rightChildIndex = index*2+2
+      let smallest = index
+
+      if(leftChildIndex<length&&this.heap[leftChildIndex][1]<this.heap[smallest][1]){
+        smallest=leftChildIndex
+      }
+
+      if(rightChildIndex<length&&this.heap[rightChildIndex][1]<this.heap[smallest][1]){
+        smallest=rightChildIndex
+      }
+
+      if(smallest===index) break
+      this.heap[index] = this.heap[smallest]
+      index=smallest
+    }
+
+    this.heap[index]=top
+  }
+
+  isEmpty(){
+    return this.heap.length===0
+  }
+}
+
+const dijkstra = (start, n)=>{
+  const dist = Array(n+1).fill(Infinity)
+  dist[start]=0
+
+  const pq = new MinHeap()
+  pq.push([start, 0]);
+
+  while(!pq.isEmpty()){
+    const [curNode, curDist] = pq.pop()
+
+    if(dist[curNode]<curDist) continue
+
+    for(const [nextNode, nextDist] of graph[curNode]){
+      const totalDist = curDist+nextDist
+
+      if(totalDist<dist[nextNode]){
+        dist[nextNode]=totalDist
+        pq.push([nextNode, totalDist])
+        prev[nextNode] = curNode
       }
     }
   }
 
-  for (const [u, v, weight] of edges) {
-    if (distances[u] !== Infinity && distances[u] + weight < distances[v]) {
-      return false
-    }
-  }
-
-  return distances;
+  return dist
 }
 
-const [n, m] = input[0].split(' ').map(Number)
+const r = dijkstra(start, n);
 
-const edges = [];
+console.log(r[goal]); 
 
-for (let i = 1; i <= m; i++) {
-  const [a, b, c] = input[i].split(' ').map(Number);
-  edges.push([a - 1, b - 1, c]);  // 간선 리스트에 저장
+let path = []
+
+let cur = goal
+
+while(cur){
+  path.push(cur)
+  cur=prev[cur]
 }
 
-const r = bellmanFord(0, edges, n);
+path.reverse()
 
-if(!r){
-  console.log(-1)
-}else{
-  for(let i=1; i<n; i++){
-    console.log(r[i]===Infinity? -1 : r[i])
-  }
-}
+console.log(path.length)
+console.log(path.join(' '))
