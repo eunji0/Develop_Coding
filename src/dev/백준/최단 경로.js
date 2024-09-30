@@ -1723,129 +1723,197 @@
 //최소 비용을 갖는 경로에 포함되어있는 도시의 개수
 // 최소 비용을 갖는 경로를 방문하는 도시 순서대로 출력
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const n = +input[0]
+// const m = +input[1]
+// const arr = input.slice(2, m+2).map(v=>v.split(' ').map(Number))
+// const [start, goal] = input[m+2].split(' ').map(Number)
+
+// const graph=Array.from({length: n+1}, ()=>[])
+// const prev = Array(n + 1).fill(null); 
+
+// for(let i=0; i<arr.length; i++){
+//   const [a, b, c] = arr[i]
+//   graph[a].push([b, c])
+// }
+
+// class MinHeap{
+//   constructor(){
+//     this.heap=[]
+//   }
+
+//   push([node, dist]){
+//     this.heap.push([node, dist])
+//     this.bubbleUp()
+//   }
+
+//   bubbleUp(){
+//     let index =this.heap.length-1
+//     let last =this.heap[index]
+
+//     while(index>0){
+//       let parentIndex = Math.floor((index-1)/2)
+
+//       if(this.heap[parentIndex][1]<last[1]) break
+
+//       this.heap[index]=this.heap[parentIndex]
+//       index=parentIndex
+//     }
+
+//     this.heap[index]=last
+//   }
+
+//   pop(){
+//     if(this.heap.length===1) 
+//       return this.heap.pop()
+//     const top = this.heap[0]
+//     this.heap[0]=this.heap.pop();
+//     this.bubbleDown()
+//     return top
+//   }
+
+//   bubbleDown(){
+//     let index=0;
+//     let top = this.heap[index]
+//     let length = this.heap.length
+
+//     while(true){
+//       let leftChildIndex = index*2+1;
+//       let rightChildIndex = index*2+2
+//       let smallest = index
+
+//       if(leftChildIndex<length&&this.heap[leftChildIndex][1]<this.heap[smallest][1]){
+//         smallest=leftChildIndex
+//       }
+
+//       if(rightChildIndex<length&&this.heap[rightChildIndex][1]<this.heap[smallest][1]){
+//         smallest=rightChildIndex
+//       }
+
+//       if(smallest===index) break
+//       this.heap[index] = this.heap[smallest]
+//       index=smallest
+//     }
+
+//     this.heap[index]=top
+//   }
+
+//   isEmpty(){
+//     return this.heap.length===0
+//   }
+// }
+
+// const dijkstra = (start, n)=>{
+//   const dist = Array(n+1).fill(Infinity)
+//   dist[start]=0
+
+//   const pq = new MinHeap()
+//   pq.push([start, 0]);
+
+//   while(!pq.isEmpty()){
+//     const [curNode, curDist] = pq.pop()
+
+//     if(dist[curNode]<curDist) continue
+
+//     for(const [nextNode, nextDist] of graph[curNode]){
+//       const totalDist = curDist+nextDist
+
+//       if(totalDist<dist[nextNode]){
+//         dist[nextNode]=totalDist
+//         pq.push([nextNode, totalDist])
+//         prev[nextNode] = curNode
+//       }
+//     }
+//   }
+
+//   return dist
+// }
+
+// const r = dijkstra(start, n);
+
+// console.log(r[goal]); 
+
+// let path = []
+
+// let cur = goal
+
+// while(cur){
+//   path.push(cur)
+//   cur=prev[cur]
+// }
+
+// path.reverse()
+
+// console.log(path.length)
+// console.log(path.join(' '))
+
+
+//1865-웜홀
+
+//입력:
+//테스트케이스의 개수 TC
+//지점의 수 N, 도로의 개수 M, 웜홀의 개수 W
+//두 번째 줄부터 M+1번째 줄에 도로의 정보(S와 E는 연결된 지점의 번호, T는 이 도로를 통해 이동하는데 걸리는 시간)
+//M+2번째 줄부터 M+W+1번째 줄까지 웜홀의 정보(S는 시작 지점, E는 도착 지점, T는 줄어드는 시간을)
+
+//알고리즘: 
+//음수가중치(웜홀)사용 -> 벨만포드 알고리즘
+
+//출력:
+//TC개의 줄에 걸쳐
+//출발 위치로 돌아오는 것이 가능하면 YES, 불가능하면 NO
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const n = +input[0]
-const m = +input[1]
-const arr = input.slice(2, m+2).map(v=>v.split(' ').map(Number))
-const [start, goal] = input[m+2].split(' ').map(Number)
+const bellmanFord=(n, edges, start)=>{
+  const dist = Array(n+1).fill(false)
+  dist[start]=0;
 
-const graph=Array.from({length: n+1}, ()=>[])
-const prev = Array(n + 1).fill(null); 
-
-for(let i=0; i<arr.length; i++){
-  const [a, b, c] = arr[i]
-  graph[a].push([b, c])
-}
-
-class MinHeap{
-  constructor(){
-    this.heap=[]
-  }
-
-  push([node, dist]){
-    this.heap.push([node, dist])
-    this.bubbleUp()
-  }
-
-  bubbleUp(){
-    let index =this.heap.length-1
-    let last =this.heap[index]
-
-    while(index>0){
-      let parentIndex = Math.floor((index-1)/2)
-
-      if(this.heap[parentIndex][1]<last[1]) break
-
-      this.heap[index]=this.heap[parentIndex]
-      index=parentIndex
-    }
-
-    this.heap[index]=last
-  }
-
-  pop(){
-    if(this.heap.length===1) 
-      return this.heap.pop()
-    const top = this.heap[0]
-    this.heap[0]=this.heap.pop();
-    this.bubbleDown()
-    return top
-  }
-
-  bubbleDown(){
-    let index=0;
-    let top = this.heap[index]
-    let length = this.heap.length
-
-    while(true){
-      let leftChildIndex = index*2+1;
-      let rightChildIndex = index*2+2
-      let smallest = index
-
-      if(leftChildIndex<length&&this.heap[leftChildIndex][1]<this.heap[smallest][1]){
-        smallest=leftChildIndex
-      }
-
-      if(rightChildIndex<length&&this.heap[rightChildIndex][1]<this.heap[smallest][1]){
-        smallest=rightChildIndex
-      }
-
-      if(smallest===index) break
-      this.heap[index] = this.heap[smallest]
-      index=smallest
-    }
-
-    this.heap[index]=top
-  }
-
-  isEmpty(){
-    return this.heap.length===0
-  }
-}
-
-const dijkstra = (start, n)=>{
-  const dist = Array(n+1).fill(Infinity)
-  dist[start]=0
-
-  const pq = new MinHeap()
-  pq.push([start, 0]);
-
-  while(!pq.isEmpty()){
-    const [curNode, curDist] = pq.pop()
-
-    if(dist[curNode]<curDist) continue
-
-    for(const [nextNode, nextDist] of graph[curNode]){
-      const totalDist = curDist+nextDist
-
-      if(totalDist<dist[nextNode]){
-        dist[nextNode]=totalDist
-        pq.push([nextNode, totalDist])
-        prev[nextNode] = curNode
+  for(let i=1; i<n; i++){
+    for(const [u, v, w] of edges){
+      if(dist[u]!==Infinity&&dist[u]+w<dist[v]){
+        dist[v]=dist[u]+w
       }
     }
   }
 
-  return dist
+  for(const [u, v, w] of edges){
+    if(dist[u]!==Infinity&&dist[u]+w<dist[v]){
+      return true
+    }
+  }
+
+  return false
 }
 
-const r = dijkstra(start, n);
+const tc = +input[0];
+let index = 1
 
-console.log(r[goal]); 
+for(let i=0; i<tc; i++){
+  const [n, m, w] = input[index++].split(' ').map(Number)
+  let edges = []
 
-let path = []
+  for(let i=0; i<m; i++){
+    const [s, e, t] = input[index++].split(' ').map(Number)
+    edges.push([s, e, t])
+    edges.push([e, s, t])
+  }
 
-let cur = goal
+  for(let i=0; i<w; i++){
+    const [s, e, t] = input[index++].split(' ').map(Number)
+    edges.push([s, e, -t])
+  }
 
-while(cur){
-  path.push(cur)
-  cur=prev[cur]
+  const h= bellmanFord(n, edges, 1)
+  
+  if(h){
+    console.log('YES')
+  }else{
+    console.log('NO')
+  }
 }
-
-path.reverse()
-
-console.log(path.length)
-console.log(path.join(' '))
