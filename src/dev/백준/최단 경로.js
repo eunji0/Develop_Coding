@@ -1866,54 +1866,111 @@
 //TC개의 줄에 걸쳐
 //출발 위치로 돌아오는 것이 가능하면 YES, 불가능하면 NO
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const bellmanFord=(n, edges, start)=>{
+//   const dist = Array(n+1).fill(false)
+//   dist[start]=0;
+
+//   for(let i=1; i<n; i++){
+//     for(const [u, v, w] of edges){
+//       if(dist[u]!==Infinity&&dist[u]+w<dist[v]){
+//         dist[v]=dist[u]+w
+//       }
+//     }
+//   }
+
+//   for(const [u, v, w] of edges){
+//     if(dist[u]!==Infinity&&dist[u]+w<dist[v]){
+//       return true
+//     }
+//   }
+
+//   return false
+// }
+
+// const tc = +input[0];
+// let index = 1
+
+// for(let i=0; i<tc; i++){
+//   const [n, m, w] = input[index++].split(' ').map(Number)
+//   let edges = []
+
+//   for(let i=0; i<m; i++){
+//     const [s, e, t] = input[index++].split(' ').map(Number)
+//     edges.push([s, e, t])
+//     edges.push([e, s, t])
+//   }
+
+//   for(let i=0; i<w; i++){
+//     const [s, e, t] = input[index++].split(' ').map(Number)
+//     edges.push([s, e, -t])
+//   }
+
+//   const h= bellmanFord(n, edges, 1)
+  
+//   if(h){
+//     console.log('YES')
+//   }else{
+//     console.log('NO')
+//   }
+// }
+
+
+//2458-키순서
+
+//입력:
+//학생들의 수 N, 두 학생 키를 비교한 횟수 M
+//서로 다른 양의 정수 a와 b
+
+//알고리즘: 
+//모든 노드를 비교 -> 플로이드 워셜
+
+//출력:
+//자신이 키가 몇 번째인지 알 수 있는 학생이 모두 몇 명인지
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const bellmanFord=(n, edges, start)=>{
-  const dist = Array(n+1).fill(false)
-  dist[start]=0;
+const [n, m] = input[0].split(' ').map(Number)
+const dist = Array.from({length: n+1}, ()=>Array(n+1).fill(Infinity))
 
-  for(let i=1; i<n; i++){
-    for(const [u, v, w] of edges){
-      if(dist[u]!==Infinity&&dist[u]+w<dist[v]){
-        dist[v]=dist[u]+w
+for(let i=1; i<=n; i++){
+  dist[i][i]=0
+}
+
+for(let i=1; i<=m; i++){
+  const [a, b] = input[i].split(' ').map(Number)
+  dist[a][b]=1
+}
+
+for(let k=1; k<=n; k++){
+  for(let i=1; i<=n; i++){
+    for(let j=1; j<=n; j++){
+      if(dist[i][j]>dist[i][k]+dist[k][j]){
+        dist[i][j]=dist[i][k]+dist[k][j]
       }
     }
   }
+}
 
-  for(const [u, v, w] of edges){
-    if(dist[u]!==Infinity&&dist[u]+w<dist[v]){
-      return true
+let r = 0;
+
+for(let i=1; i<=n; i++){
+  let k =0;
+
+  for(let j=1; j<=n; j++){
+    if(dist[i][j]!==Infinity||dist[j][i]!==Infinity){
+      k++
     }
   }
 
-  return false
-}
-
-const tc = +input[0];
-let index = 1
-
-for(let i=0; i<tc; i++){
-  const [n, m, w] = input[index++].split(' ').map(Number)
-  let edges = []
-
-  for(let i=0; i<m; i++){
-    const [s, e, t] = input[index++].split(' ').map(Number)
-    edges.push([s, e, t])
-    edges.push([e, s, t])
-  }
-
-  for(let i=0; i<w; i++){
-    const [s, e, t] = input[index++].split(' ').map(Number)
-    edges.push([s, e, -t])
-  }
-
-  const h= bellmanFord(n, edges, 1)
-  
-  if(h){
-    console.log('YES')
-  }else{
-    console.log('NO')
+  if(k===n){
+    r++
   }
 }
+
+console.log(r)
