@@ -1931,25 +1931,84 @@
 //출력:
 //자신이 키가 몇 번째인지 알 수 있는 학생이 모두 몇 명인지
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [n, m] = input[0].split(' ').map(Number)
+// const dist = Array.from({length: n+1}, ()=>Array(n+1).fill(Infinity))
+
+// for(let i=1; i<=n; i++){
+//   dist[i][i]=0
+// }
+
+// for(let i=1; i<=m; i++){
+//   const [a, b] = input[i].split(' ').map(Number)
+//   dist[a][b]=1
+// }
+
+// for(let k=1; k<=n; k++){
+//   for(let i=1; i<=n; i++){
+//     for(let j=1; j<=n; j++){
+//       if(dist[i][j]>dist[i][k]+dist[k][j]){
+//         dist[i][j]=dist[i][k]+dist[k][j]
+//       }
+//     }
+//   }
+// }
+
+// let r = 0;
+
+// for(let i=1; i<=n; i++){
+//   let k =0;
+
+//   for(let j=1; j<=n; j++){
+//     if(dist[i][j]!==Infinity||dist[j][i]!==Infinity){
+//       k++
+//     }
+//   }
+
+//   if(k===n){
+//     r++
+//   }
+// }
+
+// console.log(r)
+
+
+//1956-운동
+
+//입력:
+//V개의 마을와 E개의 도로
+// a번 마을에서 b번 마을로 가는 거리가 c인 도로
+
+//알고리즘: 
+//모든 노드를 비교 -> 플로이드 워셜
+
+//출력:
+//최소 사이클의 도로 길이의 합
+//운동 경로를 찾는 것이 불가능한 경우에는 -1
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const [n, m] = input[0].split(' ').map(Number)
-const dist = Array.from({length: n+1}, ()=>Array(n+1).fill(Infinity))
+const [v, e] = input[0].split(' ').map(Number)
 
-for(let i=1; i<=n; i++){
+const dist = Array.from({length:v+1}, ()=>Array(v+1).fill(Infinity))
+
+for(let i=1; i<=v; i++){
   dist[i][i]=0
 }
 
-for(let i=1; i<=m; i++){
-  const [a, b] = input[i].split(' ').map(Number)
-  dist[a][b]=1
+for(let i=1; i<=e; i++){
+  const [a, b, c] = input[i].split(' ').map(Number)
+  dist[a][b]=c
 }
 
-for(let k=1; k<=n; k++){
-  for(let i=1; i<=n; i++){
-    for(let j=1; j<=n; j++){
+for(let k=1; k<=v; k++){
+  for(let i=1; i<=v; i++){
+    for(let j=1; j<=v; j++){
       if(dist[i][j]>dist[i][k]+dist[k][j]){
         dist[i][j]=dist[i][k]+dist[k][j]
       }
@@ -1957,20 +2016,18 @@ for(let k=1; k<=n; k++){
   }
 }
 
-let r = 0;
+let m = Infinity
 
-for(let i=1; i<=n; i++){
-  let k =0;
-
-  for(let j=1; j<=n; j++){
-    if(dist[i][j]!==Infinity||dist[j][i]!==Infinity){
-      k++
+for(let i=1; i<=v; i++){
+  for(let j=1; j<=v; j++){
+    if(i!==j&&dist[i][j]!==Infinity&&dist[j][i]!==Infinity){
+      m=Math.min(m, dist[i][j]+dist[j][i])
     }
-  }
-
-  if(k===n){
-    r++
   }
 }
 
-console.log(r)
+if(m===Infinity){
+  console.log(-1)
+}else{
+  console.log(m)
+}
