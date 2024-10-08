@@ -377,3 +377,25 @@ function solution(n, m, section) {
 
   return count;
 }
+
+//대충 만든 자판
+//몇번 눌렀는지 count
+//키맵에서 현재 몇번 자판 위치에 있는지
+//키맵 전체에서 적은 버튼 수를 뽑아야 함
+
+//map들 중 x를 찾아 제일 작은 값을 리턴
+
+function solution(keymap, targets) {
+  let answer = [];
+  let map = new Map();
+
+  for (const key of keymap) {
+    key.split('').map((v, i) => (map[v] = map[v] < i + 1 ? map[v] : i + 1));
+  }
+
+  for (const target of targets) {
+    answer.push(target.split('').reduce((a, c) => (a += map[c]), 0) || -1);
+  }
+
+  return answer;
+}
