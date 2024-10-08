@@ -348,7 +348,6 @@ function solution(wallpaper) {
   let maxx = 0;
   let maxy = 0;
 
-  console.log(files);
   files.forEach(([a, b]) => {
     minx = Math.min(minx, a);
     miny = Math.min(miny, b);
@@ -356,5 +355,25 @@ function solution(wallpaper) {
     maxy = Math.max(maxy, b);
   });
 
-  return [minx, miny, maxx, maxy];
+  return [minx, miny, maxx + 1, maxy + 1];
+}
+
+//덧칠하기
+
+//벽길이 나열 (false)
+//칠해야 하는 부분 true
+//페인트를 칠하며 false로 표기
+
+function solution(n, m, section) {
+  let count = 0;
+  let now = 0;
+
+  for (const s of section) {
+    if (now < s) {
+      count++;
+      now = s + m - 1;
+    }
+  }
+
+  return count;
 }
