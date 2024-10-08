@@ -399,3 +399,19 @@ function solution(keymap, targets) {
 
   return answer;
 }
+
+//카드뭉치
+function solution(cards1, cards2, goal) {
+  while (goal.length) {
+    let now = goal.shift();
+
+    if (cards1[0] === now) {
+      cards1.shift();
+    } else if (cards2[0] === now) {
+      cards2.shift();
+    } else {
+      return 'No';
+    }
+  }
+  return 'Yes';
+}
