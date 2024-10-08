@@ -214,3 +214,26 @@ function solution(players, callings) {
 
   return players
 }
+
+//추억점수
+function solution(name, yearning, photo) {
+  let s = new Map()
+  let result = []
+  
+  name.forEach((v, i)=>{
+      s.set(v, yearning[i])
+  })
+  
+  for(let i=0; i<photo.length; i++){
+      let arr = photo[i]
+      let total = 0;
+      
+      arr.forEach(c=>{
+          total+=s.get(c)||0
+      })
+      
+      result.push(total)
+  }
+  
+  return result
+}
