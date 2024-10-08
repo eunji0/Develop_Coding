@@ -188,3 +188,29 @@ function solution(bandage, health, attacks) {
 
   return health
 }
+
+//달리기 경주
+function solution(players, callings) {
+  let s = new Map()
+
+  players.forEach((v, i)=>{
+    s.set(v, i)
+  })
+
+  callings.forEach(v=>{
+    let curIdx = s.get(v)
+
+    if(curIdx>0){
+      let prevIdx = curIdx-1
+      let prevP = players[prevIdx]
+
+      players[curIdx]=prevP
+      players[prevIdx]=v
+
+      s.set(v, prevIdx)
+      s.set(prevP, curIdx)
+    }
+  })
+
+  return players
+}
