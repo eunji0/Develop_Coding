@@ -321,3 +321,40 @@ function solution(park, routes) {
   }
   return [start[0], start[1]];
 }
+
+//바탕화면 정리
+
+//파일들의 위치들을 모은 배열
+//파일들의 위치들 중 x와 y가 가장 작은 값과 큰 값을 뽑음
+//배열 반환
+
+function solution(wallpaper) {
+  let n = wallpaper.length;
+  let m = wallpaper[0].length;
+
+  let files = [];
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      if (wallpaper[i][j] === '#') {
+        files.push([i, j]);
+      }
+    }
+  }
+
+  let minx = Infinity;
+  let miny = Infinity;
+
+  let maxx = 0;
+  let maxy = 0;
+
+  console.log(files);
+  files.forEach(([a, b]) => {
+    minx = Math.min(minx, a);
+    miny = Math.min(miny, b);
+    maxx = Math.max(maxx, a);
+    maxy = Math.max(maxy, b);
+  });
+
+  return [minx, miny, maxx, maxy];
+}
