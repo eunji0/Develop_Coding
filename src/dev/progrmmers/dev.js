@@ -111,3 +111,80 @@ function solution(video_len, pos, op_start, op_end, commands) {
   return transStr(pos);
 }
 
+//가장 많이 받은 선물
+
+//친구 이름을 인덱스에 대응시키기 위한 맵
+//선물을 주고받은 기록을 저장하는 2차원 배열
+//각 친구가 받은 선물 지수를 계산하기 위한 배열
+//다음 달에 선물을 받을 친구의 수를 기록하는 배열
+
+function solution(friends, gifts) {
+  const len = friends.length;
+  const nameMap = new Map();
+  const giftTable = new Array(len).fill(0).map(_ => new Array(len).fill(0));
+  const rankInfo = new Array(len).fill(0);
+  const nextMonth = new Array(len).fill(0);
+
+  friends.forEach((v, i)=>{
+    nameMap.set(v, i)
+  })
+
+  gifts.forEach(v=>{
+    const [from, to] =v.split(' ')
+    giftTable[nameMap.get(from)][nameMap.get(to)]++
+  })
+
+  for(let i=0; i<len; i++){
+    rankInfo[i]=giftTable[i].reduce((a, c)=>a+=c, 0)
+
+    for(let j=0; j<len; j++){
+      rankInfo[i]-=giftTable[j][i]
+    }
+  }
+
+  for(let i=0; i<len; i++){
+    for(let j=i+1; j<len; j++){
+      if(giftTable[i][j]>giftTable[j][i]) nextMonth[i]++
+      if(giftTable[i][j]<giftTable[j][i]) nextMonth[j]++
+      if(giftTable[i][j]===giftTable[j][i]){
+        if(rankInfo[i]>rankInfo[j]) nextMonth[i]++
+        if(rankInfo[i]<rankInfo[j]) nextMonth[j]++
+      }
+    }
+  }
+
+  return Math.max(...nextMonth)
+}
+
+//붕대 감기
+//t초 동안 붕대를 감으면서 1초마다 x만큼의 체력을 회복
+// t초 연속으로 붕대를 감는 데 성공한다면 y만큼의 체력을 추가로 회복
+// 현재 체력이 최대 체력보다 커지는 것은 불가능
+
+//최대 체력을 넘는지 확인하는 메서드
+//최대체력을 넘는다면 0 아니면 초당 회복량을 더함
+//연속 성공 상태, 연속 성공을 성공한다면 초당회복량과 추가 회복량을 더함
+
+function solution(bandage, health, attacks) {
+  const maxHealth = health
+
+  const [t, x, y] = bandage
+
+  const lastTimeAttacks = 0;
+
+  for(const [attackTime, damage] of attacks){
+    const timeDiff = attackTime-lastTimeAttacks-1
+
+    const heal = timeDiff*x+Math.floor(timeDiff/t)*y
+
+    health = Math.min(health+heal, maxHealth)
+
+    health-=damage
+
+    if(health<=0) return -1
+
+    lastTimeAttacks=attackTime
+  }
+
+  return health
+}
