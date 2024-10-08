@@ -1,36 +1,36 @@
 //완주하지 못한 선수
 function solution(participant, completion) {
-  participant.sort()
-  completion.sort()
-  for(let i=0; i<participant.length; i++){
-      if(participant[i]!==completion[i]){
-          return participant[i]
-      }
+  participant.sort();
+  completion.sort();
+  for (let i = 0; i < participant.length; i++) {
+    if (participant[i] !== completion[i]) {
+      return participant[i];
+    }
   }
 }
 
 //전화번호 목록
 function solution(phone_book) {
-  phone_book.sort()
+  phone_book.sort();
 
-  for(let i=0; i<phone_book.length-1; i++){
-    if(phone_book[i+1].startsWith(phone_book[i])){
-      return false
+  for (let i = 0; i < phone_book.length - 1; i++) {
+    if (phone_book[i + 1].startsWith(phone_book[i])) {
+      return false;
     }
   }
 
-  return true
+  return true;
 }
 
 //의상
 function solution(clothes) {
-  let count = new Map()
+  let count = new Map();
 
-  clothes.forEach(v=>{
-    count.set(v[1], (count.get(v[1])||0)+1)
-  })
+  clothes.forEach((v) => {
+    count.set(v[1], (count.get(v[1]) || 0) + 1);
+  });
 
-  return [...count.values()].reduce((a, c)=>a*(c+1), 1)-1
+  return [...count.values()].reduce((a, c) => a * (c + 1), 1) - 1;
 }
 
 //[PCCP 기출문제] 1번 / 동영상 재생기
@@ -121,39 +121,39 @@ function solution(video_len, pos, op_start, op_end, commands) {
 function solution(friends, gifts) {
   const len = friends.length;
   const nameMap = new Map();
-  const giftTable = new Array(len).fill(0).map(_ => new Array(len).fill(0));
+  const giftTable = new Array(len).fill(0).map((_) => new Array(len).fill(0));
   const rankInfo = new Array(len).fill(0);
   const nextMonth = new Array(len).fill(0);
 
-  friends.forEach((v, i)=>{
-    nameMap.set(v, i)
-  })
+  friends.forEach((v, i) => {
+    nameMap.set(v, i);
+  });
 
-  gifts.forEach(v=>{
-    const [from, to] =v.split(' ')
-    giftTable[nameMap.get(from)][nameMap.get(to)]++
-  })
+  gifts.forEach((v) => {
+    const [from, to] = v.split(' ');
+    giftTable[nameMap.get(from)][nameMap.get(to)]++;
+  });
 
-  for(let i=0; i<len; i++){
-    rankInfo[i]=giftTable[i].reduce((a, c)=>a+=c, 0)
+  for (let i = 0; i < len; i++) {
+    rankInfo[i] = giftTable[i].reduce((a, c) => (a += c), 0);
 
-    for(let j=0; j<len; j++){
-      rankInfo[i]-=giftTable[j][i]
+    for (let j = 0; j < len; j++) {
+      rankInfo[i] -= giftTable[j][i];
     }
   }
 
-  for(let i=0; i<len; i++){
-    for(let j=i+1; j<len; j++){
-      if(giftTable[i][j]>giftTable[j][i]) nextMonth[i]++
-      if(giftTable[i][j]<giftTable[j][i]) nextMonth[j]++
-      if(giftTable[i][j]===giftTable[j][i]){
-        if(rankInfo[i]>rankInfo[j]) nextMonth[i]++
-        if(rankInfo[i]<rankInfo[j]) nextMonth[j]++
+  for (let i = 0; i < len; i++) {
+    for (let j = i + 1; j < len; j++) {
+      if (giftTable[i][j] > giftTable[j][i]) nextMonth[i]++;
+      if (giftTable[i][j] < giftTable[j][i]) nextMonth[j]++;
+      if (giftTable[i][j] === giftTable[j][i]) {
+        if (rankInfo[i] > rankInfo[j]) nextMonth[i]++;
+        if (rankInfo[i] < rankInfo[j]) nextMonth[j]++;
       }
     }
   }
 
-  return Math.max(...nextMonth)
+  return Math.max(...nextMonth);
 }
 
 //붕대 감기
@@ -166,74 +166,158 @@ function solution(friends, gifts) {
 //연속 성공 상태, 연속 성공을 성공한다면 초당회복량과 추가 회복량을 더함
 
 function solution(bandage, health, attacks) {
-  const maxHealth = health
+  const maxHealth = health;
 
-  const [t, x, y] = bandage
+  const [t, x, y] = bandage;
 
   const lastTimeAttacks = 0;
 
-  for(const [attackTime, damage] of attacks){
-    const timeDiff = attackTime-lastTimeAttacks-1
+  for (const [attackTime, damage] of attacks) {
+    const timeDiff = attackTime - lastTimeAttacks - 1;
 
-    const heal = timeDiff*x+Math.floor(timeDiff/t)*y
+    const heal = timeDiff * x + Math.floor(timeDiff / t) * y;
 
-    health = Math.min(health+heal, maxHealth)
+    health = Math.min(health + heal, maxHealth);
 
-    health-=damage
+    health -= damage;
 
-    if(health<=0) return -1
+    if (health <= 0) return -1;
 
-    lastTimeAttacks=attackTime
+    lastTimeAttacks = attackTime;
   }
 
-  return health
+  return health;
 }
 
 //달리기 경주
 function solution(players, callings) {
-  let s = new Map()
+  let s = new Map();
 
-  players.forEach((v, i)=>{
-    s.set(v, i)
-  })
+  players.forEach((v, i) => {
+    s.set(v, i);
+  });
 
-  callings.forEach(v=>{
-    let curIdx = s.get(v)
+  callings.forEach((v) => {
+    let curIdx = s.get(v);
 
-    if(curIdx>0){
-      let prevIdx = curIdx-1
-      let prevP = players[prevIdx]
+    if (curIdx > 0) {
+      let prevIdx = curIdx - 1;
+      let prevP = players[prevIdx];
 
-      players[curIdx]=prevP
-      players[prevIdx]=v
+      players[curIdx] = prevP;
+      players[prevIdx] = v;
 
-      s.set(v, prevIdx)
-      s.set(prevP, curIdx)
+      s.set(v, prevIdx);
+      s.set(prevP, curIdx);
     }
-  })
+  });
 
-  return players
+  return players;
 }
 
 //추억점수
 function solution(name, yearning, photo) {
-  let s = new Map()
-  let result = []
-  
-  name.forEach((v, i)=>{
-      s.set(v, yearning[i])
-  })
-  
-  for(let i=0; i<photo.length; i++){
-      let arr = photo[i]
-      let total = 0;
-      
-      arr.forEach(c=>{
-          total+=s.get(c)||0
-      })
-      
-      result.push(total)
+  let s = new Map();
+  let result = [];
+
+  name.forEach((v, i) => {
+    s.set(v, yearning[i]);
+  });
+
+  for (let i = 0; i < photo.length; i++) {
+    let arr = photo[i];
+    let total = 0;
+
+    arr.forEach((c) => {
+      total += s.get(c) || 0;
+    });
+
+    result.push(total);
   }
-  
-  return result
+
+  return result;
+}
+
+//공원 산책
+function solution(park, routes) {
+  let start = [];
+
+  let n = park.length;
+
+  for (let i = 0; i < n; i++) {
+    park[i] = park[i].split('');
+  }
+
+  let m = park[0].length;
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      if (park[i][j] === 'S') {
+        start = [i, j];
+      }
+    }
+  }
+
+  while (routes.length) {
+    let [dir, num] = routes.shift().split(' ');
+    num = parseInt(num);
+
+    let newStart = [...start];
+    let block = false;
+
+    if (dir === 'E') {
+      if (start[1] + num >= m) {
+        continue;
+      } else {
+        for (let i = 1; i <= num; i++) {
+          if (park[start[0]][start[1] + i] === 'X') {
+            block = true;
+            break;
+          }
+        }
+        if (!block) newStart[1] += num;
+      }
+    } else if (dir === 'W') {
+      if (start[1] - num < 0) {
+        continue;
+      } else {
+        for (let i = 1; i <= num; i++) {
+          if (park[start[0]][start[1] - i] === 'X') {
+            block = true;
+            break;
+          }
+        }
+        if (!block) newStart[1] -= num;
+      }
+    } else if (dir === 'S') {
+      if (start[0] + num >= n) {
+        continue;
+      } else {
+        for (let i = 1; i <= num; i++) {
+          if (park[start[0] + i][start[1]] === 'X') {
+            block = true;
+            break;
+          }
+        }
+        if (!block) newStart[0] += num;
+      }
+    } else if (dir === 'N') {
+      if (start[0] - num < 0) {
+        continue;
+      } else {
+        for (let i = 1; i <= num; i++) {
+          if (park[start[0] - i][start[1]] === 'X') {
+            block = true;
+            break;
+          }
+        }
+        if (!block) newStart[0] -= num;
+      }
+    }
+
+    if (!block) {
+      start = newStart;
+    }
+  }
+  return [start[0], start[1]];
 }
