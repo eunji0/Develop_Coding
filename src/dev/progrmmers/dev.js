@@ -546,3 +546,30 @@ function solution(k, score) {
 
   return result;
 }
+
+//기사 단원의 무기
+const nn = (n) => {
+  let count = 0;
+  for (let i = 1; i * i <= n; i++) {
+    if (n % i === 0) {
+      count++;
+      if (i !== n / i) {
+        count++;
+      }
+    }
+  }
+  return count;
+};
+
+function solution(number, limit, power) {
+  let arr = [];
+  let result = 0;
+
+  for (let i = 1; i <= number; i++) {
+    arr.push(nn(i));
+  }
+
+  arr.forEach((v) => (v > limit ? (result += power) : (result += v)));
+
+  return result;
+}
