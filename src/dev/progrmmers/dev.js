@@ -526,3 +526,23 @@ function solution(s) {
 
   return answer;
 }
+
+//명예의 전당(1)
+function solution(k, score) {
+  let home = [];
+  let result = [];
+
+  while (score.length) {
+    let nowScore = score.shift();
+    home.push(nowScore);
+    home.sort((a, b) => b - a);
+
+    if (home.length > k) {
+      home.pop();
+    }
+
+    result.push(home[home.length - 1]);
+  }
+
+  return result;
+}
