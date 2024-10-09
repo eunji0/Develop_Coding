@@ -415,3 +415,48 @@ function solution(cards1, cards2, goal) {
   }
   return 'Yes';
 }
+
+//둘만의 암호
+function solution(s, skip, index) {
+  const alphabet = [
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z',
+  ];
+
+  let skips = skip.split('');
+
+  let remake = alphabet.filter((v) => !skips.includes(v));
+
+  let result = '';
+
+  s.split('').map((v) => {
+    let n = remake.indexOf(v) + index;
+    result += remake[n % remake.length];
+  });
+
+  return result;
+}
