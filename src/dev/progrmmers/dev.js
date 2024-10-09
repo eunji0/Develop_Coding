@@ -460,3 +460,41 @@ function solution(s, skip, index) {
 
   return result;
 }
+
+//개인정보 수집 유효기간
+function solution(today, terms, privacies) {
+  let result = [];
+  const t = today.split('.').map(Number);
+  const dates = t[0] * 12 * 28 + t[1] * 28 + t[2];
+
+  const tt = {};
+  terms.forEach((v) => {
+    let [a, b] = v.split(' ');
+    tt[a] = Number(b);
+  });
+
+  privacies.forEach((e, i) => {
+    const [day, n] = e.split(' ');
+    const dd = day.split('.').map(Number);
+    const days = dd[0] * 12 * 28 + dd[1] * 28 + dd[2] + tt[n] * 28;
+
+    if (days <= dates) result.push(i + 1);
+  });
+
+  return result;
+}
+
+//크기가 작은 부분 문자열
+function solution(t, p) {
+  let len = p.length;
+  let result = 0;
+
+  for (let i = 0; i < t.length - len + 1; i++) {
+    let num = t.slice(i, i + len);
+    if (Number(num) <= Number(p)) {
+      result++;
+    }
+  }
+
+  return result;
+}
