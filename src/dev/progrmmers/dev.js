@@ -498,3 +498,11 @@ function solution(t, p) {
 
   return result;
 }
+
+//가장 가까운 같은 글자
+function solution(s) {
+  return [...s].map((v, i) => {
+    let count = s.slice(0, i).lastIndexOf(v);
+    return count < 0 ? count : i - count;
+  });
+}
