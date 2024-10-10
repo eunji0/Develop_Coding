@@ -573,3 +573,21 @@ function solution(number, limit, power) {
 
   return result;
 }
+
+//과일 장수
+function solution(k, m, score) {
+  score.sort((a, b) => b - a);
+  let result = 0;
+
+  for (let i = 0; i < score.length; i++) {
+    const arr = score.slice(i, i + m);
+    console.log(arr);
+
+    if (arr.length === m) {
+      result += arr[m - 1] * m;
+    }
+    i = i + m - 1;
+  }
+
+  return result;
+}
