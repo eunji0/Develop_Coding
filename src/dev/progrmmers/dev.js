@@ -591,3 +591,17 @@ function solution(k, m, score) {
 
   return result;
 }
+
+//푸드 파이트 대회
+function solution(food) {
+  var answer = '';
+
+  for (let i = 1; i < food.length; i++) {
+    let n = food[i];
+    if (n % 2 === 1) {
+      n -= 1;
+    }
+    answer += `${i}`.repeat(n / 2);
+  }
+  return answer + '0' + answer.split('').reverse().join('');
+}
