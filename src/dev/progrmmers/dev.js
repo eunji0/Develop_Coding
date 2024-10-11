@@ -765,3 +765,24 @@ function solution(n) {
     }
   }
 }
+
+//최소직사각형
+function solution(sizes) {
+  sizes.forEach((v) => {
+    let [a, b] = v;
+    if (a < b) {
+      v[0] = b;
+      v[1] = a;
+    }
+  });
+
+  sizes.sort((a, b) => b[0] - a[0]);
+
+  let a = sizes[0][0];
+
+  sizes.sort((a, b) => b[1] - a[1]);
+
+  let b = sizes[0][1];
+
+  return a * b;
+}
