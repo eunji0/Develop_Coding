@@ -653,3 +653,22 @@ function solution(a, b, n) {
 
   return s;
 }
+
+//삼총사
+function solution(number) {
+  let result = 0;
+
+  const com = (cur, start) => {
+    if (cur.length === 3) {
+      result += cur.reduce((a, c) => a + c, 0) === 0 ? 1 : 0;
+      return;
+    }
+
+    for (let i = start; i < number.length; i++) {
+      com([...cur, number[i]], i + 1);
+    }
+  };
+
+  com([], 0);
+  return result;
+}
