@@ -723,3 +723,36 @@ function solution(survey, choices) {
 
   return types.map(([a, b]) => (MBTI[b] > MBTI[a] ? b : a)).join('');
 }
+
+//신고 결과 받기
+function solution(id_list, report, k) {
+  let count = {};
+  let sliceC = {};
+  let stop = [];
+  report = [...new Set(report)];
+
+  id_list.forEach((v) => {
+    count[v] = 0;
+    sliceC[v] = 0;
+  });
+
+  report.forEach((v) => {
+    const [a, b] = v.split(' ');
+    count[b] += 1;
+  });
+
+  for (let c in count) {
+    if (count[c] >= k) {
+      stop.push(c);
+    }
+  }
+
+  report.forEach((v) => {
+    const [a, b] = v.split(' ');
+    if (stop.includes(b)) {
+      sliceC[a] += 1;
+    }
+  });
+
+  return Object.entries(sliceC).map((v) => v[1]);
+}
