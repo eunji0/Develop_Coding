@@ -622,3 +622,34 @@ function solution(ingredient) {
 
   return count;
 }
+
+//옹알이2
+function solution(babbling) {
+  let standard = ['aya', 'ye', 'woo', 'ma'];
+
+  return babbling.reduce((a, c, i) => {
+    for (let i = 0; i < standard.length; i++) {
+      if (c.includes(standard[i].repeat(2))) return a;
+    }
+
+    for (let i = 0; i < standard.length; i++) {
+      c = c.split(standard[i]).join(' ').trim();
+    }
+
+    if (c) return a;
+
+    return a++;
+  }, 0);
+}
+
+//콜라 문제
+function solution(a, b, n) {
+  let s = 0;
+
+  while (n >= a) {
+    s += Math.floor(n / a) * b;
+    n = Math.floor(n / a) * b + (n % a);
+  }
+
+  return s;
+}
