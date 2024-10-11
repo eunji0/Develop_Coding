@@ -672,3 +672,36 @@ function solution(number) {
   com([], 0);
   return result;
 }
+
+//숫자 짝꿍
+function solution(X, Y) {
+  let result = [];
+
+  let countx = Array(10).fill(0);
+  let county = Array(10).fill(0);
+
+  for (let char of X) {
+    countx[char]++;
+  }
+
+  for (let char of Y) {
+    county[char]++;
+  }
+
+  for (let i = 0; i < 10; i++) {
+    let com = Math.min(countx[i], county[i]);
+    for (let j = 0; j < com; j++) {
+      result.push(i);
+    }
+  }
+
+  result.sort((a, b) => b - a);
+
+  if (result.length === 0) {
+    return '-1';
+  } else if (result[0] === 0) {
+    return '0';
+  } else {
+    return result.join('');
+  }
+}
