@@ -705,3 +705,21 @@ function solution(X, Y) {
     return result.join('');
   }
 }
+
+//성격 유형 검사하기
+function solution(survey, choices) {
+  const MBTI = {};
+  const types = ['RT', 'CF', 'JM', 'AN'];
+
+  types.forEach((v) => {
+    v.split('').forEach((a) => (MBTI[a] = 0));
+  });
+
+  choices.forEach((v, i) => {
+    const [disa, a] = survey[i];
+
+    MBTI[v > 4 ? a : disa] += Math.abs(v - 4);
+  });
+
+  return types.map(([a, b]) => (MBTI[b] > MBTI[a] ? b : a)).join('');
+}
