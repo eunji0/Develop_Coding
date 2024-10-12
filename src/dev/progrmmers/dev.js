@@ -854,3 +854,28 @@ function solution(left, right) {
 
   return result;
 }
+
+//로또의 최고 순위와 최저 순위
+function solution(lottos, win_nums) {
+  lottos.sort((a, b) => a - b);
+  win_nums.sort((a, b) => a - b);
+
+  let same = 0; //0제외 일치하는 수
+
+  for (let i = 0; i < win_nums.length; i++) {
+    if (win_nums.includes(lottos[i])) {
+      same++;
+    }
+  }
+
+  let zero = 0; //0의 개수
+
+  lottos.forEach((v) => (v === 0 ? zero++ : zero));
+
+  let max = same + zero;
+  max = 7 - max === 7 ? 6 : 7 - max;
+
+  let min = 7 - same === 7 ? 6 : 7 - same;
+
+  return [max, min];
+}
