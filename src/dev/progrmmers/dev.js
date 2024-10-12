@@ -824,3 +824,33 @@ function solution(s) {
 
   return +answer;
 }
+
+//약수의 개수와 덧셈
+const countM = (m) => {
+  let count = 0;
+
+  for (let i = 1; i * i <= m; i++) {
+    if (m % i === 0) {
+      count++;
+      if (i !== m / i) {
+        count++;
+      }
+    }
+  }
+
+  return count;
+};
+
+function solution(left, right) {
+  let result = 0;
+
+  for (let i = left; i <= right; i++) {
+    if (countM(i) % 2 === 0) {
+      result += i;
+    } else {
+      result -= i;
+    }
+  }
+
+  return result;
+}
