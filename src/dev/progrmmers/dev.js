@@ -899,3 +899,19 @@ function solution(absolutes, signs) {
 function solution(n) {
   return parseInt(n.toString(3).split('').reverse().join(''), 3);
 }
+
+//두 개 뽑아서 더하기
+function solution(numbers) {
+  let result = [];
+
+  numbers.sort((a, b) => a - b);
+
+  for (let i = 0; i < numbers.length; i++) {
+    for (let j = i + 1; j < numbers.length; j++) {
+      result.push(numbers[i] + numbers[j]);
+    }
+  }
+
+  let r = [...new Set(result)];
+  return r.sort((a, b) => a - b);
+}
