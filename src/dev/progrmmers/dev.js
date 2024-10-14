@@ -982,3 +982,33 @@ const getDistance = (locatedNumber, target) => {
 
   return Math.abs(targetPosition[0] - nowPosition[0]) + Math.abs(targetPosition[1] - nowPosition[1]);
 };
+
+//크레인 인형뽑기 게임
+function solution(board, moves) {
+  const h = board.length;
+  const stack = [];
+
+  moves.forEach((m) => {
+    for (let i = 0; i < h; i++) {
+      if (board[i][m - 1] > 0) {
+        stack.push(board[i][m - 1]);
+        board[i][m - 1] = 0;
+        break;
+      }
+    }
+  });
+
+  let count = 0;
+  const t = [];
+  while (stack.length) {
+    const currentDoll = stack.shift();
+    if (t.length && t[t.length - 1] === currentDoll) {
+      t.pop();
+      count += 2;
+    } else {
+      t.push(currentDoll);
+    }
+  }
+
+  return count;
+}
