@@ -1,3 +1,5 @@
+const { configure } = require('@testing-library/react');
+
 //완주하지 못한 선수
 function solution(participant, completion) {
   participant.sort();
@@ -1011,4 +1013,31 @@ function solution(board, moves) {
   }
 
   return count;
+}
+
+//실패율
+function solution(N, stages) {
+  let m = stages.length;
+  let arr = Array(N).fill(0);
+  let map = {};
+
+  for (let i = 0; i < N; i++) {
+    let count = 0;
+
+    stages.map((v) => (v === i + 1 ? count++ : count));
+
+    arr[i] = count / m;
+
+    m -= count;
+  }
+
+  arr.map((v, i) => {
+    map[i + 1] = v;
+  });
+
+  map = Object.entries(map);
+
+  map.sort((a, b) => b[1] - a[1]);
+
+  return map.map((v) => +v[0]);
 }
