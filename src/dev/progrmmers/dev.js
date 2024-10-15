@@ -1041,3 +1041,34 @@ function solution(N, stages) {
 
   return map.map((v) => +v[0]);
 }
+
+//체육복
+function solution(n, lost, reserve) {
+  let student = {};
+  let answer = 0;
+
+  for (let i = 1; i <= n; i++) {
+    student[i] = 1;
+  }
+
+  lost.forEach((v) => (student[v] -= 1));
+  reserve.forEach((v) => (student[v] += 1));
+
+  for (let i = 1; i <= n; i++) {
+    if (student[i] === 0 && student[i + 1] === 2) {
+      student[i + 1] -= 1;
+      student[i] += 1;
+    } else if (student[i] === 0 && student[i - 1] === 2) {
+      student[i - 1] -= 1;
+      student[i] += 1;
+    }
+  }
+
+  for (let i in student) {
+    if (student[i] > 0) {
+      answer++;
+    }
+  }
+
+  return answer;
+}
