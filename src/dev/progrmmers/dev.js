@@ -1072,3 +1072,22 @@ function solution(n, lost, reserve) {
 
   return answer;
 }
+
+//모의고사
+function solution(answers) {
+  let one = [1, 2, 3, 4, 5];
+  let two = [2, 1, 2, 3, 2, 4, 2, 5];
+  let three = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5];
+
+  let score = [0, 0, 0];
+
+  answers.forEach((answer, i) => {
+    if (answer === one[i % one.length]) score[0]++;
+    if (answer === two[i % two.length]) score[1]++;
+    if (answer === three[i % three.length]) score[2]++;
+  });
+
+  let max = Math.max(...score);
+
+  return score.map((v, i) => (v === max ? i + 1 : null)).filter((v) => v !== null);
+}
