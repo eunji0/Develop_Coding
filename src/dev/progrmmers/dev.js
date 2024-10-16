@@ -1091,3 +1091,17 @@ function solution(answers) {
 
   return score.map((v, i) => (v === max ? i + 1 : null)).filter((v) => v !== null);
 }
+
+//k번째수
+function solution(array, commands) {
+  let result = [];
+
+  commands.forEach((v) => {
+    let [i, j, k] = v;
+
+    let n = array.slice(i - 1, j).sort((a, b) => a - b)[k - 1];
+    result.push(n);
+  });
+
+  return result;
+}
