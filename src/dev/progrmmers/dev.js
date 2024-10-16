@@ -1105,3 +1105,17 @@ function solution(array, commands) {
 
   return result;
 }
+
+//완주하지 못한 선수
+function solution(participant, completion) {
+  let arr = {};
+
+  participant.forEach((v) => (arr[v] ? (arr[v] += 1) : (arr[v] = 1)));
+
+  completion.forEach((v) => (arr[v] -= 1));
+
+  return Object.entries(arr)
+    .filter((v) => v[1] > 0)
+    .map((v) => v[0])
+    .toString();
+}
