@@ -1201,3 +1201,29 @@ function solution(dartResult) {
   answer = stack.reduce((accumulator, currentValue) => accumulator + currentValue);
   return answer;
 }
+
+//1차 비밀지도
+function solution(n, arr1, arr2) {
+  arr1 = arr1.map((v) => v.toString(2).padStart(n, '0').split(''));
+  arr2 = arr2.map((v) => v.toString(2).padStart(n, '0').split(''));
+
+  let map = Array.from({ length: n }, () => Array(n).fill(0));
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (arr1[i][j] === '1' || arr2[i][j] === '1') {
+        map[i][j] = 1;
+      }
+    }
+  }
+
+  let result = [];
+
+  map.forEach((v) => {
+    let r = '';
+    r += v.map((vv) => (vv === 1 ? '#' : ' ')).join('');
+    result.push(r);
+  });
+
+  return result;
+}
