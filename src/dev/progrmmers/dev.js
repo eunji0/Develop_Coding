@@ -1294,3 +1294,16 @@ process.stdin.on('data', (data) => {
     console.log(r);
   }
 });
+
+//x만큼 간격이 있는 n개의 숫자
+function solution(x, n) {
+  let answer = [];
+  let p = x;
+
+  while (n--) {
+    answer.push(x);
+    x += p;
+  }
+
+  return answer;
+}
