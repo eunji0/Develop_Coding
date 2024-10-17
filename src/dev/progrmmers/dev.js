@@ -1227,3 +1227,53 @@ function solution(n, arr1, arr2) {
 
   return result;
 }
+
+//예산
+function solution(d, budget) {
+  d.sort((a, b) => a - b);
+
+  let sum = 0;
+  let count = 0;
+
+  d.forEach((v) => {
+    if (v + sum <= budget) {
+      sum += v;
+      count++;
+    }
+  });
+
+  return count;
+}
+
+//소수 만들기
+function isPrime(num) {
+  if (num <= 1) return false;
+
+  if (num === 2) return true;
+
+  if (num % 2 === 0) return false;
+
+  for (let i = 3; i <= Math.sqrt(num); i += 2) {
+    if (num % i === 0) return false;
+  }
+
+  return true;
+}
+
+function solution(nums) {
+  let arr = [];
+
+  for (let i = 0; i < nums.length; i++) {
+    for (let j = i + 1; j < nums.length; j++) {
+      for (let k = j + 1; k < nums.length; k++) {
+        arr.push(nums[i] + nums[j] + nums[k]);
+      }
+    }
+  }
+
+  let prime = 0;
+
+  arr.forEach((v) => (isPrime(v) ? prime++ : prime));
+
+  return prime;
+}
