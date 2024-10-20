@@ -1323,107 +1323,44 @@ function solution(arr1, arr2) {
 }
 
 //[PCCP 기출문제] 3번 / 충돌위험 찾기
+//from에서 to까지 히스토리 기록
+//일치할때까지 좌표 변환
+//충돌지점찾기
+//위험상황 횟수 return
+
+const getposiotion = (r, c, nextR, nextC) => {
+  if (r !== nextR) return r > nextR ? [r - 1, c] : [r + 1, c];
+  if (c !== nextC) return c > nextC ? [r, c - 1] : [c, c + 1];
+  return [r, c];
+};
+
 function solution(points, routes) {
-  // 현재 row,column 와 타겟으로 포인트의 row와 column 넣으면
-  // 한칸 이동했을 때 좌표를 반환한다.
-  const getNextPosition = (r, c, targetR, targetC) => {
-    if (r !== targetR) return r > targetR ? [r - 1, c] : [r + 1, c];
-    if (c !== targetC) return c > targetC ? [r, c - 1] : [r, c + 1];
-    return [r, c];
-  };
+  let map = {};
 
-  let arr = [];
-  let maxIndex = 0;
-  routes.forEach((route) => {
-    let startPoint = route.shift();
-    let history = [points[startPoint - 1]];
+  routes.forEach((v, i) => {
+    let [fromNum, toNum] = v;
+    let [r, c] = points[fromNum - 1];
+    let [toR, toC] = points[toNum - 1];
+    let history = [[r, c]];
+    map[i + 1] = history;
 
-    while (route.length) {
-      let [nowR, nowC] = history.at(-1);
-      let [targetR, targetC] = points[route[0] - 1];
+    while (r !== toR || c !== toC) {
+      r = getposiotion(r, c, toR, toC)[0];
+      c = getposiotion(r, c, toR, toC)[1];
 
-      let [nextR, nextC] = getNextPosition(nowR, nowC, targetR, targetC);
-
-      history.push([nextR, nextC]);
-      if (nextR === targetR && nextC === targetC) {
-        route.shift();
-      }
+      history.push([r, c]);
     }
-    // 로봇들이 각자 이동하는 시간이 모두 다를 수 있으므로 최대로 걸리는 시간을 알아야함
-    maxIndex = Math.max(maxIndex, history.length - 1);
-    arr.push(history);
   });
 
-  let answer = 0;
-  let index = 0;
-  while (index <= maxIndex) {
-    let crushPoints = [];
-    for (let i = 0; i < arr.length - 1; i++) {
-      for (let j = i + 1; j < arr.length; j++) {
-        if (
-          arr[i][index] &&
-          arr[j][index] &&
-          arr[i][index][0] === arr[j][index][0] &&
-          arr[i][index][1] === arr[j][index][1]
-        ) {
-          let alreadyInclude = crushPoints.some(
-            (point) => point[0] === arr[i][index][0] && point[1] === arr[i][index][1],
-          );
-          if (!alreadyInclude) {
-            crushPoints.push([arr[i][index][0], arr[i][index][1]]);
-            ++answer;
-          }
-        }
-      }
-    }
-    ++index;
-  }
-
-  return answer;
+  return map;
 }
 
+const cal = (map) => {
+  const keys = Object.keys(map);
+
+  const maxLength = Math.max(...keys.map((v) => map[v]).length);
+
+  console.log(maxLength);
+};
+
 //도넛과 막대 그래프
-const getInfo = (edges) => {
-  const info = edges.reduce((map, key) => {
-    if (!map.has(key[0])) {
-      map.set(key[0], [1, 0]);
-    } else {
-      const [give, receive] = map.get(key[0]);
-      map.set(key[0], [give + 1, receive]);
-    }
-    if (!map.has(key[1])) {
-      map.set(key[1], [0, 1]);
-    } else {
-      const [give, receive] = map.get(key[1]);
-      map.set(key[1], [give, receive + 1]);
-    }
-    return map;
-  }, new Map());
-  return info;
-};
-
-const chkInfo = (info) => {
-  const res = new Array(4).fill(0);
-  for (const [key, io] of info) {
-    const [give, receive] = io;
-    if (2 <= give && receive == 0) {
-      res[0] = key;
-    } else if (give == 0) {
-      //막대그래프 최상단은 give == 0
-      res[2]++;
-    } else if (give >= 2 && receive >= 2) {
-      res[3]++;
-    }
-  }
-  // 도넛은 사이클이 이루어진다는 것 밖에 없기 때문에 개수 계산으로 판별할 수 없다.
-  // 생성 정점은 기존에 존재하던 모든 그래프에 간선을 하나 씩 연결한다.
-  // 따라서, 생성 정점의 간선 개수에서 막대, 8자 그래프 개수를 빼면 도넛 그래프 개수가 나온다.
-  res[1] = info.get(res[0])[0] - res[2] - res[3];
-  return res;
-};
-
-const solution = (edges) => {
-  const mapInfo = getInfo(edges);
-  const answer = chkInfo(mapInfo);
-  return answer;
-};
