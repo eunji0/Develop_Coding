@@ -1327,40 +1327,59 @@ function solution(arr1, arr2) {
 //일치할때까지 좌표 변환
 //충돌지점찾기
 //위험상황 횟수 return
-
-const getposiotion = (r, c, nextR, nextC) => {
-  if (r !== nextR) return r > nextR ? [r - 1, c] : [r + 1, c];
-  if (c !== nextC) return c > nextC ? [r, c - 1] : [c, c + 1];
-  return [r, c];
-};
-
 function solution(points, routes) {
-  let map = {};
+  const getPosition = (r, c, targetR, targetC) => {
+    if (r !== targetR) return r > targetR ? [r - 1, c] : [r + 1, c];
+    if (c !== targetC) return c > targetC ? [r, c - 1] : [r, c + 1];
+    return [r, c];
+  };
 
-  routes.forEach((v, i) => {
-    let [fromNum, toNum] = v;
-    let [r, c] = points[fromNum - 1];
-    let [toR, toC] = points[toNum - 1];
-    let history = [[r, c]];
-    map[i + 1] = history;
+  let arr = [];
+  let maxImdex = 0;
+  routes.forEach((route) => {
+    let startPoint = route.shift();
+    let history = [points[startPoint - 1]];
 
-    while (r !== toR || c !== toC) {
-      r = getposiotion(r, c, toR, toC)[0];
-      c = getposiotion(r, c, toR, toC)[1];
+    while (route.length) {
+      let [nowR, nowC] = history.at(-1);
+      let [targetR, targetC] = points[route[0] - 1];
 
-      history.push([r, c]);
+      let [nextR, nextC] = getPosition(nowR, nowC, targetR, targetC);
+
+      history.push([nextR, nextC]);
+      if (nextR === targetR && nextC === targetC) {
+        route.shift();
+      }
     }
+
+    maxImdex = Math.max(maxImdex, history.length - 1);
+    arr.push(history);
   });
 
-  return map;
+  let answer = 0;
+  let index = 0;
+
+  while (index <= maxImdex) {
+    let crushPoints = [];
+    for (let i = 0; i < arr.length - 1; i++) {
+      for (let j = i + 1; j < arr.length; j++) {
+        if (
+          arr[i][index] &&
+          arr[j][index] &&
+          arr[i][index][0] === arr[j][index][0] &&
+          arr[i][index][1] === arr[j][index][1]
+        ) {
+          let r = crushPoints.some((v) => v[0] === arr[i][index][0] && v[1] === arr[i][index][1]);
+
+          if (!r) {
+            crushPoints.push([arr[i][index][0], arr[i][index][1]]);
+            ++answer;
+          }
+        }
+      }
+    }
+    ++index;
+  }
+
+  return answer;
 }
-
-const cal = (map) => {
-  const keys = Object.keys(map);
-
-  const maxLength = Math.max(...keys.map((v) => map[v]).length);
-
-  console.log(maxLength);
-};
-
-//도넛과 막대 그래프
