@@ -1432,3 +1432,75 @@ const solution = (edges) => {
   const answer = chkInfo(mapInfo);
   return answer;
 };
+
+//[PCCP 기출문제] 2번 / 석유 시추
+//각 석유덩어리의 크기 bfs로 찾기
+//시추관의 위치와 접해있는 석유 덩어리 정리
+//bfs에서 덩어리 크기와 해당 위치 묶기(map)
+//그 중 가장 큰 석유량 반환
+function solution(land) {
+  const dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+  const n = land.length;
+  const m = land[0].length;
+  let visited = Array.from({ length: n }, () => Array(m).fill(false));
+
+  let arr = [];
+
+  const bfs = (i, j) => {
+    const queue = [[i, j]];
+    let loc = [[i, j]];
+    let count = 1;
+    visited[i][j] = true;
+
+    let cols = new Set();
+    cols.add(j);
+
+    while (queue.length) {
+      const [x, y] = queue.shift();
+
+      for (const [dx, dy] of dir) {
+        const nx = x + dx;
+        const ny = y + dy;
+
+        if (nx >= 0 && ny >= 0 && nx < n && ny < m && land[nx][ny] === 1 && !visited[nx][ny]) {
+          visited[nx][ny] = true;
+          queue.push([nx, ny]);
+          loc.push([nx, ny]);
+          count++;
+          cols.add(ny);
+        }
+      }
+    }
+
+    arr.push({ size: count, cols: [...cols] });
+  };
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      if (land[i][j] === 1 && !visited[i][j]) {
+        bfs(i, j);
+      }
+    }
+  }
+
+  let maxOil = 0;
+
+  for (let col = 0; col < m; col++) {
+    let oilSum = 0;
+
+    for (const { size, cols } of arr) {
+      if (cols.includes(col)) {
+        oilSum += size;
+      }
+    }
+
+    maxOil = Math.max(maxOil, oilSum);
+  }
+
+  return maxOil;
+}
