@@ -1504,3 +1504,20 @@ function solution(land) {
 
   return maxOil;
 }
+
+//요격 시스템
+function solution(targets) {
+  targets.sort((a, b) => a[1] - b[1]);
+
+  let count = 0;
+  let last = -1;
+
+  for (const [start, end] of targets) {
+    if (last < start) {
+      count++;
+      last = end - 0.1;
+    }
+  }
+
+  return count;
+}
