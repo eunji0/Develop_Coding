@@ -1521,3 +1521,21 @@ function solution(targets) {
 
   return count;
 }
+
+//두 원 사이의 정수 쌍
+//4분의 1크기에서 점 개수를 구해 *4
+//큰 원의 포함된 점 수에서 작은 원의 안에 속해있는 점 빼기
+function solution(r1, r2) {
+  var answer = 0;
+  for (let x = 1; x <= r2; x++) {
+    let max = Math.floor(Math.sqrt(r2 * r2 - x * x));
+    let min = 0;
+    if (r1 > x) {
+      min = Math.ceil(Math.sqrt(r1 * r1 - x * x));
+    } else {
+      min = 0;
+    }
+    answer += max - min + 1;
+  }
+  return answer * 4;
+}
