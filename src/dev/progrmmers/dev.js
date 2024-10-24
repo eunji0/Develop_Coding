@@ -1539,3 +1539,28 @@ function solution(r1, r2) {
   }
   return answer * 4;
 }
+
+//과제 진행하기
+function timetTo(time) {
+  const [hh, mm] = time.split(':').map(Number);
+  return hh * 60 + mm;
+}
+
+function solution(plans) {
+  let stack = [];
+
+  const sortedPlan = plans
+    .map(([subject, time, count]) => [subject, timetTo(time), Number(count)])
+    .sort((a, b) => b[1] - a[1]);
+
+  while (sortedPlan.length) {
+    let [subject, time, count] = sortedPlan.pop();
+
+    stack.forEach((v, i) => {
+      if (time < v[1]) stack[i][1] += count;
+    });
+    stack.push([subject, time + count]);
+  }
+
+  return stack.sort((a, b) => a[1] - b[1]).map((v) => v[0]);
+}
