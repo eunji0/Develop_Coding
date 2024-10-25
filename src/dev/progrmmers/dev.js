@@ -1564,3 +1564,55 @@ function solution(plans) {
 
   return stack.sort((a, b) => a[1] - b[1]).map((v) => v[0]);
 }
+
+//광물 캐기
+
+//더 사용할 곡괭이가 없거나
+//광산에 있는 모든 광물을 캘 때까지
+
+//pickIndex = 0
+//result = 0//결과
+//let pick = pick[pickIndex] picks에서 맨 앞걸로 초기화
+//0일시 다음으로 이동 pickIndex+=1
+//let sum = picks의 sum
+//while문으로 minerals순환 조건:minerals가 남을때,picks의 sum이 0보다 클때
+//let count =0//5번 반복했는지 확인
+//let now = minerals의 shift()
+//pickIndex 로 다이아, 철, 돌 구분
+//구분한 광물을 result+=
+//반복
+//5번 반복했다면 pickIndex+=1, 처음부터 반복
+
+function solution(picks, minerals) {
+  var answer = 0;
+  var cutCount = Math.ceil(minerals.length / 5);
+  // 곡갱이 개수
+  let maxLen = picks.reduce((a, b) => a + b);
+  if (maxLen === 0) return 0;
+  // 최대 구할수 있는 개수 빼고 제거
+  minerals = minerals.splice(0, maxLen * 5);
+  var arr = [];
+  for (var i = 0; i < cutCount; i++) {
+    let obj = { diamond: 0, iron: 0, stone: 0 };
+
+    minerals.splice(0, 5).map((element) => {
+      obj[element]++;
+    });
+    arr.push([
+      obj.diamond + obj.iron + obj.stone,
+      obj.diamond * 5 + obj.iron + obj.stone,
+      obj.diamond * 25 + obj.iron * 5 + obj.stone,
+    ]);
+  }
+  arr = arr.sort((a, b) => b[2] - a[2]);
+  for (var i = 0; i < picks.length; i++) {
+    var pickCount = picks[i];
+    while (pickCount--) {
+      if (arr.length === 0) {
+        return answer;
+      }
+      answer += arr.shift()[i];
+    }
+  }
+  return answer;
+}
