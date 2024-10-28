@@ -1583,59 +1583,34 @@ function solution(plans) {
 //반복
 //5번 반복했다면 pickIndex+=1, 처음부터 반복
 
-//리코쳇 로봇
-function solution(board) {
-  let answer = -1;
+//당구연습 
+function solution(m, n, startX, startY, balls) {
+  return balls.map(([x, y]) => {
+      return getNearlist(m, n, startX, startY, x, y);
+  });
+}
 
-  const map = board.map((item) => item.split(''));
-  const n = map.length;
-  const m = map[0].length;
-  const visited = new Array(n).fill().map((_) => new Array(m).fill(0));
+const getNearlist = (m, n, x1, y1, x2, y2) => {
+  let symmetryPoints = [];
 
-  const dx = [0, 1, 0, -1];
-  const dy = [-1, 0, 1, 0];
-
-  // 시작 지점 찾기
-  let sx, sy;
-  for (let x = 0; x < n; x++) {
-    for (let y = 0; y < m; y++) {
-      if (map[x][y] === 'R') {
-        sx = x;
-        sy = y;
-      }
-    }
+  if (x1 !== x2 || y1 < y2) {
+      const bottom = [x1, -y1];
+      symmetryPoints.push(bottom);
   }
-
-  // BFS
-  const queue = [[sx, sy, 0]];
-  visited[sx][sy] = 1;
-
-  while (queue.length) {
-    const [x, y, count] = queue.shift();
-
-    if (map[x][y] === 'G') {
-      answer = count;
-      break;
-    }
-
-    for (let i = 0; i < 4; i++) {
-      let nx = x + dx[i];
-      let ny = y + dy[i];
-
-      // 미끄러지기 (한방향으로)
-      while (0 <= nx && nx < n && 0 <= ny && ny < m && map[nx][ny] !== 'D') {
-        nx += dx[i];
-        ny += dy[i];
-      }
-      nx -= dx[i];
-      ny -= dy[i];
-
-      if (visited[nx][ny] === 0) {
-        queue.push([nx, ny, count + 1]);
-        visited[nx][ny] = 1;
-      }
-    }
+  if (x1 !== x2 || y1 > y2) {
+      const top = [x1, n + n - y1];
+      symmetryPoints.push(top);
   }
-
-  return answer;
+  if (y1 !== y2 || x1 < x2) {
+      const left = [-x1, y1];
+      symmetryPoints.push(left);
+  }
+  if (y1 !== y2 || x1 > x2) {
+      const right = [m + m - x1, y1];
+      symmetryPoints.push(right);
+  }
+  
+  return symmetryPoints.reduce((min, [x,y])=>{
+      return Math.min(min, (x-x2)**2 + (y-y2)**2);
+  }, m**2 + n**2);
 }
