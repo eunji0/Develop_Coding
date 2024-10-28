@@ -1583,34 +1583,38 @@ function solution(plans) {
 //반복
 //5번 반복했다면 pickIndex+=1, 처음부터 반복
 
-//당구연습 
+//당구연습
 function solution(m, n, startX, startY, balls) {
-  return balls.map(([x, y]) => {
-      return getNearlist(m, n, startX, startY, x, y);
-  });
-}
+  const answer = [];
+  const d = [
+    [startX, 2 * n - startY],
+    [startX, -startY],
+    [-startX, startY],
+    [2 * m - startX, startY],
+  ];
 
-const getNearlist = (m, n, x1, y1, x2, y2) => {
-  let symmetryPoints = [];
+  for (let i = 0; i < balls.length; i++) {
+    let maxValue = Number.MAX_VALUE;
 
-  if (x1 !== x2 || y1 < y2) {
-      const bottom = [x1, -y1];
-      symmetryPoints.push(bottom);
+    for (let j = 0; j < 4; j++) {
+      const [newX, newY] = d[j];
+      if (newX === balls[i][0]) {
+        const maxY = Math.max(startY, newY);
+        const minY = Math.min(startY, newY);
+        if (minY < balls[i][1] && balls[i][1] < maxY) continue;
+      }
+      if (newY === balls[i][1]) {
+        const maxX = Math.max(startX, newX);
+        const minX = Math.min(startX, newX);
+        if (minX < balls[i][0] && balls[i][0] < maxX) continue;
+      }
+
+      const tmp = (newX - balls[i][0]) ** 2 + (newY - balls[i][1]) ** 2;
+      maxValue = Math.min(maxValue, tmp);
+    }
+
+    answer.push(maxValue);
   }
-  if (x1 !== x2 || y1 > y2) {
-      const top = [x1, n + n - y1];
-      symmetryPoints.push(top);
-  }
-  if (y1 !== y2 || x1 < x2) {
-      const left = [-x1, y1];
-      symmetryPoints.push(left);
-  }
-  if (y1 !== y2 || x1 > x2) {
-      const right = [m + m - x1, y1];
-      symmetryPoints.push(right);
-  }
-  
-  return symmetryPoints.reduce((min, [x,y])=>{
-      return Math.min(min, (x-x2)**2 + (y-y2)**2);
-  }, m**2 + n**2);
+
+  return answer;
 }
