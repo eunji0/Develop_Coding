@@ -1583,38 +1583,42 @@ function solution(plans) {
 //반복
 //5번 반복했다면 pickIndex+=1, 처음부터 반복
 
-//당구연습
-function solution(m, n, startX, startY, balls) {
-  const answer = [];
-  const d = [
-    [startX, 2 * n - startY],
-    [startX, -startY],
-    [-startX, startY],
-    [2 * m - startX, startY],
+//혼자서하는 틱택토
+function checkTicTacToe(board, sign) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
   ];
 
-  for (let i = 0; i < balls.length; i++) {
-    let maxValue = Number.MAX_VALUE;
+  for (const [a, b, c] of lines) {
+    if (board[a] == sign && board[b] == sign && board[c] == sign) return true;
+  }
+  return false;
+}
 
-    for (let j = 0; j < 4; j++) {
-      const [newX, newY] = d[j];
-      if (newX === balls[i][0]) {
-        const maxY = Math.max(startY, newY);
-        const minY = Math.min(startY, newY);
-        if (minY < balls[i][1] && balls[i][1] < maxY) continue;
-      }
-      if (newY === balls[i][1]) {
-        const maxX = Math.max(startX, newX);
-        const minX = Math.min(startX, newX);
-        if (minX < balls[i][0] && balls[i][0] < maxX) continue;
-      }
+function solution(board) {
+  board = board.map((val) => val.split('')).flat();
+  let [O, X] = [0, 0];
 
-      const tmp = (newX - balls[i][0]) ** 2 + (newY - balls[i][1]) ** 2;
-      maxValue = Math.min(maxValue, tmp);
-    }
-
-    answer.push(maxValue);
+  for (const sign of board) {
+    if (sign === 'O') O++;
+    else if (sign === 'X') X++;
   }
 
-  return answer;
+  if (O < X || 1 < O - X) return 0;
+
+  let oWins = checkTicTacToe(board, 'O');
+  let xWins = checkTicTacToe(board, 'X');
+
+  if (oWins && xWins) return 0;
+  if (oWins && O - X !== 1) return 0;
+  if (xWins && O !== X) return 0;
+
+  return 1;
 }
