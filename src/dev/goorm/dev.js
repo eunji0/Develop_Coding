@@ -93,3 +93,74 @@ const readline = require('readline');
 
   process.exit();
 })();
+
+//딱지놀이
+
+//문제정리
+//별의 개수가 다르다면 많은쪽이 이김
+//별 개수가 같고 동그라미가 다르면 많은쪽이 이김
+//별,동그라미 같고 네모가 다르다면 //
+//별, 동그라미, 네모 같고 세모다르다면 //
+//모두 같다면 무승부
+//별-4 동그라미-3 네모-2 세모-1
+
+//map함수로 4,3,2,1 만들기
+//a와 b개수 세기
+// Run by Node.js
+const readline = require('readline');
+
+(async () => {
+  let rl = readline.createInterface({ input: process.stdin });
+
+  let input = [];
+
+  for await (const line of rl) {
+    if (!line) {
+      rl.close();
+    } else {
+      input.push(line.split(' ').map(Number));
+    }
+  }
+
+  const n = Number(input.shift());
+  let result = [];
+
+  for (let i = 0; i < n; i++) {
+    let a = input.shift();
+    let b = input.shift();
+    let aCount = a.shift();
+    let bCount = b.shift();
+
+    a.sort((a, b) => b - a);
+    b.sort((a, b) => b - a);
+
+    if (a.join('') === b.join('')) {
+      result.push('D');
+    } else {
+      let aMap = {};
+      let bMap = {};
+
+      for (let i = 4; i > 0; i--) {
+        aMap[i] = 0;
+        bMap[i] = 0;
+      }
+
+      a.forEach((v) => (aMap[v] += 1));
+      b.forEach((v) => (bMap[v] += 1));
+
+      for (let i = 4; i > 0; i--) {
+        if (aMap[i] !== bMap[i]) {
+          if (aMap[i] > bMap[i]) {
+            result.push('A');
+          } else {
+            result.push('B');
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  console.log(result.join('\n') + '\n');
+  process.exit();
+})();
