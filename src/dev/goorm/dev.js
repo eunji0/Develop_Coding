@@ -67,3 +67,29 @@ rl.on('close', () => {
   solution(input);
   process.exit();
 });
+
+//소금물의 농도 구하기
+const readline = require('readline');
+
+(async () => {
+  let rl = readline.createInterface({ input: process.stdin });
+
+  let n, m;
+
+  for await (const line of rl) {
+    if (line.trim() === '') {
+      rl.close();
+    } else {
+      [n, m] = line.split(' ').map(Number);
+      break;
+    }
+  }
+
+  let salt = 0.07 * n;
+  let saltWater = n + m;
+  let s = (salt / saltWater) * 100;
+
+  console.log((Math.floor(s * 100) / 100).toFixed(2));
+
+  process.exit();
+})();
