@@ -166,42 +166,89 @@ const readline = require('readline');
 })();
 
 //장마
+
+//배수시스템
+//장마 시작 3의 배수가 되는 날, 비 내린뒤 작동
+//작동날짜를 기준으로 2일 이내에 비가 내린 위치에서만 작동
+
+//input
+//n, m
+//마을의 땅 높이
+//m개의 줄 s, e집
+
+// Run by Node.js
 const readline = require('readline');
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+//1을 더하는 메서드
+const plusOne = (arr, s, state) => {
+  let [from, to] = s;
 
-let input = [];
-rl.on('line', (line) => {
-    input.push(line);
-});
+  for (let i = from - 1; i <= to - 1; i++) {
+    arr[i] += 1;
+    state[i] = true;
+  }
 
-rl.on('close', () => {
-    const [N, M] = input[0].split(' ').map(Number);
-    let beforeHeights = input[1].split(' ').map(Number);
-    let rainyDay = input.slice(2).map(line => line.split(' ').map(Number));
-    let waterHeights  = new Array(N).fill(0);
+  return [arr, state];
+};
 
-    for (let i = 0; i < M; i++) {
-        const [start, end] = rainyDay[i];
-        for (let j = start - 1; j < end; j++) waterHeights [j]++;
-      
-        if ((i + 1) % 3 === 0) {
-          	let recentRainyDays = new Set();
-            for (let k = Math.max(0, i - 2); k <= i; k++) {
-                const [s, e] = rainyDay[k];
-                for (let j = s - 1; j < e; j++) {
-                    recentRainyDays.add(j);
-                }
-            }
-          	for(let idx of recentRainyDays){
-              	if(waterHeights[idx] > 0) waterHeights[idx]--;
-            }
-        }
+//1을 빼는 배수 메서드
+const minusOne = (arr, state) => {
+  for (let i = 0; i < arr.length; i++) {
+    if (state[i]) {
+      arr[i] -= 1;
     }
-  
-    let finalHeights = beforeHeights.map((height, idx) => height + waterHeights [idx]);
-    console.log(finalHeights.join(" "));
-});
+  }
+
+  return arr;
+};
+
+(async () => {
+  let rl = readline.createInterface({ input: process.stdin });
+
+  let input = [];
+
+  for await (const line of rl) {
+    if (!line) {
+      rl.close();
+    } else {
+      input.push(line.split(' '));
+    }
+  }
+
+  let n, m, k, loc;
+
+  n = +input[0][0];
+  m = +input[0][1];
+
+  k = input[1].map(Number);
+
+  loc = input.slice(2).map((v) => v.map(Number));
+
+  //-1 0 1 0 2 집 상태
+  //0 0 1 0 2 //t f f f f //1
+  //0 1 1 0 2 //t t f f f //2
+  //0 1 2 0 2 //t t t f f //3
+
+  //-1 0 1 0 2
+  //-1 0 1 1 3
+  //-1 0 1 2 4
+
+  let day = 0;
+  let state = Array(n).fill(false); //비가 내린 위치 확인
+  arr = k;
+
+  while (m--) {
+    [arr, state] = plusOne(arr, loc.shift(), state);
+    day++;
+
+    if (day % 3 === 0) {
+      arr = minusOne(arr, state);
+      state = Array(n).fill(false);
+      continue;
+    }
+  }
+
+  console.log(arr.join(' '));
+
+  process.exit();
+})();
