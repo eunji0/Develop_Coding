@@ -404,3 +404,29 @@ const readline = require('readline');
   console.log(count);
   process.exit();
 })();
+
+//0커플
+// Run by Node.js
+const readline = require('readline');
+
+(async () => {
+  let rl = readline.createInterface({ input: process.stdin });
+
+  let input = [];
+
+  for await (const line of rl) {
+    if (!line) {
+      rl.close();
+    } else {
+      input.push(line);
+    }
+  }
+
+  let n = +input.shift();
+
+  let arr = input[0].split(' ').map(Number);
+
+  console.log(arr.reduce((a, c) => a + c, 0));
+
+  process.exit();
+})();
