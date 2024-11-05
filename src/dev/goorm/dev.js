@@ -262,39 +262,84 @@ const minusOne = (arr, state) => {
 //버튼 누르는 횟수 k(1씩 증가)
 // Run by Node.js
 
+// const readline = require('readline');
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+
+// let input = [];
+// let n, max, per, k;
+
+// rl.on('line', function (line) {
+//   if (!line) {
+//     rl.close();
+//   } else {
+//     input.push(line.split(' ').map(Number));
+//   }
+// }).on('close', function () {
+//   n = +input[0];
+//   max = input[1];
+//   per = input[2];
+//   k = +input[3];
+
+//   let point = n - 1;
+
+//   for (let p = point; p >= 0; p--) {
+//     per[p] += k % (max[p] + 1);
+//     k = Math.floor(k / (max[p] + 1));
+
+//     if (per[p] > max[p]) {
+//       k += Math.floor(per[p] / (max[p] + 1));
+//       per[p] %= max[p] + 1;
+//     }
+//   }
+
+//   console.log(per.join(''));
+//   process.exit();
+// });
+
+//어려운 문제
+
+//팩토리얼 계산
+//한 자리 수 인지 확인
+//아니라면 모든 자릿 수 더하기
 const readline = require('readline');
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
 
-let input = [];
-let n, max, per, k;
+// BigInt 팩토리얼 계산 함수
+const fac = (n) => {
+  if (n < 0) return -1n;
+  else if (n === 0) return 1n;
+  else return BigInt(n) * fac(n - 1);
+};
 
-rl.on('line', function (line) {
-  if (!line) {
-    rl.close();
-  } else {
-    input.push(line.split(' ').map(Number));
-  }
-}).on('close', function () {
-  n = +input[0];
-  max = input[1];
-  per = input[2];
-  k = +input[3];
+// 모든 자리수를 더하는 함수
+const calNum = (n) => {
+  return n
+    .toString()
+    .split('')
+    .map(Number)
+    .reduce((a, c) => a + c, 0);
+};
 
-  let point = n - 1;
+(async () => {
+  const rl = readline.createInterface({ input: process.stdin });
 
-  for (let p = point; p >= 0; p--) {
-    per[p] += k % (max[p] + 1);
-    k = Math.floor(k / (max[p] + 1));
+  let input;
 
-    if (per[p] > max[p]) {
-      k += Math.floor(per[p] / (max[p] + 1));
-      per[p] %= max[p] + 1;
-    }
+  for await (const line of rl) {
+    if (!line) rl.close();
+    else input = +line;
   }
 
-  console.log(per.join(''));
+  // 팩토리얼 계산
+  let n = fac(input);
+
+  // 한 자리 숫자가 될 때까지 반복해서 자리수를 더함
+  while (n >= 10n) {
+    n = BigInt(calNum(n));
+  }
+
+  console.log(n.toString()); // 결과 출력
   process.exit();
-});
+})();
