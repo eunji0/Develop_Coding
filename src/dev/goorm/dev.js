@@ -430,3 +430,87 @@ const readline = require('readline');
 
   process.exit();
 })();
+
+//블록게임
+
+// Run by Node.js
+const readline = require('readline');
+
+(async () => {
+  let rl = readline.createInterface({ input: process.stdin });
+  let input = [];
+
+  for await (const line of rl) {
+    if (!line) {
+      rl.close();
+    } else {
+      input.push(line);
+    }
+  }
+
+  //0,0 1
+  //1,0 5
+  //2,0 2
+  //2,1 4
+  //1,1 3
+  //1,0 2
+
+  //위치담는 상자
+  //점수담는 상자
+  //위치를 담다가 같은 위치를 담으면 stop
+  //뒤에서 부터 같은 위치까지 삭제 점수도 동일
+
+  let n = +input.shift();
+  let directionArr = input[0].split('');
+  let scoreArr = input[1].split(' ').map(Number);
+  let dirNum = [
+    [-1, 0],
+    [1, 0],
+    [0, 1],
+    [0, -1],
+  ]; //L, R, U, D
+
+  let coordinateBox = [[0, 0]];
+  let scoreBox = [1];
+
+  const caldir = (coord, str) => {
+    let [x, y] = coord;
+
+    if (str === 'L') {
+      x += dirNum[0][0];
+      y += dirNum[0][1];
+    } else if (str === 'R') {
+      x += dirNum[1][0];
+      y += dirNum[1][1];
+    } else if (str === 'U') {
+      x += dirNum[2][0];
+      y += dirNum[2][1];
+    } else {
+      x += dirNum[3][0];
+      y += dirNum[3][1];
+    }
+
+    return [x, y];
+  };
+
+  for (let i = 0; i < n; i++) {
+    let newCoord = caldir(coordinateBox[coordinateBox.length - 1], directionArr[i]);
+
+    //이미 있는 거면 push하기 전 삭제 진행
+    let nIndex = coordinateBox.findIndex(([x, y]) => x === newCoord[0] && y === newCoord[1]);
+
+    if (nIndex < 0) {
+      coordinateBox.push(newCoord);
+      scoreBox.push(scoreArr[i]);
+    } else {
+      coordinateBox = coordinateBox.slice(0, nIndex);
+      coordinateBox.push(newCoord);
+      scoreBox = scoreBox.slice(0, nIndex);
+      scoreBox.push(scoreArr[i]);
+    }
+  }
+
+  console.log(scoreBox.reduce((a, c) => a + c, 0));
+
+  process.exit();
+})();
