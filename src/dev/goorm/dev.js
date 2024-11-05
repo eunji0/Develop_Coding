@@ -343,3 +343,64 @@ const calNum = (n) => {
   console.log(n.toString()); // 결과 출력
   process.exit();
 })();
+
+//단풍나무
+
+//find 0이상인 곳
+//상하좌우로 0이 인접한 개수 count
+//자신에서 count만큼 뺴기
+//모든 구역이 끝나면 하루 지남
+
+// Run by Node.js
+// Run by Node.js
+const readline = require('readline');
+
+(async () => {
+  let rl = readline.createInterface({ input: process.stdin });
+  let input = [];
+
+  for await (const line of rl) {
+    if (!line) rl.close();
+    input.push(line.split(' ').map(Number));
+  }
+
+  const n = input.shift()[0];
+  let map = input;
+  const directions = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+
+  let count = 0;
+
+  while (!map.flat().every((v) => v === 0)) {
+    count++;
+    let changetMap = map.map((v) => [...v]);
+
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < n; j++) {
+        if (map[i][j] > 0) {
+          let reduceCount = 0;
+
+          for (const [dx, dy] of directions) {
+            const nx = i + dx;
+            const ny = j + dy;
+
+            if (nx >= 0 && ny >= 0 && nx < n && ny < n && map[nx][ny] === 0) {
+              reduceCount++;
+            }
+          }
+
+          changetMap[i][j] = Math.max(0, map[i][j] - reduceCount);
+        }
+      }
+    }
+
+    map = changetMap;
+  }
+
+  console.log(count);
+  process.exit();
+})();
