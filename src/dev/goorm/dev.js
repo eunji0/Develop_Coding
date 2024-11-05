@@ -514,3 +514,119 @@ const readline = require('readline');
 
   process.exit();
 })();
+
+// ADAS 시스템(테스트케이스 하나만 통과)
+const readline = require('readline');
+
+(async () => {
+  let rl = readline.createInterface({ input: process.stdin });
+  let input = [];
+  for await (const line of rl) {
+    if (!line) {
+      rl.close();
+    } else {
+      input.push(line);
+    }
+  }
+
+  let [w, h] = input[0].split(' ');
+  let map = input.slice(1).map((v) => v.split(''));
+  let dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+  let danDir = [
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [0, 1],
+    [1, 1],
+    [1, 0],
+    [1, 1],
+  ];
+
+  //s의 좌표찾기
+  //상하좌우 좌표 위치 찾기
+  //상하좌우중 우선순위 좌표찾기
+  //선택한 좌표의 상하좌우대각선좌표의 p의 개수 세기(위험점수)
+  //위험점수 누적
+  //2번부터 e의 좌표에 도착할때까지 반복
+  let now, target;
+
+  //출발지점과 도착지점 좌표
+  for (let i = 0; i < w; i++) {
+    for (let j = 0; j < h; j++) {
+      if (map[i][j] === 'S') {
+        now = [i, j];
+      }
+      if (map[i][j] === 'E') {
+        target = [i, j];
+      }
+    }
+  }
+
+  //위험점수 계산
+  const calScore = (now) => {
+    const [x, y] = now;
+    let queue = [[x, y]];
+    let count = 0;
+
+    for (const [dx, dy] of danDir) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < w && ny < h) {
+        if (map[nx][ny] === 'P') {
+          queue.push([nx, ny]);
+          count++;
+        }
+      }
+    }
+
+    let n = Array.from(new Set(queue.map(JSON.stringify)), JSON.parse);
+    return n.length - 1;
+  };
+
+  //초기점수
+  let score = 0;
+
+  while (true) {
+    let [x, y] = now;
+    if (x === target[0] && y === target[1]) {
+      console.log('r', score);
+      return;
+    }
+    let places = [];
+
+    for (const [dx, dy] of dir) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < w && ny < h) {
+        places.push([nx, ny]);
+      }
+    }
+
+    places.sort((a, b) => {
+      const priority = { E: -2, P: -1 }; // 우선순위 설정
+      const aPriority = priority[map[a[0]][a[1]]] || 0;
+      const bPriority = priority[map[b[0]][b[1]]] || 0;
+
+      if (aPriority !== bPriority) return aPriority - bPriority;
+      return a[0] - b[0] || a[1] - b[1]; // 같은 우선순위일 경우 좌표 정렬
+    });
+
+    if (map[now[0]][now[1]] === 'P') {
+      score += calScore(now) - 3;
+    } else {
+      score += calScore(now);
+    }
+
+    now = places[0];
+  }
+
+  process.exit();
+})();
