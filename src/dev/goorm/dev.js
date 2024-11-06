@@ -630,3 +630,72 @@ const readline = require('readline');
 
   process.exit();
 })();
+
+//불이야(테스트 8/10)
+const readline = require('readline');
+
+(async () => {
+  const rl = readline.createInterface({ input: process.stdin });
+  const input = [];
+  for await (const line of rl) {
+    if (!line) {
+      rl.close();
+    } else {
+      input.push(line);
+    }
+  }
+
+  let [r, c] = input.shift().split(' ').map(Number);
+  const map = input.map((v) => v.split(''));
+
+  let end;
+  const queue = [];
+  const visited = Array.from({ length: r }, () => Array(c).fill(false));
+
+  // 시작점과 도착점 설정
+  for (let i = 0; i < r; i++) {
+    for (let j = 0; j < c; j++) {
+      if (map[i][j] === '@') {
+        queue.push([i, j, 0]); // 시작 지점을 큐에 넣기
+        visited[i][j] = true; // 방문 처리
+      }
+      if (map[i][j] === '&') {
+        end = [i, j];
+      }
+    }
+  }
+
+  const directions = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+
+  while (queue.length) {
+    const [x, y, dist] = queue.shift();
+
+    // 도착 지점에 도달한 경우 최단 거리 반환
+    if (x === end[0] && y === end[1]) {
+      console.log(dist - 1);
+      return;
+    }
+
+    // 상하좌우로 이동
+    for (const [dx, dy] of directions) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      // 유효한 범위 내에 있고, 방문하지 않았으며, 장애물이 아닐 때만 이동
+      if (nx >= 0 && ny >= 0 && nx < r && ny < c && !visited[nx][ny] && map[nx][ny] !== '#') {
+        visited[nx][ny] = true;
+        queue.push([nx, ny, dist + 1]);
+      }
+    }
+  }
+
+  // 도착 지점에 도달할 수 없는 경우 -1 출력
+  console.log(-1);
+
+  process.exit();
+})();
