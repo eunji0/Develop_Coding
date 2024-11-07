@@ -699,3 +699,60 @@ const readline = require('readline');
 
   process.exit();
 })();
+
+//발전기
+const readline = require('readline');
+let rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+let input = [];
+rl.on('line', (line) => {
+  if (!line) {
+    rl.close();
+  } else {
+    input.push(line);
+  }
+});
+
+rl.on('close', () => {
+  let n = +input.shift();
+  let arr = input.map((v) => v.split(' ').map(Number));
+  let dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+
+  const bfs = (i, j) => {
+    let queue = [[i, j]];
+
+    while (queue.length) {
+      const [x, y] = queue.shift();
+
+      for (const [dx, dy] of dir) {
+        const nx = x + dx;
+        const ny = y + dy;
+
+        if (nx >= 0 && ny >= 0 && nx < n && ny < n && arr[nx][ny] === 1) {
+          arr[nx][ny] = 0;
+          queue.push([nx, ny]);
+        }
+      }
+    }
+  };
+
+  let count = 0;
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (arr[i][j] === 1) {
+        arr[i][j] = 0;
+        bfs(i, j);
+        count += 1;
+      }
+    }
+  }
+
+  console.log(count);
+});
