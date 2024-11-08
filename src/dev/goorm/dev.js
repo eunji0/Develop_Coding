@@ -758,6 +758,93 @@ const readline = require('readline');
 // });
 
 //발전기2
+// const readline = require('readline');
+// let rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+// let input = [];
+// rl.on('line', (line) => {
+//   if (!line) {
+//     rl.close();
+//   } else {
+//     input.push(line);
+//   }
+// });
+
+// rl.on('close', () => {
+//   let [n, k] = input[0].split(' ').map(Number);
+//   let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+//   let visited = Array.from({ length: n }, () => Array(n).fill(false));
+//   let complex = [];
+//   let dir = [
+//     [0, 1],
+//     [0, -1],
+//     [1, 0],
+//     [-1, 0],
+//   ];
+
+//   const bfs = (i, j, num) => {
+//     visited[i][j] = true;
+
+//     let count = 1;
+//     let queue = [[i, j]];
+
+//     while (queue.length) {
+//       const [x, y] = queue.shift();
+
+//       for (const [dx, dy] of dir) {
+//         const nx = x + dx;
+//         const ny = y + dy;
+
+//         if (nx >= 0 && ny >= 0 && nx < n && ny < n) {
+//           if (!visited[nx][ny] && arr[nx][ny] === num) {
+//             queue.push([nx, ny]);
+//             visited[nx][ny] = true;
+//             count += 1;
+//           }
+//         }
+//       }
+//     }
+
+//     return count;
+//   };
+
+//   for (let i = 0; i < n; i++) {
+//     for (let j = 0; j < n; j++) {
+//       if (!visited[i][j]) {
+//         let count = bfs(i, j, arr[i][j]);
+//         if (count >= k) {
+//           complex.push(arr[i][j]);
+//         }
+//       }
+//     }
+//   }
+
+//   let countComplex = new Map();
+
+//   complex.forEach((v) => {
+//     countComplex.set(v, (countComplex.get(v) || 0) + 1);
+//   });
+
+//   let maxCount = 0;
+//   let maxNum = null;
+
+//   for (let [num, count] of countComplex) {
+//     if (maxCount < count) {
+//       maxCount = count;
+//       maxNum = num;
+//     } else if (maxCount === count) {
+//       if (num > maxNum) {
+//         maxNum = num;
+//       }
+//     }
+//   }
+
+//   console.log(maxNum);
+// });
+
+//과일구매
 const readline = require('readline');
 let rl = readline.createInterface({
   input: process.stdin,
@@ -772,74 +859,39 @@ rl.on('line', (line) => {
   }
 });
 
+//몇배인지에 따라 오름차순으로 정렬
+
 rl.on('close', () => {
-  let [n, k] = input[0].split(' ').map(Number);
+  let [n, k] = input[0].split(' ').map(Number); //개수, 돈
+  //n개의 줄 가격, 포만감
   let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-  let visited = Array.from({ length: n }, () => Array(n).fill(false));
-  let complex = [];
-  let dir = [
-    [0, 1],
-    [0, -1],
-    [1, 0],
-    [-1, 0],
-  ];
-
-  const bfs = (i, j, num) => {
-    visited[i][j] = true;
-
-    let count = 1;
-    let queue = [[i, j]];
-
-    while (queue.length) {
-      const [x, y] = queue.shift();
-
-      for (const [dx, dy] of dir) {
-        const nx = x + dx;
-        const ny = y + dy;
-
-        if (nx >= 0 && ny >= 0 && nx < n && ny < n) {
-          if (!visited[nx][ny] && arr[nx][ny] === num) {
-            queue.push([nx, ny]);
-            visited[nx][ny] = true;
-            count += 1;
-          }
-        }
-      }
-    }
-
-    return count;
-  };
-
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) {
-      if (!visited[i][j]) {
-        let count = bfs(i, j, arr[i][j]);
-        if (count >= k) {
-          complex.push(arr[i][j]);
-        }
-      }
-    }
-  }
-
-  let countComplex = new Map();
-
-  complex.forEach((v) => {
-    countComplex.set(v, (countComplex.get(v) || 0) + 1);
+  arr.map((v) => {
+    v.push(v[1] / v[0]);
   });
 
-  let maxCount = 0;
-  let maxNum = null;
+  arr.sort((a, b) => {
+    if (a[2] === b[2]) {
+      return b[1] - a[1];
+    }
+    return b[2] - a[2];
+  });
 
-  for (let [num, count] of countComplex) {
-    if (maxCount < count) {
-      maxCount = count;
-      maxNum = num;
-    } else if (maxCount === count) {
-      if (num > maxNum) {
-        maxNum = num;
-      }
+  let sumPrice = 0;
+  let sumF = 0;
+
+  while (sumPrice < k && arr.length > 0) {
+    let [price, full, x] = arr.shift();
+
+    if (price + sumPrice <= k) {
+      sumPrice += price;
+      sumF += full;
+    } else {
+      let n = k - sumPrice;
+      sumF += x * n;
+      sumPrice += n;
+      break;
     }
   }
 
-  console.log(maxNum);
+  console.log(sumF);
 });
