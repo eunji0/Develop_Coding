@@ -701,6 +701,63 @@ const readline = require('readline');
 })();
 
 //발전기
+// const readline = require('readline');
+// let rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+// let input = [];
+// rl.on('line', (line) => {
+//   if (!line) {
+//     rl.close();
+//   } else {
+//     input.push(line);
+//   }
+// });
+
+// rl.on('close', () => {
+//   let n = +input.shift();
+//   let arr = input.map((v) => v.split(' ').map(Number));
+//   let dir = [
+//     [0, 1],
+//     [0, -1],
+//     [1, 0],
+//     [-1, 0],
+//   ];
+
+//   const bfs = (i, j) => {
+//     let queue = [[i, j]];
+
+//     while (queue.length) {
+//       const [x, y] = queue.shift();
+
+//       for (const [dx, dy] of dir) {
+//         const nx = x + dx;
+//         const ny = y + dy;
+
+//         if (nx >= 0 && ny >= 0 && nx < n && ny < n && arr[nx][ny] === 1) {
+//           arr[nx][ny] = 0;
+//           queue.push([nx, ny]);
+//         }
+//       }
+//     }
+//   };
+
+//   let count = 0;
+//   for (let i = 0; i < n; i++) {
+//     for (let j = 0; j < n; j++) {
+//       if (arr[i][j] === 1) {
+//         arr[i][j] = 0;
+//         bfs(i, j);
+//         count += 1;
+//       }
+//     }
+//   }
+
+//   console.log(count);
+// });
+
+//발전기2
 const readline = require('readline');
 let rl = readline.createInterface({
   input: process.stdin,
@@ -716,8 +773,10 @@ rl.on('line', (line) => {
 });
 
 rl.on('close', () => {
-  let n = +input.shift();
-  let arr = input.map((v) => v.split(' ').map(Number));
+  let [n, k] = input[0].split(' ').map(Number);
+  let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+  let visited = Array.from({ length: n }, () => Array(n).fill(false));
+  let complex = [];
   let dir = [
     [0, 1],
     [0, -1],
@@ -725,7 +784,10 @@ rl.on('close', () => {
     [-1, 0],
   ];
 
-  const bfs = (i, j) => {
+  const bfs = (i, j, num) => {
+    visited[i][j] = true;
+
+    let count = 1;
     let queue = [[i, j]];
 
     while (queue.length) {
@@ -735,24 +797,49 @@ rl.on('close', () => {
         const nx = x + dx;
         const ny = y + dy;
 
-        if (nx >= 0 && ny >= 0 && nx < n && ny < n && arr[nx][ny] === 1) {
-          arr[nx][ny] = 0;
-          queue.push([nx, ny]);
+        if (nx >= 0 && ny >= 0 && nx < n && ny < n) {
+          if (!visited[nx][ny] && arr[nx][ny] === num) {
+            queue.push([nx, ny]);
+            visited[nx][ny] = true;
+            count += 1;
+          }
         }
       }
     }
+
+    return count;
   };
 
-  let count = 0;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      if (arr[i][j] === 1) {
-        arr[i][j] = 0;
-        bfs(i, j);
-        count += 1;
+      if (!visited[i][j]) {
+        let count = bfs(i, j, arr[i][j]);
+        if (count >= k) {
+          complex.push(arr[i][j]);
+        }
       }
     }
   }
 
-  console.log(count);
+  let countComplex = new Map();
+
+  complex.forEach((v) => {
+    countComplex.set(v, (countComplex.get(v) || 0) + 1);
+  });
+
+  let maxCount = 0;
+  let maxNum = null;
+
+  for (let [num, count] of countComplex) {
+    if (maxCount < count) {
+      maxCount = count;
+      maxNum = num;
+    } else if (maxCount === count) {
+      if (num > maxNum) {
+        maxNum = num;
+      }
+    }
+  }
+
+  console.log(maxNum);
 });
