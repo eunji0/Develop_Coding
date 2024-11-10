@@ -897,51 +897,110 @@ const readline = require('readline');
 // });
 
 //연합
+// const readline = require('readline');
+
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+
+// let lines = [];
+
+// rl.on('line', (line) => {
+//   lines.push(line.split(' ').map(Number));
+// }).on('close', () => {
+//   const [N, M] = lines[0];
+//   let cnt = 1;
+//   let graph = {};
+//   visited = Array(N + 1).fill(false);
+//   const check = Array.from(Array(N + 1), () => Array(N + 1).fill(false));
+
+//   for (let i = 1; i <= M; i++) {
+//     let [start, end] = lines[i];
+//     if (!graph[start]) {
+//       graph[start] = [];
+//     }
+//     graph[start].push(end);
+//     check[start][end] = true;
+//   }
+
+//   for (let i = 1; i <= N; i++) {
+//     if (visited[i] === false) {
+//       let queue = [i];
+
+//       while (queue.length > 0) {
+//         const currentNode = queue.shift();
+//         visited[currentNode] = true;
+
+//         for (const nextNode of graph[currentNode] || []) {
+//           if (graph[nextNode] && check[nextNode][currentNode] && !visited[nextNode]) {
+//             queue.push(nextNode);
+//           }
+//         }
+//       }
+
+//       cnt++;
+//     }
+//   }
+//   console.log(cnt - 1);
+//   process.exit();
+// });
+
+//구름이의 여행
+// Run by Node.js
 const readline = require('readline');
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+(async () => {
+  let rl = readline.createInterface({ input: process.stdin });
 
-let lines = [];
-
-rl.on('line', (line) => {
-  lines.push(line.split(' ').map(Number));
-}).on('close', () => {
-  const [N, M] = lines[0];
-  let cnt = 1;
-  let graph = {};
-  visited = Array(N + 1).fill(false);
-  const check = Array.from(Array(N + 1), () => Array(N + 1).fill(false));
-
-  for (let i = 1; i <= M; i++) {
-    let [start, end] = lines[i];
-    if (!graph[start]) {
-      graph[start] = [];
+  let input = [];
+  for await (const line of rl) {
+    if (line === '0') {
+      rl.close();
+    } else {
+      input.push(line);
     }
-    graph[start].push(end);
-    check[start][end] = true;
   }
 
-  for (let i = 1; i <= N; i++) {
-    if (visited[i] === false) {
-      let queue = [i];
+  let [n, m, k] = input[0].split(' ').map(Number);
+  let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+  let graph = Array.from({ length: n + 1 }, () => []);
 
-      while (queue.length > 0) {
-        const currentNode = queue.shift();
-        visited[currentNode] = true;
+  for (let i = 0; i < m; i++) {
+    let [a, b] = arr[i];
+    graph[a].push(b);
+    graph[b].push(a);
+  }
 
-        for (const nextNode of graph[currentNode] || []) {
-          if (graph[nextNode] && check[nextNode][currentNode] && !visited[nextNode]) {
-            queue.push(nextNode);
+  const bfs = (start, goal, k) => {
+    let visited = Array(n + 1).fill(false);
+
+    let queue = [[start, 0]];
+    visited[start] = true;
+
+    while (queue.length) {
+      let [node, dist] = queue.shift();
+
+      if (node === goal) {
+        return dist;
+      }
+
+      for (const next of graph[node]) {
+        if (!visited[next]) {
+          visited[next] = true;
+
+          if (dist + 1 <= k) {
+            queue.push([next, dist + 1]);
           }
         }
       }
-
-      cnt++;
     }
-  }
-  console.log(cnt - 1);
+
+    return -1;
+  };
+
+  const s = bfs(1, n, k);
+  console.log(s <= k && s > 0 ? 'YES' : 'NO');
+
   process.exit();
-});
+})();
