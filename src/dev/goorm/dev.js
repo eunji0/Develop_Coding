@@ -845,53 +845,103 @@ const readline = require('readline');
 // });
 
 //과일구매
+// const readline = require('readline');
+// let rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+// let input = [];
+// rl.on('line', (line) => {
+//   if (!line) {
+//     rl.close();
+//   } else {
+//     input.push(line);
+//   }
+// });
+
+// //몇배인지에 따라 오름차순으로 정렬
+
+// rl.on('close', () => {
+//   let [n, k] = input[0].split(' ').map(Number); //개수, 돈
+//   //n개의 줄 가격, 포만감
+//   let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+//   arr.map((v) => {
+//     v.push(v[1] / v[0]);
+//   });
+
+//   arr.sort((a, b) => {
+//     if (a[2] === b[2]) {
+//       return b[1] - a[1];
+//     }
+//     return b[2] - a[2];
+//   });
+
+//   let sumPrice = 0;
+//   let sumF = 0;
+
+//   while (sumPrice < k && arr.length > 0) {
+//     let [price, full, x] = arr.shift();
+
+//     if (price + sumPrice <= k) {
+//       sumPrice += price;
+//       sumF += full;
+//     } else {
+//       let n = k - sumPrice;
+//       sumF += x * n;
+//       sumPrice += n;
+//       break;
+//     }
+//   }
+
+//   console.log(sumF);
+// });
+
+//연합
 const readline = require('readline');
-let rl = readline.createInterface({
+
+const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-let input = [];
+
+let lines = [];
+
 rl.on('line', (line) => {
-  if (!line) {
-    rl.close();
-  } else {
-    input.push(line);
-  }
-});
+  lines.push(line.split(' ').map(Number));
+}).on('close', () => {
+  const [N, M] = lines[0];
+  let cnt = 1;
+  let graph = {};
+  visited = Array(N + 1).fill(false);
+  const check = Array.from(Array(N + 1), () => Array(N + 1).fill(false));
 
-//몇배인지에 따라 오름차순으로 정렬
-
-rl.on('close', () => {
-  let [n, k] = input[0].split(' ').map(Number); //개수, 돈
-  //n개의 줄 가격, 포만감
-  let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-  arr.map((v) => {
-    v.push(v[1] / v[0]);
-  });
-
-  arr.sort((a, b) => {
-    if (a[2] === b[2]) {
-      return b[1] - a[1];
+  for (let i = 1; i <= M; i++) {
+    let [start, end] = lines[i];
+    if (!graph[start]) {
+      graph[start] = [];
     }
-    return b[2] - a[2];
-  });
-
-  let sumPrice = 0;
-  let sumF = 0;
-
-  while (sumPrice < k && arr.length > 0) {
-    let [price, full, x] = arr.shift();
-
-    if (price + sumPrice <= k) {
-      sumPrice += price;
-      sumF += full;
-    } else {
-      let n = k - sumPrice;
-      sumF += x * n;
-      sumPrice += n;
-      break;
-    }
+    graph[start].push(end);
+    check[start][end] = true;
   }
 
-  console.log(sumF);
+  for (let i = 1; i <= N; i++) {
+    if (visited[i] === false) {
+      let queue = [i];
+
+      while (queue.length > 0) {
+        const currentNode = queue.shift();
+        visited[currentNode] = true;
+
+        for (const nextNode of graph[currentNode] || []) {
+          if (graph[nextNode] && check[nextNode][currentNode] && !visited[nextNode]) {
+            queue.push(nextNode);
+          }
+        }
+      }
+
+      cnt++;
+    }
+  }
+  console.log(cnt - 1);
+  process.exit();
 });
