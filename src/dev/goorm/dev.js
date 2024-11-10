@@ -947,64 +947,108 @@ const readline = require('readline');
 // });
 
 //구름이의 여행
-const readline = require('readline');
+// const readline = require('readline');
 
-(async () => {
-  let rl = readline.createInterface({ input: process.stdin });
+// (async () => {
+//   let rl = readline.createInterface({ input: process.stdin });
 
-  let input = [];
-  for await (const line of rl) {
-    if (line === '0') {
-      rl.close();
-    } else {
-      input.push(line);
-    }
-  }
+//   let input = [];
+//   for await (const line of rl) {
+//     if (line === '0') {
+//       rl.close();
+//     } else {
+//       input.push(line);
+//     }
+//   }
 
-  let [n, m, k] = input[0].split(' ').map(Number);
-  let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-  let graph = Array.from({ length: n + 1 }, () => []);
+//   let [n, m, k] = input[0].split(' ').map(Number);
+//   let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+//   let graph = Array.from({ length: n + 1 }, () => []);
 
-  for (let i = 0; i < m; i++) {
-    let [a, b] = arr[i];
-    graph[a].push(b);
-    graph[b].push(a);
-  }
+//   for (let i = 0; i < m; i++) {
+//     let [a, b] = arr[i];
+//     graph[a].push(b);
+//     graph[b].push(a);
+//   }
 
-  const bfs = (start, goal, k) => {
-    let visited = Array(n + 1).fill(false);
+//   const bfs = (start, goal, k) => {
+//     let visited = Array(n + 1).fill(false);
 
-    let queue = [[start, 0]];
-    visited[start] = true;
+//     let queue = [[start, 0]];
+//     visited[start] = true;
 
-    while (queue.length) {
-      let [node, dist] = queue.shift();
+//     while (queue.length) {
+//       let [node, dist] = queue.shift();
 
-      if (node === goal) {
-        return dist;
-      }
+//       if (node === goal) {
+//         return dist;
+//       }
 
-      for (const next of graph[node]) {
-        if (!visited[next]) {
-          visited[next] = true;
+//       for (const next of graph[node]) {
+//         if (!visited[next]) {
+//           visited[next] = true;
 
-          if (dist + 1 <= k) {
-            queue.push([next, dist + 1]);
-          }
-        }
-      }
-    }
+//           if (dist + 1 <= k) {
+//             queue.push([next, dist + 1]);
+//           }
+//         }
+//       }
+//     }
 
-    return -1;
-  };
+//     return -1;
+//   };
 
-  const s = bfs(1, n, k);
-  console.log(s <= k && s > 0 ? 'YES' : 'NO');
+//   const s = bfs(1, n, k);
+//   console.log(s <= k && s > 0 ? 'YES' : 'NO');
 
-  process.exit();
-})();
+//   process.exit();
+// })();
 
 //완벽한 햄버거 만들기
+// const readline = require('readline');
+// let rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+// let input = [];
+// rl.on('line', (line) => {
+//   input.push(line);
+// });
+
+// //n개의 재료를 순서대로 쌓
+// //맛은 모든 재료의 정도를 더한 값
+// //완벽하지 않은 구름 햄버거 0
+// //=>1,2,3,2,1 o 1,2,3,1,2 x
+// //1 2 3 2 1 커지다가 작아진다면 이전보다 꾸준히 작아햐 함
+
+// rl.on('close', () => {
+//   let n = +input[0];
+//   let arr = input[1].split(' ').map(Number);
+
+//   let maxNum = 0;
+//   let maxIndex = 0;
+
+//   arr.forEach((v, i) => {
+//     if (v > maxNum) {
+//       maxNum = v;
+//       maxIndex = i;
+//     }
+//   });
+
+//   let a = arr.slice(0, maxIndex);
+//   let b = arr.slice(maxIndex);
+
+//   let sa = [...a].sort((a, b) => a - b);
+//   let sb = [...b].sort((a, b) => b - a);
+
+//   if (a.join('') === sa.join('') && b.join('') === sb.join('')) {
+//     console.log(arr.reduce((a, c) => a + c, 0));
+//   } else {
+//     console.log(0);
+//   }
+// });
+
+//이진수 정렬
 const readline = require('readline');
 let rl = readline.createInterface({
   input: process.stdin,
@@ -1015,35 +1059,21 @@ rl.on('line', (line) => {
   input.push(line);
 });
 
-//n개의 재료를 순서대로 쌓
-//맛은 모든 재료의 정도를 더한 값
-//완벽하지 않은 구름 햄버거 0
-//=>1,2,3,2,1 o 1,2,3,1,2 x
-//1 2 3 2 1 커지다가 작아진다면 이전보다 꾸준히 작아햐 함
-
 rl.on('close', () => {
-  let n = +input[0];
+  let [n, k] = input[0].split(' ').map(Number);
   let arr = input[1].split(' ').map(Number);
+  let g = [];
 
-  let maxNum = 0;
-  let maxIndex = 0;
+  arr.forEach((v) => g.push([v, v.toString(2)]));
 
-  arr.forEach((v, i) => {
-    if (v > maxNum) {
-      maxNum = v;
-      maxIndex = i;
+  g.sort((a, b) => {
+    let aa = a[1].split('').filter((v) => v === '1').length;
+    let bb = b[1].split('').filter((v) => v === '1').length;
+    if (aa === bb) {
+      return b[0] - a[0];
     }
+    return bb - aa;
   });
 
-  let a = arr.slice(0, maxIndex);
-  let b = arr.slice(maxIndex);
-
-  let sa = [...a].sort((a, b) => a - b);
-  let sb = [...b].sort((a, b) => b - a);
-
-  if (a.join('') === sa.join('') && b.join('') === sb.join('')) {
-    console.log(arr.reduce((a, c) => a + c, 0));
-  } else {
-    console.log(0);
-  }
+  console.log(g[k - 1][0]);
 });
