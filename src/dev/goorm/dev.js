@@ -947,7 +947,6 @@ const readline = require('readline');
 // });
 
 //구름이의 여행
-// Run by Node.js
 const readline = require('readline');
 
 (async () => {
@@ -1004,3 +1003,47 @@ const readline = require('readline');
 
   process.exit();
 })();
+
+//완벽한 햄버거 만들기
+const readline = require('readline');
+let rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+let input = [];
+rl.on('line', (line) => {
+  input.push(line);
+});
+
+//n개의 재료를 순서대로 쌓
+//맛은 모든 재료의 정도를 더한 값
+//완벽하지 않은 구름 햄버거 0
+//=>1,2,3,2,1 o 1,2,3,1,2 x
+//1 2 3 2 1 커지다가 작아진다면 이전보다 꾸준히 작아햐 함
+
+rl.on('close', () => {
+  let n = +input[0];
+  let arr = input[1].split(' ').map(Number);
+
+  let maxNum = 0;
+  let maxIndex = 0;
+
+  arr.forEach((v, i) => {
+    if (v > maxNum) {
+      maxNum = v;
+      maxIndex = i;
+    }
+  });
+
+  let a = arr.slice(0, maxIndex);
+  let b = arr.slice(maxIndex);
+
+  let sa = [...a].sort((a, b) => a - b);
+  let sb = [...b].sort((a, b) => b - a);
+
+  if (a.join('') === sa.join('') && b.join('') === sb.join('')) {
+    console.log(arr.reduce((a, c) => a + c, 0));
+  } else {
+    console.log(0);
+  }
+});
