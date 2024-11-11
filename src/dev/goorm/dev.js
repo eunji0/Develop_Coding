@@ -1126,50 +1126,102 @@ const readline = require('readline');
 // });
 
 //통증
+// const readline = require('readline');
+// let rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+// let input;
+// rl.on('line', (line) => {
+//   input = +line;
+//   rl.close();
+// });
+
+// //1, 7, 14
+// //0보다 작아지는 건 사용할 수 없음
+
+// //100
+// //-14 86 1
+// //-14 72 2
+// //-14 58 3
+// //-14 44 4
+// //-14 30 5
+// //-14 16 6
+// //-14 2 7
+// //-1 1 8
+// //-1 0 9
+
+// rl.on('close', () => {
+//   //뺄 숫자를 찾는 메서드
+//   const findNum = (n) => {
+//     let numArr = [14, 7, 1];
+
+//     for (let i = 0; i < 3; i++) {
+//       if (n >= numArr[i]) {
+//         return numArr[i];
+//       }
+//     }
+//   };
+
+//   let count = 0;
+
+//   while (input > 0) {
+//     let minusNum = findNum(input);
+//     count += Math.floor(input / minusNum);
+//     input = input % minusNum;
+//   }
+
+//   console.log(count);
+// });
+
+//폭탄 구현하기2
 const readline = require('readline');
 let rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-let input;
+let input = [];
 rl.on('line', (line) => {
-  input = +line;
-  rl.close();
+  input.push(line);
 });
 
-//1, 7, 14
-//0보다 작아지는 건 사용할 수 없음
-
-//100
-//-14 86 1
-//-14 72 2
-//-14 58 3
-//-14 44 4
-//-14 30 5
-//-14 16 6
-//-14 2 7
-//-1 1 8
-//-1 0 9
-
 rl.on('close', () => {
-  //뺄 숫자를 찾는 메서드
-  const findNum = (n) => {
-    let numArr = [14, 7, 1];
+  let [n, k] = input[0].split(' ').map(Number);
+  let map = input.slice(1, n + 1).map((v) => v.split(' ').map((v) => (v === '0' ? 0 : v)));
+  let arr = input.slice(n + 1).map((v) => v.split(' ').map(Number));
+  let dist = Array.from({ length: n }, () => Array(n).fill(0));
+  let dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
 
-    for (let i = 0; i < 3; i++) {
-      if (n >= numArr[i]) {
-        return numArr[i];
+  const bfs = (i, j) => {
+    if (map[i][j] === 0) {
+      dist[i][j] += 1;
+    } else if (map[i][j] === '@') {
+      dist[i][j] += 2;
+    }
+
+    for (const [dx, dy] of dir) {
+      const nx = i + dx;
+      const ny = j + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < n && ny < n) {
+        if (map[nx][ny] === 0) {
+          dist[nx][ny] += 1;
+        } else if (map[nx][ny] === '@') {
+          dist[nx][ny] += 2;
+        }
       }
     }
   };
 
-  let count = 0;
+  arr.forEach((v) => {
+    let [a, b] = v;
 
-  while (input > 0) {
-    let minusNum = findNum(input);
-    count += Math.floor(input / minusNum);
-    input = input % minusNum;
-  }
-
-  console.log(count);
+    bfs(a - 1, b - 1);
+  });
+  console.log(Math.max(...dist.flat()));
 });
