@@ -1079,48 +1079,97 @@ const readline = require('readline');
 // });
 
 //구름 찾기 깃발
+// const readline = require('readline');
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+
+// let input = [];
+// rl.on('line', (line) => {
+//   input.push(line);
+// });
+
+// rl.on('close', () => {
+//   let [n, k] = input[0].split(' ').map(Number);
+//   let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+//   let sliceArr = Array.from({ length: n }, () => Array(n).fill(0));
+
+//   const dir = [
+//     [0, 1],
+//     [0, -1],
+//     [1, 0],
+//     [-1, 0],
+//     [1, 1],
+//     [-1, -1],
+//     [-1, 1],
+//     [1, -1],
+//   ];
+
+//   for (let i = 0; i < n; i++) {
+//     for (let j = 0; j < n; j++) {
+//       if (arr[i][j] === 0) {
+//         let count = 0;
+//         for (const [dx, dy] of dir) {
+//           const nx = i + dx;
+//           const ny = j + dy;
+//           if (nx >= 0 && ny >= 0 && nx < n && ny < n && arr[nx][ny] === 1) {
+//             count++;
+//           }
+//         }
+//         sliceArr[i][j] = count;
+//       }
+//     }
+//   }
+
+//   console.log(sliceArr.flat().filter((v) => v === k).length);
+// });
+
+//통증
 const readline = require('readline');
-const rl = readline.createInterface({
+let rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-
-let input = [];
+let input;
 rl.on('line', (line) => {
-  input.push(line);
+  input = +line;
+  rl.close();
 });
 
+//1, 7, 14
+//0보다 작아지는 건 사용할 수 없음
+
+//100
+//-14 86 1
+//-14 72 2
+//-14 58 3
+//-14 44 4
+//-14 30 5
+//-14 16 6
+//-14 2 7
+//-1 1 8
+//-1 0 9
+
 rl.on('close', () => {
-  let [n, k] = input[0].split(' ').map(Number);
-  let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-  let sliceArr = Array.from({ length: n }, () => Array(n).fill(0));
+  //뺄 숫자를 찾는 메서드
+  const findNum = (n) => {
+    let numArr = [14, 7, 1];
 
-  const dir = [
-    [0, 1],
-    [0, -1],
-    [1, 0],
-    [-1, 0],
-    [1, 1],
-    [-1, -1],
-    [-1, 1],
-    [1, -1],
-  ];
-
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) {
-      if (arr[i][j] === 0) {
-        let count = 0;
-        for (const [dx, dy] of dir) {
-          const nx = i + dx;
-          const ny = j + dy;
-          if (nx >= 0 && ny >= 0 && nx < n && ny < n && arr[nx][ny] === 1) {
-            count++;
-          }
-        }
-        sliceArr[i][j] = count;
+    for (let i = 0; i < 3; i++) {
+      if (n >= numArr[i]) {
+        return numArr[i];
       }
     }
+  };
+
+  let count = 0;
+
+  while (input > 0) {
+    let minusNum = findNum(input);
+    count += Math.floor(input / minusNum);
+    input = input % minusNum;
   }
 
-  console.log(sliceArr.flat().filter((v) => v === k).length);
+  console.log(count);
 });
