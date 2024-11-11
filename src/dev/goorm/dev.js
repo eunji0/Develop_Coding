@@ -1049,11 +1049,42 @@ const readline = require('readline');
 // });
 
 //이진수 정렬
+// const readline = require('readline');
+// let rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+// let input = [];
+// rl.on('line', (line) => {
+//   input.push(line);
+// });
+
+// rl.on('close', () => {
+//   let [n, k] = input[0].split(' ').map(Number);
+//   let arr = input[1].split(' ').map(Number);
+//   let g = [];
+
+//   arr.forEach((v) => g.push([v, v.toString(2)]));
+
+//   g.sort((a, b) => {
+//     let aa = a[1].split('').filter((v) => v === '1').length;
+//     let bb = b[1].split('').filter((v) => v === '1').length;
+//     if (aa === bb) {
+//       return b[0] - a[0];
+//     }
+//     return bb - aa;
+//   });
+
+//   console.log(g[k - 1][0]);
+// });
+
+//구름 찾기 깃발
 const readline = require('readline');
-let rl = readline.createInterface({
+const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
+
 let input = [];
 rl.on('line', (line) => {
   input.push(line);
@@ -1061,19 +1092,35 @@ rl.on('line', (line) => {
 
 rl.on('close', () => {
   let [n, k] = input[0].split(' ').map(Number);
-  let arr = input[1].split(' ').map(Number);
-  let g = [];
+  let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+  let sliceArr = Array.from({ length: n }, () => Array(n).fill(0));
 
-  arr.forEach((v) => g.push([v, v.toString(2)]));
+  const dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+    [1, 1],
+    [-1, -1],
+    [-1, 1],
+    [1, -1],
+  ];
 
-  g.sort((a, b) => {
-    let aa = a[1].split('').filter((v) => v === '1').length;
-    let bb = b[1].split('').filter((v) => v === '1').length;
-    if (aa === bb) {
-      return b[0] - a[0];
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (arr[i][j] === 0) {
+        let count = 0;
+        for (const [dx, dy] of dir) {
+          const nx = i + dx;
+          const ny = j + dy;
+          if (nx >= 0 && ny >= 0 && nx < n && ny < n && arr[nx][ny] === 1) {
+            count++;
+          }
+        }
+        sliceArr[i][j] = count;
+      }
     }
-    return bb - aa;
-  });
+  }
 
-  console.log(g[k - 1][0]);
+  console.log(sliceArr.flat().filter((v) => v === k).length);
 });
