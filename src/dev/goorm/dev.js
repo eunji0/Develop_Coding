@@ -1334,6 +1334,52 @@ const readline = require('readline');
 
 //uxui 디자이너
 // Run by Node.js
+// const readline = require('readline');
+
+// (async () => {
+//   let rl = readline.createInterface({ input: process.stdin });
+
+//   let input = [];
+//   for await (const line of rl) {
+//     if (!line) {
+//       rl.close();
+//     } else {
+//       input.push(line);
+//     }
+//   }
+
+//   let [n, m] = input.shift().split(' ').map(Number);
+//   let s = input.map((v) => v.split(' ').slice(1).map(Number));
+//   //m개의 줄
+//   let arr = [];
+
+//   // 초기화
+//   for (let i = 1; i <= n; i++) {
+//     arr.push([i, 0]);
+//   }
+
+//   for (let i = 0; i < m; i++) {
+//     s[i].map((v) => (arr[v - 1][1] += 1));
+//   }
+
+//   arr.sort((a, b) => {
+//     if (a[1] === b[1]) {
+//       return b[0] - a[0];
+//     }
+//     return b[1] - a[1];
+//   });
+
+//   let max = arr[0][1];
+//   let answer = [];
+//   arr = arr.filter((v) => v[1] === max);
+//   arr = arr.map((v) => v[0]);
+//   console.log(arr.join(' '));
+
+//   process.exit();
+// })();
+
+//제곱암호
+// Run by Node.js
 const readline = require('readline');
 
 (async () => {
@@ -1348,32 +1394,52 @@ const readline = require('readline');
     }
   }
 
-  let [n, m] = input.shift().split(' ').map(Number);
-  let s = input.map((v) => v.split(' ').slice(1).map(Number));
-  //m개의 줄
-  let arr = [];
+  let n = +input.shift();
+  let arr = input[0].split('');
+  let str = [
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z',
+  ];
 
-  // 초기화
-  for (let i = 1; i <= n; i++) {
-    arr.push([i, 0]);
-  }
-
-  for (let i = 0; i < m; i++) {
-    s[i].map((v) => (arr[v - 1][1] += 1));
-  }
-
-  arr.sort((a, b) => {
-    if (a[1] === b[1]) {
-      return b[0] - a[0];
+  let r = [];
+  for (let i = 0; i < n; i++) {
+    let s = arr[i];
+    let num = +arr[i + 1] * +arr[i + 1];
+    let sNum = str.indexOf(s);
+    let all = num + sNum;
+    if (all > 25) {
+      all = all % 26; // 범위 초과 시 26으로 나눈 나머지 사용
     }
-    return b[1] - a[1];
-  });
 
-  let max = arr[0][1];
-  let answer = [];
-  arr = arr.filter((v) => v[1] === max);
-  arr = arr.map((v) => v[0]);
-  console.log(arr.join(' '));
+    r.push(str[all]);
+    i += 1;
+  }
+
+  console.log(r.join(''));
 
   process.exit();
 })();
