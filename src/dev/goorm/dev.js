@@ -1227,6 +1227,83 @@ const readline = require('readline');
 // });
 
 //삼각형 더하기
+// const readline = require('readline');
+
+// (async () => {
+//   let rl = readline.createInterface({ input: process.stdin });
+
+//   let input = [];
+//   for await (const line of rl) {
+//     input.push(line);
+//   }
+
+//   let [n, q] = input[0].split(' ').map(Number);
+//   let map = input.slice(1, n + 1).map((v) => v.split(' ').map(Number));
+//   let xy = input.slice(n + 1).map((v) => v.split(' ').map(Number));
+
+//   // 함수: 세 점으로 구성된 삼각형 내부에 있는 좌표 구하기
+//   const getTrianglePoints = (x1, y1, x2, y2, x3, y3) => {
+//     // 삼각형을 구성하는 좌표들
+//     let points = [
+//       [x1, y1],
+//       [x2, y2],
+//       [x3, y3],
+//     ];
+
+//     // x, y 기준으로 정렬하여 범위를 구함
+//     let xMin = Math.min(x1, x2, x3),
+//       xMax = Math.max(x1, x2, x3);
+//     let yMin = Math.min(y1, y2, y3),
+//       yMax = Math.max(y1, y2, y3);
+
+//     let insidePoints = new Set();
+
+//     // 범위 내 모든 점을 순회하며 내부에 있는 점 찾기
+//     for (let x = xMin; x <= xMax; x++) {
+//       for (let y = yMin; y <= yMax; y++) {
+//         if (isPointInTriangle(x, y, points)) {
+//           insidePoints.add(`${x},${y}`);
+//         }
+//       }
+//     }
+//     return insidePoints;
+//   };
+
+//   // 함수: 점이 삼각형 내부에 있는지 확인
+//   const isPointInTriangle = (px, py, points) => {
+//     const [p1, p2, p3] = points;
+//     const areaOrig = triangleArea(...p1, ...p2, ...p3);
+//     const area1 = triangleArea(px, py, ...p2, ...p3);
+//     const area2 = triangleArea(...p1, px, py, ...p3);
+//     const area3 = triangleArea(...p1, ...p2, px, py);
+//     return areaOrig === area1 + area2 + area3;
+//   };
+
+//   // 함수: 삼각형 넓이 계산
+//   const triangleArea = (x1, y1, x2, y2, x3, y3) => {
+//     return Math.abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2);
+//   };
+
+//   // 각 좌표 케이스별로 삼각형 내부 점을 출력
+//   xy.forEach((v) => {
+//     let x1 = v[0],
+//       y1 = v[1],
+//       x2 = v[2],
+//       y2 = v[3],
+//       x3 = v[4],
+//       y3 = v[5];
+//     const pointsInTriangle = getTrianglePoints(x1, y1, x2, y2, x3, y3);
+//     let all = [...pointsInTriangle].map((p) => p.split(',').map(Number));
+//     let sum = 0;
+//     all.map((v) => (sum += map[v[0] - 1][v[1] - 1]));
+//     console.log(sum);
+//   });
+
+//   process.exit();
+// })();
+
+//구름 공방
+// Run by Node.js
 const readline = require('readline');
 
 (async () => {
@@ -1236,68 +1313,21 @@ const readline = require('readline');
   for await (const line of rl) {
     input.push(line);
   }
+  //2 -  8
+  //3 , 8-11
+  //12 17
 
-  let [n, q] = input[0].split(' ').map(Number);
-  let map = input.slice(1, n + 1).map((v) => v.split(' ').map(Number));
-  let xy = input.slice(n + 1).map((v) => v.split(' ').map(Number));
+  let n = +input[0];
+  let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+  let now = 0;
 
-  // 함수: 세 점으로 구성된 삼각형 내부에 있는 좌표 구하기
-  const getTrianglePoints = (x1, y1, x2, y2, x3, y3) => {
-    // 삼각형을 구성하는 좌표들
-    let points = [
-      [x1, y1],
-      [x2, y2],
-      [x3, y3],
-    ];
-
-    // x, y 기준으로 정렬하여 범위를 구함
-    let xMin = Math.min(x1, x2, x3),
-      xMax = Math.max(x1, x2, x3);
-    let yMin = Math.min(y1, y2, y3),
-      yMax = Math.max(y1, y2, y3);
-
-    let insidePoints = new Set();
-
-    // 범위 내 모든 점을 순회하며 내부에 있는 점 찾기
-    for (let x = xMin; x <= xMax; x++) {
-      for (let y = yMin; y <= yMax; y++) {
-        if (isPointInTriangle(x, y, points)) {
-          insidePoints.add(`${x},${y}`);
-        }
-      }
+  for (let i = 0; i < n; i++) {
+    let [a, b] = arr[i];
+    if (now < a) {
+      now = a;
     }
-    return insidePoints;
-  };
-
-  // 함수: 점이 삼각형 내부에 있는지 확인
-  const isPointInTriangle = (px, py, points) => {
-    const [p1, p2, p3] = points;
-    const areaOrig = triangleArea(...p1, ...p2, ...p3);
-    const area1 = triangleArea(px, py, ...p2, ...p3);
-    const area2 = triangleArea(...p1, px, py, ...p3);
-    const area3 = triangleArea(...p1, ...p2, px, py);
-    return areaOrig === area1 + area2 + area3;
-  };
-
-  // 함수: 삼각형 넓이 계산
-  const triangleArea = (x1, y1, x2, y2, x3, y3) => {
-    return Math.abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2);
-  };
-
-  // 각 좌표 케이스별로 삼각형 내부 점을 출력
-  xy.forEach((v) => {
-    let x1 = v[0],
-      y1 = v[1],
-      x2 = v[2],
-      y2 = v[3],
-      x3 = v[4],
-      y3 = v[5];
-    const pointsInTriangle = getTrianglePoints(x1, y1, x2, y2, x3, y3);
-    let all = [...pointsInTriangle].map((p) => p.split(',').map(Number));
-    let sum = 0;
-    all.map((v) => (sum += map[v[0] - 1][v[1] - 1]));
-    console.log(sum);
-  });
-
+    now += b;
+    console.log(now);
+  }
   process.exit();
 })();
