@@ -1304,6 +1304,36 @@ const readline = require('readline');
 
 //구름 공방
 // Run by Node.js
+// const readline = require('readline');
+
+// (async () => {
+//   let rl = readline.createInterface({ input: process.stdin });
+
+//   let input = [];
+//   for await (const line of rl) {
+//     input.push(line);
+//   }
+//   //2 -  8
+//   //3 , 8-11
+//   //12 17
+
+//   let n = +input[0];
+//   let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+//   let now = 0;
+
+//   for (let i = 0; i < n; i++) {
+//     let [a, b] = arr[i];
+//     if (now < a) {
+//       now = a;
+//     }
+//     now += b;
+//     console.log(now);
+//   }
+//   process.exit();
+// })();
+
+//uxui 디자이너
+// Run by Node.js
 const readline = require('readline');
 
 (async () => {
@@ -1311,23 +1341,39 @@ const readline = require('readline');
 
   let input = [];
   for await (const line of rl) {
-    input.push(line);
-  }
-  //2 -  8
-  //3 , 8-11
-  //12 17
-
-  let n = +input[0];
-  let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-  let now = 0;
-
-  for (let i = 0; i < n; i++) {
-    let [a, b] = arr[i];
-    if (now < a) {
-      now = a;
+    if (!line) {
+      rl.close();
+    } else {
+      input.push(line);
     }
-    now += b;
-    console.log(now);
   }
+
+  let [n, m] = input.shift().split(' ').map(Number);
+  let s = input.map((v) => v.split(' ').slice(1).map(Number));
+  //m개의 줄
+  let arr = [];
+
+  // 초기화
+  for (let i = 1; i <= n; i++) {
+    arr.push([i, 0]);
+  }
+
+  for (let i = 0; i < m; i++) {
+    s[i].map((v) => (arr[v - 1][1] += 1));
+  }
+
+  arr.sort((a, b) => {
+    if (a[1] === b[1]) {
+      return b[0] - a[0];
+    }
+    return b[1] - a[1];
+  });
+
+  let max = arr[0][1];
+  let answer = [];
+  arr = arr.filter((v) => v[1] === max);
+  arr = arr.map((v) => v[0]);
+  console.log(arr.join(' '));
+
   process.exit();
 })();
