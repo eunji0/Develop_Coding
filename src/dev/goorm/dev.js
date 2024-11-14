@@ -1380,6 +1380,71 @@ const readline = require('readline');
 
 //제곱암호
 // Run by Node.js
+// const readline = require('readline');
+
+// (async () => {
+//   let rl = readline.createInterface({ input: process.stdin });
+
+//   let input = [];
+//   for await (const line of rl) {
+//     if (!line) {
+//       rl.close();
+//     } else {
+//       input.push(line);
+//     }
+//   }
+
+//   let n = +input.shift();
+//   let arr = input[0].split('');
+//   let str = [
+//     'a',
+//     'b',
+//     'c',
+//     'd',
+//     'e',
+//     'f',
+//     'g',
+//     'h',
+//     'i',
+//     'j',
+//     'k',
+//     'l',
+//     'm',
+//     'n',
+//     'o',
+//     'p',
+//     'q',
+//     'r',
+//     's',
+//     't',
+//     'u',
+//     'v',
+//     'w',
+//     'x',
+//     'y',
+//     'z',
+//   ];
+
+//   let r = [];
+//   for (let i = 0; i < n; i++) {
+//     let s = arr[i];
+//     let num = +arr[i + 1] * +arr[i + 1];
+//     let sNum = str.indexOf(s);
+//     let all = num + sNum;
+//     if (all > 25) {
+//       all = all % 26; // 범위 초과 시 26으로 나눈 나머지 사용
+//     }
+
+//     r.push(str[all]);
+//     i += 1;
+//   }
+
+//   console.log(r.join(''));
+
+//   process.exit();
+// })();
+
+//퍼져나가는 소문
 const readline = require('readline');
 
 (async () => {
@@ -1394,52 +1459,38 @@ const readline = require('readline');
     }
   }
 
-  let n = +input.shift();
-  let arr = input[0].split('');
-  let str = [
-    'a',
-    'b',
-    'c',
-    'd',
-    'e',
-    'f',
-    'g',
-    'h',
-    'i',
-    'j',
-    'k',
-    'l',
-    'm',
-    'n',
-    'o',
-    'p',
-    'q',
-    'r',
-    's',
-    't',
-    'u',
-    'v',
-    'w',
-    'x',
-    'y',
-    'z',
-  ];
+  let n = +input[0]; // 전체 노드 수
+  let m = +input[1]; // 간선 수
+  let arr = input.slice(2).map((v) => v.split(' ').map(Number)); // 간선 리스트
 
-  let r = [];
-  for (let i = 0; i < n; i++) {
-    let s = arr[i];
-    let num = +arr[i + 1] * +arr[i + 1];
-    let sNum = str.indexOf(s);
-    let all = num + sNum;
-    if (all > 25) {
-      all = all % 26; // 범위 초과 시 26으로 나눈 나머지 사용
-    }
+  const graph = Array.from({ length: n + 1 }, () => []); // 인접 리스트 초기화
 
-    r.push(str[all]);
-    i += 1;
+  // 간선 정보를 기반으로 양방향 그래프 생성
+  for (const [a, b] of arr) {
+    graph[a].push(b);
+    graph[b].push(a);
   }
 
-  console.log(r.join(''));
+  let visited = Array(n + 1).fill(false);
+
+  const bfs = (start) => {
+    let queue = [start];
+    visited[start] = true;
+
+    while (queue.length) {
+      let node = queue.shift();
+
+      for (const next of graph[node]) {
+        if (!visited[next]) {
+          visited[next] = true;
+          queue.push(next);
+        }
+      }
+    }
+  };
+
+  bfs(1);
+  console.log(visited.filter((v) => v === true).length);
 
   process.exit();
 })();
