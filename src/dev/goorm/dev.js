@@ -1583,7 +1583,33 @@ const readline = require('readline');
 //   process.exit();
 // })();
 
-//8진수 계산시
+//8진수 계산기
+// Run by Node.js
+// const readline = require('readline');
+
+// (async () => {
+//   let rl = readline.createInterface({ input: process.stdin });
+
+//   let input = [];
+//   for await (const line of rl) {
+//     if (!line) {
+//       rl.close();
+//     } else {
+//       input.push(line);
+//     }
+//   }
+
+//   let n = input[0];
+//   let num = input[1]
+//     .split(' ')
+//     .map(Number)
+//     .reduce((a, c) => a + c, 0);
+//   console.log(num.toString(8));
+
+//   process.exit();
+// })();
+
+//회전 배열
 // Run by Node.js
 const readline = require('readline');
 
@@ -1599,12 +1625,14 @@ const readline = require('readline');
     }
   }
 
-  let n = input[0];
-  let num = input[1]
-    .split(' ')
-    .map(Number)
-    .reduce((a, c) => a + c, 0);
-  console.log(num.toString(8));
+  let [n, m] = input[0].split(' ').map(Number);
+  let arr = input[1].split(' ').map(Number);
+  let currIdx = 0;
 
+  for (let i = 0; i < m; i++) {
+    currIdx = (currIdx + arr[currIdx]) % n;
+  }
+
+  console.log(arr[currIdx]);
   process.exit();
 })();
