@@ -1533,27 +1533,64 @@ const readline = require('readline');
 
 //구름 숫자
 // Run by Node.js
+// const readline = require('readline');
+
+// (async () => {
+//   let rl = readline.createInterface({ input: process.stdin });
+
+//   let input = [];
+//   let strArr = {
+//     1: 'qw',
+//     2: 'as',
+//     3: 'zx',
+//     4: 'we',
+//     5: 'sd',
+//     6: 'xc',
+//     7: 'er',
+//     8: 'df',
+//     9: 'cv',
+//     0: 'ze',
+//   };
+
+//   for await (const line of rl) {
+//     if (!line) {
+//       rl.close();
+//     } else {
+//       input.push(line);
+//     }
+//   }
+
+//   let n = +input[0];
+//   let str = input[1].split('');
+
+//   const findStr = (s) => {
+//     for (let i in strArr) {
+//       if (strArr[i] === s) {
+//         return i;
+//       }
+//     }
+//   };
+
+//   let result = '';
+//   for (let i = 0; i < n - 1; i++) {
+//     let s = str[i] + str[i + 1];
+//     if (findStr(s) !== undefined) {
+//       result += findStr(s);
+//     }
+//   }
+
+//   console.log(result);
+//   process.exit();
+// })();
+
+//8진수 계산시
+// Run by Node.js
 const readline = require('readline');
 
 (async () => {
   let rl = readline.createInterface({ input: process.stdin });
 
   let input = [];
-  let strArr = {
-    1: 'qw',
-    2: 'as',
-    3: 'zx',
-    4: 'we',
-    5: 'sd',
-    6: 'xc',
-    7: 'er',
-    8: 'df',
-    9: 'cv',
-    0: 'ze',
-  };
-
-  //가능한 경우의 수?
-
   for await (const line of rl) {
     if (!line) {
       rl.close();
@@ -1562,25 +1599,12 @@ const readline = require('readline');
     }
   }
 
-  let n = +input[0];
-  let str = input[1].split('');
+  let n = input[0];
+  let num = input[1]
+    .split(' ')
+    .map(Number)
+    .reduce((a, c) => a + c, 0);
+  console.log(num.toString(8));
 
-  const findStr = (s) => {
-    for (let i in strArr) {
-      if (strArr[i] === s) {
-        return i;
-      }
-    }
-  };
-
-  let result = '';
-  for (let i = 0; i < n - 1; i++) {
-    let s = str[i] + str[i + 1];
-    if (findStr(s) !== undefined) {
-      result += findStr(s);
-    }
-  }
-
-  console.log(result);
   process.exit();
 })();
