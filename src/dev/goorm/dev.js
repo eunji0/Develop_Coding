@@ -1497,12 +1497,63 @@ const readline = require('readline');
 
 //구름 아이돌
 // Run by Node.js
+// const readline = require('readline');
+
+// (async () => {
+//   let rl = readline.createInterface({ input: process.stdin });
+
+//   let input = [];
+//   for await (const line of rl) {
+//     if (!line) {
+//       rl.close();
+//     } else {
+//       input.push(line);
+//     }
+//   }
+
+//   let n = +input[0];
+//   let arr = input[1].split(' ').map(Number);
+
+//   let box = [];
+
+//   arr.map((v, i) => {
+//     box.push([i + 1, v]);
+//   });
+
+//   box.sort((a, b) => b[1] - a[1]);
+//   console.log(
+//     box
+//       .slice(0, 3)
+//       .map((v) => v[0])
+//       .join(' '),
+//   );
+
+//   process.exit();
+// })();
+
+//구름 숫자
+// Run by Node.js
 const readline = require('readline');
 
 (async () => {
   let rl = readline.createInterface({ input: process.stdin });
 
   let input = [];
+  let strArr = {
+    1: 'qw',
+    2: 'as',
+    3: 'zx',
+    4: 'we',
+    5: 'sd',
+    6: 'xc',
+    7: 'er',
+    8: 'df',
+    9: 'cv',
+    0: 'ze',
+  };
+
+  //가능한 경우의 수?
+
   for await (const line of rl) {
     if (!line) {
       rl.close();
@@ -1512,21 +1563,24 @@ const readline = require('readline');
   }
 
   let n = +input[0];
-  let arr = input[1].split(' ').map(Number);
+  let str = input[1].split('');
 
-  let box = [];
+  const findStr = (s) => {
+    for (let i in strArr) {
+      if (strArr[i] === s) {
+        return i;
+      }
+    }
+  };
 
-  arr.map((v, i) => {
-    box.push([i + 1, v]);
-  });
+  let result = '';
+  for (let i = 0; i < n - 1; i++) {
+    let s = str[i] + str[i + 1];
+    if (findStr(s) !== undefined) {
+      result += findStr(s);
+    }
+  }
 
-  box.sort((a, b) => b[1] - a[1]);
-  console.log(
-    box
-      .slice(0, 3)
-      .map((v) => v[0])
-      .join(' '),
-  );
-
+  console.log(result);
   process.exit();
 })();
