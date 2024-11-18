@@ -1685,67 +1685,130 @@ const readline = require('readline');
 // })();
 
 //세계여행
+// const readline = require('readline');
+
+// (async () => {
+//   let rl = readline.createInterface({ input: process.stdin });
+//   let input = [];
+
+//   for await (const line of rl) {
+//     if (!line) {
+//       rl.close();
+//     } else {
+//       input.push(line);
+//     }
+//   }
+
+//   // 입력 처리
+//   let [n, m] = input[0].split(' ').map(Number); // 나라 수와 항로 수
+//   let languages = input[1].split(' ').map(Number); // 각 나라의 언어
+//   let connections = input.slice(2).map((v) => v.split(' ').map(Number)); // 항로 정보
+
+//   // 그래프 생성
+//   let graph = Array.from({ length: n + 1 }, () => []);
+//   for (const [a, b] of connections) {
+//     graph[a].push(b);
+//     graph[b].push(a);
+//   }
+
+//   // BFS 탐색
+//   const bfs = (start, knownLanguages) => {
+//     let queue = [start];
+//     let visited = Array(n + 1).fill(false);
+//     visited[start] = true;
+//     let reachable = 0;
+
+//     while (queue.length) {
+//       const current = queue.shift();
+//       reachable++;
+
+//       for (const neighbor of graph[current]) {
+//         if (!visited[neighbor] && knownLanguages.has(languages[neighbor - 1])) {
+//           visited[neighbor] = true;
+//           queue.push(neighbor);
+//         }
+//       }
+//     }
+
+//     return reachable;
+//   };
+
+//   // 1번 나라의 언어
+//   const firstCountryLanguage = languages[0];
+
+//   // 모든 언어 중 최대 방문 가능한 나라 계산
+//   let maxReachable = 0;
+//   for (let language = 1; language <= 10; language++) {
+//     if (language === firstCountryLanguage) continue;
+
+//     // 현재 언어와 추가 학습 언어를 사용할 수 있는 상태로 BFS
+//     const knownLanguages = new Set([firstCountryLanguage, language]);
+//     maxReachable = Math.max(maxReachable, bfs(1, knownLanguages));
+//   }
+
+//   console.log(maxReachable);
+//   process.exit();
+// })();
+
+//대체 경로
 const readline = require('readline');
+let rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-(async () => {
-  let rl = readline.createInterface({ input: process.stdin });
-  let input = [];
-
-  for await (const line of rl) {
-    if (!line) {
-      rl.close();
-    } else {
-      input.push(line);
-    }
+let input = [];
+rl.on('line', (line) => {
+  if (!line) {
+    rl.close();
+  } else {
+    input.push(line);
   }
+});
 
-  // 입력 처리
-  let [n, m] = input[0].split(' ').map(Number); // 나라 수와 항로 수
-  let languages = input[1].split(' ').map(Number); // 각 나라의 언어
-  let connections = input.slice(2).map((v) => v.split(' ').map(Number)); // 항로 정보
+rl.on('close', () => {
+  let [n, m, s, e] = input[0].split(' ').map(Number); // n: 노드 수, m: 간선 수, s: 시작 노드, e: 목표 노드
+  let edges = input.slice(1).map((v) => v.split(' ').map(Number)); // 간선 정보
 
   // 그래프 생성
   let graph = Array.from({ length: n + 1 }, () => []);
-  for (const [a, b] of connections) {
+  edges.forEach(([a, b]) => {
     graph[a].push(b);
     graph[b].push(a);
-  }
+  });
 
-  // BFS 탐색
-  const bfs = (start, knownLanguages) => {
+  const bfs = (start, end, ex) => {
     let queue = [start];
     let visited = Array(n + 1).fill(false);
     visited[start] = true;
-    let reachable = 0;
-
+    let count = 1;
     while (queue.length) {
-      const current = queue.shift();
-      reachable++;
+      let size = queue.length; // 현재 레벨의 노드 수 저장
+      for (let i = 0; i < size; i++) {
+        let node = queue.shift();
 
-      for (const neighbor of graph[current]) {
-        if (!visited[neighbor] && knownLanguages.has(languages[neighbor - 1])) {
-          visited[neighbor] = true;
-          queue.push(neighbor);
+        if (node === ex) {
+          return -1;
+        }
+        if (node === end) {
+          return count;
+        }
+
+        for (const next of graph[node]) {
+          if (!visited[next] && next !== ex) {
+            queue.push(next);
+            visited[next] = true;
+          }
         }
       }
+
+      count++;
     }
 
-    return reachable;
+    return -1;
   };
 
-  // 1번 나라의 언어
-  const firstCountryLanguage = languages[0];
-
-  // 모든 언어 중 최대 방문 가능한 나라 계산
-  let maxReachable = 0;
-  for (let language = 1; language <= 10; language++) {
-    if (language === firstCountryLanguage) continue;
-
-    // 현재 언어와 추가 학습 언어를 사용할 수 있는 상태로 BFS
-    const knownLanguages = new Set([firstCountryLanguage, language]);
-    maxReachable = Math.max(maxReachable, bfs(1, knownLanguages));
+  for (let i = 1; i <= n; i++) {
+    console.log(bfs(s, e, i));
   }
-
-  console.log(maxReachable);
-  process.exit();
-})();
+});
