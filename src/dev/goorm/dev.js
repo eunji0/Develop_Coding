@@ -1611,39 +1611,86 @@ const readline = require('readline');
 
 //회전 배열
 // Run by Node.js
-const readline = require('readline');
+// const readline = require('readline');
 
-(async () => {
-  let rl = readline.createInterface({ input: process.stdin });
+// (async () => {
+//   let rl = readline.createInterface({ input: process.stdin });
 
-  let input = [];
-  for await (const line of rl) {
-    if (!line) {
-      rl.close();
-    } else {
-      input.push(line);
-    }
-  }
+//   let input = [];
+//   for await (const line of rl) {
+//     if (!line) {
+//       rl.close();
+//     } else {
+//       input.push(line);
+//     }
+//   }
 
-  let [n, m] = input[0].split(' ').map(Number);
-  let arr = input[1].split(' ').map(Number);
-  let currIdx = 0;
+//   let [n, m] = input[0].split(' ').map(Number);
+//   let arr = input[1].split(' ').map(Number);
+//   let currIdx = 0;
 
-  for (let i = 0; i < m; i++) {
-    currIdx = (currIdx + arr[currIdx]) % n;
-  }
+//   for (let i = 0; i < m; i++) {
+//     currIdx = (currIdx + arr[currIdx]) % n;
+//   }
 
-  console.log(arr[currIdx]);
-  process.exit();
-})();
+//   console.log(arr[currIdx]);
+//   process.exit();
+// })();
 
 //두루마리 휴지공장
+// const readline = require('readline');
+
+// (async () => {
+//   let rl = readline.createInterface({ input: process.stdin });
+
+//   let input = [];
+//   for await (const line of rl) {
+//     if (!line) {
+//       rl.close();
+//     } else {
+//       input.push(line);
+//     }
+//   }
+
+//   let [n, m] = input[0].split(' ').map(Number); // 휴지의 개수, 남은 휴지 길이
+//   let arr = input[1].split(' ').map(Number);
+
+//   let currentSum = arr.reduce((a, c) => a + c, 0); // 현재 휴지 총합
+//   let maxLength = Math.max(...arr);
+//   let left = maxLength;
+//   let right = maxLength + Math.floor(m / n);
+//   let result = -1;
+
+//   // 이진 탐색으로 최대 길이 찾기
+//   while (left <= right) {
+//     let mid = Math.floor((left + right) / 2);
+//     let needed = arr.map((v) => Math.max(0, mid - v)).reduce((a, c) => a + c, 0);
+
+//     if (needed <= m) {
+//       result = mid; // 조건 만족, 더 큰 값 시도
+//       left = mid + 1;
+//     } else {
+//       right = mid - 1; // 조건 불만족, 더 작은 값 시도
+//     }
+//   }
+
+//   // 출력
+//   if (result === -1) {
+//     console.log('No way!');
+//   } else {
+//     console.log(result);
+//   }
+
+//   process.exit();
+// })();
+
+//세계여행
 const readline = require('readline');
 
 (async () => {
   let rl = readline.createInterface({ input: process.stdin });
-
   let input = [];
+
   for await (const line of rl) {
     if (!line) {
       rl.close();
@@ -1652,34 +1699,53 @@ const readline = require('readline');
     }
   }
 
-  let [n, m] = input[0].split(' ').map(Number); // 휴지의 개수, 남은 휴지 길이
-  let arr = input[1].split(' ').map(Number);
+  // 입력 처리
+  let [n, m] = input[0].split(' ').map(Number); // 나라 수와 항로 수
+  let languages = input[1].split(' ').map(Number); // 각 나라의 언어
+  let connections = input.slice(2).map((v) => v.split(' ').map(Number)); // 항로 정보
 
-  let currentSum = arr.reduce((a, c) => a + c, 0); // 현재 휴지 총합
-  let maxLength = Math.max(...arr);
-  let left = maxLength;
-  let right = maxLength + Math.floor(m / n);
-  let result = -1;
+  // 그래프 생성
+  let graph = Array.from({ length: n + 1 }, () => []);
+  for (const [a, b] of connections) {
+    graph[a].push(b);
+    graph[b].push(a);
+  }
 
-  // 이진 탐색으로 최대 길이 찾기
-  while (left <= right) {
-    let mid = Math.floor((left + right) / 2);
-    let needed = arr.map((v) => Math.max(0, mid - v)).reduce((a, c) => a + c, 0);
+  // BFS 탐색
+  const bfs = (start, knownLanguages) => {
+    let queue = [start];
+    let visited = Array(n + 1).fill(false);
+    visited[start] = true;
+    let reachable = 0;
 
-    if (needed <= m) {
-      result = mid; // 조건 만족, 더 큰 값 시도
-      left = mid + 1;
-    } else {
-      right = mid - 1; // 조건 불만족, 더 작은 값 시도
+    while (queue.length) {
+      const current = queue.shift();
+      reachable++;
+
+      for (const neighbor of graph[current]) {
+        if (!visited[neighbor] && knownLanguages.has(languages[neighbor - 1])) {
+          visited[neighbor] = true;
+          queue.push(neighbor);
+        }
+      }
     }
+
+    return reachable;
+  };
+
+  // 1번 나라의 언어
+  const firstCountryLanguage = languages[0];
+
+  // 모든 언어 중 최대 방문 가능한 나라 계산
+  let maxReachable = 0;
+  for (let language = 1; language <= 10; language++) {
+    if (language === firstCountryLanguage) continue;
+
+    // 현재 언어와 추가 학습 언어를 사용할 수 있는 상태로 BFS
+    const knownLanguages = new Set([firstCountryLanguage, language]);
+    maxReachable = Math.max(maxReachable, bfs(1, knownLanguages));
   }
 
-  // 출력
-  if (result === -1) {
-    console.log('No way!');
-  } else {
-    console.log(result);
-  }
-
+  console.log(maxReachable);
   process.exit();
 })();
