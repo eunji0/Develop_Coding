@@ -1636,3 +1636,50 @@ const readline = require('readline');
   console.log(arr[currIdx]);
   process.exit();
 })();
+
+//두루마리 휴지공장
+const readline = require('readline');
+
+(async () => {
+  let rl = readline.createInterface({ input: process.stdin });
+
+  let input = [];
+  for await (const line of rl) {
+    if (!line) {
+      rl.close();
+    } else {
+      input.push(line);
+    }
+  }
+
+  let [n, m] = input[0].split(' ').map(Number); // 휴지의 개수, 남은 휴지 길이
+  let arr = input[1].split(' ').map(Number);
+
+  let currentSum = arr.reduce((a, c) => a + c, 0); // 현재 휴지 총합
+  let maxLength = Math.max(...arr);
+  let left = maxLength;
+  let right = maxLength + Math.floor(m / n);
+  let result = -1;
+
+  // 이진 탐색으로 최대 길이 찾기
+  while (left <= right) {
+    let mid = Math.floor((left + right) / 2);
+    let needed = arr.map((v) => Math.max(0, mid - v)).reduce((a, c) => a + c, 0);
+
+    if (needed <= m) {
+      result = mid; // 조건 만족, 더 큰 값 시도
+      left = mid + 1;
+    } else {
+      right = mid - 1; // 조건 불만족, 더 작은 값 시도
+    }
+  }
+
+  // 출력
+  if (result === -1) {
+    console.log('No way!');
+  } else {
+    console.log(result);
+  }
+
+  process.exit();
+})();
