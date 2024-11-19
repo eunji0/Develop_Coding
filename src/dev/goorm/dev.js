@@ -1904,99 +1904,99 @@ const readline = require('readline');
 // });
 
 //모래섬
-const readline = require('readline');
+// const readline = require('readline');
 
-(async () => {
-  let rl = readline.createInterface({ input: process.stdin });
+// (async () => {
+//   let rl = readline.createInterface({ input: process.stdin });
 
-  let input = [];
-  for await (const line of rl) {
-    if (!line) {
-      rl.close();
-    } else {
-      input.push(line);
-    }
-  }
+//   let input = [];
+//   for await (const line of rl) {
+//     if (!line) {
+//       rl.close();
+//     } else {
+//       input.push(line);
+//     }
+//   }
 
-  let [n, m] = input[0].split(' ').map(Number);
-  let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-  let dir = [
-    [0, 1],
-    [0, -1],
-    [1, 0],
-    [-1, 0],
-  ];
+//   let [n, m] = input[0].split(' ').map(Number);
+//   let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+//   let dir = [
+//     [0, 1],
+//     [0, -1],
+//     [1, 0],
+//     [-1, 0],
+//   ];
 
-  const calWater = (i, j, arr, sliceArr) => {
-    for (const [dx, dy] of dir) {
-      const nx = i + dx;
-      const ny = j + dy;
+//   const calWater = (i, j, arr, sliceArr) => {
+//     for (const [dx, dy] of dir) {
+//       const nx = i + dx;
+//       const ny = j + dy;
 
-      if (nx >= 0 && ny >= 0 && nx < n && ny < m && arr[nx][ny] === 1) {
-        sliceArr[nx][ny] = 0;
-      }
-    }
-  };
+//       if (nx >= 0 && ny >= 0 && nx < n && ny < m && arr[nx][ny] === 1) {
+//         sliceArr[nx][ny] = 0;
+//       }
+//     }
+//   };
 
-  const countCal = (i, j, visited, arr) => {
-    let queue = [[i, j]];
+//   const countCal = (i, j, visited, arr) => {
+//     let queue = [[i, j]];
 
-    while (queue.length) {
-      const [x, y] = queue.shift();
+//     while (queue.length) {
+//       const [x, y] = queue.shift();
 
-      for (const [dx, dy] of dir) {
-        const nx = x + dx;
-        const ny = y + dy;
+//       for (const [dx, dy] of dir) {
+//         const nx = x + dx;
+//         const ny = y + dy;
 
-        if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && arr[nx][ny] === 1) {
-          visited[nx][ny] = true;
-          queue.push([nx, ny]);
-        }
-      }
-    }
-  };
+//         if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && arr[nx][ny] === 1) {
+//           visited[nx][ny] = true;
+//           queue.push([nx, ny]);
+//         }
+//       }
+//     }
+//   };
 
-  const countMap = (arr) => {
-    let visited = Array.from({ length: n }, () => Array(m).fill(false));
-    let count = 0;
+//   const countMap = (arr) => {
+//     let visited = Array.from({ length: n }, () => Array(m).fill(false));
+//     let count = 0;
 
-    for (let i = 0; i < n; i++) {
-      for (let j = 0; j < m; j++) {
-        if (arr[i][j] === 1 && !visited[i][j]) {
-          visited[i][j] = true;
-          countCal(i, j, visited, arr);
-          count++;
-        }
-      }
-    }
+//     for (let i = 0; i < n; i++) {
+//       for (let j = 0; j < m; j++) {
+//         if (arr[i][j] === 1 && !visited[i][j]) {
+//           visited[i][j] = true;
+//           countCal(i, j, visited, arr);
+//           count++;
+//         }
+//       }
+//     }
 
-    return count;
-  };
+//     return count;
+//   };
 
-  let count = 1;
-  let c = 0;
+//   let count = 1;
+//   let c = 0;
 
-  let iterations = 2;
-  while (count < 2) {
-    if (count === 0) {
-      console.log(-1);
-      return;
-    }
+//   let iterations = 2;
+//   while (count < 2) {
+//     if (count === 0) {
+//       console.log(-1);
+//       return;
+//     }
 
-    c++;
-    let sliceArr = arr.map((row) => [...row]);
-    for (let i = 0; i < n; i++) {
-      for (let j = 0; j < m; j++) {
-        if (arr[i][j] === 0) {
-          calWater(i, j, arr, sliceArr);
-        }
-      }
-    }
-    arr = sliceArr;
-    count = countMap(arr);
-  }
+//     c++;
+//     let sliceArr = arr.map((row) => [...row]);
+//     for (let i = 0; i < n; i++) {
+//       for (let j = 0; j < m; j++) {
+//         if (arr[i][j] === 0) {
+//           calWater(i, j, arr, sliceArr);
+//         }
+//       }
+//     }
+//     arr = sliceArr;
+//     count = countMap(arr);
+//   }
 
-  console.log(c);
+//   console.log(c);
 
-  process.exit();
-})();
+//   process.exit();
+// })();

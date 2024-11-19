@@ -64,7 +64,6 @@
 
 // console.log(result.trim())
 
-
 //1916-최소비용 구하기
 // const fs = require('fs');
 // const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
@@ -170,7 +169,6 @@
 // const result = dijkstra(start);
 // console.log(result[goal]);
 
-
 //1238-파티
 
 //n: 학생수
@@ -178,7 +176,7 @@
 //x: 파티 장소
 
 //경로: 자신의 마을 -> 파티 장소 ->자신의 마을
-//이 도로들은 단방향이기 때문에 아마 그들이 오고 가는 길이 다를지도 모른다. 
+//이 도로들은 단방향이기 때문에 아마 그들이 오고 가는 길이 다를지도 모른다.
 //출력: . N명의 학생들 중 오고 가는데 가장 많은 시간을 소비하는 학생(번호)
 
 //문제풀이과정
@@ -313,7 +311,6 @@
 
 // console.log(maxTime);
 
-
 //1261-알고스팟
 
 // 시작점 (1, 1)에서 BFS를 시작, 방문한 방마다 부순 벽의 개수를 기록.
@@ -358,7 +355,6 @@
 // }
 
 // console.log(bfs())
-
 
 //4485-녹색 옷 입은 애가 젤다지?
 // const fs = require('fs');
@@ -445,7 +441,7 @@
 //         check=true
 //       }
 //     }
-    
+
 //     if(!check) break
 //   }
 
@@ -454,7 +450,7 @@
 //       return false
 //     }
 //   }
-  
+
 //   return true
 // }
 
@@ -466,9 +462,7 @@
 //   }
 // }
 
-
-
-//11779-최소비용 구하기 2 
+//11779-최소비용 구하기 2
 
 //문제풀이과정
 
@@ -489,7 +483,6 @@
 //출발 도시에서 도착 도시까지 가는데 드는 최소 비용
 // 경로에 포함되어있는 도시의 개수
 //최소 비용을 갖는 경로를 방문하는 도시 순서대로 출력
-
 
 // const fs = require('fs');
 // const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
@@ -547,7 +540,7 @@
 //     if(this.heap.length===1) return this.heap.pop()
 //       //제일 뒤에 있는 걸 꺼내 top으로 올려둔 뒤 내려가며 자리를 찾음
 //       const top = this.heap[0]
-//       this.heap[0] = this.heap.pop() 
+//       this.heap[0] = this.heap.pop()
 //       this.bubbleDown()
 //       return top
 //   }
@@ -628,7 +621,7 @@
 //입력받기:
 //테스트케이스의 개수 TC
 //첫번째줄: 지점의 수 N, 도로의 개수 M, 웜홀의 개수 W
-//두 번째 줄부터 M+1번째 줄에 도로의 정보 
+//두 번째 줄부터 M+1번째 줄에 도로의 정보
 // M+2번째 줄부터 M+W+1번째 줄: S와 E는 연결된 지점의 번호, T는 이 도로를 통해 이동하는데 걸리는 시간
 
 //알고리즘 구현:
@@ -642,13 +635,11 @@
 //출력:
 //TC개의 줄에 걸쳐서 만약에 시간이 줄어들면서 출발 위치로 돌아오는 것이 가능하면 YES, 불가능하면 NO
 
-
 // const fs = require('fs');
 // const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 // const input = fs.readFileSync(filePath).toString().trim().split('\n');
 // let t = +input[0];
 // let index = 1;
-
 
 // //벨만 포드 알고리즘
 // const bellmanFord = (vertices, edges, start) =>{
@@ -696,7 +687,6 @@
 //     console.log('NO')
 //   }
 // }
-
 
 //2458-키 순서
 
@@ -757,8 +747,6 @@
 // }
 
 // console.log(reuslt)
-
-
 
 //1753-최단경로
 
@@ -829,7 +817,7 @@
 //     while(true){
 //       let leftChildIndex = index*2+1;
 //       let rightChildIndex = index*2+2;
-//       let smallest = index; 
+//       let smallest = index;
 
 //       if(leftChildIndex<length && this.heap[leftChildIndex][1] < this.heap[smallest][1]){
 //         smallest = leftChildIndex
@@ -882,11 +870,10 @@
 //   console.log(r[i]===Infinity? 'INF':r[i])
 // }
 
-
 //11403-경로찾기
 
 //입력:
-//정점의 개수 N 
+//정점의 개수 N
 //그래프의 인접 행렬(1 or 0)
 
 //알고리즘:
@@ -922,7 +909,6 @@
 // for(let i=0; i<n; i++){
 //   console.log(result[i].join(' '))
 // }
-
 
 //11404-플로이드
 
@@ -972,7 +958,6 @@
 // for(let i=0; i<n; i++){
 //   console.log(result[i].map(v=>v===Infinity?0:v).join(' '))
 // }
-
 
 //1916-최소비용 구하기
 
@@ -1099,7 +1084,6 @@
 // const result = dijkstra(graph ,start, n)
 // console.log(result[goal])
 
-
 //13549-숨바꼭질3
 
 // const fs = require('fs');
@@ -1193,7 +1177,6 @@
 // }
 
 // console.log(result)
-
 
 //1238-파티
 
@@ -1331,7 +1314,6 @@
 
 // console.log(max)
 
-
 //1504-특정한 최단 경로
 
 //입력:
@@ -1392,7 +1374,7 @@
 //   }
 
 //   pop(){
-//     if(this.heap.length===1) 
+//     if(this.heap.length===1)
 //       return this.heap.pop()
 //     const top = this.heap[0]
 //     this.heap[0]=this.heap.pop();
@@ -1471,7 +1453,6 @@
 // // 경로 2: 1 -> v2 -> v1 -> N
 // const path2 = distFrom1[v2] + distFromV2[v1] + distFromV1[n];
 
-
 // // 두 경로 중 더 작은 값을 선택, 불가능하면 -1
 // const result = Math.min(path1, path2);
 // if (result >= Infinity) {
@@ -1479,7 +1460,6 @@
 // } else {
 //   console.log(result);
 // }
-
 
 //1261-알고스팟
 
@@ -1590,15 +1570,13 @@
 //   console.log(r.sort((a, b) => a - b).join('\n'))
 // }
 
-
-
 //4485-녹색 옷 입은 애가 젤다지?
 
 //입력:
 //동굴의 크기를 나타내는 정수 N
 //N = 0인 입력이 주어지면 전체 입력이 종료
 
-//알고리즘: 
+//알고리즘:
 //가중치가 있는 최단 경로 -> 다익스트라
 //BFS는 가중치가 모두 동일한 경우에 적합
 
@@ -1619,7 +1597,7 @@
 
 //   const cave = input.slice(idx+1, idx+1+n).map(v=>v.split(' ').map(Number))
 //   idx+=(n+1)
-  
+
 //   const pq = [[0,0,cave[0][0]]]
 //   const dist = Array.from({length: n}, ()=>Array(n).fill(Infinity));
 //   dist[0][0]=cave[0][0]
@@ -1648,7 +1626,6 @@
 //   console.log(`Problem ${problemNum}: ${dist[n - 1][n - 1]}`);
 //   problemNum++
 // }
-
 
 //11657-타임머신
 
@@ -1707,7 +1684,6 @@
 //   }
 // }
 
-
 //11779-최소비용 구하기2
 
 //입력:
@@ -1715,7 +1691,7 @@
 //셋째 줄부터 m+2줄까지 다음과 같은 버스의 정보
 //m+3째 줄에는 우리가 구하고자 하는 구간 출발점의 도시번호와 도착점의 도시번호
 
-//알고리즘: 
+//알고리즘:
 //한 노드에서 다른 노드까지 -> 다익스트라 알고리즘
 
 //출력:
@@ -1733,7 +1709,7 @@
 // const [start, goal] = input[m+2].split(' ').map(Number)
 
 // const graph=Array.from({length: n+1}, ()=>[])
-// const prev = Array(n + 1).fill(null); 
+// const prev = Array(n + 1).fill(null);
 
 // for(let i=0; i<arr.length; i++){
 //   const [a, b, c] = arr[i]
@@ -1767,7 +1743,7 @@
 //   }
 
 //   pop(){
-//     if(this.heap.length===1) 
+//     if(this.heap.length===1)
 //       return this.heap.pop()
 //     const top = this.heap[0]
 //     this.heap[0]=this.heap.pop();
@@ -1834,7 +1810,7 @@
 
 // const r = dijkstra(start, n);
 
-// console.log(r[goal]); 
+// console.log(r[goal]);
 
 // let path = []
 
@@ -1850,7 +1826,6 @@
 // console.log(path.length)
 // console.log(path.join(' '))
 
-
 //1865-웜홀
 
 //입력:
@@ -1859,7 +1834,7 @@
 //두 번째 줄부터 M+1번째 줄에 도로의 정보(S와 E는 연결된 지점의 번호, T는 이 도로를 통해 이동하는데 걸리는 시간)
 //M+2번째 줄부터 M+W+1번째 줄까지 웜홀의 정보(S는 시작 지점, E는 도착 지점, T는 줄어드는 시간을)
 
-//알고리즘: 
+//알고리즘:
 //음수가중치(웜홀)사용 -> 벨만포드 알고리즘
 
 //출력:
@@ -1910,7 +1885,7 @@
 //   }
 
 //   const h= bellmanFord(n, edges, 1)
-  
+
 //   if(h){
 //     console.log('YES')
 //   }else{
@@ -1918,14 +1893,13 @@
 //   }
 // }
 
-
 //2458-키순서
 
 //입력:
 //학생들의 수 N, 두 학생 키를 비교한 횟수 M
 //서로 다른 양의 정수 a와 b
 
-//알고리즘: 
+//알고리즘:
 //모든 노드를 비교 -> 플로이드 워셜
 
 //출력:
@@ -1975,59 +1949,165 @@
 
 // console.log(r)
 
-
 //1956-운동
 
 //입력:
 //V개의 마을와 E개의 도로
 // a번 마을에서 b번 마을로 가는 거리가 c인 도로
 
-//알고리즘: 
+//알고리즘:
 //모든 노드를 비교 -> 플로이드 워셜
 
 //출력:
 //최소 사이클의 도로 길이의 합
 //운동 경로를 찾는 것이 불가능한 경우에는 -1
 
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [v, e] = input[0].split(' ').map(Number)
+
+// const dist = Array.from({length:v+1}, ()=>Array(v+1).fill(Infinity))
+
+// for(let i=1; i<=v; i++){
+//   dist[i][i]=0
+// }
+
+// for(let i=1; i<=e; i++){
+//   const [a, b, c] = input[i].split(' ').map(Number)
+//   dist[a][b]=c
+// }
+
+// for(let k=1; k<=v; k++){
+//   for(let i=1; i<=v; i++){
+//     for(let j=1; j<=v; j++){
+//       if(dist[i][j]>dist[i][k]+dist[k][j]){
+//         dist[i][j]=dist[i][k]+dist[k][j]
+//       }
+//     }
+//   }
+// }
+
+// let m = Infinity
+
+// for(let i=1; i<=v; i++){
+//   for(let j=1; j<=v; j++){
+//     if(i!==j&&dist[i][j]!==Infinity&&dist[j][i]!==Infinity){
+//       m=Math.min(m, dist[i][j]+dist[j][i])
+//     }
+//   }
+// }
+
+// if(m===Infinity){
+//   console.log(-1)
+// }else{
+//   console.log(m)
+// }
+
+//1916-최소비용구하기
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const [v, e] = input[0].split(' ').map(Number)
+let n = +input[0];
+let m = +input[1];
+let arr = input.slice(2, m + 2).map((v) => v.split(' ').map(Number));
+let [start, end] = input[m + 2].split(' ').map(Number);
+let graph = Array.from({ length: n + 1 }, () => []);
 
-const dist = Array.from({length:v+1}, ()=>Array(v+1).fill(Infinity))
+arr.forEach((a) => {
+  let [u, v, w] = a;
+  graph[u].push([v, w]);
+});
 
-for(let i=1; i<=v; i++){
-  dist[i][i]=0
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  push([node, dist]) {
+    this.heap.push([node, dist]);
+    this.bubbleUp();
+  }
+
+  bubbleUp() {
+    let index = this.heap.length - 1;
+    let last = this.heap[index];
+
+    while (index > 0) {
+      let parentIndex = Math.floor((index - 1) / 2);
+
+      if (this.heap[parentIndex][1] <= last[1]) break;
+      this.heap[index] = this.heap[parentIndex];
+      index = parentIndex;
+    }
+
+    this.heap[index] = last;
+  }
+
+  pop() {
+    if (this.heap.length === 1) {
+      return this.heap.pop();
+    }
+    let top = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.bubbleDown();
+    return top;
+  }
+
+  bubbleDown() {
+    let index = 0;
+    let top = this.heap[index];
+    let length = this.heap.length;
+
+    while (true) {
+      let leftChildIndex = index * 2 + 1;
+      let rightChildIndex = index * 2 + 2;
+      let smallest = index;
+
+      if (leftChildIndex < length && this.heap[leftChildIndex][1] < this.heap[smallest][1]) {
+        smallest = leftChildIndex;
+      }
+      if (rightChildIndex < length && this.heap[rightChildIndex][1] < this.heap[smallest][1]) {
+        smallest = rightChildIndex;
+      }
+
+      if (smallest === index) break;
+      this.heap[index] = this.heap[smallest];
+      index = smallest;
+    }
+    this.heap[index] = top;
+  }
+
+  isEmpty() {
+    return this.heap.length === 0;
+  }
 }
 
-for(let i=1; i<=e; i++){
-  const [a, b, c] = input[i].split(' ').map(Number)
-  dist[a][b]=c
-}
+const dijkstra = (start) => {
+  let dist = Array(n + 1).fill(Infinity);
+  dist[start] = 0;
 
-for(let k=1; k<=v; k++){
-  for(let i=1; i<=v; i++){
-    for(let j=1; j<=v; j++){
-      if(dist[i][j]>dist[i][k]+dist[k][j]){
-        dist[i][j]=dist[i][k]+dist[k][j]
+  let pq = new MinHeap();
+  pq.push([start, 0]);
+
+  while (!pq.isEmpty()) {
+    let [curNode, curDist] = pq.pop();
+
+    if (dist[curNode] < curDist) continue;
+
+    for (const [nextNode, nextDist] of graph[curNode]) {
+      let totalDist = curDist + nextDist;
+
+      if (totalDist < dist[nextNode]) {
+        dist[nextNode] = totalDist;
+        pq.push([nextNode, totalDist]);
       }
     }
   }
-}
+  return dist;
+};
 
-let m = Infinity
-
-for(let i=1; i<=v; i++){
-  for(let j=1; j<=v; j++){
-    if(i!==j&&dist[i][j]!==Infinity&&dist[j][i]!==Infinity){
-      m=Math.min(m, dist[i][j]+dist[j][i])
-    }
-  }
-}
-
-if(m===Infinity){
-  console.log(-1)
-}else{
-  console.log(m)
-}
+let a = dijkstra(start);
+console.log(a[end]);
