@@ -1814,24 +1814,112 @@ const readline = require('readline');
 // });
 
 //연결 요소 제거하기
-const readline = require('readline');
-let rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-let input = [];
-rl.on('line', (line) => {
-  if (!line) {
-    rl.close();
-  } else {
-    input.push(line);
-  }
-});
+// const readline = require('readline');
+// let rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+// let input = [];
+// rl.on('line', (line) => {
+//   if (!line) {
+//     rl.close();
+//   } else {
+//     input.push(line);
+//   }
+// });
 
-rl.on('close', () => {
-  let [n, k, q] = input[0].split(' ').map(Number); //배열크기, 기준, 문자를 적을 횟수
-  let map = input.slice(1, n + 1).map((v) => v.split(''));
-  let arr = input.slice(n + 1);
+// rl.on('close', () => {
+//   let [n, k, q] = input[0].split(' ').map(Number); //배열크기, 기준, 문자를 적을 횟수
+//   let map = input.slice(1, n + 1).map((v) => v.split(''));
+//   let arr = input.slice(n + 1);
+//   let dir = [
+//     [0, 1],
+//     [0, -1],
+//     [1, 0],
+//     [-1, 0],
+//   ];
+
+//   const bfs = (i, j, s) => {
+//     let visited = Array.from({ length: n + 1 }, () => Array(n + 1).fill(false));
+//     visited[i][j] = true;
+//     let queue = [[i, j]];
+//     let count = 1;
+
+//     while (queue.length) {
+//       let [x, y] = queue.shift();
+
+//       for (const [dx, dy] of dir) {
+//         const nx = x + dx;
+//         const ny = y + dy;
+
+//         if (nx >= 0 && ny >= 0 && nx < n && ny < n && !visited[nx][ny] && map[nx][ny] === s) {
+//           count++;
+//           queue.push([nx, ny]);
+//           visited[nx][ny] = true;
+//         }
+//       }
+//     }
+
+//     return count;
+//   };
+
+//   const deleteMap = (i, j, s) => {
+//     let visited = Array.from({ length: n + 1 }, () => Array(n + 1).fill(false));
+//     visited[i][j] = true;
+//     let queue = [[i, j]];
+
+//     while (queue.length) {
+//       let [x, y] = queue.shift();
+//       map[x][y] = '.';
+
+//       for (const [dx, dy] of dir) {
+//         const nx = x + dx;
+//         const ny = y + dy;
+
+//         if (nx >= 0 && ny >= 0 && nx < n && ny < n && !visited[nx][ny] && map[nx][ny] === s) {
+//           map[nx][ny] = '.';
+//           queue.push([nx, ny]);
+//           visited[nx][ny] = true;
+//         }
+//       }
+//     }
+
+//     return map;
+//   };
+
+//   for (let i = 0; i < q; i++) {
+//     let [a, b, s] = arr[i].split(' ');
+
+//     a = Number(a);
+//     b = Number(b);
+
+//     map[a - 1][b - 1] = s;
+
+//     if (bfs(a - 1, b - 1, s) >= k) {
+//       map = deleteMap(a - 1, b - 1, s);
+//     }
+//   }
+
+//   console.log(map.map((v) => v.join('')).join('\n'));
+// });
+
+//모래섬
+const readline = require('readline');
+
+(async () => {
+  let rl = readline.createInterface({ input: process.stdin });
+
+  let input = [];
+  for await (const line of rl) {
+    if (!line) {
+      rl.close();
+    } else {
+      input.push(line);
+    }
+  }
+
+  let [n, m] = input[0].split(' ').map(Number);
+  let arr = input.slice(1).map((v) => v.split(' ').map(Number));
   let dir = [
     [0, 1],
     [0, -1],
@@ -1839,23 +1927,45 @@ rl.on('close', () => {
     [-1, 0],
   ];
 
-  const bfs = (i, j, s) => {
-    let visited = Array.from({ length: n + 1 }, () => Array(n + 1).fill(false));
-    visited[i][j] = true;
+  const calWater = (i, j, arr, sliceArr) => {
+    for (const [dx, dy] of dir) {
+      const nx = i + dx;
+      const ny = j + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < n && ny < m && arr[nx][ny] === 1) {
+        sliceArr[nx][ny] = 0;
+      }
+    }
+  };
+
+  const countCal = (i, j, visited, arr) => {
     let queue = [[i, j]];
-    let count = 1;
 
     while (queue.length) {
-      let [x, y] = queue.shift();
+      const [x, y] = queue.shift();
 
       for (const [dx, dy] of dir) {
         const nx = x + dx;
         const ny = y + dy;
 
-        if (nx >= 0 && ny >= 0 && nx < n && ny < n && !visited[nx][ny] && map[nx][ny] === s) {
-          count++;
-          queue.push([nx, ny]);
+        if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && arr[nx][ny] === 1) {
           visited[nx][ny] = true;
+          queue.push([nx, ny]);
+        }
+      }
+    }
+  };
+
+  const countMap = (arr) => {
+    let visited = Array.from({ length: n }, () => Array(m).fill(false));
+    let count = 0;
+
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < m; j++) {
+        if (arr[i][j] === 1 && !visited[i][j]) {
+          visited[i][j] = true;
+          countCal(i, j, visited, arr);
+          count++;
         }
       }
     }
@@ -1863,42 +1973,30 @@ rl.on('close', () => {
     return count;
   };
 
-  const deleteMap = (i, j, s) => {
-    let visited = Array.from({ length: n + 1 }, () => Array(n + 1).fill(false));
-    visited[i][j] = true;
-    let queue = [[i, j]];
+  let count = 1;
+  let c = 0;
 
-    while (queue.length) {
-      let [x, y] = queue.shift();
-      map[x][y] = '.';
+  let iterations = 2;
+  while (count < 2) {
+    if (count === 0) {
+      console.log(-1);
+      return;
+    }
 
-      for (const [dx, dy] of dir) {
-        const nx = x + dx;
-        const ny = y + dy;
-
-        if (nx >= 0 && ny >= 0 && nx < n && ny < n && !visited[nx][ny] && map[nx][ny] === s) {
-          map[nx][ny] = '.';
-          queue.push([nx, ny]);
-          visited[nx][ny] = true;
+    c++;
+    let sliceArr = arr.map((row) => [...row]);
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < m; j++) {
+        if (arr[i][j] === 0) {
+          calWater(i, j, arr, sliceArr);
         }
       }
     }
-
-    return map;
-  };
-
-  for (let i = 0; i < q; i++) {
-    let [a, b, s] = arr[i].split(' ');
-
-    a = Number(a);
-    b = Number(b);
-
-    map[a - 1][b - 1] = s;
-
-    if (bfs(a - 1, b - 1, s) >= k) {
-      map = deleteMap(a - 1, b - 1, s);
-    }
+    arr = sliceArr;
+    count = countMap(arr);
   }
 
-  console.log(map.map((v) => v.join('')).join('\n'));
-});
+  console.log(c);
+
+  process.exit();
+})();
