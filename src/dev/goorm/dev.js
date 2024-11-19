@@ -1751,12 +1751,74 @@ const readline = require('readline');
 // })();
 
 //대체 경로
+// const readline = require('readline');
+// let rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+
+// let input = [];
+// rl.on('line', (line) => {
+//   if (!line) {
+//     rl.close();
+//   } else {
+//     input.push(line);
+//   }
+// });
+
+// rl.on('close', () => {
+//   let [n, m, s, e] = input[0].split(' ').map(Number); // n: 노드 수, m: 간선 수, s: 시작 노드, e: 목표 노드
+//   let edges = input.slice(1).map((v) => v.split(' ').map(Number)); // 간선 정보
+
+//   // 그래프 생성
+//   let graph = Array.from({ length: n + 1 }, () => []);
+//   edges.forEach(([a, b]) => {
+//     graph[a].push(b);
+//     graph[b].push(a);
+//   });
+
+//   const bfs = (start, end, ex) => {
+//     let queue = [start];
+//     let visited = Array(n + 1).fill(false);
+//     visited[start] = true;
+//     let count = 1;
+//     while (queue.length) {
+//       let size = queue.length; // 현재 레벨의 노드 수 저장
+//       for (let i = 0; i < size; i++) {
+//         let node = queue.shift();
+
+//         if (node === ex) {
+//           return -1;
+//         }
+//         if (node === end) {
+//           return count;
+//         }
+
+//         for (const next of graph[node]) {
+//           if (!visited[next] && next !== ex) {
+//             queue.push(next);
+//             visited[next] = true;
+//           }
+//         }
+//       }
+
+//       count++;
+//     }
+
+//     return -1;
+//   };
+
+//   for (let i = 1; i <= n; i++) {
+//     console.log(bfs(s, e, i));
+//   }
+// });
+
+//연결 요소 제거하기
 const readline = require('readline');
 let rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-
 let input = [];
 rl.on('line', (line) => {
   if (!line) {
@@ -1767,48 +1829,76 @@ rl.on('line', (line) => {
 });
 
 rl.on('close', () => {
-  let [n, m, s, e] = input[0].split(' ').map(Number); // n: 노드 수, m: 간선 수, s: 시작 노드, e: 목표 노드
-  let edges = input.slice(1).map((v) => v.split(' ').map(Number)); // 간선 정보
+  let [n, k, q] = input[0].split(' ').map(Number); //배열크기, 기준, 문자를 적을 횟수
+  let map = input.slice(1, n + 1).map((v) => v.split(''));
+  let arr = input.slice(n + 1);
+  let dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
 
-  // 그래프 생성
-  let graph = Array.from({ length: n + 1 }, () => []);
-  edges.forEach(([a, b]) => {
-    graph[a].push(b);
-    graph[b].push(a);
-  });
-
-  const bfs = (start, end, ex) => {
-    let queue = [start];
-    let visited = Array(n + 1).fill(false);
-    visited[start] = true;
+  const bfs = (i, j, s) => {
+    let visited = Array.from({ length: n + 1 }, () => Array(n + 1).fill(false));
+    visited[i][j] = true;
+    let queue = [[i, j]];
     let count = 1;
+
     while (queue.length) {
-      let size = queue.length; // 현재 레벨의 노드 수 저장
-      for (let i = 0; i < size; i++) {
-        let node = queue.shift();
+      let [x, y] = queue.shift();
 
-        if (node === ex) {
-          return -1;
-        }
-        if (node === end) {
-          return count;
-        }
+      for (const [dx, dy] of dir) {
+        const nx = x + dx;
+        const ny = y + dy;
 
-        for (const next of graph[node]) {
-          if (!visited[next] && next !== ex) {
-            queue.push(next);
-            visited[next] = true;
-          }
+        if (nx >= 0 && ny >= 0 && nx < n && ny < n && !visited[nx][ny] && map[nx][ny] === s) {
+          count++;
+          queue.push([nx, ny]);
+          visited[nx][ny] = true;
         }
       }
-
-      count++;
     }
 
-    return -1;
+    return count;
   };
 
-  for (let i = 1; i <= n; i++) {
-    console.log(bfs(s, e, i));
+  const deleteMap = (i, j, s) => {
+    let visited = Array.from({ length: n + 1 }, () => Array(n + 1).fill(false));
+    visited[i][j] = true;
+    let queue = [[i, j]];
+
+    while (queue.length) {
+      let [x, y] = queue.shift();
+      map[x][y] = '.';
+
+      for (const [dx, dy] of dir) {
+        const nx = x + dx;
+        const ny = y + dy;
+
+        if (nx >= 0 && ny >= 0 && nx < n && ny < n && !visited[nx][ny] && map[nx][ny] === s) {
+          map[nx][ny] = '.';
+          queue.push([nx, ny]);
+          visited[nx][ny] = true;
+        }
+      }
+    }
+
+    return map;
+  };
+
+  for (let i = 0; i < q; i++) {
+    let [a, b, s] = arr[i].split(' ');
+
+    a = Number(a);
+    b = Number(b);
+
+    map[a - 1][b - 1] = s;
+
+    if (bfs(a - 1, b - 1, s) >= k) {
+      map = deleteMap(a - 1, b - 1, s);
+    }
   }
+
+  console.log(map.map((v) => v.join('')).join('\n'));
 });
