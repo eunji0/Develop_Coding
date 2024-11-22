@@ -3939,7 +3939,7 @@
 
 // console.log(solution(n, m))
 
-//15651-N과 M (3) 
+//15651-N과 M (3)
 // const fs = require("fs");
 // const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 // const input = fs.readFileSync(filePath).toString().trim();
@@ -3971,7 +3971,7 @@
 
 // console.log(solution(n, m))
 
-//15652-N과 M (4) 
+//15652-N과 M (4)
 // const fs = require("fs");
 // const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
 // const input = fs.readFileSync(filePath).toString().trim();
@@ -4146,18 +4146,18 @@
 // function findNum(){
 //     let start = 1;
 //     let end = K;
-    
+
 //     while (start <= end){
 //         let mid = parseInt((start + end) / 2);
 //         let order = findOrder(mid);
-        
+
 //         if (order >= K){
 //             end = mid - 1;
 //         } else{
 //             start = mid + 1;
 //         }
 //     }
-    
+
 //     return start;
 // }
 
@@ -4305,13 +4305,13 @@
 //2740-행렬 곱셈
 // const fs = require("fs");
 // const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-// const input = fs.readFileSync(filePath).toString().trim().split("\n").map(v=>v.split(' ').map(x=>+x)); 
+// const input = fs.readFileSync(filePath).toString().trim().split("\n").map(v=>v.split(' ').map(x=>+x));
 // const A=[]; //첫번째 행렬
 // const B=[];  // 두번째 행렬
 // const C =[]; // 계산하기 좋게 두번째 행렬을 바꿔서 만들 행렬
 
 // //첫번째 행렬 정리
-// const [N,M] = input.shift();  
+// const [N,M] = input.shift();
 // for(let i = 0; i<N; i++){
 //   A.push(input.shift());
 // }
@@ -4345,7 +4345,6 @@
 //      answer[answer.length - 1].push(sum); // 계산한 결과를 결과 행렬의 현재 행에 추가합니다.
 //    }
 //  }
- 
 
 //  const result = answer.map(v=>v.join(' ')).join('\n')
 
@@ -4460,7 +4459,7 @@
 // function binarySearch(H, Trees, min, max) {
 //   let mid = 0;
 //   let BestH = 0;
-  
+
 //   while (min <= max) {
 //     let SumWood = 0;
 //     mid = Math.floor((min + max) / 2);
@@ -4471,7 +4470,7 @@
 //     if (SumWood >= H) {
 //       if (mid > BestH) BestH = mid;
 //       min = mid + 1;
-//     } 
+//     }
 //     else {
 //       max = mid - 1;
 //     }
@@ -4675,7 +4674,7 @@
 // const arr = input[1].split(' ').map(Number);
 
 // const sol = (list, left, right, target) => {
-    
+
 //     while(left < right){
 //         let mid = Math.floor((left+right)/2);
 //         if(list[mid] < target){
@@ -4800,7 +4799,7 @@
 //     let bestH =0 ;
 
 //     while(min<=max){
-//         let sumwood =0; 
+//         let sumwood =0;
 //         mid = Math.floor((min+max)/2);
 
 //         arr.forEach(v=>{
@@ -4991,7 +4990,7 @@
 //     if (this.heap.length === 0) {
 //       return null;
 //     }
-    
+
 //     const min = this.heap[0];
 //     const lastIdx = this.heap.length - 1;
 //     this.heap[0] = this.heap[lastIdx];
@@ -5001,7 +5000,6 @@
 //     return min;
 //   }
 // }
-
 
 // const minHeap = new MinHeap();
 // const answer = [];
@@ -5348,7 +5346,6 @@
 //     }
 //     console.log(totalCompareCount);
 //   });
-
 
 //1665-가운데를 말해요
 // const fs = require("fs");
@@ -5982,28 +5979,28 @@
 // console.log(visited.slice(1).join("\n"));
 
 //24445-너비우선탐색2
-// const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n'); 
-// const [N, M, R] = input.shift().split(' ').map(v => +v); 
-// const graph = Array.from({length:N+1}).map(() => []); //정점이 1부터 N까지 이니까, 배열의 idx를 N+1d 을 해줘야 생각하기 쉬움 
-// for(let i=0; i<N; i++){ //만든 graph 채우기 
-//     const [from, to] = input[i].split(' ').map(v => +v); 
+// const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
+// const [N, M, R] = input.shift().split(' ').map(v => +v);
+// const graph = Array.from({length:N+1}).map(() => []); //정점이 1부터 N까지 이니까, 배열의 idx를 N+1d 을 해줘야 생각하기 쉬움
+// for(let i=0; i<N; i++){ //만든 graph 채우기
+//     const [from, to] = input[i].split(' ').map(v => +v);
 //     graph[from].push(to); //간선 연결
 //     graph[to].push(from);
 // }
-// graph.forEach((el) => el.sort((a,b) => b-a)); //내림차순 정렬  
-// const visited = new Array(N+1).fill(0); //방문하지 않음 0 표시 
+// graph.forEach((el) => el.sort((a,b) => b-a)); //내림차순 정렬
+// const visited = new Array(N+1).fill(0); //방문하지 않음 0 표시
 
-// const queue = []; 
+// const queue = [];
 // queue.push(R);// 시작 정점 push
 // let cnt = 1; //첫번째 순서
-// visited[R] = cnt //방문 표시 & 순서 표시 
+// visited[R] = cnt //방문 표시 & 순서 표시
 // while(queue.length){
-//     let cur = queue.shift(); //현재 방문하고 있는 정점 
+//     let cur = queue.shift(); //현재 방문하고 있는 정점
 //     for(let i=0; i<graph[cur].length; i++){ //방문한 정점과 연결되어있는 모든 정점 방문해보자
 //         let nx = graph[cur][i]
-//         if(visited[nx] === 0){ //단 이미 방문했으면 안됨 
+//         if(visited[nx] === 0){ //단 이미 방문했으면 안됨
 //             queue.push(nx); //queue에 넣으면서 방문
-//             visited[nx] = ++cnt;  //방문 표시 & 순서 표시 
+//             visited[nx] = ++cnt;  //방문 표시 & 순서 표시
 //         }
 //     }
 // }
@@ -6107,13 +6104,13 @@
 //                     ny >= 0 &&
 //                     nx < arr.length &&
 //                     ny < arr.length ) &&
-//                 // 좌표의 유효성 확인 
+//                 // 좌표의 유효성 확인
 //                     (arr[nx][ny] === 1) &&
 //                 // 1일 경우에만 진행되므로 1인 경우만 좌표 출력
 //                     (!visited[[nx,ny]])
 //                 // visited 확인
 //                     )
-//                 {   
+//                 {
 //                     visited[[nx,ny]] = true;
 //                     visitedCoords[[nx,ny]] = true;
 //                     cnt++;
@@ -6190,14 +6187,13 @@
 //   console.log(worm);
 // }
 
-
 //2178-미로탐색
 // const sol = (input) => {
 //     const [N, M] = input[0].split(" ").map((v) => +v);
 //     const adjM = [];
 //     for (let i = 1; i <= N; i++) adjM.push(input[i].split("").map((v) => +v)); // 미로 행렬
 //     const check = Array.from({ length: N }, () => Array(M).fill(0)); // 방문 여부를 위한 체크 행렬
-  
+
 //     function bfs(row, col) {
 //       const dx = [-1, 0, 1, 0];
 //       const dy = [0, 1, 0, -1]; // 현재 위치로부터 동서남북 조회를 위한 dx, dy 배열
@@ -6219,7 +6215,7 @@
 //     bfs(0, 0);
 //     return check[N - 1][M - 1];
 //   };
-  
+
 //   // 백준에서 입력을 받기 위한 코드
 //   const input = [];
 //   require("readline")
@@ -6233,34 +6229,55 @@
 //     });
 
 //24479-알고리즘 수업 - 깊이 우선 탐색 1
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
-const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
-const [N, M, R] = input.shift().split(' ').map(Number);
-const arr = input.map((v) => v.split(' ').map(Number));
-const graph = [...Array(N + 1)].map(() => []);
-const visited = Array(N).fill(0);
-let cnt = 1;
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+// const [N, M, R] = input.shift().split(' ').map(Number);
+// const arr = input.map((v) => v.split(' ').map(Number));
+// const graph = [...Array(N + 1)].map(() => []);
+// const visited = Array(N).fill(0);
+// let cnt = 1;
 
-// 무방향(양방향) 그래프 만들기
-arr.map(([from, to]) => {
-  graph[from].push(to);
-  graph[to].push(from);
-});
+// // 무방향(양방향) 그래프 만들기
+// arr.map(([from, to]) => {
+//   graph[from].push(to);
+//   graph[to].push(from);
+// });
 
-// 오름차순 정렬
-graph.map((v) => v.sort((a, b) => a - b));
+// // 오름차순 정렬
+// graph.map((v) => v.sort((a, b) => a - b));
 
-// DFS
-const dfs = (node) => {
-  // graph의 0번째 인덱스는 쓰지 않으므로 현재 노드번호에 -1의 방문여부 체크
-  if (!visited[node - 1]) {
-    // 방문 체크함과 동시에 해당 인덱스의 값은 1씩 증가하는 cnt로 넣어준다.
-    visited[node - 1] = cnt;
-    cnt++;
-    for (const next of graph[node]) dfs(next); // 재귀
+// // DFS
+// const dfs = (node) => {
+//   // graph의 0번째 인덱스는 쓰지 않으므로 현재 노드번호에 -1의 방문여부 체크
+//   if (!visited[node - 1]) {
+//     // 방문 체크함과 동시에 해당 인덱스의 값은 1씩 증가하는 cnt로 넣어준다.
+//     visited[node - 1] = cnt;
+//     cnt++;
+//     for (const next of graph[node]) dfs(next); // 재귀
+//   }
+// };
+
+// dfs(R);
+
+// console.log(visited.join('\n'));
+
+//1463-1로 만들기
+const input = require('fs').readFileSync('/dev/stdin').toString();
+const X = Number(input);
+
+function dp(n, memo = [0, 0]) {
+  let i = 2;
+  while (i <= n) {
+    memo[i] = memo[i - 1] + 1;
+    if (i % 3 === 0) {
+      memo[i] = Math.min(memo[i], memo[i / 3] + 1);
+    }
+    if (i % 2 === 0) {
+      memo[i] = Math.min(memo[i], memo[i / 2] + 1);
+    }
+    i++;
   }
-};
+  return memo[n];
+}
 
-dfs(R);
-
-console.log(visited.join('\n'));
+console.log(dp(X));
