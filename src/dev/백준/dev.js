@@ -6262,22 +6262,45 @@
 // console.log(visited.join('\n'));
 
 //1463-1로 만들기
-const input = require('fs').readFileSync('/dev/stdin').toString();
-const X = Number(input);
+// const input = require('fs').readFileSync('/dev/stdin').toString();
+// const X = Number(input);
 
-function dp(n, memo = [0, 0]) {
-  let i = 2;
-  while (i <= n) {
-    memo[i] = memo[i - 1] + 1;
-    if (i % 3 === 0) {
-      memo[i] = Math.min(memo[i], memo[i / 3] + 1);
-    }
-    if (i % 2 === 0) {
-      memo[i] = Math.min(memo[i], memo[i / 2] + 1);
-    }
-    i++;
+// function dp(n, memo = [0, 0]) {
+//   let i = 2;
+//   while (i <= n) {
+//     memo[i] = memo[i - 1] + 1;
+//     if (i % 3 === 0) {
+//       memo[i] = Math.min(memo[i], memo[i / 3] + 1);
+//     }
+//     if (i % 2 === 0) {
+//       memo[i] = Math.min(memo[i], memo[i / 2] + 1);
+//     }
+//     i++;
+//   }
+//   return memo[n];
+// }
+
+// console.log(dp(X));
+
+//2512-예산
+const solve = (input, N, M) => {
+  input.sort((a, b) => a - b);
+  let high = input[N - 1];
+  let low = 1;
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    const sum = input.reduce((acc, v) => acc + (v <= mid ? v : mid), 0);
+    if (sum <= M) low = mid + 1;
+    else high = mid - 1;
   }
-  return memo[n];
-}
+  console.log(high);
+};
 
-console.log(dp(X));
+const [N, ...input] = require('fs')
+  .readFileSync('/dev/stdin')
+  .toString()
+  .trim()
+  .split(/\s+/)
+  .map((v) => +v);
+const M = input.pop();
+solve(input, N, M);
