@@ -6283,24 +6283,57 @@
 // console.log(dp(X));
 
 //2512-예산
-const solve = (input, N, M) => {
-  input.sort((a, b) => a - b);
-  let high = input[N - 1];
-  let low = 1;
-  while (low <= high) {
-    const mid = Math.floor((low + high) / 2);
-    const sum = input.reduce((acc, v) => acc + (v <= mid ? v : mid), 0);
-    if (sum <= M) low = mid + 1;
-    else high = mid - 1;
-  }
-  console.log(high);
-};
+// const solve = (input, N, M) => {
+//   input.sort((a, b) => a - b);
+//   let high = input[N - 1];
+//   let low = 1;
+//   while (low <= high) {
+//     const mid = Math.floor((low + high) / 2);
+//     const sum = input.reduce((acc, v) => acc + (v <= mid ? v : mid), 0);
+//     if (sum <= M) low = mid + 1;
+//     else high = mid - 1;
+//   }
+//   console.log(high);
+// };
 
-const [N, ...input] = require('fs')
-  .readFileSync('/dev/stdin')
-  .toString()
-  .trim()
-  .split(/\s+/)
-  .map((v) => +v);
-const M = input.pop();
-solve(input, N, M);
+// const [N, ...input] = require('fs')
+//   .readFileSync('/dev/stdin')
+//   .toString()
+//   .trim()
+//   .split(/\s+/)
+//   .map((v) => +v);
+// const M = input.pop();
+// solve(input, N, M);
+
+//2470-예산
+let fs = require('fs');
+let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
+
+const N = Number(input.shift());
+const solution = input
+  .shift()
+  .split(' ')
+  .map(Number)
+  .sort((a, b) => a - b);
+
+let left = 0;
+let right = N - 1;
+let tempSum = Number.MAX_SAFE_INTEGER;
+let answer = '';
+
+while (left < right) {
+  let sum = solution[left] + solution[right];
+
+  if (tempSum > Math.abs(sum)) {
+    tempSum = Math.abs(sum);
+    answer = [solution[left], solution[right]];
+  }
+
+  if (sum < 0) {
+    left++;
+  } else {
+    right--;
+  }
+}
+
+console.log(answer.sort((a, b) => a - b).join(' '));
