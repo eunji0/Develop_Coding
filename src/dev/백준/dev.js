@@ -6306,34 +6306,68 @@
 // solve(input, N, M);
 
 //2470-예산
-let fs = require('fs');
-let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
+// let fs = require('fs');
+// let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-const N = Number(input.shift());
-const solution = input
-  .shift()
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => a - b);
+// const N = Number(input.shift());
+// const solution = input
+//   .shift()
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
 
-let left = 0;
-let right = N - 1;
-let tempSum = Number.MAX_SAFE_INTEGER;
-let answer = '';
+// let left = 0;
+// let right = N - 1;
+// let tempSum = Number.MAX_SAFE_INTEGER;
+// let answer = '';
 
-while (left < right) {
-  let sum = solution[left] + solution[right];
+// while (left < right) {
+//   let sum = solution[left] + solution[right];
 
-  if (tempSum > Math.abs(sum)) {
-    tempSum = Math.abs(sum);
-    answer = [solution[left], solution[right]];
-  }
+//   if (tempSum > Math.abs(sum)) {
+//     tempSum = Math.abs(sum);
+//     answer = [solution[left], solution[right]];
+//   }
 
-  if (sum < 0) {
-    left++;
-  } else {
-    right--;
+//   if (sum < 0) {
+//     left++;
+//   } else {
+//     right--;
+//   }
+// }
+
+// console.log(answer.sort((a, b) => a - b).join(' '));
+
+//2467-용액
+const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+
+let input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+
+let N = Number(input[0]);
+let liquidsArr = input[1].split(' ').map(Number);
+
+let abs = 2000000000;
+let ansLeft = 0;
+let ansRight = 0;
+
+for (let i = 0; i < N - 1; i++) {
+  let start = i + 1;
+  let end = N - 1;
+  while (start <= end) {
+    let mid = Math.floor((start + end) / 2);
+    let sum = liquidsArr[mid] + liquidsArr[i];
+    if (Math.abs(sum) < abs) {
+      abs = Math.abs(sum);
+      ansLeft = liquidsArr[i];
+      ansRight = liquidsArr[mid];
+    }
+    if (sum === 0) {
+      break;
+    } else if (sum > 0) {
+      end = mid - 1;
+    } else {
+      start = mid + 1;
+    }
   }
 }
-
-console.log(answer.sort((a, b) => a - b).join(' '));
+console.log(ansLeft, ansRight);
