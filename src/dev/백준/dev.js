@@ -6373,46 +6373,89 @@
 // console.log(ansLeft, ansRight);
 
 //k번째수
-const { mkdir } = require('fs');
-const readline = require('readline');
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+// const { mkdir } = require('fs');
+// const readline = require('readline');
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
 
-const binarySearch = (k, N) => {
-  let end = N * N;
-  let start = 1;
-  let ans = 0;
-  while (start <= end) {
-    mid = Math.floor((start + end) / 2);
-    let sum = 0;
-    for (let i = 1; i <= N; i++) {
-      let val = 0;
-      mid / i > N ? (val = N) : (val = Math.floor(mid / i));
-      sum += val;
+// const binarySearch = (k, N) => {
+//   let end = N * N;
+//   let start = 1;
+//   let ans = 0;
+//   while (start <= end) {
+//     mid = Math.floor((start + end) / 2);
+//     let sum = 0;
+//     for (let i = 1; i <= N; i++) {
+//       let val = 0;
+//       mid / i > N ? (val = N) : (val = Math.floor(mid / i));
+//       sum += val;
+//     }
+//     // console.log("mid : ", mid , " sum :",sum)
+//     if (sum >= k) {
+//       ans = mid;
+//       end = mid - 1;
+//     } else {
+//       start = mid + 1;
+//     }
+//   }
+//   return ans;
+// };
+
+// const solution = (input) => {
+//   const N = parseInt(input[0]);
+//   const k = parseInt(input[1]);
+//   console.log(binarySearch(k, N));
+// };
+
+// const input = [];
+// rl.on('line', function (line) {
+//   input.push(line);
+// }).on('close', function () {
+//   solution(input);
+//   process.exit();
+// });
+
+//1253-좋다
+const fs = require('fs');
+const path = process.platform === 'linux' ? '/dev/stdin' : 'Wiki\\input.txt';
+const inputs = fs
+  .readFileSync(path)
+  .toString()
+  .trim()
+  .split('\n')
+  .map((it) => it.split(' ').map(BigInt));
+const n = Number(inputs[0][0]);
+const A = inputs[1];
+
+const map = new Map();
+
+for (const a of A) {
+  if (map.has(a)) map.set(a, map.get(a) + 1);
+  else map.set(a, 1);
+}
+
+let ans = 0;
+const bt = (selected, start) => {
+  if (selected.length === 2) {
+    const sum = selected[0] + selected[1];
+
+    if (map.has(sum)) {
+      if (sum === selected[0] && sum === selected[1] && map.get(sum) === 2) return;
+      if (sum === selected[0] && map.get(sum) === 1) return;
+      if (sum === selected[1] && map.get(sum) === 1) return;
+      ans += map.get(sum);
+      map.delete(sum);
     }
-    // console.log("mid : ", mid , " sum :",sum)
-    if (sum >= k) {
-      ans = mid;
-      end = mid - 1;
-    } else {
-      start = mid + 1;
-    }
+    return;
   }
-  return ans;
+
+  for (let i = start; i < n; i++) {
+    bt([...selected, A[i]], i + 1);
+  }
 };
 
-const solution = (input) => {
-  const N = parseInt(input[0]);
-  const k = parseInt(input[1]);
-  console.log(binarySearch(k, N));
-};
+bt([], 0);
 
-const input = [];
-rl.on('line', function (line) {
-  input.push(line);
-}).on('close', function () {
-  solution(input);
-  process.exit();
-});
+console.log(ans);
