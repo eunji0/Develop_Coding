@@ -6339,35 +6339,80 @@
 // console.log(answer.sort((a, b) => a - b).join(' '));
 
 //2467-용액
-const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
 
-let input = require('fs').readFileSync(filePath).toString().trim().split('\n');
+// let input = require('fs').readFileSync(filePath).toString().trim().split('\n');
 
-let N = Number(input[0]);
-let liquidsArr = input[1].split(' ').map(Number);
+// let N = Number(input[0]);
+// let liquidsArr = input[1].split(' ').map(Number);
 
-let abs = 2000000000;
-let ansLeft = 0;
-let ansRight = 0;
+// let abs = 2000000000;
+// let ansLeft = 0;
+// let ansRight = 0;
 
-for (let i = 0; i < N - 1; i++) {
-  let start = i + 1;
-  let end = N - 1;
+// for (let i = 0; i < N - 1; i++) {
+//   let start = i + 1;
+//   let end = N - 1;
+//   while (start <= end) {
+//     let mid = Math.floor((start + end) / 2);
+//     let sum = liquidsArr[mid] + liquidsArr[i];
+//     if (Math.abs(sum) < abs) {
+//       abs = Math.abs(sum);
+//       ansLeft = liquidsArr[i];
+//       ansRight = liquidsArr[mid];
+//     }
+//     if (sum === 0) {
+//       break;
+//     } else if (sum > 0) {
+//       end = mid - 1;
+//     } else {
+//       start = mid + 1;
+//     }
+//   }
+// }
+// console.log(ansLeft, ansRight);
+
+//k번째수
+const { mkdir } = require('fs');
+const readline = require('readline');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+const binarySearch = (k, N) => {
+  let end = N * N;
+  let start = 1;
+  let ans = 0;
   while (start <= end) {
-    let mid = Math.floor((start + end) / 2);
-    let sum = liquidsArr[mid] + liquidsArr[i];
-    if (Math.abs(sum) < abs) {
-      abs = Math.abs(sum);
-      ansLeft = liquidsArr[i];
-      ansRight = liquidsArr[mid];
+    mid = Math.floor((start + end) / 2);
+    let sum = 0;
+    for (let i = 1; i <= N; i++) {
+      let val = 0;
+      mid / i > N ? (val = N) : (val = Math.floor(mid / i));
+      sum += val;
     }
-    if (sum === 0) {
-      break;
-    } else if (sum > 0) {
+    // console.log("mid : ", mid , " sum :",sum)
+    if (sum >= k) {
+      ans = mid;
       end = mid - 1;
     } else {
       start = mid + 1;
     }
   }
-}
-console.log(ansLeft, ansRight);
+  return ans;
+};
+
+const solution = (input) => {
+  const N = parseInt(input[0]);
+  const k = parseInt(input[1]);
+  console.log(binarySearch(k, N));
+};
+
+const input = [];
+rl.on('line', function (line) {
+  input.push(line);
+}).on('close', function () {
+  solution(input);
+  process.exit();
+});
