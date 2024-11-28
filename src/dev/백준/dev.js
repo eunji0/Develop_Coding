@@ -6462,38 +6462,61 @@
 
 //2343-기타레슨
 
-const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
+// const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
 
-const [N, M] = input.shift().split(' ').map(Number);
-const classes = input[0].split(' ').map(Number);
+// const [N, M] = input.shift().split(' ').map(Number);
+// const classes = input[0].split(' ').map(Number);
 
-let left = Math.max(...classes);
+// let left = Math.max(...classes);
 
-let right = classes.reduce((acc, cur) => acc + cur);
+// let right = classes.reduce((acc, cur) => acc + cur);
 
-let answer = Number.MAX_SAFE_INTEGER;
+// let answer = Number.MAX_SAFE_INTEGER;
+// while (left <= right) {
+//   let cnt = 1;
+//   let mid = Math.floor((left + right) / 2);
+//   let tmp = 0;
+//   for (let i = 0; i < classes.length; i++) {
+//     if (tmp + classes[i] <= mid) {
+//       tmp += classes[i];
+//     } else {
+//       tmp = 0 + classes[i];
+//       cnt++;
+//       if (cnt > M) break;
+//     }
+//   }
+
+//   if (cnt > M) {
+//     left = mid + 1;
+//   }
+
+//   if (cnt <= M) {
+//     if (answer >= mid) answer = mid;
+//     right = mid - 1;
+//   }
+// }
+
+// console.log(answer);
+
+//1072-게임
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+let [x, y] = input[0].split(' ').map(Number);
+let z = Math.floor((100 * y) / x);
+let left = 1;
+let right = 1000000000;
+let ans = Infinity;
 while (left <= right) {
-  let cnt = 1;
-  let mid = Math.floor((left + right) / 2);
-  let tmp = 0;
-  for (let i = 0; i < classes.length; i++) {
-    if (tmp + classes[i] <= mid) {
-      tmp += classes[i];
-    } else {
-      tmp = 0 + classes[i];
-      cnt++;
-      if (cnt > M) break;
-    }
-  }
-
-  if (cnt > M) {
+  let mid = parseInt((left + right) / 2);
+  let new_z = Math.floor((100 * (y + mid)) / (x + mid));
+  if (z !== new_z) {
+    ans = Math.min(ans, mid);
+    right = mid - 1;
+  } else {
     left = mid + 1;
   }
-
-  if (cnt <= M) {
-    if (answer >= mid) answer = mid;
-    right = mid - 1;
-  }
 }
-
-console.log(answer);
+if (ans === Infinity) console.log(-1);
+else console.log(ans);
