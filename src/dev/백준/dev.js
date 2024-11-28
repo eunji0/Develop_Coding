@@ -6418,44 +6418,82 @@
 // });
 
 //1253-좋다
-const fs = require('fs');
-const path = process.platform === 'linux' ? '/dev/stdin' : 'Wiki\\input.txt';
-const inputs = fs
-  .readFileSync(path)
-  .toString()
-  .trim()
-  .split('\n')
-  .map((it) => it.split(' ').map(BigInt));
-const n = Number(inputs[0][0]);
-const A = inputs[1];
+// const fs = require('fs');
+// const path = process.platform === 'linux' ? '/dev/stdin' : 'Wiki\\input.txt';
+// const inputs = fs
+//   .readFileSync(path)
+//   .toString()
+//   .trim()
+//   .split('\n')
+//   .map((it) => it.split(' ').map(BigInt));
+// const n = Number(inputs[0][0]);
+// const A = inputs[1];
 
-const map = new Map();
+// const map = new Map();
 
-for (const a of A) {
-  if (map.has(a)) map.set(a, map.get(a) + 1);
-  else map.set(a, 1);
+// for (const a of A) {
+//   if (map.has(a)) map.set(a, map.get(a) + 1);
+//   else map.set(a, 1);
+// }
+
+// let ans = 0;
+// const bt = (selected, start) => {
+//   if (selected.length === 2) {
+//     const sum = selected[0] + selected[1];
+
+//     if (map.has(sum)) {
+//       if (sum === selected[0] && sum === selected[1] && map.get(sum) === 2) return;
+//       if (sum === selected[0] && map.get(sum) === 1) return;
+//       if (sum === selected[1] && map.get(sum) === 1) return;
+//       ans += map.get(sum);
+//       map.delete(sum);
+//     }
+//     return;
+//   }
+
+//   for (let i = start; i < n; i++) {
+//     bt([...selected, A[i]], i + 1);
+//   }
+// };
+
+// bt([], 0);
+
+// console.log(ans);
+
+//2343-기타레슨
+
+const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
+
+const [N, M] = input.shift().split(' ').map(Number);
+const classes = input[0].split(' ').map(Number);
+
+let left = Math.max(...classes);
+
+let right = classes.reduce((acc, cur) => acc + cur);
+
+let answer = Number.MAX_SAFE_INTEGER;
+while (left <= right) {
+  let cnt = 1;
+  let mid = Math.floor((left + right) / 2);
+  let tmp = 0;
+  for (let i = 0; i < classes.length; i++) {
+    if (tmp + classes[i] <= mid) {
+      tmp += classes[i];
+    } else {
+      tmp = 0 + classes[i];
+      cnt++;
+      if (cnt > M) break;
+    }
+  }
+
+  if (cnt > M) {
+    left = mid + 1;
+  }
+
+  if (cnt <= M) {
+    if (answer >= mid) answer = mid;
+    right = mid - 1;
+  }
 }
 
-let ans = 0;
-const bt = (selected, start) => {
-  if (selected.length === 2) {
-    const sum = selected[0] + selected[1];
-
-    if (map.has(sum)) {
-      if (sum === selected[0] && sum === selected[1] && map.get(sum) === 2) return;
-      if (sum === selected[0] && map.get(sum) === 1) return;
-      if (sum === selected[1] && map.get(sum) === 1) return;
-      ans += map.get(sum);
-      map.delete(sum);
-    }
-    return;
-  }
-
-  for (let i = start; i < n; i++) {
-    bt([...selected, A[i]], i + 1);
-  }
-};
-
-bt([], 0);
-
-console.log(ans);
+console.log(answer);
