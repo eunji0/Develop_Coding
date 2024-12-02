@@ -6581,40 +6581,71 @@
 // console.log(answer.reverse().join(' '));
 
 //12738-가장 긴 증가하는 부분 수열 3
-const fs = require('fs');
-const input = fs.readFileSync("./dev/stdin").toString().trim().split("\n").map(v => v.split(' ').map(Number))
-const [N] = input[0];
-const arr = input[1];
+// const fs = require('fs');
+// const input = fs.readFileSync("./dev/stdin").toString().trim().split("\n").map(v => v.split(' ').map(Number))
+// const [N] = input[0];
+// const arr = input[1];
 
 
-function binarySearch(left, right, target) {
-  let mid;
+// function binarySearch(left, right, target) {
+//   let mid;
+//   while (left < right) {
+//     mid = Math.floor((left + right) / 2);
+
+//     if (lis[mid] < target) {
+//       left = mid + 1;
+//     } else {
+//       right = mid
+//     }
+//   }
+//   return right;
+// }
+
+// let lis = [];
+
+// let j = 0;
+// lis[0] = arr[0];
+// let i = 1;
+
+// while (i < N) {
+
+//   if (lis[j] < arr[i]) {
+//     lis[++j] = arr[i];
+//   } else {
+//     let idx = binarySearch(0, j, arr[i]);
+//     lis[idx] = arr[i]
+//   }
+//   i++;
+// }
+// console.log(lis.length)
+
+//2473-세용액
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+let input = fs.readFileSync(filePath).toString().trim().split("\n");
+
+const N = +input[0];
+const nums = input[1]
+  .split(" ")
+  .map(Number)
+  .sort((a, b) => a - b);
+const ansArr = Array.from({ length: 3 }, () => 0);
+let ans = Infinity;
+
+for (let i = 0; i < N - 2; i++) {
+  let left = i + 1;
+  let right = N - 1;
   while (left < right) {
-    mid = Math.floor((left + right) / 2);
-
-    if (lis[mid] < target) {
-      left = mid + 1;
-    } else {
-      right = mid
+    const sum = nums[i] + nums[left] + nums[right];
+    if (Math.abs(sum) < ans) {
+      ans = Math.abs(sum);
+      ansArr[0] = nums[i];
+      ansArr[1] = nums[left];
+      ansArr[2] = nums[right];
     }
+    if (sum < 0) left++;
+    else right--;
   }
-  return right;
 }
 
-let lis = [];
-
-let j = 0;
-lis[0] = arr[0];
-let i = 1;
-
-while (i < N) {
-
-  if (lis[j] < arr[i]) {
-    lis[++j] = arr[i];
-  } else {
-    let idx = binarySearch(0, j, arr[i]);
-    lis[idx] = arr[i]
-  }
-  i++;
-}
-console.log(lis.length)
+console.log(ansArr.join(" "));
