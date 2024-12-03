@@ -6586,7 +6586,6 @@
 // const [N] = input[0];
 // const arr = input[1];
 
-
 // function binarySearch(left, right, target) {
 //   let mid;
 //   while (left < right) {
@@ -6620,32 +6619,72 @@
 // console.log(lis.length)
 
 //2473-세용액
-const fs = require("fs");
-const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
-let input = fs.readFileSync(filePath).toString().trim().split("\n");
+// const fs = require("fs");
+// const filePath = process.platform === "linux" ? "/dev/stdin" : "input.txt";
+// let input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-const N = +input[0];
-const nums = input[1]
-  .split(" ")
-  .map(Number)
-  .sort((a, b) => a - b);
-const ansArr = Array.from({ length: 3 }, () => 0);
-let ans = Infinity;
+// const N = +input[0];
+// const nums = input[1]
+//   .split(" ")
+//   .map(Number)
+//   .sort((a, b) => a - b);
+// const ansArr = Array.from({ length: 3 }, () => 0);
+// let ans = Infinity;
 
-for (let i = 0; i < N - 2; i++) {
-  let left = i + 1;
-  let right = N - 1;
-  while (left < right) {
-    const sum = nums[i] + nums[left] + nums[right];
-    if (Math.abs(sum) < ans) {
-      ans = Math.abs(sum);
-      ansArr[0] = nums[i];
-      ansArr[1] = nums[left];
-      ansArr[2] = nums[right];
-    }
-    if (sum < 0) left++;
-    else right--;
+// for (let i = 0; i < N - 2; i++) {
+//   let left = i + 1;
+//   let right = N - 1;
+//   while (left < right) {
+//     const sum = nums[i] + nums[left] + nums[right];
+//     if (Math.abs(sum) < ans) {
+//       ans = Math.abs(sum);
+//       ansArr[0] = nums[i];
+//       ansArr[1] = nums[left];
+//       ansArr[2] = nums[right];
+//     }
+//     if (sum < 0) left++;
+//     else right--;
+//   }
+// }
+
+// console.log(ansArr.join(" "));
+
+//2512-예산
+
+//여러 지방의 예산요청을 심사하여 국가의 예산을 분배
+//정해진 총액 이하에서 가능한 한 최대의 총 예산
+//모든 요청이 배정될 수 있는 경우에는 요청한 금액을 그대로 배정
+//모든 요청이 배정될 수 없는 경우에는 특정한 정수 상한액을 계산하여 그 이상인 예산요청에는 모두 상한액을 배정한다. 상한액 이하의 예산요청에 대해서는 요청한 금액을 그대로 배정한다.
+
+//예산 요청들이 모두 상한액을 넘지 않는지 확인
+//넘지 않는다면 return
+//넘는다면 127로 변환
+const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
+
+const [N, request, total] = [+input[0], input[1].split(' ').map(Number), +input[2]];
+
+request.sort((a, b) => a - b);
+
+let left = 0;
+let right = request[request.length - 1];
+let answer = Number.MIN_SAFE_INTEGER;
+while (left <= right) {
+  let mid = Math.floor((left + right) / 2);
+
+  let possible = 0;
+  for (let x of request) {
+    if (x > mid) possible += mid;
+    else possible += x;
+  }
+
+  if (total >= possible) {
+    // 예산 배정이 가능한 경우
+    if (mid > answer) answer = mid;
+    // answer은 최댓값
+    left = mid + 1;
+  } else {
+    right = mid - 1;
   }
 }
 
-console.log(ansArr.join(" "));
+console.log(answer);
