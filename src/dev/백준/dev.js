@@ -6658,33 +6658,66 @@
 
 //예산 요청들이 모두 상한액을 넘지 않는지 확인
 //넘지 않는다면 return
-//넘는다면 127로 변환
-const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
+//넘는다면 상한액으로 변환
 
-const [N, request, total] = [+input[0], input[1].split(' ').map(Number), +input[2]];
+//상한액 정하기
+//
 
-request.sort((a, b) => a - b);
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// let count = +input[0];
+// let arr = input[1].split(' ').map(Number);
+// let limit = +input[2];
 
-let left = 0;
-let right = request[request.length - 1];
-let answer = Number.MIN_SAFE_INTEGER;
-while (left <= right) {
-  let mid = Math.floor((left + right) / 2);
+// let sum = arr.reduce((a, c) => a + c, 0);
 
-  let possible = 0;
-  for (let x of request) {
-    if (x > mid) possible += mid;
-    else possible += x;
+// console.log((485 - 230) / (count / 2));
+// while (sum > limit) {
+//   arr.forEach((v) => v);
+// }
+
+//1300 - k번째 수
+const { mkdir } = require('fs');
+const readline = require('readline');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+const binarySearch = (k, N) => {
+  let end = N * N;
+  let start = 1;
+  let ans = 0;
+  while (start <= end) {
+    mid = Math.floor((start + end) / 2);
+    let sum = 0;
+    for (let i = 1; i <= N; i++) {
+      let val = 0;
+      mid / i > N ? (val = N) : (val = Math.floor(mid / i));
+      sum += val;
+    }
+    // console.log("mid : ", mid , " sum :",sum)
+    if (sum >= k) {
+      ans = mid;
+      end = mid - 1;
+    } else {
+      start = mid + 1;
+    }
   }
+  return ans;
+};
 
-  if (total >= possible) {
-    // 예산 배정이 가능한 경우
-    if (mid > answer) answer = mid;
-    // answer은 최댓값
-    left = mid + 1;
-  } else {
-    right = mid - 1;
-  }
-}
+const solution = (input) => {
+  const N = parseInt(input[0]);
+  const k = parseInt(input[1]);
+  console.log(binarySearch(k, N));
+};
 
-console.log(answer);
+const input = [];
+rl.on('line', function (line) {
+  input.push(line);
+}).on('close', function () {
+  solution(input);
+  process.exit();
+});
