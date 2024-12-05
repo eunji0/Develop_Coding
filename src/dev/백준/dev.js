@@ -6723,63 +6723,112 @@
 // });
 
 //14938-서강그라운드
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [n, m, r] = input[0].split(' ').map(Number);
+// const items = input[1].split(' ').map(Number);
+
+// const roads = [];
+// for (let i = 2; i < 2 + r; i++) {
+//   const [a, b, l] = input[i].split(' ').map(Number);
+//   roads.push([a, b, l]);
+// }
+
+// const graph = Array.from({ length: n + 1 }, () => []);
+// roads.forEach(([a, b, l]) => {
+//   graph[a].push([b, l]);
+//   graph[b].push([a, l]);
+// });
+
+// const dijkstra = (start) => {
+//   let dists = Array(n + 1).fill(Infinity);
+//   let visited = Array(n + 1).fill(false);
+//   dists[start] = 0;
+//   let p = [[0, start]];
+
+//   while (p.length) {
+//     p.sort((a, b) => b[0] - a[0]);
+
+//     let [curDist, curNode] = p.pop();
+
+//     if (visited[curNode]) continue;
+//     visited[curNode] = true;
+
+//     for (const [node, dist] of graph[curNode]) {
+//       let total = dist + curDist;
+//       if (total < dists[node]) {
+//         dists[node] = total;
+//         p.push([total, node]);
+//       }
+//     }
+//   }
+
+//   return dists;
+// };
+
+// let result = 0;
+// for (let i = 1; i <= n; i++) {
+//   let dist = dijkstra(i);
+
+//   let r = 0;
+
+//   for (let j = 1; j <= n; j++) {
+//     if (dist[j] <= m) {
+//       r += items[j - 1];
+//     }
+//   }
+//   result = Math.max(r, result);
+// }
+
+// console.log(result);
+
+//2665-미로만들기
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const [n, m, r] = input[0].split(' ').map(Number);
-const items = input[1].split(' ').map(Number);
+const n = parseInt(input[0]);
+const graph = input.slice(1).map((line) => line.split('').map(Number));
 
-const roads = [];
-for (let i = 2; i < 2 + r; i++) {
-  const [a, b, l] = input[i].split(' ').map(Number);
-  roads.push([a, b, l]);
-}
+let dir = [
+  [0, 1],
+  [0, -1],
+  [1, 0],
+  [-1, 0],
+];
 
-const graph = Array.from({ length: n + 1 }, () => []);
-roads.forEach(([a, b, l]) => {
-  graph[a].push([b, l]);
-  graph[b].push([a, l]);
-});
+const dijkstra = () => {
+  let visited = Array.from({ length: n }, () => Array(n).fill(false));
+  let dists = Array.from({ length: n }, () => Array(n).fill(Infinity));
+  let queue = [[0, 0, 0]];
+  dists[0][0] = true;
 
-const dijkstra = (start) => {
-  let dists = Array(n + 1).fill(Infinity);
-  let visited = Array(n + 1).fill(false);
-  dists[start] = 0;
-  let p = [[0, start]];
+  while (queue.length) {
+    queue.sort((a, b) => b[0] - a[0]);
+    let [count, x, y] = queue.pop();
 
-  while (p.length) {
-    p.sort((a, b) => b[0] - a[0]);
+    if (visited[x][y]) continue;
+    visited[x][y] = true;
 
-    let [curDist, curNode] = p.pop();
+    if (x === n - 1 && y === n - 1) return count;
 
-    if (visited[curNode]) continue;
-    visited[curNode] = true;
+    for (const [dx, dy] of dir) {
+      let nx = x + dx;
+      let ny = y + dy;
 
-    for (const [node, dist] of graph[curNode]) {
-      let total = dist + curDist;
-      if (total < dists[node]) {
-        dists[node] = total;
-        p.push([total, node]);
+      if (nx >= 0 && ny >= 0 && nx < n && ny < n) {
+        let totalCount = count + (graph[nx][ny] === 0 ? 1 : 0);
+        if (totalCount < dists[nx][ny]) {
+          dists[nx][ny] = totalCount;
+          queue.push([totalCount, nx, ny]);
+        }
       }
     }
   }
 
-  return dists;
+  return -1;
 };
 
-let result = 0;
-for (let i = 1; i <= n; i++) {
-  let dist = dijkstra(i);
-
-  let r = 0;
-
-  for (let j = 1; j <= n; j++) {
-    if (dist[j] <= m) {
-      r += items[j - 1];
-    }
-  }
-  result = Math.max(r, result);
-}
-
-console.log(result);
+console.log(dijkstra());
