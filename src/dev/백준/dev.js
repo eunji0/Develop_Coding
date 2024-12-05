@@ -6678,46 +6678,108 @@
 // }
 
 //1300 - k번째 수
-const { mkdir } = require('fs');
-const readline = require('readline');
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
+// const { mkdir } = require('fs');
+// const readline = require('readline');
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+
+// const binarySearch = (k, N) => {
+//   let end = N * N;
+//   let start = 1;
+//   let ans = 0;
+//   while (start <= end) {
+//     mid = Math.floor((start + end) / 2);
+//     let sum = 0;
+//     for (let i = 1; i <= N; i++) {
+//       let val = 0;
+//       mid / i > N ? (val = N) : (val = Math.floor(mid / i));
+//       sum += val;
+//     }
+//     // console.log("mid : ", mid , " sum :",sum)
+//     if (sum >= k) {
+//       ans = mid;
+//       end = mid - 1;
+//     } else {
+//       start = mid + 1;
+//     }
+//   }
+//   return ans;
+// };
+
+// const solution = (input) => {
+//   const N = parseInt(input[0]);
+//   const k = parseInt(input[1]);
+//   console.log(binarySearch(k, N));
+// };
+
+// const input = [];
+// rl.on('line', function (line) {
+//   input.push(line);
+// }).on('close', function () {
+//   solution(input);
+//   process.exit();
+// });
+
+//14938-서강그라운드
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+const [n, m, r] = input[0].split(' ').map(Number);
+const items = input[1].split(' ').map(Number);
+
+const roads = [];
+for (let i = 2; i < 2 + r; i++) {
+  const [a, b, l] = input[i].split(' ').map(Number);
+  roads.push([a, b, l]);
+}
+
+const graph = Array.from({ length: n + 1 }, () => []);
+roads.forEach(([a, b, l]) => {
+  graph[a].push([b, l]);
+  graph[b].push([a, l]);
 });
 
-const binarySearch = (k, N) => {
-  let end = N * N;
-  let start = 1;
-  let ans = 0;
-  while (start <= end) {
-    mid = Math.floor((start + end) / 2);
-    let sum = 0;
-    for (let i = 1; i <= N; i++) {
-      let val = 0;
-      mid / i > N ? (val = N) : (val = Math.floor(mid / i));
-      sum += val;
-    }
-    // console.log("mid : ", mid , " sum :",sum)
-    if (sum >= k) {
-      ans = mid;
-      end = mid - 1;
-    } else {
-      start = mid + 1;
+const dijkstra = (start) => {
+  let dists = Array(n + 1).fill(Infinity);
+  let visited = Array(n + 1).fill(false);
+  dists[start] = 0;
+  let p = [[0, start]];
+
+  while (p.length) {
+    p.sort((a, b) => b[0] - a[0]);
+
+    let [curDist, curNode] = p.pop();
+
+    if (visited[curNode]) continue;
+    visited[curNode] = true;
+
+    for (const [node, dist] of graph[curNode]) {
+      let total = dist + curDist;
+      if (total < dists[node]) {
+        dists[node] = total;
+        p.push([total, node]);
+      }
     }
   }
-  return ans;
+
+  return dists;
 };
 
-const solution = (input) => {
-  const N = parseInt(input[0]);
-  const k = parseInt(input[1]);
-  console.log(binarySearch(k, N));
-};
+let result = 0;
+for (let i = 1; i <= n; i++) {
+  let dist = dijkstra(i);
 
-const input = [];
-rl.on('line', function (line) {
-  input.push(line);
-}).on('close', function () {
-  solution(input);
-  process.exit();
-});
+  let r = 0;
+
+  for (let j = 1; j <= n; j++) {
+    if (dist[j] <= m) {
+      r += items[j - 1];
+    }
+  }
+  result = Math.max(r, result);
+}
+
+console.log(result);
