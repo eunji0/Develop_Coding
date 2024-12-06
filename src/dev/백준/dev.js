@@ -6785,50 +6785,83 @@
 // console.log(result);
 
 //2665-미로만들기
-const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const n = parseInt(input[0]);
-const graph = input.slice(1).map((line) => line.split('').map(Number));
+// const n = parseInt(input[0]);
+// const graph = input.slice(1).map((line) => line.split('').map(Number));
 
-let dir = [
-  [0, 1],
-  [0, -1],
-  [1, 0],
-  [-1, 0],
-];
+// let dir = [
+//   [0, 1],
+//   [0, -1],
+//   [1, 0],
+//   [-1, 0],
+// ];
 
-const dijkstra = () => {
-  let visited = Array.from({ length: n }, () => Array(n).fill(false));
-  let dists = Array.from({ length: n }, () => Array(n).fill(Infinity));
-  let queue = [[0, 0, 0]];
-  dists[0][0] = true;
+// const dijkstra = () => {
+//   let visited = Array.from({ length: n }, () => Array(n).fill(false));
+//   let dists = Array.from({ length: n }, () => Array(n).fill(Infinity));
+//   let queue = [[0, 0, 0]];
+//   dists[0][0] = true;
 
-  while (queue.length) {
-    queue.sort((a, b) => b[0] - a[0]);
-    let [count, x, y] = queue.pop();
+//   while (queue.length) {
+//     queue.sort((a, b) => b[0] - a[0]);
+//     let [count, x, y] = queue.pop();
 
-    if (visited[x][y]) continue;
-    visited[x][y] = true;
+//     if (visited[x][y]) continue;
+//     visited[x][y] = true;
 
-    if (x === n - 1 && y === n - 1) return count;
+//     if (x === n - 1 && y === n - 1) return count;
 
-    for (const [dx, dy] of dir) {
-      let nx = x + dx;
-      let ny = y + dy;
+//     for (const [dx, dy] of dir) {
+//       let nx = x + dx;
+//       let ny = y + dy;
 
-      if (nx >= 0 && ny >= 0 && nx < n && ny < n) {
-        let totalCount = count + (graph[nx][ny] === 0 ? 1 : 0);
-        if (totalCount < dists[nx][ny]) {
-          dists[nx][ny] = totalCount;
-          queue.push([totalCount, nx, ny]);
-        }
-      }
-    }
+//       if (nx >= 0 && ny >= 0 && nx < n && ny < n) {
+//         let totalCount = count + (graph[nx][ny] === 0 ? 1 : 0);
+//         if (totalCount < dists[nx][ny]) {
+//           dists[nx][ny] = totalCount;
+//           queue.push([totalCount, nx, ny]);
+//         }
+//       }
+//     }
+//   }
+
+//   return -1;
+// };
+
+// console.log(dijkstra());
+
+//2470-두용액
+let fs = require("fs");
+let input = fs.readFileSync("/dev/stdin").toString().trim().split("\n");
+
+const N = Number(input.shift());
+const solution = input
+  .shift()
+  .split(" ")
+  .map(Number)
+  .sort((a, b) => a - b);
+
+let left = 0;
+let right = N - 1;
+let tempSum = Number.MAX_SAFE_INTEGER;
+let answer = "";
+
+while (left < right) {
+  let sum = solution[left] + solution[right];
+
+  if (tempSum > Math.abs(sum)) {
+    tempSum = Math.abs(sum);
+    answer = [solution[left], solution[right]];
   }
 
-  return -1;
-};
+  if (sum < 0) {
+    left++;
+  } else {
+    right--;
+  }
+}
 
-console.log(dijkstra());
+console.log(answer.sort((a, b) => a - b).join(" "));
