@@ -6834,34 +6834,72 @@
 // console.log(dijkstra());
 
 //2470-두용액
-let fs = require("fs");
-let input = fs.readFileSync("/dev/stdin").toString().trim().split("\n");
+// let fs = require("fs");
+// let input = fs.readFileSync("/dev/stdin").toString().trim().split("\n");
 
-const N = Number(input.shift());
-const solution = input
-  .shift()
-  .split(" ")
-  .map(Number)
-  .sort((a, b) => a - b);
+// const N = Number(input.shift());
+// const solution = input
+//   .shift()
+//   .split(" ")
+//   .map(Number)
+//   .sort((a, b) => a - b);
 
-let left = 0;
-let right = N - 1;
-let tempSum = Number.MAX_SAFE_INTEGER;
-let answer = "";
+// let left = 0;
+// let right = N - 1;
+// let tempSum = Number.MAX_SAFE_INTEGER;
+// let answer = "";
 
-while (left < right) {
-  let sum = solution[left] + solution[right];
+// while (left < right) {
+//   let sum = solution[left] + solution[right];
 
-  if (tempSum > Math.abs(sum)) {
-    tempSum = Math.abs(sum);
-    answer = [solution[left], solution[right]];
-  }
+//   if (tempSum > Math.abs(sum)) {
+//     tempSum = Math.abs(sum);
+//     answer = [solution[left], solution[right]];
+//   }
 
-  if (sum < 0) {
-    left++;
-  } else {
-    right--;
-  }
+//   if (sum < 0) {
+//     left++;
+//   } else {
+//     right--;
+//   }
+// }
+
+// console.log(answer.sort((a, b) => a - b).join(" "));
+
+//2776-암기왕
+const fs = require('fs');
+const input = fs.readFileSync('./dev/stdin').toString().trim().split('\n');
+const T = +input.shift();
+
+for (let i = 0; i < T; i++) {
+  input.shift();
+  const first = input
+    .shift()
+    .split(' ')
+    .map(Number)
+    .sort((a, b) => a - b);
+  input.shift();
+  const second = input.shift().split(' ').map(Number);
+  let answer = [];
+  second.forEach((target) => {
+    let min = 0;
+    let max = first.length - 1;
+    let mid;
+    let success = false;
+    while (min <= max) {
+      mid = Math.floor((min + max) / 2);
+      if (first[mid] == target) {
+        success = true;
+        break;
+      } else if (first[mid] < target) {
+        min = mid + 1;
+      } else {
+        max = mid - 1;
+      }
+    }
+    const res = success ? 1 : 0;
+    answer.push(res);
+  });
+
+  console.log(answer.join('\n'));
 }
-
-console.log(answer.sort((a, b) => a - b).join(" "));
