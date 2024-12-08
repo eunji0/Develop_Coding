@@ -6867,39 +6867,98 @@
 // console.log(answer.sort((a, b) => a - b).join(" "));
 
 //2776-암기왕
+// const fs = require('fs');
+// const input = fs.readFileSync('./dev/stdin').toString().trim().split('\n');
+// const T = +input.shift();
+
+// for (let i = 0; i < T; i++) {
+//   input.shift();
+//   const first = input
+//     .shift()
+//     .split(' ')
+//     .map(Number)
+//     .sort((a, b) => a - b);
+//   input.shift();
+//   const second = input.shift().split(' ').map(Number);
+//   let answer = [];
+//   second.forEach((target) => {
+//     let min = 0;
+//     let max = first.length - 1;
+//     let mid;
+//     let success = false;
+//     while (min <= max) {
+//       mid = Math.floor((min + max) / 2);
+//       if (first[mid] == target) {
+//         success = true;
+//         break;
+//       } else if (first[mid] < target) {
+//         min = mid + 1;
+//       } else {
+//         max = mid - 1;
+//       }
+//     }
+//     const res = success ? 1 : 0;
+//     answer.push(res);
+//   });
+
+//   console.log(answer.join('\n'));
+// }
+
+//1939-중량제한
 const fs = require('fs');
-const input = fs.readFileSync('./dev/stdin').toString().trim().split('\n');
-const T = +input.shift();
+let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-for (let i = 0; i < T; i++) {
-  input.shift();
-  const first = input
-    .shift()
-    .split(' ')
-    .map(Number)
-    .sort((a, b) => a - b);
-  input.shift();
-  const second = input.shift().split(' ').map(Number);
-  let answer = [];
-  second.forEach((target) => {
-    let min = 0;
-    let max = first.length - 1;
-    let mid;
-    let success = false;
-    while (min <= max) {
-      mid = Math.floor((min + max) / 2);
-      if (first[mid] == target) {
-        success = true;
-        break;
-      } else if (first[mid] < target) {
-        min = mid + 1;
-      } else {
-        max = mid - 1;
-      }
-    }
-    const res = success ? 1 : 0;
-    answer.push(res);
-  });
+const [N, M] = input.shift().split(' ');
+const [start, end] = input.pop().split(' ');
 
-  console.log(answer.join('\n'));
+input = input.map((v) => {
+  v = v.split(' ').map(Number);
+  return v;
+});
+let answer = 0;
+const graph = [];
+const set = Array.from({ length: N + 1 }, (v, i) => i);
+
+for (const [v1, v2, cost] of input) {
+  graph.push([v1, v2, cost]);
 }
+
+graph.sort((a, b) => b[2] - a[2]);
+
+function find(a) {
+  if (set[a] === a) return a;
+  return (set[a] = find(set[a]));
+}
+
+function union(a, b) {
+  const parentA = find(a);
+  const parentB = find(b);
+
+  parentA < parentB ? (set[parentB] = parentA) : (set[parentA] = parentB);
+}
+
+function isCycled(a, b) {
+  const parentA = find(a);
+  const parentB = find(b);
+
+  if (parentA === parentB) return true;
+  return false;
+}
+
+function isFinished(a, b) {
+  if (find(a) === find(b)) return true;
+  return false;
+}
+
+for (let i = 0; i < set.length; i++) {
+  const [v1, v2, cost] = graph[i];
+  if (!isCycled(v1, v2)) {
+    union(v1, v2);
+    if (isFinished(start, end)) {
+      answer = cost;
+      break;
+    }
+  }
+}
+
+console.log(answer);
