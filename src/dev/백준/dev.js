@@ -6905,60 +6905,101 @@
 // }
 
 //1939-중량제한
-const fs = require('fs');
-let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
+// const fs = require('fs');
+// let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-const [N, M] = input.shift().split(' ');
-const [start, end] = input.pop().split(' ');
+// const [N, M] = input.shift().split(' ');
+// const [start, end] = input.pop().split(' ');
 
-input = input.map((v) => {
-  v = v.split(' ').map(Number);
-  return v;
+// input = input.map((v) => {
+//   v = v.split(' ').map(Number);
+//   return v;
+// });
+// let answer = 0;
+// const graph = [];
+// const set = Array.from({ length: N + 1 }, (v, i) => i);
+
+// for (const [v1, v2, cost] of input) {
+//   graph.push([v1, v2, cost]);
+// }
+
+// graph.sort((a, b) => b[2] - a[2]);
+
+// function find(a) {
+//   if (set[a] === a) return a;
+//   return (set[a] = find(set[a]));
+// }
+
+// function union(a, b) {
+//   const parentA = find(a);
+//   const parentB = find(b);
+
+//   parentA < parentB ? (set[parentB] = parentA) : (set[parentA] = parentB);
+// }
+
+// function isCycled(a, b) {
+//   const parentA = find(a);
+//   const parentB = find(b);
+
+//   if (parentA === parentB) return true;
+//   return false;
+// }
+
+// function isFinished(a, b) {
+//   if (find(a) === find(b)) return true;
+//   return false;
+// }
+
+// for (let i = 0; i < set.length; i++) {
+//   const [v1, v2, cost] = graph[i];
+//   if (!isCycled(v1, v2)) {
+//     union(v1, v2);
+//     if (isFinished(start, end)) {
+//       answer = cost;
+//       break;
+//     }
+//   }
+// }
+
+// console.log(answer);
+
+//1446-지름길
+//let now = 0
+//now에 시작하는 게 있는지 확인.
+//시작하는게 있다면
+//끝이 길이를 넘지 않는지 확인
+//여러개라면 그중 지름길 길이가 가장 짧은 걸로 셀렉
+//0 50 10, 20
+//->10이 더 짧을때 10으로 체인지
+const input = require('fs')
+  .readFileSync(process.platform === 'linux' ? 'dev/stdin' : 'input.txt')
+  .toString()
+  .trim()
+  .split('\n');
+
+let [n, d] = input[0].split(' ').map(Number);
+let shortcuts = input.slice(1).map((v) => v.split(' ').map(Number));
+
+let dists = Array(d + 1).fill(Infinity);
+dists[0] = 0;
+
+let graph = Array.from({ length: d + 1 }, () => []);
+shortcuts.forEach(([s, e, l]) => {
+  if (e > d) return; // 도착점이 범위를 초과
+  if (e - s <= l) return; // 지름길이 더 비효율적
+  graph[s].push([e, l]);
 });
-let answer = 0;
-const graph = [];
-const set = Array.from({ length: N + 1 }, (v, i) => i);
 
-for (const [v1, v2, cost] of input) {
-  graph.push([v1, v2, cost]);
-}
+for (let i = 0; i <= d; i++) {
+  if (i > 0) {
+    dists[i] = Math.min(dists[i], dists[i - 1] + 1);
+  }
 
-graph.sort((a, b) => b[2] - a[2]);
-
-function find(a) {
-  if (set[a] === a) return a;
-  return (set[a] = find(set[a]));
-}
-
-function union(a, b) {
-  const parentA = find(a);
-  const parentB = find(b);
-
-  parentA < parentB ? (set[parentB] = parentA) : (set[parentA] = parentB);
-}
-
-function isCycled(a, b) {
-  const parentA = find(a);
-  const parentB = find(b);
-
-  if (parentA === parentB) return true;
-  return false;
-}
-
-function isFinished(a, b) {
-  if (find(a) === find(b)) return true;
-  return false;
-}
-
-for (let i = 0; i < set.length; i++) {
-  const [v1, v2, cost] = graph[i];
-  if (!isCycled(v1, v2)) {
-    union(v1, v2);
-    if (isFinished(start, end)) {
-      answer = cost;
-      break;
+  for (let [e, l] of graph[i]) {
+    if (e <= d && dists[e] > dists[i] + l) {
+      dists[e] = dists[i] + l;
     }
   }
 }
 
-console.log(answer);
+console.log(dists[d]);
