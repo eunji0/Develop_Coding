@@ -6971,35 +6971,89 @@
 //여러개라면 그중 지름길 길이가 가장 짧은 걸로 셀렉
 //0 50 10, 20
 //->10이 더 짧을때 10으로 체인지
+// const input = require('fs')
+//   .readFileSync(process.platform === 'linux' ? 'dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, d] = input[0].split(' ').map(Number);
+// let shortcuts = input.slice(1).map((v) => v.split(' ').map(Number));
+
+// let dists = Array(d + 1).fill(Infinity);
+// dists[0] = 0;
+
+// let graph = Array.from({ length: d + 1 }, () => []);
+// shortcuts.forEach(([s, e, l]) => {
+//   if (e > d) return; // 도착점이 범위를 초과
+//   if (e - s <= l) return; // 지름길이 더 비효율적
+//   graph[s].push([e, l]);
+// });
+
+// for (let i = 0; i <= d; i++) {
+//   if (i > 0) {
+//     dists[i] = Math.min(dists[i], dists[i - 1] + 1);
+//   }
+
+//   for (let [e, l] of graph[i]) {
+//     if (e <= d && dists[e] > dists[i] + l) {
+//       dists[e] = dists[i] + l;
+//     }
+//   }
+// }
+
+// console.log(dists[d]);
+
+//10282-해킹
 const input = require('fs')
   .readFileSync(process.platform === 'linux' ? 'dev/stdin' : 'input.txt')
   .toString()
   .trim()
   .split('\n');
 
-let [n, d] = input[0].split(' ').map(Number);
-let shortcuts = input.slice(1).map((v) => v.split(' ').map(Number));
+const dijkstra = (n, c, graph) => {
+  const dist = Array(n + 1).fill(Infinity);
+  const visited = Array(n + 1).fill(false);
+  const pq = [[0, c]]; // [감염 시간, 컴퓨터 번호]
+  dist[c] = 0;
 
-let dists = Array(d + 1).fill(Infinity);
-dists[0] = 0;
+  while (pq.length) {
+    // 우선순위 큐에서 가장 작은 값을 꺼냄
+    pq.sort((a, b) => a[0] - b[0]);
+    const [time, node] = pq.shift();
 
-let graph = Array.from({ length: d + 1 }, () => []);
-shortcuts.forEach(([s, e, l]) => {
-  if (e > d) return; // 도착점이 범위를 초과
-  if (e - s <= l) return; // 지름길이 더 비효율적
-  graph[s].push([e, l]);
-});
+    if (visited[node]) continue;
+    visited[node] = true;
 
-for (let i = 0; i <= d; i++) {
-  if (i > 0) {
-    dists[i] = Math.min(dists[i], dists[i - 1] + 1);
-  }
-
-  for (let [e, l] of graph[i]) {
-    if (e <= d && dists[e] > dists[i] + l) {
-      dists[e] = dists[i] + l;
+    for (const [next, cost] of graph[node]) {
+      if (dist[next] > time + cost) {
+        dist[next] = time + cost;
+        pq.push([dist[next], next]);
+      }
     }
   }
+
+  // 감염된 컴퓨터의 수와 최종 감염 시간 계산
+  const infected = dist.filter((d) => d < Infinity);
+  return [infected.length, Math.max(...infected)];
+};
+
+let t = +input[0];
+const results = [];
+
+for (let i = 1; i < input.length; ) {
+  const [n, d, c] = input[i].split(' ').map(Number);
+  const graph = Array.from({ length: n + 1 }, () => []);
+
+  for (let j = 0; j < d; j++) {
+    const [a, b, s] = input[i + 1 + j].split(' ').map(Number);
+    graph[b].push([a, s]); // b가 감염되면 a가 감염됨
+  }
+
+  const result = dijkstra(n, c, graph);
+  results.push(result.join(' '));
+
+  i += d + 1;
 }
 
-console.log(dists[d]);
+console.log(results.join('\n'));
