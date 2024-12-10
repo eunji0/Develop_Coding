@@ -7005,39 +7005,107 @@
 // console.log(dists[d]);
 
 //10282-해킹
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  push(value) {
+    this.heap.push(value);
+    this._heapifyUp();
+  }
+
+  pop() {
+    if (this.size() === 1) return this.heap.pop();
+    const root = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this._heapifyDown();
+    return root;
+  }
+
+  peek() {
+    return this.heap[0];
+  }
+
+  size() {
+    return this.heap.length;
+  }
+
+  _heapifyUp() {
+    let index = this.heap.length - 1;
+    while (index > 0) {
+      const parentIndex = Math.floor((index - 1) / 2);
+      if (this.heap[parentIndex][0] <= this.heap[index][0]) break;
+
+      [this.heap[parentIndex], this.heap[index]] = [this.heap[index], this.heap[parentIndex]];
+      index = parentIndex;
+    }
+  }
+
+  _heapifyDown() {
+    let index = 0;
+    const lastIndex = this.heap.length - 1;
+
+    while (true) {
+      const leftChild = 2 * index + 1;
+      const rightChild = 2 * index + 2;
+      let smallest = index;
+
+      if (leftChild <= lastIndex && this.heap[leftChild][0] < this.heap[smallest][0]) {
+        smallest = leftChild;
+      }
+      if (rightChild <= lastIndex && this.heap[rightChild][0] < this.heap[smallest][0]) {
+        smallest = rightChild;
+      }
+      if (smallest === index) break;
+
+      [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+      index = smallest;
+    }
+  }
+}
 const input = require('fs')
   .readFileSync(process.platform === 'linux' ? 'dev/stdin' : 'input.txt')
   .toString()
   .trim()
   .split('\n');
 
+// 다익스트라 함수
 const dijkstra = (n, c, graph) => {
-  const dist = Array(n + 1).fill(Infinity);
-  const visited = Array(n + 1).fill(false);
-  const pq = [[0, c]]; // [감염 시간, 컴퓨터 번호]
-  dist[c] = 0;
+  const dists = Array(n + 1).fill(Infinity);
+  dists[c] = 0;
 
-  while (pq.length) {
-    // 우선순위 큐에서 가장 작은 값을 꺼냄
-    pq.sort((a, b) => a[0] - b[0]);
-    const [time, node] = pq.shift();
+  const minHeap = new MinHeap();
+  minHeap.push([0, c]); // [시간, 컴퓨터]
 
-    if (visited[node]) continue;
-    visited[node] = true;
+  while (minHeap.size()) {
+    const [time, computer] = minHeap.pop();
 
-    for (const [next, cost] of graph[node]) {
-      if (dist[next] > time + cost) {
-        dist[next] = time + cost;
-        pq.push([dist[next], next]);
+    if (time > dists[computer]) continue; // 이미 처리된 노드 무시
+
+    for (const [next, t] of graph[computer]) {
+      const newTime = time + t;
+      if (newTime < dists[next]) {
+        dists[next] = newTime;
+        minHeap.push([newTime, next]);
       }
     }
   }
 
-  // 감염된 컴퓨터의 수와 최종 감염 시간 계산
-  const infected = dist.filter((d) => d < Infinity);
-  return [infected.length, Math.max(...infected)];
+  // 감염된 컴퓨터 수와 최대 감염 시간 계산
+  let count = 0;
+  let maxTime = 0;
+  for (const time of dists) {
+    if (time < Infinity) {
+      count++;
+      maxTime = Math.max(maxTime, time);
+    }
+  }
+
+  return [count, maxTime];
 };
 
+// 입력 처리 및 결과 출력
 let t = +input[0];
 const results = [];
 
