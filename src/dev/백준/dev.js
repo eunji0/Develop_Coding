@@ -7005,123 +7005,307 @@
 // console.log(dists[d]);
 
 //10282-해킹
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   push(value) {
+//     this.heap.push(value);
+//     this._heapifyUp();
+//   }
+
+//   pop() {
+//     if (this.size() === 1) return this.heap.pop();
+//     const root = this.heap[0];
+//     this.heap[0] = this.heap.pop();
+//     this._heapifyDown();
+//     return root;
+//   }
+
+//   peek() {
+//     return this.heap[0];
+//   }
+
+//   size() {
+//     return this.heap.length;
+//   }
+
+//   _heapifyUp() {
+//     let index = this.heap.length - 1;
+//     while (index > 0) {
+//       const parentIndex = Math.floor((index - 1) / 2);
+//       if (this.heap[parentIndex][0] <= this.heap[index][0]) break;
+
+//       [this.heap[parentIndex], this.heap[index]] = [this.heap[index], this.heap[parentIndex]];
+//       index = parentIndex;
+//     }
+//   }
+
+//   _heapifyDown() {
+//     let index = 0;
+//     const lastIndex = this.heap.length - 1;
+
+//     while (true) {
+//       const leftChild = 2 * index + 1;
+//       const rightChild = 2 * index + 2;
+//       let smallest = index;
+
+//       if (leftChild <= lastIndex && this.heap[leftChild][0] < this.heap[smallest][0]) {
+//         smallest = leftChild;
+//       }
+//       if (rightChild <= lastIndex && this.heap[rightChild][0] < this.heap[smallest][0]) {
+//         smallest = rightChild;
+//       }
+//       if (smallest === index) break;
+
+//       [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+//       index = smallest;
+//     }
+//   }
+// }
+// const input = require('fs')
+//   .readFileSync(process.platform === 'linux' ? 'dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// // 다익스트라 함수
+// const dijkstra = (n, c, graph) => {
+//   const dists = Array(n + 1).fill(Infinity);
+//   dists[c] = 0;
+
+//   const minHeap = new MinHeap();
+//   minHeap.push([0, c]); // [시간, 컴퓨터]
+
+//   while (minHeap.size()) {
+//     const [time, computer] = minHeap.pop();
+
+//     if (time > dists[computer]) continue; // 이미 처리된 노드 무시
+
+//     for (const [next, t] of graph[computer]) {
+//       const newTime = time + t;
+//       if (newTime < dists[next]) {
+//         dists[next] = newTime;
+//         minHeap.push([newTime, next]);
+//       }
+//     }
+//   }
+
+//   // 감염된 컴퓨터 수와 최대 감염 시간 계산
+//   let count = 0;
+//   let maxTime = 0;
+//   for (const time of dists) {
+//     if (time < Infinity) {
+//       count++;
+//       maxTime = Math.max(maxTime, time);
+//     }
+//   }
+
+//   return [count, maxTime];
+// };
+
+// // 입력 처리 및 결과 출력
+// let t = +input[0];
+// const results = [];
+
+// for (let i = 1; i < input.length; ) {
+//   const [n, d, c] = input[i].split(' ').map(Number);
+//   const graph = Array.from({ length: n + 1 }, () => []);
+
+//   for (let j = 0; j < d; j++) {
+//     const [a, b, s] = input[i + 1 + j].split(' ').map(Number);
+//     graph[b].push([a, s]); // b가 감염되면 a가 감염됨
+//   }
+
+//   const result = dijkstra(n, c, graph);
+//   results.push(result.join(' '));
+
+//   i += d + 1;
+// }
+
+// console.log(results.join('\n'));
+
+//9370-미확인 도착지
+class Node {
+  constructor(item) {
+    this.item = item;
+    this.next = null;
+  }
+}
+
+class Queue {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+
+  push(item) {
+    const node = new Node(item)
+    if (this.head === null) {
+      this.head = node;
+    } else {
+      this.tail.next = node;
+    }
+
+    this.tail = node;
+    this.length += 1;
+  }
+
+  pop() {
+    const popItem = this.head.item;
+    this.head = this.head.next;
+    this.length -= 1;
+    return popItem;
+  }
+}
+
+//다익스트라 알고리즘을 위한 최소힙 작성 
 class MinHeap {
   constructor() {
     this.heap = [];
   }
 
-  push(value) {
+  empty() {
+    if (this.heap.length == 0) {
+      return true;
+    }
+    return false;
+  }
+
+  swap(arr, x, y) {
+    let temp = arr[x];
+    arr[x] = arr[y];
+    arr[y] = temp;
+    return;
+  }
+
+
+  insert(value) {
     this.heap.push(value);
-    this._heapifyUp();
+    this.bubbleUp();
   }
 
-  pop() {
-    if (this.size() === 1) return this.heap.pop();
-    const root = this.heap[0];
+  bubbleUp() {
+    let currentIndex = this.heap.length - 1;
+
+    while (currentIndex > 0) {
+      const parentIndex = Math.floor((currentIndex - 1) / 2);
+      if (this.heap[parentIndex].cost <= this.heap[currentIndex].cost) break;
+      this.swap(this.heap, parentIndex, currentIndex)
+      currentIndex = parentIndex;
+    }
+  }
+
+
+  extractMin() {
+    if (this.heap.length == 1) {
+      return this.heap.pop();
+    }
+    const min = this.heap[0];
     this.heap[0] = this.heap.pop();
-    this._heapifyDown();
-    return root;
+    this.sinkDown(0);
+    return min
   }
 
-  peek() {
-    return this.heap[0];
-  }
+  sinkDown(index) {
+    const leftIndex = 2 * index + 1;
+    const rightIndex = 2 * index + 2;
+    const length = this.heap.length;
+    let smallestIndex = index;
 
-  size() {
-    return this.heap.length;
-  }
-
-  _heapifyUp() {
-    let index = this.heap.length - 1;
-    while (index > 0) {
-      const parentIndex = Math.floor((index - 1) / 2);
-      if (this.heap[parentIndex][0] <= this.heap[index][0]) break;
-
-      [this.heap[parentIndex], this.heap[index]] = [this.heap[index], this.heap[parentIndex]];
-      index = parentIndex;
+    if (leftIndex < length && this.heap[leftIndex].cost < this.heap[smallestIndex].cost) {
+      smallestIndex = leftIndex;
     }
-  }
-
-  _heapifyDown() {
-    let index = 0;
-    const lastIndex = this.heap.length - 1;
-
-    while (true) {
-      const leftChild = 2 * index + 1;
-      const rightChild = 2 * index + 2;
-      let smallest = index;
-
-      if (leftChild <= lastIndex && this.heap[leftChild][0] < this.heap[smallest][0]) {
-        smallest = leftChild;
-      }
-      if (rightChild <= lastIndex && this.heap[rightChild][0] < this.heap[smallest][0]) {
-        smallest = rightChild;
-      }
-      if (smallest === index) break;
-
-      [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
-      index = smallest;
+    if (rightIndex < length && this.heap[rightIndex].cost < this.heap[smallestIndex].cost) {
+      smallestIndex = rightIndex;
+    }
+    if (smallestIndex !== index) {
+      this.swap(this.heap, index, smallestIndex);
+      this.sinkDown(smallestIndex)
     }
   }
 }
-const input = require('fs')
-  .readFileSync(process.platform === 'linux' ? 'dev/stdin' : 'input.txt')
-  .toString()
-  .trim()
-  .split('\n');
 
-// 다익스트라 함수
-const dijkstra = (n, c, graph) => {
-  const dists = Array(n + 1).fill(Infinity);
-  dists[c] = 0;
 
-  const minHeap = new MinHeap();
-  minHeap.push([0, c]); // [시간, 컴퓨터]
+//이번 문제의 입력을 책임져줄  readline
+const readline = require("readline");
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+let input = new Queue();
+rl.on("line", function (line) {
+  input.push(line)
+}).on("close", function () {
+  solve(input);
+  process.exit();
+});
 
-  while (minHeap.size()) {
-    const [time, computer] = minHeap.pop();
 
-    if (time > dists[computer]) continue; // 이미 처리된 노드 무시
 
-    for (const [next, t] of graph[computer]) {
-      const newTime = time + t;
-      if (newTime < dists[next]) {
-        dists[next] = newTime;
-        minHeap.push([newTime, next]);
+function solve(x) {
+  const answer = [];  // 최종답안이 담기는 곳. 
+  const T = +x.pop(); // 테스트 케이스의 수.
+  for (let i = 0; i < T; i++) { // 테스트 케이스 만큼 반복 .
+    let tempAnswer = [];   // 각 테스트케이스에 대한 답이 담기는 곳. 
+    const [n, m, t] = x.pop().split(' ').map(v => +v); // 첫째줄에 n은 노드 수, m은 간선수, t는 목적지 후보의 수. 
+    const [s, g, h] = x.pop().split(' ').map(v => +v); //두번째 줄은 출발점s와  경유지 g,h 
+
+    let adj = Array.from(Array(n + 1), () => []); // 인접노드를 표시가히기 위한 2차원 배열. 
+    for (let j = 0; j < m; j++) {  //간선의 수만큼 반복 
+      const [a, b, d] = x.pop().split(' ').map(v => +v); // 노드 a와 노드 b 사이의 거리가 d 
+      adj[a].push({ node: b, dist: d });  // 방향이 없는 그래프라고 하니 노드 순서를 바꿔서 각각 넣어줌. 
+      adj[b].push({ node: a, dist: d });
+    }
+
+    //**solution
+    //출발점에서 목적지로 가는 최단경로가 
+    //출발점에서 g,h를 거쳐서 가는 최단경로와 같거나
+    //출발점에서 h,g를 거쳐서 가는 최단경로와 같으면 
+    //그것은 목적지 후보가 될 수 있다. 
+    const routeS = route(s, n, adj); // 출발지점에서 어떤 지점으로 가는 데 필요한 최단거리를 나타내는 배열
+    const routeG = route(g, n, adj); // g지점에서 어떤 지점으로 가는 데 필요한 최단거리를 나타내는 배열
+    const routeH = route(h, n, adj); // h지점에서 어떤 지점으로 가는 데 필요한 최단거리를 나타내는 배열
+
+    for (let k = 0; k < t; k++) {
+      const E = +x.pop(); // 문제에서 주어진 검사해야할 목적지. 
+      const base = routeS[E]; // 출발점에서 목적지까지로 가는 최단 경로 
+      const possibleA = routeS[g] + routeG[h] + routeH[E]; //출발점에서 g,h를 거쳐서 가는 최단경로
+      const possibleB = routeS[h] + routeH[g] + routeG[E]; //출발점에서 h,g를 거쳐서 가는 최단경로
+      if (base != Infinity && (base == possibleA || base == possibleB)) { // 갈수 있는 목적지이고 && 최단경로 값이 같다면 도착 가능한 목적지 후보가 된다. 
+        tempAnswer.push(E);
+      }
+    }
+
+    answer.push(tempAnswer.sort((a, b) => a - b).join(' '));
+  }
+  console.log(answer.join('\n'))
+}
+
+
+
+// n개의 노드, adj는 인접노드와 그 노드까지의 거리가 담겨있다. s는 출발점이다. 
+// s에서 각 노드로 가는데 필요한 최소비용을 담은 배열을 반환한다. 
+function route(s, n, adj) {
+
+  let MinDist = new Array(n + 1).fill(Infinity);
+  MinDist[s] = 0;
+
+  let heap = new MinHeap();
+  heap.insert({ node: s, dist: 0 });
+
+  while (!heap.empty()) {
+    let now = heap.extractMin();
+    for (let i = 0; i < adj[now.node].length; i++) {
+      const { node, dist } = adj[now.node][i];
+      if (MinDist[node] > now.dist + dist) {
+        MinDist[node] = now.dist + dist;
+        heap.insert({ node: node, dist: MinDist[node] })
       }
     }
   }
 
-  // 감염된 컴퓨터 수와 최대 감염 시간 계산
-  let count = 0;
-  let maxTime = 0;
-  for (const time of dists) {
-    if (time < Infinity) {
-      count++;
-      maxTime = Math.max(maxTime, time);
-    }
-  }
-
-  return [count, maxTime];
-};
-
-// 입력 처리 및 결과 출력
-let t = +input[0];
-const results = [];
-
-for (let i = 1; i < input.length; ) {
-  const [n, d, c] = input[i].split(' ').map(Number);
-  const graph = Array.from({ length: n + 1 }, () => []);
-
-  for (let j = 0; j < d; j++) {
-    const [a, b, s] = input[i + 1 + j].split(' ').map(Number);
-    graph[b].push([a, s]); // b가 감염되면 a가 감염됨
-  }
-
-  const result = dijkstra(n, c, graph);
-  results.push(result.join(' '));
-
-  i += d + 1;
+  return MinDist  
 }
-
-console.log(results.join('\n'));
