@@ -7145,18 +7145,78 @@ const input = require('fs')
   .trim()
   .split('\n');
 
-let t = +input[0];
+let t = +input[0]; // 테스트 케이스 수
+let results = []; // 결과 저장
 
-for (let i = 1; i < input.length; i++) {
+// 다익스트라 알고리즘
+const dijkstra = (n, graph, start) => {
+  const distances = Array(n + 1).fill(Infinity);
+  const pq = [];
+  distances[start] = 0;
+  pq.push([0, start]); // [거리, 노드]
+
+  while (pq.length > 0) {
+    const [dist, current] = pq.shift();
+    if (dist > distances[current]) continue;
+
+    for (const [next, weight] of graph[current]) {
+      const cost = dist + weight;
+      if (cost < distances[next]) {
+        distances[next] = cost;
+        pq.push([cost, next]);
+      }
+    }
+    pq.sort((a, b) => a[0] - b[0]); // 우선순위 큐를 정렬
+  }
+
+  return distances;
+};
+
+// 입력 처리 및 풀이
+for (let i = 1; i < input.length; ) {
   // 교차로, 도로, 목적지 후보의 개수
   let [n, m, t] = input[i].split(' ').map(Number);
-  //s는 예술가들의 출발지
+  // s는 예술가들의 출발지
   let [s, g, h] = input[i + 1].split(' ').map(Number);
-  // a와 b 사이에 길이 d의 양방향 도로가 있다
+
+  // 그래프 구성
+  let graph = Array.from({ length: n + 1 }, () => []);
+  let specialEdge = 0;
   let abd = input.slice(i + 2, i + 2 + m).map((v) => v.split(' ').map(Number));
-  // t개의 목적지 후보
-  let xx = input.slice(i + m + t, i + m + t + 2).map(Number);
-  console.log(n, m, t);
-  console.log(xx);
-  i = i + m + t + 1;
+  for (const [a, b, d] of abd) {
+    graph[a].push([b, d]);
+    graph[b].push([a, d]);
+    if ((a === g && b === h) || (a === h && b === g)) specialEdge = d;
+  }
+
+  // 목적지 후보
+  let xx = input.slice(i + 2 + m, i + 2 + m + t).map(Number);
+
+  // 각 지점에서 최단 거리 계산
+  const distFromS = dijkstra(n, graph, s);
+  const distFromG = dijkstra(n, graph, g);
+  const distFromH = dijkstra(n, graph, h);
+
+  // 목적지 후보 필터링
+  let validDestinations = [];
+  for (const x of xx) {
+    // 최단 거리
+    const directDist = distFromS[x];
+    // g -> h를 포함하는 경로의 거리 계산
+    const viaGH = distFromS[g] + specialEdge + distFromH[x];
+    const viaHG = distFromS[h] + specialEdge + distFromG[x];
+
+    if (directDist === viaGH || directDist === viaHG) {
+      validDestinations.push(x);
+    }
+  }
+
+  // 결과 저장
+  results.push(validDestinations.sort((a, b) => a - b).join(' '));
+
+  // 다음 테스트 케이스로 이동
+  i = i + 2 + m + t;
 }
+
+// 결과 출력
+console.log(results.join('\n'));
