@@ -7139,84 +7139,187 @@
 // 출력 요구사항:
 
 // 가능한 목적지를 오름차순으로 출력
-const input = require('fs')
-  .readFileSync(process.platform === 'linux' ? 'dev/stdin' : 'input.txt')
+// const input = require('fs')
+//   .readFileSync(process.platform === 'linux' ? 'dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// const T = +input[0];
+// let idx = 1;
+
+// const dijkstra = (n, graph, start) => {
+//   const dist = Array(n + 1).fill(Infinity);
+//   const pq = [[0, start]]; // [거리, 노드]
+//   dist[start] = 0;
+
+//   while (pq.length > 0) {
+//     const [currentDist, currentNode] = pq.shift();
+//     if (currentDist > dist[currentNode]) continue;
+
+//     for (const [nextNode, weight] of graph[currentNode]) {
+//       const newDist = currentDist + weight;
+//       if (newDist < dist[nextNode]) {
+//         dist[nextNode] = newDist;
+//         pq.push([newDist, nextNode]);
+//       }
+//     }
+//     pq.sort((a, b) => a[0] - b[0]); // 우선순위 큐 정렬
+//   }
+
+//   return dist;
+// };
+
+// const results = [];
+
+// for (let t = 0; t < T; t++) {
+//   const [n, m, candidateCount] = input[idx++].split(' ').map(Number);
+//   const [s, g, h] = input[idx++].split(' ').map(Number);
+
+//   // 그래프 초기화
+//   const graph = Array.from({ length: n + 1 }, () => []);
+//   let ghDistance = 0;
+
+//   for (let i = 0; i < m; i++) {
+//     const [a, b, d] = input[idx++].split(' ').map(Number);
+//     graph[a].push([b, d]);
+//     graph[b].push([a, d]);
+//     if ((a === g && b === h) || (a === h && b === g)) ghDistance = d;
+//   }
+
+//   const destinations = [];
+//   for (let i = 0; i < candidateCount; i++) {
+//     destinations.push(+input[idx++]);
+//   }
+
+//   // 다익스트라 3번 수행
+//   const distFromS = dijkstra(n, graph, s);
+//   const distFromG = dijkstra(n, graph, g);
+//   const distFromH = dijkstra(n, graph, h);
+
+//   // 조건에 맞는 목적지 필터링
+//   const validDestinations = [];
+//   for (const dest of destinations) {
+//     const directDist = distFromS[dest];
+//     const viaGH = distFromS[g] + ghDistance + distFromH[dest];
+//     const viaHG = distFromS[h] + ghDistance + distFromG[dest];
+
+//     if (directDist === viaGH || directDist === viaHG) {
+//       validDestinations.push(dest);
+//     }
+//   }
+
+//   results.push(validDestinations.sort((a, b) => a - b).join(' '));
+// }
+
+// console.log(results.join('\n'));
+
+//5972-택배배송
+const fs = require('fs');
+const input = fs
+  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
   .toString()
   .trim()
   .split('\n');
 
-let t = +input[0]; // 테스트 케이스 수
-let results = []; // 결과 저장
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
 
-// 다익스트라 알고리즘
-const dijkstra = (n, graph, start) => {
-  const distances = Array(n + 1).fill(Infinity);
-  const pq = [];
-  distances[start] = 0;
-  pq.push([0, start]); // [거리, 노드]
+  size() {
+    return this.heap.length;
+  }
 
-  while (pq.length > 0) {
-    const [dist, current] = pq.shift();
-    if (dist > distances[current]) continue;
+  isEmpty() {
+    return this.heap.length === 0;
+  }
 
-    for (const [next, weight] of graph[current]) {
-      const cost = dist + weight;
-      if (cost < distances[next]) {
-        distances[next] = cost;
-        pq.push([cost, next]);
+  push(value) {
+    this.heap.push(value);
+    this._heapifyUp();
+  }
+
+  pop() {
+    if (this.isEmpty()) return null;
+    const root = this.heap[0];
+    const end = this.heap.pop();
+    if (!this.isEmpty()) {
+      this.heap[0] = end;
+      this._heapifyDown();
+    }
+    return root;
+  }
+
+  _heapifyUp() {
+    let index = this.heap.length - 1;
+    const current = this.heap[index];
+    while (index > 0) {
+      const parentIndex = Math.floor((index - 1) / 2);
+      if (this.heap[parentIndex][0] <= current[0]) break;
+      this.heap[index] = this.heap[parentIndex];
+      index = parentIndex;
+    }
+    this.heap[index] = current;
+  }
+
+  _heapifyDown() {
+    let index = 0;
+    const length = this.heap.length;
+    const current = this.heap[index];
+
+    while (true) {
+      let leftChildIndex = 2 * index + 1;
+      let rightChildIndex = 2 * index + 2;
+      let smallest = index;
+
+      if (leftChildIndex < length && this.heap[leftChildIndex][0] < this.heap[smallest][0]) {
+        smallest = leftChildIndex;
       }
+
+      if (rightChildIndex < length && this.heap[rightChildIndex][0] < this.heap[smallest][0]) {
+        smallest = rightChildIndex;
+      }
+
+      if (smallest === index) break;
+
+      this.heap[index] = this.heap[smallest];
+      index = smallest;
     }
-    pq.sort((a, b) => a[0] - b[0]); // 우선순위 큐를 정렬
+
+    this.heap[index] = current;
   }
-
-  return distances;
-};
-
-// 입력 처리 및 풀이
-for (let i = 1; i < input.length; ) {
-  // 교차로, 도로, 목적지 후보의 개수
-  let [n, m, t] = input[i].split(' ').map(Number);
-  // s는 예술가들의 출발지
-  let [s, g, h] = input[i + 1].split(' ').map(Number);
-
-  // 그래프 구성
-  let graph = Array.from({ length: n + 1 }, () => []);
-  let specialEdge = 0;
-  let abd = input.slice(i + 2, i + 2 + m).map((v) => v.split(' ').map(Number));
-  for (const [a, b, d] of abd) {
-    graph[a].push([b, d]);
-    graph[b].push([a, d]);
-    if ((a === g && b === h) || (a === h && b === g)) specialEdge = d;
-  }
-
-  // 목적지 후보
-  let xx = input.slice(i + 2 + m, i + 2 + m + t).map(Number);
-
-  // 각 지점에서 최단 거리 계산
-  const distFromS = dijkstra(n, graph, s);
-  const distFromG = dijkstra(n, graph, g);
-  const distFromH = dijkstra(n, graph, h);
-
-  // 목적지 후보 필터링
-  let validDestinations = [];
-  for (const x of xx) {
-    // 최단 거리
-    const directDist = distFromS[x];
-    // g -> h를 포함하는 경로의 거리 계산
-    const viaGH = distFromS[g] + specialEdge + distFromH[x];
-    const viaHG = distFromS[h] + specialEdge + distFromG[x];
-
-    if (directDist === viaGH || directDist === viaHG) {
-      validDestinations.push(x);
-    }
-  }
-
-  // 결과 저장
-  results.push(validDestinations.sort((a, b) => a - b).join(' '));
-
-  // 다음 테스트 케이스로 이동
-  i = i + 2 + m + t;
 }
 
-// 결과 출력
-console.log(results.join('\n'));
+let [n, m] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let graph = Array.from({ length: n + 1 }, () => []);
+arr.forEach(([a, b, c]) => {
+  graph[a].push([b, c]);
+  graph[b].push([a, c]);
+});
+
+const dijkstra = (start) => {
+  let dists = Array(n + 1).fill(Infinity);
+  dists[start] = 0;
+  let pq = new MinHeap();
+  pq.push([0, start]);
+
+  while (!pq.isEmpty()) {
+    let [dist, node] = pq.pop();
+
+    if (dist > dists[node]) continue;
+
+    for (let [nextNode, nextDist] of graph[node]) {
+      let total = nextDist + dist;
+      if (total < dists[nextNode]) {
+        dists[nextNode] = total;
+        pq.push([total, nextNode]);
+      }
+    }
+  }
+
+  return dists;
+};
+
+console.log(dijkstra(1)[n]);
