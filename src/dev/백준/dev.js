@@ -7215,111 +7215,151 @@
 // console.log(results.join('\n'));
 
 //5972-택배배송
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   size() {
+//     return this.heap.length;
+//   }
+
+//   isEmpty() {
+//     return this.heap.length === 0;
+//   }
+
+//   push(value) {
+//     this.heap.push(value);
+//     this._heapifyUp();
+//   }
+
+//   pop() {
+//     if (this.isEmpty()) return null;
+//     const root = this.heap[0];
+//     const end = this.heap.pop();
+//     if (!this.isEmpty()) {
+//       this.heap[0] = end;
+//       this._heapifyDown();
+//     }
+//     return root;
+//   }
+
+//   _heapifyUp() {
+//     let index = this.heap.length - 1;
+//     const current = this.heap[index];
+//     while (index > 0) {
+//       const parentIndex = Math.floor((index - 1) / 2);
+//       if (this.heap[parentIndex][0] <= current[0]) break;
+//       this.heap[index] = this.heap[parentIndex];
+//       index = parentIndex;
+//     }
+//     this.heap[index] = current;
+//   }
+
+//   _heapifyDown() {
+//     let index = 0;
+//     const length = this.heap.length;
+//     const current = this.heap[index];
+
+//     while (true) {
+//       let leftChildIndex = 2 * index + 1;
+//       let rightChildIndex = 2 * index + 2;
+//       let smallest = index;
+
+//       if (leftChildIndex < length && this.heap[leftChildIndex][0] < this.heap[smallest][0]) {
+//         smallest = leftChildIndex;
+//       }
+
+//       if (rightChildIndex < length && this.heap[rightChildIndex][0] < this.heap[smallest][0]) {
+//         smallest = rightChildIndex;
+//       }
+
+//       if (smallest === index) break;
+
+//       this.heap[index] = this.heap[smallest];
+//       index = smallest;
+//     }
+
+//     this.heap[index] = current;
+//   }
+// }
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+// arr.forEach(([a, b, c]) => {
+//   graph[a].push([b, c]);
+//   graph[b].push([a, c]);
+// });
+
+// const dijkstra = (start) => {
+//   let dists = Array(n + 1).fill(Infinity);
+//   dists[start] = 0;
+//   let pq = new MinHeap();
+//   pq.push([0, start]);
+
+//   while (!pq.isEmpty()) {
+//     let [dist, node] = pq.pop();
+
+//     if (dist > dists[node]) continue;
+
+//     for (let [nextNode, nextDist] of graph[node]) {
+//       let total = nextDist + dist;
+//       if (total < dists[nextNode]) {
+//         dists[nextNode] = total;
+//         pq.push([total, nextNode]);
+//       }
+//     }
+//   }
+
+//   return dists;
+// };
+
+// console.log(dijkstra(1)[n]);
+
+//1854-k번째 최단 경로 찾기
 const fs = require('fs');
-const input = fs
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
-  .toString()
-  .trim()
-  .split('\n');
+const input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-class MinHeap {
-  constructor() {
-    this.heap = [];
-  }
+const [n, m, k] = input[0].split(' ').map(Number);
+const graph = Array.from({ length: n + 1 }, () => []);
 
-  size() {
-    return this.heap.length;
-  }
+// 그래프 초기화
+for (let i = 1; i <= m; i++) {
+  const [a, b, c] = input[i].split(' ').map(Number);
+  graph[a].push([b, c]);
+}
 
-  isEmpty() {
-    return this.heap.length === 0;
-  }
+// K번째 최단 경로를 저장하는 배열
+const distances = Array.from({ length: n + 1 }, () => Array(k).fill(Infinity));
+distances[1][0] = 0;
 
-  push(value) {
-    this.heap.push(value);
-    this._heapifyUp();
-  }
+// 우선순위 큐: [거리, 노드]
+const pq = [[0, 1]]; // [현재까지 거리, 현재 노드]
 
-  pop() {
-    if (this.isEmpty()) return null;
-    const root = this.heap[0];
-    const end = this.heap.pop();
-    if (!this.isEmpty()) {
-      this.heap[0] = end;
-      this._heapifyDown();
+while (pq.length > 0) {
+  const [currentDist, currentNode] = pq.shift();
+
+  for (const [nextNode, weight] of graph[currentNode]) {
+    const newDist = currentDist + weight;
+
+    // K번째 최단 거리 배열의 최대값보다 작으면 갱신
+    if (newDist < distances[nextNode][k - 1]) {
+      distances[nextNode][k - 1] = newDist;
+      distances[nextNode].sort((a, b) => a - b); // 정렬하여 K번째 최단 거리 유지
+      pq.push([newDist, nextNode]);
+      pq.sort((a, b) => a[0] - b[0]); // 최소 힙처럼 동작하도록 정렬
     }
-    return root;
-  }
-
-  _heapifyUp() {
-    let index = this.heap.length - 1;
-    const current = this.heap[index];
-    while (index > 0) {
-      const parentIndex = Math.floor((index - 1) / 2);
-      if (this.heap[parentIndex][0] <= current[0]) break;
-      this.heap[index] = this.heap[parentIndex];
-      index = parentIndex;
-    }
-    this.heap[index] = current;
-  }
-
-  _heapifyDown() {
-    let index = 0;
-    const length = this.heap.length;
-    const current = this.heap[index];
-
-    while (true) {
-      let leftChildIndex = 2 * index + 1;
-      let rightChildIndex = 2 * index + 2;
-      let smallest = index;
-
-      if (leftChildIndex < length && this.heap[leftChildIndex][0] < this.heap[smallest][0]) {
-        smallest = leftChildIndex;
-      }
-
-      if (rightChildIndex < length && this.heap[rightChildIndex][0] < this.heap[smallest][0]) {
-        smallest = rightChildIndex;
-      }
-
-      if (smallest === index) break;
-
-      this.heap[index] = this.heap[smallest];
-      index = smallest;
-    }
-
-    this.heap[index] = current;
   }
 }
 
-let [n, m] = input[0].split(' ').map(Number);
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
-arr.forEach(([a, b, c]) => {
-  graph[a].push([b, c]);
-  graph[b].push([a, c]);
-});
-
-const dijkstra = (start) => {
-  let dists = Array(n + 1).fill(Infinity);
-  dists[start] = 0;
-  let pq = new MinHeap();
-  pq.push([0, start]);
-
-  while (!pq.isEmpty()) {
-    let [dist, node] = pq.pop();
-
-    if (dist > dists[node]) continue;
-
-    for (let [nextNode, nextDist] of graph[node]) {
-      let total = nextDist + dist;
-      if (total < dists[nextNode]) {
-        dists[nextNode] = total;
-        pq.push([total, nextNode]);
-      }
-    }
-  }
-
-  return dists;
-};
-
-console.log(dijkstra(1)[n]);
+// 결과 출력
+const result = distances.map((dist) => (dist[k - 1] === Infinity ? -1 : dist[k - 1]));
+console.log(result.slice(1).join('\n'));
