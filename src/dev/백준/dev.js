@@ -7325,41 +7325,126 @@
 // console.log(dijkstra(1)[n]);
 
 //1854-k번째 최단 경로 찾기
+// const fs = require('fs');
+// const input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
+
+// const [n, m, k] = input[0].split(' ').map(Number);
+// const graph = Array.from({ length: n + 1 }, () => []);
+
+// // 그래프 초기화
+// for (let i = 1; i <= m; i++) {
+//   const [a, b, c] = input[i].split(' ').map(Number);
+//   graph[a].push([b, c]);
+// }
+
+// // K번째 최단 경로를 저장하는 배열
+// const distances = Array.from({ length: n + 1 }, () => Array(k).fill(Infinity));
+// distances[1][0] = 0;
+
+// // 우선순위 큐: [거리, 노드]
+// const pq = [[0, 1]]; // [현재까지 거리, 현재 노드]
+
+// while (pq.length > 0) {
+//   const [currentDist, currentNode] = pq.shift();
+
+//   for (const [nextNode, weight] of graph[currentNode]) {
+//     const newDist = currentDist + weight;
+
+//     // K번째 최단 거리 배열의 최대값보다 작으면 갱신
+//     if (newDist < distances[nextNode][k - 1]) {
+//       distances[nextNode][k - 1] = newDist;
+//       distances[nextNode].sort((a, b) => a - b); // 정렬하여 K번째 최단 거리 유지
+//       pq.push([newDist, nextNode]);
+//       pq.sort((a, b) => a[0] - b[0]); // 최소 힙처럼 동작하도록 정렬
+//     }
+//   }
+// }
+
+// // 결과 출력
+// const result = distances.map((dist) => (dist[k - 1] === Infinity ? -1 : dist[k - 1]));
+// console.log(result.slice(1).join('\n'));
+
+//5719-거의 최단경로
 const fs = require('fs');
 const input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-const [n, m, k] = input[0].split(' ').map(Number);
-const graph = Array.from({ length: n + 1 }, () => []);
+const INF = Infinity;
 
-// 그래프 초기화
-for (let i = 1; i <= m; i++) {
-  const [a, b, c] = input[i].split(' ').map(Number);
-  graph[a].push([b, c]);
-}
+const dijkstra = (n, start, graph) => {
+  const dist = Array(n).fill(INF);
+  const pq = [[0, start]]; // [거리, 노드]
+  dist[start] = 0;
 
-// K번째 최단 경로를 저장하는 배열
-const distances = Array.from({ length: n + 1 }, () => Array(k).fill(Infinity));
-distances[1][0] = 0;
+  while (pq.length > 0) {
+    const [currentDist, currentNode] = pq.shift();
 
-// 우선순위 큐: [거리, 노드]
-const pq = [[0, 1]]; // [현재까지 거리, 현재 노드]
+    if (currentDist > dist[currentNode]) continue;
 
-while (pq.length > 0) {
-  const [currentDist, currentNode] = pq.shift();
-
-  for (const [nextNode, weight] of graph[currentNode]) {
-    const newDist = currentDist + weight;
-
-    // K번째 최단 거리 배열의 최대값보다 작으면 갱신
-    if (newDist < distances[nextNode][k - 1]) {
-      distances[nextNode][k - 1] = newDist;
-      distances[nextNode].sort((a, b) => a - b); // 정렬하여 K번째 최단 거리 유지
-      pq.push([newDist, nextNode]);
-      pq.sort((a, b) => a[0] - b[0]); // 최소 힙처럼 동작하도록 정렬
+    for (const [nextNode, weight] of graph[currentNode]) {
+      const newDist = currentDist + weight;
+      if (newDist < dist[nextNode]) {
+        dist[nextNode] = newDist;
+        pq.push([newDist, nextNode]);
+        pq.sort((a, b) => a[0] - b[0]); // 우선순위 큐 유지
+      }
     }
   }
-}
 
-// 결과 출력
-const result = distances.map((dist) => (dist[k - 1] === Infinity ? -1 : dist[k - 1]));
-console.log(result.slice(1).join('\n'));
+  return dist;
+};
+
+const removeShortestPaths = (n, start, end, dist, graph, reverseGraph) => {
+  const queue = [end];
+  const visited = Array(n).fill(false);
+
+  while (queue.length > 0) {
+    const currentNode = queue.pop();
+
+    if (visited[currentNode]) continue;
+    visited[currentNode] = true;
+
+    for (const [prevNode, weight] of reverseGraph[currentNode]) {
+      if (dist[prevNode] + weight === dist[currentNode]) {
+        // 최단 경로 간선을 제거
+        graph[prevNode] = graph[prevNode].filter(([nextNode, w]) => nextNode !== currentNode || w !== weight);
+        queue.push(prevNode);
+      }
+    }
+  }
+};
+
+const solve = (input) => {
+  let idx = 0;
+  const results = [];
+
+  while (true) {
+    const [n, m] = input[idx++].split(' ').map(Number);
+    if (n === 0 && m === 0) break;
+
+    const [start, end] = input[idx++].split(' ').map(Number);
+
+    const graph = Array.from({ length: n }, () => []);
+    const reverseGraph = Array.from({ length: n }, () => []);
+
+    for (let i = 0; i < m; i++) {
+      const [u, v, p] = input[idx++].split(' ').map(Number);
+      graph[u].push([v, p]);
+      reverseGraph[v].push([u, p]);
+    }
+
+    // 최단 경로 계산
+    const dist = dijkstra(n, start, graph);
+
+    // 최단 경로 간선 제거
+    removeShortestPaths(n, start, end, dist, graph, reverseGraph);
+
+    // 거의 최단 경로 계산
+    const newDist = dijkstra(n, start, graph);
+    const result = newDist[end] === INF ? -1 : newDist[end];
+    results.push(result);
+  }
+
+  console.log(results.join('\n'));
+};
+
+solve(input);
