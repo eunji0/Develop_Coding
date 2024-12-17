@@ -7450,42 +7450,128 @@
 // solve(input);
 
 //1719-택배
-const fs = require('fs');
-const input = fs
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
-  .toString()
-  .trim()
-  .split('\n');
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
 
-const [n, m] = input[0].split(' ').map(Number);
-const path = input.slice(1).map((e) => e.split(' ').map(Number));
-const distance = Array.from({ length: n + 1 }, () => Array(n + 1).fill(Infinity));
-let arr = Array.from({ length: n + 1 }, () => Array(n + 1));
+// const [n, m] = input[0].split(' ').map(Number);
+// const path = input.slice(1).map((e) => e.split(' ').map(Number));
+// const distance = Array.from({ length: n + 1 }, () => Array(n + 1).fill(Infinity));
+// let arr = Array.from({ length: n + 1 }, () => Array(n + 1));
 
-path.forEach(([a, b, c]) => {
-  distance[a][b] = c;
-  distance[b][a] = c;
-  arr[a][b] = b;
-  arr[b][a] = a;
-});
+// path.forEach(([a, b, c]) => {
+//   distance[a][b] = c;
+//   distance[b][a] = c;
+//   arr[a][b] = b;
+//   arr[b][a] = a;
+// });
 
-for (let k = 1; k <= n; k++) {
-  for (let i = 1; i <= n; i++) {
-    for (let j = 1; j <= n; j++) {
-      if (i === j) {
-        arr[i][j] = '-';
-        continue;
-      }
+// for (let k = 1; k <= n; k++) {
+//   for (let i = 1; i <= n; i++) {
+//     for (let j = 1; j <= n; j++) {
+//       if (i === j) {
+//         arr[i][j] = '-';
+//         continue;
+//       }
 
-      if (distance[i][j] > distance[i][k] + distance[k][j]) {
-        distance[i][j] = distance[i][k] + distance[k][j];
-        arr[i][j] = arr[i][k];
-      }
-    }
+//       if (distance[i][j] > distance[i][k] + distance[k][j]) {
+//         distance[i][j] = distance[i][k] + distance[k][j];
+//         arr[i][j] = arr[i][k];
+//       }
+//     }
+//   }
+// }
+
+// arr.slice(1).map((v) => v.slice(1));
+// for (let i = 1; i <= n; i++) {
+//   console.log(arr[i].join(' '));
+// }
+
+//14497-주난의난
+class Node {
+  constructor(item) {
+    this.item = item;
+    this.next = null;
   }
 }
 
-arr.slice(1).map((v) => v.slice(1));
-for (let i = 1; i <= n; i++) {
-  console.log(arr[i].join(' '));
+class Queue {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+
+  push(item) {
+    const node = new Node(item)
+    if (this.head == null) {
+      this.head = node;
+    } else {
+      this.tail.next = node;
+    }
+
+    this.tail = node;
+    this.length += 1;
+  }
+
+  pop() {
+    const popItem = this.head;
+    this.head = this.head.next;
+    this.length -= 1;
+    return popItem.item;
+  }
 }
+const fs = require('fs');
+const input = fs.readFileSync("./dev/stdin").toString().trim().split("\n");
+const [N, M] = input.shift().split(' ').map(Number);
+const [x1, y1, x2, y2] = input.shift().split(' ').map(Number);
+let board = input.map(v => v.trim().split(''));
+
+
+
+
+function solve() {
+
+  let cnt = 1;
+  let q = new Queue();
+  let visited = Array.from(Array(N), () => Array(M).fill(false));
+  const dx = [0, 0, -1, 1]
+  const dy = [1, -1, 0, 0]
+
+
+  q.push([x1 - 1, y1 - 1]);
+  visited[x1 - 1][y1 - 1] = true;
+
+  while (q.length > 0) {
+    const friends = [];
+
+    while (q.length > 0) {
+      let [x, y] = q.pop();
+      for (let j = 0; j < 4; j++) {
+        const nx = x + dx[j]
+        const ny = y + dy[j]
+        if (nx >= 0 && ny >= 0 && nx < N && ny < M && !visited[nx][ny]) {
+          if (board[nx][ny] == '1') {
+            visited[nx][ny] = true;
+            friends.push([nx, ny])
+          } else if (board[nx][ny] == '0') {
+            visited[nx][ny] = true;
+            q.push([nx, ny])
+          } else {
+            return cnt;
+          }
+        }
+      }
+    }
+    friends.forEach(v => {
+      q.push([v[0], v[1]]);
+    })
+    cnt++;
+  }
+}
+
+const x = solve();
+console.log(x)
