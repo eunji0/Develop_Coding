@@ -7491,87 +7491,208 @@
 // }
 
 //14497-주난의난
-class Node {
-  constructor(item) {
-    this.item = item;
-    this.next = null;
-  }
+// class Node {
+//   constructor(item) {
+//     this.item = item;
+//     this.next = null;
+//   }
+// }
+
+// class Queue {
+//   constructor() {
+//     this.head = null;
+//     this.tail = null;
+//     this.length = 0;
+//   }
+
+//   push(item) {
+//     const node = new Node(item)
+//     if (this.head == null) {
+//       this.head = node;
+//     } else {
+//       this.tail.next = node;
+//     }
+
+//     this.tail = node;
+//     this.length += 1;
+//   }
+
+//   pop() {
+//     const popItem = this.head;
+//     this.head = this.head.next;
+//     this.length -= 1;
+//     return popItem.item;
+//   }
+// }
+// const fs = require('fs');
+// const input = fs.readFileSync("./dev/stdin").toString().trim().split("\n");
+// const [N, M] = input.shift().split(' ').map(Number);
+// const [x1, y1, x2, y2] = input.shift().split(' ').map(Number);
+// let board = input.map(v => v.trim().split(''));
+
+// function solve() {
+
+//   let cnt = 1;
+//   let q = new Queue();
+//   let visited = Array.from(Array(N), () => Array(M).fill(false));
+//   const dx = [0, 0, -1, 1]
+//   const dy = [1, -1, 0, 0]
+
+//   q.push([x1 - 1, y1 - 1]);
+//   visited[x1 - 1][y1 - 1] = true;
+
+//   while (q.length > 0) {
+//     const friends = [];
+
+//     while (q.length > 0) {
+//       let [x, y] = q.pop();
+//       for (let j = 0; j < 4; j++) {
+//         const nx = x + dx[j]
+//         const ny = y + dy[j]
+//         if (nx >= 0 && ny >= 0 && nx < N && ny < M && !visited[nx][ny]) {
+//           if (board[nx][ny] == '1') {
+//             visited[nx][ny] = true;
+//             friends.push([nx, ny])
+//           } else if (board[nx][ny] == '0') {
+//             visited[nx][ny] = true;
+//             q.push([nx, ny])
+//           } else {
+//             return cnt;
+//           }
+//         }
+//       }
+//     }
+//     friends.forEach(v => {
+//       q.push([v[0], v[1]]);
+//     })
+//     cnt++;
+//   }
+// }
+
+// const x = solve();
+// console.log(x)
+
+//18223-민준이와 마산 그리고 건우
+const fs = require('fs');
+const input = fs
+  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+  .toString()
+  .trim()
+  .split('\n');
+const [V, E, P] = input[0].split(' ').map(Number); // 정점, 간선, 건우의 위치
+const nodes = Array.from({ length: V + 1 }, () => []); // 인접 리스트
+const INF = Infinity;
+
+for (let i = 1; i <= E; i++) {
+  const [start, end, weight] = input[i].split(' ').map(Number);
+  nodes[start].push({ x: end, weight });
+  nodes[end].push({ x: start, weight });
 }
 
-class Queue {
-  constructor() {
-    this.head = null;
-    this.tail = null;
-    this.length = 0;
+// 다익스트라 알고리즘 구현
+const dijkstra = (start) => {
+  const dist = Array(V + 1).fill(INF);
+  const visited = Array(V + 1).fill(false);
+  const pq = new MinHeap();
+  pq.push({ x: start, weight: 0 });
+  dist[start] = 0;
+
+  while (!pq.isEmpty()) {
+    const { x: current, weight: currentWeight } = pq.pop();
+
+    if (visited[current]) continue;
+    visited[current] = true;
+
+    for (const { x: next, weight: nextWeight } of nodes[current]) {
+      if (!visited[next] && dist[next] > currentWeight + nextWeight) {
+        dist[next] = currentWeight + nextWeight;
+        pq.push({ x: next, weight: dist[next] });
+      }
+    }
   }
 
-  push(item) {
-    const node = new Node(item)
-    if (this.head == null) {
-      this.head = node;
-    } else {
-      this.tail.next = node;
-    }
+  return dist;
+};
 
-    this.tail = node;
-    this.length += 1;
+// 최소 힙 구현
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  push(node) {
+    this.heap.push(node);
+    this._heapifyUp();
   }
 
   pop() {
-    const popItem = this.head;
-    this.head = this.head.next;
-    this.length -= 1;
-    return popItem.item;
+    if (this.heap.length === 1) return this.heap.pop();
+    const top = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this._heapifyDown();
+    return top;
   }
-}
-const fs = require('fs');
-const input = fs.readFileSync("./dev/stdin").toString().trim().split("\n");
-const [N, M] = input.shift().split(' ').map(Number);
-const [x1, y1, x2, y2] = input.shift().split(' ').map(Number);
-let board = input.map(v => v.trim().split(''));
 
+  isEmpty() {
+    return this.heap.length === 0;
+  }
 
+  _heapifyUp() {
+    let index = this.heap.length - 1;
+    const current = this.heap[index];
 
+    while (index > 0) {
+      const parentIndex = Math.floor((index - 1) / 2);
+      const parent = this.heap[parentIndex];
 
-function solve() {
-
-  let cnt = 1;
-  let q = new Queue();
-  let visited = Array.from(Array(N), () => Array(M).fill(false));
-  const dx = [0, 0, -1, 1]
-  const dy = [1, -1, 0, 0]
-
-
-  q.push([x1 - 1, y1 - 1]);
-  visited[x1 - 1][y1 - 1] = true;
-
-  while (q.length > 0) {
-    const friends = [];
-
-    while (q.length > 0) {
-      let [x, y] = q.pop();
-      for (let j = 0; j < 4; j++) {
-        const nx = x + dx[j]
-        const ny = y + dy[j]
-        if (nx >= 0 && ny >= 0 && nx < N && ny < M && !visited[nx][ny]) {
-          if (board[nx][ny] == '1') {
-            visited[nx][ny] = true;
-            friends.push([nx, ny])
-          } else if (board[nx][ny] == '0') {
-            visited[nx][ny] = true;
-            q.push([nx, ny])
-          } else {
-            return cnt;
-          }
-        }
-      }
+      if (current.weight >= parent.weight) break;
+      this.heap[index] = parent;
+      index = parentIndex;
     }
-    friends.forEach(v => {
-      q.push([v[0], v[1]]);
-    })
-    cnt++;
+
+    this.heap[index] = current;
+  }
+
+  _heapifyDown() {
+    let index = 0;
+    const length = this.heap.length;
+    const current = this.heap[index];
+
+    while (true) {
+      const leftIndex = index * 2 + 1;
+      const rightIndex = index * 2 + 2;
+      let smallest = index;
+
+      if (leftIndex < length && this.heap[leftIndex].weight < this.heap[smallest].weight) {
+        smallest = leftIndex;
+      }
+
+      if (rightIndex < length && this.heap[rightIndex].weight < this.heap[smallest].weight) {
+        smallest = rightIndex;
+      }
+
+      if (smallest === index) break;
+
+      this.heap[index] = this.heap[smallest];
+      index = smallest;
+    }
+
+    this.heap[index] = current;
   }
 }
 
-const x = solve();
-console.log(x)
+// 시작점에서 각 정점까지의 거리 계산
+const distFromStart = dijkstra(1);
+const distToV = distFromStart[V];
+const distToP = distFromStart[P];
+
+// 건우 위치에서 각 정점까지의 거리 계산
+const distFromP = dijkstra(P);
+const distPToV = distFromP[V];
+
+// 최종 결과 출력
+if (distToV === distToP + distPToV) {
+  console.log('SAVE HIM');
+} else {
+  console.log('GOOD BYE');
+}
