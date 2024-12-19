@@ -7573,126 +7573,126 @@
 // console.log(x)
 
 //18223-민준이와 마산 그리고 건우
-const fs = require('fs');
-const input = fs
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
-  .toString()
-  .trim()
-  .split('\n');
-const [V, E, P] = input[0].split(' ').map(Number); // 정점, 간선, 건우의 위치
-const nodes = Array.from({ length: V + 1 }, () => []); // 인접 리스트
-const INF = Infinity;
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+// const [V, E, P] = input[0].split(' ').map(Number); // 정점, 간선, 건우의 위치
+// const nodes = Array.from({ length: V + 1 }, () => []); // 인접 리스트
+// const INF = Infinity;
 
-for (let i = 1; i <= E; i++) {
-  const [start, end, weight] = input[i].split(' ').map(Number);
-  nodes[start].push({ x: end, weight });
-  nodes[end].push({ x: start, weight });
-}
+// for (let i = 1; i <= E; i++) {
+//   const [start, end, weight] = input[i].split(' ').map(Number);
+//   nodes[start].push({ x: end, weight });
+//   nodes[end].push({ x: start, weight });
+// }
 
-// 다익스트라 알고리즘 구현
-const dijkstra = (start) => {
-  const dist = Array(V + 1).fill(INF);
-  const visited = Array(V + 1).fill(false);
-  const pq = new MinHeap();
-  pq.push({ x: start, weight: 0 });
-  dist[start] = 0;
+// // 다익스트라 알고리즘 구현
+// const dijkstra = (start) => {
+//   const dist = Array(V + 1).fill(INF);
+//   const visited = Array(V + 1).fill(false);
+//   const pq = new MinHeap();
+//   pq.push({ x: start, weight: 0 });
+//   dist[start] = 0;
 
-  while (!pq.isEmpty()) {
-    const { x: current, weight: currentWeight } = pq.pop();
+//   while (!pq.isEmpty()) {
+//     const { x: current, weight: currentWeight } = pq.pop();
 
-    if (visited[current]) continue;
-    visited[current] = true;
+//     if (visited[current]) continue;
+//     visited[current] = true;
 
-    for (const { x: next, weight: nextWeight } of nodes[current]) {
-      if (!visited[next] && dist[next] > currentWeight + nextWeight) {
-        dist[next] = currentWeight + nextWeight;
-        pq.push({ x: next, weight: dist[next] });
-      }
-    }
-  }
+//     for (const { x: next, weight: nextWeight } of nodes[current]) {
+//       if (!visited[next] && dist[next] > currentWeight + nextWeight) {
+//         dist[next] = currentWeight + nextWeight;
+//         pq.push({ x: next, weight: dist[next] });
+//       }
+//     }
+//   }
 
-  return dist;
-};
+//   return dist;
+// };
 
-// 최소 힙 구현
-class MinHeap {
-  constructor() {
-    this.heap = [];
-  }
+// // 최소 힙 구현
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
 
-  push(node) {
-    this.heap.push(node);
-    this._heapifyUp();
-  }
+//   push(node) {
+//     this.heap.push(node);
+//     this._heapifyUp();
+//   }
 
-  pop() {
-    if (this.heap.length === 1) return this.heap.pop();
-    const top = this.heap[0];
-    this.heap[0] = this.heap.pop();
-    this._heapifyDown();
-    return top;
-  }
+//   pop() {
+//     if (this.heap.length === 1) return this.heap.pop();
+//     const top = this.heap[0];
+//     this.heap[0] = this.heap.pop();
+//     this._heapifyDown();
+//     return top;
+//   }
 
-  isEmpty() {
-    return this.heap.length === 0;
-  }
+//   isEmpty() {
+//     return this.heap.length === 0;
+//   }
 
-  _heapifyUp() {
-    let index = this.heap.length - 1;
-    const current = this.heap[index];
+//   _heapifyUp() {
+//     let index = this.heap.length - 1;
+//     const current = this.heap[index];
 
-    while (index > 0) {
-      const parentIndex = Math.floor((index - 1) / 2);
-      const parent = this.heap[parentIndex];
+//     while (index > 0) {
+//       const parentIndex = Math.floor((index - 1) / 2);
+//       const parent = this.heap[parentIndex];
 
-      if (current.weight >= parent.weight) break;
-      this.heap[index] = parent;
-      index = parentIndex;
-    }
+//       if (current.weight >= parent.weight) break;
+//       this.heap[index] = parent;
+//       index = parentIndex;
+//     }
 
-    this.heap[index] = current;
-  }
+//     this.heap[index] = current;
+//   }
 
-  _heapifyDown() {
-    let index = 0;
-    const length = this.heap.length;
-    const current = this.heap[index];
+//   _heapifyDown() {
+//     let index = 0;
+//     const length = this.heap.length;
+//     const current = this.heap[index];
 
-    while (true) {
-      const leftIndex = index * 2 + 1;
-      const rightIndex = index * 2 + 2;
-      let smallest = index;
+//     while (true) {
+//       const leftIndex = index * 2 + 1;
+//       const rightIndex = index * 2 + 2;
+//       let smallest = index;
 
-      if (leftIndex < length && this.heap[leftIndex].weight < this.heap[smallest].weight) {
-        smallest = leftIndex;
-      }
+//       if (leftIndex < length && this.heap[leftIndex].weight < this.heap[smallest].weight) {
+//         smallest = leftIndex;
+//       }
 
-      if (rightIndex < length && this.heap[rightIndex].weight < this.heap[smallest].weight) {
-        smallest = rightIndex;
-      }
+//       if (rightIndex < length && this.heap[rightIndex].weight < this.heap[smallest].weight) {
+//         smallest = rightIndex;
+//       }
 
-      if (smallest === index) break;
+//       if (smallest === index) break;
 
-      this.heap[index] = this.heap[smallest];
-      index = smallest;
-    }
+//       this.heap[index] = this.heap[smallest];
+//       index = smallest;
+//     }
 
-    this.heap[index] = current;
-  }
-}
+//     this.heap[index] = current;
+//   }
+// }
 
-// 시작점에서 각 정점까지의 거리 계산
-const distFromStart = dijkstra(1);
-const distToV = distFromStart[V];
-const distToP = distFromStart[P];
+// // 시작점에서 각 정점까지의 거리 계산
+// const distFromStart = dijkstra(1);
+// const distToV = distFromStart[V];
+// const distToP = distFromStart[P];
 
-// 건우 위치에서 각 정점까지의 거리 계산
-const distFromP = dijkstra(P);
-const distPToV = distFromP[V];
+// // 건우 위치에서 각 정점까지의 거리 계산
+// const distFromP = dijkstra(P);
+// const distPToV = distFromP[V];
 
-// 최종 결과 출력
-if (distToV === distToP + distPToV) {
-  console.log('SAVE HIM');
-} else {
-  console.log('GOOD BYE');
-}
+// // 최종 결과 출력
+// if (distToV === distToP + distPToV) {
+//   console.log('SAVE HIM');
+// } else {
+//   console.log('GOOD BYE');
+// }
