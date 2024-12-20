@@ -66,6 +66,45 @@
 // console.log(count);
 
 //1946-신입사원
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// const T = +input[0]; // 테스트 케이스 개수
+// let index = 1;
+// const results = [];
+
+// for (let t = 0; t < T; t++) {
+//   const N = +input[index++]; // 지원자 수
+//   const candidates = [];
+
+//   for (let i = 0; i < N; i++) {
+//     const [paper, interview] = input[index++].split(' ').map(Number);
+//     candidates.push([paper, interview]);
+//   }
+
+//   // 서류 심사 순위 기준 정렬
+//   candidates.sort((a, b) => a[0] - b[0]);
+
+//   let count = 1; // 첫 번째 지원자는 무조건 선발
+//   let minInterviewRank = candidates[0][1]; // 최소 면접 순위
+
+//   for (let i = 1; i < N; i++) {
+//     if (candidates[i][1] < minInterviewRank) {
+//       count++;
+//       minInterviewRank = candidates[i][1]; // 최소 면접 순위 갱신
+//     }
+//   }
+
+//   results.push(count);
+// }
+
+// console.log(results.join('\n'));
+
+//10610-30
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -73,33 +112,14 @@ const input = fs
   .trim()
   .split('\n');
 
-const T = +input[0]; // 테스트 케이스 개수
-let index = 1;
-const results = [];
+let arr = input[0].split('').map(Number);
+let canTen = false;
 
-for (let t = 0; t < T; t++) {
-  const N = +input[index++]; // 지원자 수
-  const candidates = [];
-
-  for (let i = 0; i < N; i++) {
-    const [paper, interview] = input[index++].split(' ').map(Number);
-    candidates.push([paper, interview]);
-  }
-
-  // 서류 심사 순위 기준 정렬
-  candidates.sort((a, b) => a[0] - b[0]);
-
-  let count = 1; // 첫 번째 지원자는 무조건 선발
-  let minInterviewRank = candidates[0][1]; // 최소 면접 순위
-
-  for (let i = 1; i < N; i++) {
-    if (candidates[i][1] < minInterviewRank) {
-      count++;
-      minInterviewRank = candidates[i][1]; // 최소 면접 순위 갱신
-    }
-  }
-
-  results.push(count);
+if (arr.includes(0)) canTen = true;
+let sum = arr.reduce((a, c) => a + c, 0);
+if (canTen && sum % 3 === 0) {
+  arr.sort((a, b) => b - a);
+  console.log(arr.join(''));
+} else {
+  console.log(-1);
 }
-
-console.log(results.join('\n'));
