@@ -32,6 +32,40 @@
 // console.log(arr.sort((a, b) => a - b).join(' '));
 
 //3273-두 수의 합
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+// let x = +input[2];
+
+// arr.sort((a, b) => a - b); // 배열 정렬
+
+// let left = 0;
+// let right = n - 1;
+// let count = 0;
+
+// while (left < right) {
+//   let sum = arr[left] + arr[right];
+
+//   if (sum === x) {
+//     left++;
+//     right--;
+//     count++;
+//   } else if (sum < x) {
+//     left++;
+//   } else {
+//     right--;
+//   }
+// }
+
+// console.log(count);
+
+//1946-신입사원
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -39,28 +73,33 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let arr = input[1].split(' ').map(Number);
-let x = +input[2];
+const T = +input[0]; // 테스트 케이스 개수
+let index = 1;
+const results = [];
 
-arr.sort((a, b) => a - b); // 배열 정렬
+for (let t = 0; t < T; t++) {
+  const N = +input[index++]; // 지원자 수
+  const candidates = [];
 
-let left = 0;
-let right = n - 1;
-let count = 0;
-
-while (left < right) {
-  let sum = arr[left] + arr[right];
-
-  if (sum === x) {
-    left++;
-    right--;
-    count++;
-  } else if (sum < x) {
-    left++;
-  } else {
-    right--;
+  for (let i = 0; i < N; i++) {
+    const [paper, interview] = input[index++].split(' ').map(Number);
+    candidates.push([paper, interview]);
   }
+
+  // 서류 심사 순위 기준 정렬
+  candidates.sort((a, b) => a[0] - b[0]);
+
+  let count = 1; // 첫 번째 지원자는 무조건 선발
+  let minInterviewRank = candidates[0][1]; // 최소 면접 순위
+
+  for (let i = 1; i < N; i++) {
+    if (candidates[i][1] < minInterviewRank) {
+      count++;
+      minInterviewRank = candidates[i][1]; // 최소 면접 순위 갱신
+    }
+  }
+
+  results.push(count);
 }
 
-console.log(count);
+console.log(results.join('\n'));
