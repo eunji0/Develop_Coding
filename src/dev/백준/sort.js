@@ -105,6 +105,26 @@
 // console.log(results.join('\n'));
 
 //10610-30
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let arr = input[0].split('').map(Number);
+// let canTen = false;
+
+// if (arr.includes(0)) canTen = true;
+// let sum = arr.reduce((a, c) => a + c, 0);
+// if (canTen && sum % 3 === 0) {
+//   arr.sort((a, b) => b - a);
+//   console.log(arr.join(''));
+// } else {
+//   console.log(-1);
+// }
+
+//11004-k번째수
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -112,14 +132,8 @@ const input = fs
   .trim()
   .split('\n');
 
-let arr = input[0].split('').map(Number);
-let canTen = false;
+let [n, k] = input[0].split(' ').map(Number);
+let arr = input[1].split(' ').map(Number);
 
-if (arr.includes(0)) canTen = true;
-let sum = arr.reduce((a, c) => a + c, 0);
-if (canTen && sum % 3 === 0) {
-  arr.sort((a, b) => b - a);
-  console.log(arr.join(''));
-} else {
-  console.log(-1);
-}
+arr.sort((a, b) => a - b);
+console.log(arr[k - 1]);
