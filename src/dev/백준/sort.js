@@ -125,6 +125,20 @@
 // }
 
 //11004-k번째수
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, k] = input[0].split(' ').map(Number);
+// let arr = input[1].split(' ').map(Number);
+
+// arr.sort((a, b) => a - b);
+// console.log(arr[k - 1]);
+
+//11656-접미사 배열
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -132,8 +146,10 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, k] = input[0].split(' ').map(Number);
-let arr = input[1].split(' ').map(Number);
+let arr = input[0].split('');
+let box = [];
+for (let i = 0; i < arr.length; i++) {
+  box.push(arr.slice(i).join(''));
+}
 
-arr.sort((a, b) => a - b);
-console.log(arr[k - 1]);
+console.log(box.sort().join('\n'));
