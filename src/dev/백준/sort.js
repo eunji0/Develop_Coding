@@ -139,6 +139,22 @@
 // console.log(arr[k - 1]);
 
 //11656-접미사 배열
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let arr = input[0].split('');
+// let box = [];
+// for (let i = 0; i < arr.length; i++) {
+//   box.push(arr.slice(i).join(''));
+// }
+
+// console.log(box.sort().join('\n'));
+
+//10825-국영수
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -146,10 +162,33 @@ const input = fs
   .trim()
   .split('\n');
 
-let arr = input[0].split('');
-let box = [];
-for (let i = 0; i < arr.length; i++) {
-  box.push(arr.slice(i).join(''));
-}
+// let n = +input[0]
+// let arr = input.slice(1).map(v=>v.split(' '))
 
-console.log(box.sort().join('\n'));
+// arr.sort((a, b)=>{
+//   if(a[1]===b[1]){
+//     if(a[1]===b[1]){
+//     }
+//     return 
+//   }
+//   return b[1]-a[1]
+// })
+input.shift();
+
+let answer = "";
+
+const students = input.map((el) =>
+  el.split(" ").map((v, i) => {
+    return i === 0 ? v : Number(v);
+  })
+);
+
+students.sort((a, b) => {
+  return b[1] - a[1] || a[2] - b[2] || b[3] - a[3] || (a[0] > b[0] ? 1 : -1);
+});
+
+students.forEach((el) => {
+  answer += el[0] + "\n";
+});
+
+console.log(answer.trim());
