@@ -185,7 +185,7 @@
 
 // console.log(arr.map((v) => v[0]).join('\n'));
 
-//2470-두 용액
+//11728-배열 합치기
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -193,29 +193,10 @@ const input = fs
   .trim()
   .split('\n');
 
-const n = Number(input[0]);
-const arr = input[1].split(' ').map(Number);
+let [n, m] = input[0].split(' ').map(Number);
+let arr = input
+  .slice(1)
+  .map((v) => v.split(' ').map(Number))
+  .flat();
 
-arr.sort((a, b) => a - b);
-
-let left = 0;
-let right = n - 1;
-let closetSum = Infinity;
-let result = [0, 0];
-
-while (left < right) {
-  let sum = arr[left] + arr[right];
-
-  if (Math.abs(sum) < Math.abs(closetSum)) {
-    closetSum = sum;
-    result = [arr[left], arr[right]];
-  }
-
-  if (sum < 0) {
-    left++;
-  } else {
-    right--;
-  }
-}
-
-console.log(result.join(' '));
+console.log(arr.sort((a, b) => a - b).join(' '));
