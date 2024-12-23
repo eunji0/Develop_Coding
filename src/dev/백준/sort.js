@@ -155,6 +155,37 @@
 // console.log(box.sort().join('\n'));
 
 //10825-국영수
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' '));
+
+// arr.map((v) => {
+//   v[1] = +v[1];
+//   v[2] = +v[2];
+//   v[3] = +v[3];
+// });
+// arr.sort((a, b) => {
+//   if (a[1] === b[1]) {
+//     if (a[2] === b[2]) {
+//       if (a[3] === b[3]) {
+//         return a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0;
+//       }
+//       return b[3] - a[3];
+//     }
+//     return a[2] - b[2];
+//   }
+//   return b[1] - a[1];
+// });
+
+// console.log(arr.map((v) => v[0]).join('\n'));
+
+//2470-두 용액
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -162,25 +193,29 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let arr = input.slice(1).map((v) => v.split(' '));
+const n = Number(input[0]);
+const arr = input[1].split(' ').map(Number);
 
-arr.map((v) => {
-  v[1] = +v[1];
-  v[2] = +v[2];
-  v[3] = +v[3];
-});
-arr.sort((a, b) => {
-  if (a[1] === b[1]) {
-    if (a[2] === b[2]) {
-      if (a[3] === b[3]) {
-        return a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0;
-      }
-      return b[3] - a[3];
-    }
-    return a[2] - b[2];
+arr.sort((a, b) => a - b);
+
+let left = 0;
+let right = n - 1;
+let closetSum = Infinity;
+let result = [0, 0];
+
+while (left < right) {
+  let sum = arr[left] + arr[right];
+
+  if (Math.abs(sum) < Math.abs(closetSum)) {
+    closetSum = sum;
+    result = [arr[left], arr[right]];
   }
-  return b[1] - a[1];
-});
 
-console.log(arr.map((v) => v[0]).join('\n'));
+  if (sum < 0) {
+    left++;
+  } else {
+    right--;
+  }
+}
+
+console.log(result.join(' '));
