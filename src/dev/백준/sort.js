@@ -186,17 +186,33 @@
 // console.log(arr.map((v) => v[0]).join('\n'));
 
 //11728-배열 합치기
-const fs = require('fs');
-const input = fs
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
-  .toString()
-  .trim()
-  .split('\n');
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
 
-let [n, m] = input[0].split(' ').map(Number);
-let arr = input
-  .slice(1)
-  .map((v) => v.split(' ').map(Number))
-  .flat();
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input
+//   .slice(1)
+//   .map((v) => v.split(' ').map(Number))
+//   .flat();
 
-console.log(arr.sort((a, b) => a - b).join(' '));
+// console.log(arr.sort((a, b) => a - b).join(' '));
+
+//1302-베스트셀러
+const [N, ...arr] = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
+let maxCount = 0;
+let maxName = '';
+const dict = {};
+arr.forEach((name) => {
+  if (dict[name]) dict[name]++;
+  else dict[name] = 1;
+  if (dict[name] === maxCount && name < maxName) maxName = name;
+  else if (dict[name] > maxCount) {
+    maxName = name;
+    maxCount = dict[name];
+  }
+});
+console.log(maxName);
