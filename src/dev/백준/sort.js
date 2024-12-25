@@ -229,6 +229,42 @@
 // console.log(newArr[0][0]);
 
 //1744-수 묶기
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map(Number);
+
+// let positives = [];
+// let negatives = [];
+// let result = 0;
+
+// arr.forEach((num) => {
+//   if (num > 1) positives.push(num);
+//   else if (num <= 0) negatives.push(num);
+//   else result += 1;
+// });
+
+// positives.sort((a, b) => b - a);
+// negatives.sort((a, b) => a - b);
+
+// for (let i = 0; i < positives.length; i += 2) {
+//   if (i + 1 < positives.length) result += positives[i] * positives[i + 1];
+//   else result += positives[i];
+// }
+
+// for (let i = 0; i < negatives.length; i += 2) {
+//   if (i + 1 < negatives.length) result += negatives[i] * negatives[i + 1];
+//   else result += negatives[i];
+// }
+
+// console.log(result);
+
+//1940-주몽
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -237,29 +273,19 @@ const input = fs
   .split('\n');
 
 let n = +input[0];
-let arr = input.slice(1).map(Number);
+let m = +input[1];
+let arr = input[2].split(' ').map(Number);
 
-let positives = [];
-let negatives = [];
-let result = 0;
+arr.sort((a, b) => a - b);
 
-arr.forEach((num) => {
-  if (num > 1) positives.push(num);
-  else if (num <= 0) negatives.push(num);
-  else result += 1;
-});
+let count = 0;
 
-positives.sort((a, b) => b - a);
-negatives.sort((a, b) => a - b);
-
-for (let i = 0; i < positives.length; i += 2) {
-  if (i + 1 < positives.length) result += positives[i] * positives[i + 1];
-  else result += positives[i];
+for (let i = 0; i < arr.length; i++) {
+  for (let j = i + 1; j < arr.length; j++) {
+    if (arr[i] + arr[j] === m) {
+      count += 1;
+    }
+  }
 }
 
-for (let i = 0; i < negatives.length; i += 2) {
-  if (i + 1 < negatives.length) result += negatives[i] * negatives[i + 1];
-  else result += negatives[i];
-}
-
-console.log(result);
+console.log(count);
