@@ -202,6 +202,33 @@
 // console.log(arr.sort((a, b) => a - b).join(' '));
 
 //1302-베스트셀러
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let m = new Map();
+
+// for (let i = 1; i <= n; i++) {
+//   let name = input[i].trim();
+//   m.set(name, (m.get(name) || 0) + 1);
+// }
+
+// let newArr = [...m];
+
+// newArr.sort((a, b) => {
+//   if (b[1] === a[1]) {
+//     return a[0].localeCompare(b[0]);
+//   }
+//   return b[1] - a[1];
+// });
+
+// console.log(newArr[0][0]);
+
+//1744-수 묶기
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -210,20 +237,29 @@ const input = fs
   .split('\n');
 
 let n = +input[0];
-let m = new Map();
+let arr = input.slice(1).map(Number);
 
-for (let i = 1; i <= n; i++) {
-  let name = input[i].trim();
-  m.set(name, (m.get(name) || 0) + 1);
-}
+let positives = [];
+let negatives = [];
+let result = 0;
 
-let newArr = [...m];
-
-newArr.sort((a, b) => {
-  if (b[1] === a[1]) {
-    return a[0].localeCompare(b[0]);
-  }
-  return b[1] - a[1];
+arr.forEach((num) => {
+  if (num > 1) positives.push(num);
+  else if (num <= 0) negatives.push(num);
+  else result += 1;
 });
 
-console.log(newArr[0][0]);
+positives.sort((a, b) => b - a);
+negatives.sort((a, b) => a - b);
+
+for (let i = 0; i < positives.length; i += 2) {
+  if (i + 1 < positives.length) result += positives[i] * positives[i + 1];
+  else result += positives[i];
+}
+
+for (let i = 0; i < negatives.length; i += 2) {
+  if (i + 1 < negatives.length) result += negatives[i] * negatives[i + 1];
+  else result += negatives[i];
+}
+
+console.log(result);
