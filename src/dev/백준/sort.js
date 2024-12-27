@@ -354,75 +354,127 @@
 // }
 
 //2075-n번째 큰수
-class MinHeap {
-  constructor() {
-    this.heap = [null];
-  }
+// class MinHeap {
+//   constructor() {
+//     this.heap = [null];
+//   }
 
-  push(value) {
-    let cur = this.heap.length;
-    let parent;
-    while (cur > 1) {
-      parent = Math.floor(cur / 2);
-      if (value < this.heap[parent]) {
-        this.heap[cur] = this.heap[parent];
-        cur = parent;
-      } else break;
+//   push(value) {
+//     let cur = this.heap.length;
+//     let parent;
+//     while (cur > 1) {
+//       parent = Math.floor(cur / 2);
+//       if (value < this.heap[parent]) {
+//         this.heap[cur] = this.heap[parent];
+//         cur = parent;
+//       } else break;
+//     }
+//     this.heap[cur] = value;
+//   }
+
+//   pop() {
+//     if (this.heap.length === 1) return null;
+//     if (this.heap.length === 2) return this.heap.pop();
+//     const popValue = this.heap[1];
+//     this.heap[1] = this.heap.pop();
+//     let cur = 1;
+//     let left = cur * 2;
+//     let right = cur * 2 + 1;
+//     while (this.heap[left]) {
+//       let childIdx = left;
+//       if (this.heap[right] && this.heap[left] > this.heap[right]) childIdx = right;
+//       if (this.heap[cur] > this.heap[childIdx]) {
+//         [this.heap[cur], this.heap[childIdx]] = [this.heap[childIdx], this.heap[cur]];
+//         cur = childIdx;
+//         left = cur * 2;
+//         right = cur * 2 + 1;
+//       } else break;
+//     }
+//     return popValue;
+//   }
+
+//   size() {
+//     return this.heap.length - 1;
+//   }
+// }
+
+// const readline = require('readline');
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+
+// let N = -1;
+// let cnt;
+// const que = new MinHeap();
+// rl.on('line', (line) => {
+//   if (N === -1) {
+//     N = parseInt(line);
+//     cnt = N;
+//     idxCheck = new Array(N).fill(N - 1);
+//     return;
+//   }
+//   const temp = line.split(' ').map(Number);
+//   temp.forEach((num, idx) => {
+//     que.push(num);
+//     if (que.size() > N) que.pop();
+//   });
+//   cnt -= 1;
+//   if (cnt === 0) {
+//     rl.close();
+//   }
+// }).on('close', () => {
+//   console.log(que.pop());
+// });
+
+//11652-카드
+const [n, ...arr] = require('fs')
+  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+  .toString()
+  .trim()
+  .split('\n');
+
+function mergeSort(arr) {
+  if (arr.length <= 1) return arr;
+
+  const mid = Math.floor(arr.length / 2);
+  const left = mergeSort(arr.slice(0, mid));
+  const right = mergeSort(arr.slice(mid));
+
+  let i = 0;
+  let j = 0;
+  const sorted = [];
+
+  while (i < left.length && j < right.length) {
+    if (left[i] < right[j]) {
+      sorted.push(left[i]);
+      i++;
+    } else {
+      sorted.push(right[j]);
+      j++;
     }
-    this.heap[cur] = value;
   }
 
-  pop() {
-    if (this.heap.length === 1) return null;
-    if (this.heap.length === 2) return this.heap.pop();
-    const popValue = this.heap[1];
-    this.heap[1] = this.heap.pop();
-    let cur = 1;
-    let left = cur * 2;
-    let right = cur * 2 + 1;
-    while (this.heap[left]) {
-      let childIdx = left;
-      if (this.heap[right] && this.heap[left] > this.heap[right]) childIdx = right;
-      if (this.heap[cur] > this.heap[childIdx]) {
-        [this.heap[cur], this.heap[childIdx]] = [this.heap[childIdx], this.heap[cur]];
-        cur = childIdx;
-        left = cur * 2;
-        right = cur * 2 + 1;
-      } else break;
-    }
-    return popValue;
-  }
+  if (i < left.length) sorted.push(...left.slice(i));
+  if (j < right.length) sorted.push(...right.slice(j));
 
-  size() {
-    return this.heap.length - 1;
-  }
+  return sorted;
 }
 
-const readline = require('readline');
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-let N = -1;
-let cnt;
-const que = new MinHeap();
-rl.on('line', (line) => {
-  if (N === -1) {
-    N = parseInt(line);
-    cnt = N;
-    idxCheck = new Array(N).fill(N - 1);
-    return;
+const sorted_arr = mergeSort(arr.map((v) => BigInt(v)));
+let maxCount = 0;
+let curCount = 0;
+let prevNumber = '';
+let largest = 2 ** 62;
+sorted_arr.forEach((v) => {
+  if (prevNumber !== v) {
+    prevNumber = v;
+    curCount = 0;
   }
-  const temp = line.split(' ').map(Number);
-  temp.forEach((num, idx) => {
-    que.push(num);
-    if (que.size() > N) que.pop();
-  });
-  cnt -= 1;
-  if (cnt === 0) {
-    rl.close();
+  curCount++;
+  if (curCount > maxCount || (curCount === maxCount && largest > v)) {
+    maxCount = curCount;
+    largest = v;
   }
-}).on('close', () => {
-  console.log(que.pop());
 });
+console.log(String(largest));
