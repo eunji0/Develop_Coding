@@ -324,6 +324,18 @@
 // console.log(answer);
 
 //10867-중복 빼고 정렬하기
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let arr = input[1].split(' ').map(Number);
+// let newArr = new Set([...arr]);
+// console.log([...newArr].sort((a, b) => a - b).join(' '));
+
+//2693-n번째 큰수
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -331,6 +343,12 @@ const input = fs
   .trim()
   .split('\n');
 
-let arr = input[1].split(' ').map(Number);
-let newArr = new Set([...arr]);
-console.log([...newArr].sort((a, b) => a - b).join(' '));
+let n = +input[0];
+
+for (let i = 1; i <= n; i++) {
+  let arr = input[i]
+    .split(' ')
+    .map(Number)
+    .sort((a, b) => b - a);
+  console.log(arr[2]);
+}
