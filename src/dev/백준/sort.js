@@ -291,6 +291,39 @@
 // console.log(count);
 
 //11000-강의실 배정
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// input.shift();
+
+// let times = [];
+
+// input.forEach((v) => {
+//   v = v.split(' ').map(Number);
+//   times.push([v[0], 1]);
+//   times.push([v[1], -1]);
+// });
+
+// times.sort((a, b) => {
+//   if (a[0] === b[0]) return a[1] - b[1];
+//   return a[0] - b[0];
+// });
+
+// let answer = 0;
+// let result = 0;
+
+// for (let i = 0; i < times.length; i++) {
+//   result += times[i][1];
+//   answer = Math.max(answer, result);
+// }
+
+// console.log(answer);
+
+//10867-중복 빼고 정렬하기
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -298,27 +331,6 @@ const input = fs
   .trim()
   .split('\n');
 
-input.shift();
-
-let times = [];
-
-input.forEach((v) => {
-  v = v.split(' ').map(Number);
-  times.push([v[0], 1]);
-  times.push([v[1], -1]);
-});
-
-times.sort((a, b) => {
-  if (a[0] === b[0]) return a[1] - b[1];
-  return a[0] - b[0];
-});
-
-let answer = 0;
-let result = 0;
-
-for (let i = 0; i < times.length; i++) {
-  result += times[i][1];
-  answer = Math.max(answer, result);
-}
-
-console.log(answer);
+let arr = input[1].split(' ').map(Number);
+let newArr = new Set([...arr]);
+console.log([...newArr].sort((a, b) => a - b).join(' '));
