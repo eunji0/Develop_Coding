@@ -428,53 +428,94 @@
 // });
 
 //11652-카드
-const [n, ...arr] = require('fs')
+// const [n, ...arr] = require('fs')
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// function mergeSort(arr) {
+//   if (arr.length <= 1) return arr;
+
+//   const mid = Math.floor(arr.length / 2);
+//   const left = mergeSort(arr.slice(0, mid));
+//   const right = mergeSort(arr.slice(mid));
+
+//   let i = 0;
+//   let j = 0;
+//   const sorted = [];
+
+//   while (i < left.length && j < right.length) {
+//     if (left[i] < right[j]) {
+//       sorted.push(left[i]);
+//       i++;
+//     } else {
+//       sorted.push(right[j]);
+//       j++;
+//     }
+//   }
+
+//   if (i < left.length) sorted.push(...left.slice(i));
+//   if (j < right.length) sorted.push(...right.slice(j));
+
+//   return sorted;
+// }
+
+// const sorted_arr = mergeSort(arr.map((v) => BigInt(v)));
+// let maxCount = 0;
+// let curCount = 0;
+// let prevNumber = '';
+// let largest = 2 ** 62;
+// sorted_arr.forEach((v) => {
+//   if (prevNumber !== v) {
+//     prevNumber = v;
+//     curCount = 0;
+//   }
+//   curCount++;
+//   if (curCount > maxCount || (curCount === maxCount && largest > v)) {
+//     maxCount = curCount;
+//     largest = v;
+//   }
+// });
+// console.log(String(largest));
+
+//1253-좋다
+const fs = require('fs');
+const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
   .toString()
   .trim()
   .split('\n');
+const n = Number(inputs[0][0]);
+const A = inputs[1];
 
-function mergeSort(arr) {
-  if (arr.length <= 1) return arr;
+const map = new Map();
 
-  const mid = Math.floor(arr.length / 2);
-  const left = mergeSort(arr.slice(0, mid));
-  const right = mergeSort(arr.slice(mid));
-
-  let i = 0;
-  let j = 0;
-  const sorted = [];
-
-  while (i < left.length && j < right.length) {
-    if (left[i] < right[j]) {
-      sorted.push(left[i]);
-      i++;
-    } else {
-      sorted.push(right[j]);
-      j++;
-    }
-  }
-
-  if (i < left.length) sorted.push(...left.slice(i));
-  if (j < right.length) sorted.push(...right.slice(j));
-
-  return sorted;
+for (const a of A) {
+  if (map.has(a)) map.set(a, map.get(a) + 1);
+  else map.set(a, 1);
 }
 
-const sorted_arr = mergeSort(arr.map((v) => BigInt(v)));
-let maxCount = 0;
-let curCount = 0;
-let prevNumber = '';
-let largest = 2 ** 62;
-sorted_arr.forEach((v) => {
-  if (prevNumber !== v) {
-    prevNumber = v;
-    curCount = 0;
+let ans = 0;
+const bt = (selected, start) => {
+  if (selected.length === 2) {
+    const sum = selected[0] + selected[1];
+
+    if (map.has(sum)) {
+      if (sum === selected[0] && sum === selected[1] && map.get(sum) === 2) return;
+      if (sum === selected[0] && map.get(sum) === 1) return;
+      if (sum === selected[1] && map.get(sum) === 1) return;
+      ans += map.get(sum);
+      map.delete(sum);
+    }
+    return;
   }
-  curCount++;
-  if (curCount > maxCount || (curCount === maxCount && largest > v)) {
-    maxCount = curCount;
-    largest = v;
+
+  for (let i = start; i < n; i++) {
+    bt([...selected, A[i]], i + 1);
   }
-});
-console.log(String(largest));
+};
+
+bt([], 0);
+
+console.log(ans);
