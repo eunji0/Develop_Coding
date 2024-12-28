@@ -479,43 +479,20 @@
 // });
 // console.log(String(largest));
 
-//1253-좋다
-const fs = require('fs');
-const input = fs
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
-  .toString()
-  .trim()
-  .split('\n');
-const n = Number(inputs[0][0]);
-const A = inputs[1];
-
-const map = new Map();
-
-for (const a of A) {
-  if (map.has(a)) map.set(a, map.get(a) + 1);
-  else map.set(a, 1);
+//18110-solved.ac
+const input = require('fs').readFileSync('./dev/stdin').toString().trim().split('\n').map(Number);
+const N = input.shift();
+if (N == 0) {
+	console.log(0);
+	process.exit();
 }
-
-let ans = 0;
-const bt = (selected, start) => {
-  if (selected.length === 2) {
-    const sum = selected[0] + selected[1];
-
-    if (map.has(sum)) {
-      if (sum === selected[0] && sum === selected[1] && map.get(sum) === 2) return;
-      if (sum === selected[0] && map.get(sum) === 1) return;
-      if (sum === selected[1] && map.get(sum) === 1) return;
-      ans += map.get(sum);
-      map.delete(sum);
-    }
-    return;
-  }
-
-  for (let i = start; i < n; i++) {
-    bt([...selected, A[i]], i + 1);
-  }
-};
-
-bt([], 0);
-
-console.log(ans);
+const limit = Math.round(N * 0.15);
+console.log(
+	Math.round(
+		input
+			.sort((a, b) => a - b)
+			.slice(limit, N - limit)
+			.reduce((r, v) => r + v, 0) /
+			(N - 2 * limit)
+	)
+);
