@@ -480,6 +480,51 @@
 // console.log(String(largest));
 
 //1253-좋다
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// const n = +input[0];
+// const arr = input[1].split(' ').map(Number);
+
+// arr.sort((a, b) => a - b);
+
+// let count = 0;
+
+// for (let k = 0; k < n; k++) {
+//   let target = arr[k];
+//   let i = 0;
+//   let j = n - 1;
+
+//   while (i < j) {
+//     if (i === k) {
+//       i++;
+//       continue;
+//     }
+//     if (j === k) {
+//       j--;
+//       continue;
+//     }
+
+//     let sum = arr[i] + arr[j];
+
+//     if (sum === target) {
+//       count++;
+//       break;
+//     } else if (sum < target) {
+//       i++;
+//     } else {
+//       j--;
+//     }
+//   }
+// }
+
+// console.log(count);
+
+//2822-점수 계산
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -487,39 +532,24 @@ const input = fs
   .trim()
   .split('\n');
 
-const n = +input[0];
-const arr = input[1].split(' ').map(Number);
+let arr = input.map(Number);
+let graph = [];
 
-arr.sort((a, b) => a - b);
+arr.map((v, i) => {
+  graph.push([v, i + 1]);
+});
 
-let count = 0;
+graph.sort((a, b) => b[0] - a[0]);
 
-for (let k = 0; k < n; k++) {
-  let target = arr[k];
-  let i = 0;
-  let j = n - 1;
+let s = graph.slice(0, 5);
 
-  while (i < j) {
-    if (i === k) {
-      i++;
-      continue;
-    }
-    if (j === k) {
-      j--;
-      continue;
-    }
+let resultSum = 0;
+let result = [];
 
-    let sum = arr[i] + arr[j];
+s.map((v) => {
+  resultSum += v[0];
+  result.push(v[1]);
+});
 
-    if (sum === target) {
-      count++;
-      break;
-    } else if (sum < target) {
-      i++;
-    } else {
-      j--;
-    }
-  }
-}
-
-console.log(count);
+console.log(resultSum);
+console.log(result.sort((a, b) => a - b).join(' '));
