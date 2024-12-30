@@ -479,20 +479,47 @@
 // });
 // console.log(String(largest));
 
-//18110-solved.ac
-const input = require('fs').readFileSync('./dev/stdin').toString().trim().split('\n').map(Number);
-const N = input.shift();
-if (N == 0) {
-	console.log(0);
-	process.exit();
+//1253-좋다
+const fs = require('fs');
+const input = fs
+  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+  .toString()
+  .trim()
+  .split('\n');
+
+const n = +input[0];
+const arr = input[1].split(' ').map(Number);
+
+arr.sort((a, b) => a - b);
+
+let count = 0;
+
+for (let k = 0; k < n; k++) {
+  let target = arr[k];
+  let i = 0;
+  let j = n - 1;
+
+  while (i < j) {
+    if (i === k) {
+      i++;
+      continue;
+    }
+    if (j === k) {
+      j--;
+      continue;
+    }
+
+    let sum = arr[i] + arr[j];
+
+    if (sum === target) {
+      count++;
+      break;
+    } else if (sum < target) {
+      i++;
+    } else {
+      j--;
+    }
+  }
 }
-const limit = Math.round(N * 0.15);
-console.log(
-	Math.round(
-		input
-			.sort((a, b) => a - b)
-			.slice(limit, N - limit)
-			.reduce((r, v) => r + v, 0) /
-			(N - 2 * limit)
-	)
-);
+
+console.log(count);
