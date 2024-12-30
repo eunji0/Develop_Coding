@@ -525,6 +525,36 @@
 // console.log(count);
 
 //2822-점수 계산
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let arr = input.map(Number);
+// let graph = [];
+
+// arr.map((v, i) => {
+//   graph.push([v, i + 1]);
+// });
+
+// graph.sort((a, b) => b[0] - a[0]);
+
+// let s = graph.slice(0, 5);
+
+// let resultSum = 0;
+// let result = [];
+
+// s.map((v) => {
+//   resultSum += v[0];
+//   result.push(v[1]);
+// });
+
+// console.log(resultSum);
+// console.log(result.sort((a, b) => a - b).join(' '));
+
+//18110-solved.ac
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -532,24 +562,18 @@ const input = fs
   .trim()
   .split('\n');
 
-let arr = input.map(Number);
-let graph = [];
+let n = +input[0];
+let arr = input.slice(1).map(Number);
+if (n === 0) {
+  console.log(0);
+  return;
+}
 
-arr.map((v, i) => {
-  graph.push([v, i + 1]);
-});
+arr.sort((a, b) => a - b);
+let minusNum = Math.round(n * 0.15);
+let m = [];
+for (let i = minusNum; i < n - minusNum; i++) {
+  m.push(arr[i]);
+}
 
-graph.sort((a, b) => b[0] - a[0]);
-
-let s = graph.slice(0, 5);
-
-let resultSum = 0;
-let result = [];
-
-s.map((v) => {
-  resultSum += v[0];
-  result.push(v[1]);
-});
-
-console.log(resultSum);
-console.log(result.sort((a, b) => a - b).join(' '));
+console.log(Math.round(m.reduce((a, c) => a + c, 0) / m.length));
