@@ -555,6 +555,30 @@
 // console.log(result.sort((a, b) => a - b).join(' '));
 
 //18110-solved.ac
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map(Number);
+// if (n === 0) {
+//   console.log(0);
+//   return;
+// }
+
+// arr.sort((a, b) => a - b);
+// let minusNum = Math.round(n * 0.15);
+// let m = [];
+// for (let i = minusNum; i < n - minusNum; i++) {
+//   m.push(arr[i]);
+// }
+
+// console.log(Math.round(m.reduce((a, c) => a + c, 0) / m.length));
+
+//5052-전화번호 목록
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -562,18 +586,28 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let arr = input.slice(1).map(Number);
-if (n === 0) {
-  console.log(0);
-  return;
+let t = +input[0];
+let result = [];
+let idx = 1;
+
+for (let tt = 0; tt < t; tt++) {
+  let n = +input[idx++];
+  let phones = [];
+
+  for (let i = 0; i < n; i++) {
+    phones.push(input[idx++]);
+  }
+
+  phones.sort();
+
+  let isC = true;
+  for (let i = 0; i < phones.length - 1; i++) {
+    if (phones[i + 1].startsWith(phones[i])) {
+      isC = false;
+      break;
+    }
+  }
+  result.push(isC ? 'YES' : 'NO');
 }
 
-arr.sort((a, b) => a - b);
-let minusNum = Math.round(n * 0.15);
-let m = [];
-for (let i = minusNum; i < n - minusNum; i++) {
-  m.push(arr[i]);
-}
-
-console.log(Math.round(m.reduce((a, c) => a + c, 0) / m.length));
+console.log(result.join('\n'));
