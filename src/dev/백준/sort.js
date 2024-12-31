@@ -613,6 +613,37 @@
 // console.log(result.join('\n'));
 
 //1449-수리공 항승
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, l] = input[0].split(' ').map(Number);
+// let arr = input[1].split(' ').map(Number);
+// let count = 1;
+// l -= 0.5;
+// let e = l;
+// arr.sort((a, b) => b - a);
+// //l-=0.5
+// //sort로 내림차순 정렬
+// //for문으로 순차적으로 돔
+// //i - i+1 가 l보다 크다면 stop, count+=1
+
+// for (let i = 0; i < n - 1; i++) {
+//   let m = arr[i] - arr[i + 1];
+//   if (m < e) {
+//     e -= m;
+//   } else {
+//     count += 1;
+//     e = l;
+//   }
+// }
+
+// console.log(count);
+
+//24479-알고리즘 수업 - 깊이 우선 탐색 1
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -620,25 +651,32 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, l] = input[0].split(' ').map(Number);
-let arr = input[1].split(' ').map(Number);
-let count = 1;
-l -= 0.5;
-let e = l;
-arr.sort((a, b) => b - a);
-//l-=0.5
-//sort로 내림차순 정렬
-//for문으로 순차적으로 돔
-//i - i+1 가 l보다 크다면 stop, count+=1
+let [n, m, r] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let graph = Array.from({ length: n + 1 }, () => []);
 
-for (let i = 0; i < n - 1; i++) {
-  let m = arr[i] - arr[i + 1];
-  if (m < e) {
-    e -= m;
-  } else {
-    count += 1;
-    e = l;
+arr.forEach(([u, v]) => {
+  graph[u].push(v);
+  graph[v].push(u);
+});
+
+graph.forEach((neighbors) => neighbors.sort((a, b) => a - b));
+
+let visited = Array(n + 1).fill(false);
+let result = Array(n + 1).fill(0);
+let order = 1;
+
+const dfs = (start) => {
+  visited[start] = true;
+  result[start] = order++;
+
+  for (const next of graph[start]) {
+    if (!visited[next]) {
+      dfs(next);
+    }
   }
-}
+};
 
-console.log(count);
+dfs(r);
+
+console.log(result.slice(1).join('\n'));
