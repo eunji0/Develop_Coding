@@ -644,6 +644,44 @@
 // console.log(count);
 
 //24479-알고리즘 수업 - 깊이 우선 탐색 1
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, m, r] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// arr.forEach(([u, v]) => {
+//   graph[u].push(v);
+//   graph[v].push(u);
+// });
+
+// graph.forEach((neighbors) => neighbors.sort((a, b) => a - b));
+
+// let visited = Array(n + 1).fill(false);
+// let result = Array(n + 1).fill(0);
+// let order = 1;
+
+// const dfs = (start) => {
+//   visited[start] = true;
+//   result[start] = order++;
+
+//   for (const next of graph[start]) {
+//     if (!visited[next]) {
+//       dfs(next);
+//     }
+//   }
+// };
+
+// dfs(r);
+
+// console.log(result.slice(1).join('\n'));
+
+//8979-올림픽
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -651,32 +689,24 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, m, r] = input[0].split(' ').map(Number);
+let [n, k] = input[0].split(' ').map(Number);
 let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
 
-arr.forEach(([u, v]) => {
-  graph[u].push(v);
-  graph[v].push(u);
+arr.sort((a, b) => {
+  if (b[1] !== a[1]) return b[1] - a[1];
+  if (b[2] !== a[2]) return b[2] - a[2];
+  return b[3] - a[3];
 });
 
-graph.forEach((neighbors) => neighbors.sort((a, b) => a - b));
+let ranks = Array(n + 1).fill(0);
+let rank = 1;
 
-let visited = Array(n + 1).fill(false);
-let result = Array(n + 1).fill(0);
-let order = 1;
-
-const dfs = (start) => {
-  visited[start] = true;
-  result[start] = order++;
-
-  for (const next of graph[start]) {
-    if (!visited[next]) {
-      dfs(next);
-    }
+for (let i = 0; i < n; i++) {
+  if (i > 0 && arr[i][1] === arr[i - 1][1] && arr[i][2] === arr[i - 1][2] && arr[i][3] === arr[i - 1][3]) {
+    ranks[arr[i][0]] = rank;
+  } else {
+    ranks[arr[i][0]] = rank = i + 1;
   }
-};
+}
 
-dfs(r);
-
-console.log(result.slice(1).join('\n'));
+console.log(ranks[k]);
