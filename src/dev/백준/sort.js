@@ -579,6 +579,40 @@
 // console.log(Math.round(m.reduce((a, c) => a + c, 0) / m.length));
 
 //5052-전화번호 목록
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let t = +input[0];
+// let result = [];
+// let idx = 1;
+
+// for (let tt = 0; tt < t; tt++) {
+//   let n = +input[idx++];
+//   let phones = [];
+
+//   for (let i = 0; i < n; i++) {
+//     phones.push(input[idx++]);
+//   }
+
+//   phones.sort();
+
+//   let isC = true;
+//   for (let i = 0; i < phones.length - 1; i++) {
+//     if (phones[i + 1].startsWith(phones[i])) {
+//       isC = false;
+//       break;
+//     }
+//   }
+//   result.push(isC ? 'YES' : 'NO');
+// }
+
+// console.log(result.join('\n'));
+
+//1449-수리공 항승
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -586,28 +620,25 @@ const input = fs
   .trim()
   .split('\n');
 
-let t = +input[0];
-let result = [];
-let idx = 1;
+let [n, l] = input[0].split(' ').map(Number);
+let arr = input[1].split(' ').map(Number);
+let count = 1;
+l -= 0.5;
+let e = l;
+arr.sort((a, b) => b - a);
+//l-=0.5
+//sort로 내림차순 정렬
+//for문으로 순차적으로 돔
+//i - i+1 가 l보다 크다면 stop, count+=1
 
-for (let tt = 0; tt < t; tt++) {
-  let n = +input[idx++];
-  let phones = [];
-
-  for (let i = 0; i < n; i++) {
-    phones.push(input[idx++]);
+for (let i = 0; i < n - 1; i++) {
+  let m = arr[i] - arr[i + 1];
+  if (m < e) {
+    e -= m;
+  } else {
+    count += 1;
+    e = l;
   }
-
-  phones.sort();
-
-  let isC = true;
-  for (let i = 0; i < phones.length - 1; i++) {
-    if (phones[i + 1].startsWith(phones[i])) {
-      isC = false;
-      break;
-    }
-  }
-  result.push(isC ? 'YES' : 'NO');
 }
 
-console.log(result.join('\n'));
+console.log(count);
