@@ -712,6 +712,35 @@
 // console.log(ranks[k]);
 
 //20920-영단어 암기는 괴로워
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map((v) => v.trim());
+// let graph = new Map();
+
+// arr.map((v) => {
+//   graph.set(v, (graph.get(v) || 0) + 1);
+// });
+
+// graph = [...graph].filter((v) => v[0].length > m - 1);
+// graph.map((v) => v.push(v[0].length));
+// graph.sort((a, b) => {
+//   if (a[1] === b[1]) {
+//     if (a[2] === b[2]) {
+//       return a[0].localeCompare(b[0]);
+//     }
+//     return b[2] - a[2];
+//   }
+//   return b[1] - a[1];
+// });
+// console.log(graph.map((v) => v[0]).join('\n'));
+
+//1431-시리얼 번호
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -719,23 +748,29 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, m] = input[0].split(' ').map(Number);
+let n = +input[0];
 let arr = input.slice(1).map((v) => v.trim());
-let graph = new Map();
+let newArr = [];
 
-arr.map((v) => {
-  graph.set(v, (graph.get(v) || 0) + 1);
-});
+arr.map((v) =>
+  newArr.push([
+    v,
+    v
+      .split('')
+      .map(Number)
+      .filter((v) => isNaN(v) === false)
+      .reduce((a, c) => a + c, 0),
+  ]),
+);
 
-graph = [...graph].filter((v) => v[0].length > m - 1);
-graph.map((v) => v.push(v[0].length));
-graph.sort((a, b) => {
-  if (a[1] === b[1]) {
-    if (a[2] === b[2]) {
+newArr.sort((a, b) => {
+  if (a[0].length === b[0].length) {
+    if (a[1] === b[1]) {
       return a[0].localeCompare(b[0]);
     }
-    return b[2] - a[2];
+    return a[1] - b[1];
   }
-  return b[1] - a[1];
+  return a[0].length - b[0].length;
 });
-console.log(graph.map((v) => v[0]).join('\n'));
+
+newArr.map((v) => console.log(v[0]));
