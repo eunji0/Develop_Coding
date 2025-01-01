@@ -682,6 +682,36 @@
 // console.log(result.slice(1).join('\n'));
 
 //8979-올림픽
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, k] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+
+// arr.sort((a, b) => {
+//   if (b[1] !== a[1]) return b[1] - a[1];
+//   if (b[2] !== a[2]) return b[2] - a[2];
+//   return b[3] - a[3];
+// });
+
+// let ranks = Array(n + 1).fill(0);
+// let rank = 1;
+
+// for (let i = 0; i < n; i++) {
+//   if (i > 0 && arr[i][1] === arr[i - 1][1] && arr[i][2] === arr[i - 1][2] && arr[i][3] === arr[i - 1][3]) {
+//     ranks[arr[i][0]] = rank;
+//   } else {
+//     ranks[arr[i][0]] = rank = i + 1;
+//   }
+// }
+
+// console.log(ranks[k]);
+
+//20920-영단어 암기는 괴로워
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -689,24 +719,23 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, k] = input[0].split(' ').map(Number);
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let [n, m] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.trim());
+let graph = new Map();
 
-arr.sort((a, b) => {
-  if (b[1] !== a[1]) return b[1] - a[1];
-  if (b[2] !== a[2]) return b[2] - a[2];
-  return b[3] - a[3];
+arr.map((v) => {
+  graph.set(v, (graph.get(v) || 0) + 1);
 });
 
-let ranks = Array(n + 1).fill(0);
-let rank = 1;
-
-for (let i = 0; i < n; i++) {
-  if (i > 0 && arr[i][1] === arr[i - 1][1] && arr[i][2] === arr[i - 1][2] && arr[i][3] === arr[i - 1][3]) {
-    ranks[arr[i][0]] = rank;
-  } else {
-    ranks[arr[i][0]] = rank = i + 1;
+graph = [...graph].filter((v) => v[0].length > m - 1);
+graph.map((v) => v.push(v[0].length));
+graph.sort((a, b) => {
+  if (a[1] === b[1]) {
+    if (a[2] === b[2]) {
+      return a[0].localeCompare(b[0]);
+    }
+    return b[2] - a[2];
   }
-}
-
-console.log(ranks[k]);
+  return b[1] - a[1];
+});
+console.log(graph.map((v) => v[0]).join('\n'));
