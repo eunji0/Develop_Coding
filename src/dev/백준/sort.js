@@ -776,6 +776,30 @@
 // newArr.map((v) => console.log(v[0]));
 
 //5635-생일
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' '));
+
+// arr.sort((a, b) => {
+//   if (Number(a[3]) === Number(b[3])) {
+//     if (Number(a[2]) === Number(b[2])) {
+//       return Number(a[1]) - Number(b[1]);
+//     }
+//     return Number(a[2]) - Number(b[2]);
+//   }
+//   return Number(a[3]) - Number(b[3]);
+// });
+
+// console.log(arr[n - 1][0]);
+// console.log(arr[0][0]);
+
+//11931-수 정렬하기4
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -783,18 +807,9 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let arr = input.slice(1).map((v) => v.split(' '));
-
-arr.sort((a, b) => {
-  if (Number(a[3]) === Number(b[3])) {
-    if (Number(a[2]) === Number(b[2])) {
-      return Number(a[1]) - Number(b[1]);
-    }
-    return Number(a[2]) - Number(b[2]);
-  }
-  return Number(a[3]) - Number(b[3]);
-});
-
-console.log(arr[n - 1][0]);
-console.log(arr[0][0]);
+let arr = input
+  .slice(1)
+  .map(Number)
+  .sort((a, b) => b - a)
+  .join('\n');
+console.log(arr);
