@@ -800,6 +800,21 @@
 // console.log(arr[0][0]);
 
 //11931-수 정렬하기4
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let arr = input
+//   .slice(1)
+//   .map(Number)
+//   .sort((a, b) => b - a)
+//   .join('\n');
+// console.log(arr);
+
+//2437-저울
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -807,9 +822,19 @@ const input = fs
   .trim()
   .split('\n');
 
-let arr = input
-  .slice(1)
+let n = +input[0];
+let arr = input[1]
+  .split(' ')
   .map(Number)
-  .sort((a, b) => b - a)
-  .join('\n');
-console.log(arr);
+  .sort((a, b) => a - b);
+
+let cSum = 0;
+
+for (let a of arr) {
+  if (a > cSum + 1) {
+    break;
+  }
+  cSum += a;
+}
+
+console.log(cSum + 1);
