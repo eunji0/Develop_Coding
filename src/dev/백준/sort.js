@@ -741,6 +741,41 @@
 // console.log(graph.map((v) => v[0]).join('\n'));
 
 //1431-시리얼 번호
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.trim());
+// let newArr = [];
+
+// arr.map((v) =>
+//   newArr.push([
+//     v,
+//     v
+//       .split('')
+//       .map(Number)
+//       .filter((v) => isNaN(v) === false)
+//       .reduce((a, c) => a + c, 0),
+//   ]),
+// );
+
+// newArr.sort((a, b) => {
+//   if (a[0].length === b[0].length) {
+//     if (a[1] === b[1]) {
+//       return a[0].localeCompare(b[0]);
+//     }
+//     return a[1] - b[1];
+//   }
+//   return a[0].length - b[0].length;
+// });
+
+// newArr.map((v) => console.log(v[0]));
+
+//5635-생일
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -749,28 +784,17 @@ const input = fs
   .split('\n');
 
 let n = +input[0];
-let arr = input.slice(1).map((v) => v.trim());
-let newArr = [];
+let arr = input.slice(1).map((v) => v.split(' '));
 
-arr.map((v) =>
-  newArr.push([
-    v,
-    v
-      .split('')
-      .map(Number)
-      .filter((v) => isNaN(v) === false)
-      .reduce((a, c) => a + c, 0),
-  ]),
-);
-
-newArr.sort((a, b) => {
-  if (a[0].length === b[0].length) {
-    if (a[1] === b[1]) {
-      return a[0].localeCompare(b[0]);
+arr.sort((a, b) => {
+  if (Number(a[3]) === Number(b[3])) {
+    if (Number(a[2]) === Number(b[2])) {
+      return Number(a[1]) - Number(b[1]);
     }
-    return a[1] - b[1];
+    return Number(a[2]) - Number(b[2]);
   }
-  return a[0].length - b[0].length;
+  return Number(a[3]) - Number(b[3]);
 });
 
-newArr.map((v) => console.log(v[0]));
+console.log(arr[n - 1][0]);
+console.log(arr[0][0]);
