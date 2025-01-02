@@ -815,6 +815,31 @@
 // console.log(arr);
 
 //2437-저울
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// let cSum = 0;
+
+// for (let a of arr) {
+//   if (a > cSum + 1) {
+//     break;
+//   }
+//   cSum += a;
+// }
+
+// console.log(cSum + 1);
+
+//2473-세 용액
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -828,13 +853,30 @@ let arr = input[1]
   .map(Number)
   .sort((a, b) => a - b);
 
-let cSum = 0;
+let answer = Infinity;
+let result = [];
 
-for (let a of arr) {
-  if (a > cSum + 1) {
-    break;
+for (let k = 0; k < n - 2; k++) {
+  let next = k + 1;
+  let nnext = n - 1;
+
+  while (next < nnext) {
+    let sum = arr[k] + arr[next] + arr[nnext];
+
+    if (Math.abs(sum) < answer) {
+      answer = Math.abs(sum);
+      result = [arr[k], arr[next], arr[nnext]];
+    }
+
+    if (sum < 0) {
+      next++;
+    } else if (sum > 0) {
+      nnext--;
+    } else {
+      console.log(result.join(' '));
+      return;
+    }
   }
-  cSum += a;
 }
 
-console.log(cSum + 1);
+console.log(result.join(' '));
