@@ -840,6 +840,48 @@
 // console.log(cSum + 1);
 
 //2473-세 용액
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// let answer = Infinity;
+// let result = [];
+
+// for (let k = 0; k < n - 2; k++) {
+//   let next = k + 1;
+//   let nnext = n - 1;
+
+//   while (next < nnext) {
+//     let sum = arr[k] + arr[next] + arr[nnext];
+
+//     if (Math.abs(sum) < answer) {
+//       answer = Math.abs(sum);
+//       result = [arr[k], arr[next], arr[nnext]];
+//     }
+
+//     if (sum < 0) {
+//       next++;
+//     } else if (sum > 0) {
+//       nnext--;
+//     } else {
+//       console.log(result.join(' '));
+//       return;
+//     }
+//   }
+// }
+
+// console.log(result.join(' '));
+
+//11557-Yangjojang of The Year
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -847,36 +889,12 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let arr = input[1]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => a - b);
-
-let answer = Infinity;
-let result = [];
-
-for (let k = 0; k < n - 2; k++) {
-  let next = k + 1;
-  let nnext = n - 1;
-
-  while (next < nnext) {
-    let sum = arr[k] + arr[next] + arr[nnext];
-
-    if (Math.abs(sum) < answer) {
-      answer = Math.abs(sum);
-      result = [arr[k], arr[next], arr[nnext]];
-    }
-
-    if (sum < 0) {
-      next++;
-    } else if (sum > 0) {
-      nnext--;
-    } else {
-      console.log(result.join(' '));
-      return;
-    }
-  }
+let t = +input[0];
+for (let i = 1; i < input.length; i++) {
+  let n = +input[i];
+  let arr = input.slice(i + 1, i + n + 1).map((v) => v.split(' '));
+  arr.map((v) => (v[1] = +v[1]));
+  arr.sort((a, b) => b[1] - a[1]);
+  console.log(arr[0][0]);
+  i = i + n;
 }
-
-console.log(result.join(' '));
