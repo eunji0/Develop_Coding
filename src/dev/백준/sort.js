@@ -882,6 +882,24 @@
 // console.log(result.join(' '));
 
 //11557-Yangjojang of The Year
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let t = +input[0];
+// for (let i = 1; i < input.length; i++) {
+//   let n = +input[i];
+//   let arr = input.slice(i + 1, i + n + 1).map((v) => v.split(' '));
+//   arr.map((v) => (v[1] = +v[1]));
+//   arr.sort((a, b) => b[1] - a[1]);
+//   console.log(arr[0][0]);
+//   i = i + n;
+// }
+
+//2212-센서
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -889,12 +907,19 @@ const input = fs
   .trim()
   .split('\n');
 
-let t = +input[0];
-for (let i = 1; i < input.length; i++) {
-  let n = +input[i];
-  let arr = input.slice(i + 1, i + n + 1).map((v) => v.split(' '));
-  arr.map((v) => (v[1] = +v[1]));
-  arr.sort((a, b) => b[1] - a[1]);
-  console.log(arr[0][0]);
-  i = i + n;
+const N = +input[0];
+const K = +input[1];
+const sensors = input[2]
+  .split(' ')
+  .map(Number)
+  .sort((a, b) => a - b);
+
+const distances = [];
+for (let i = 1; i < N; i++) {
+  distances.push(sensors[i] - sensors[i - 1]);
 }
+
+distances.sort((a, b) => b - a);
+const minSum = distances.slice(K - 1).reduce((sum, dist) => sum + dist, 0);
+
+console.log(minSum);
