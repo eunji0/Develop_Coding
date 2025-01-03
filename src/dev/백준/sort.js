@@ -900,6 +900,31 @@
 // }
 
 //2212-센서
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// const N = +input[0];
+// const K = +input[1];
+// const sensors = input[2]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// const distances = [];
+// for (let i = 1; i < N; i++) {
+//   distances.push(sensors[i] - sensors[i - 1]);
+// }
+
+// distances.sort((a, b) => b - a);
+// const minSum = distances.slice(K - 1).reduce((sum, dist) => sum + dist, 0);
+
+// console.log(minSum);
+
+//24444-알고리즘 수업 - 너비 우선 탐색 1
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -907,19 +932,39 @@ const input = fs
   .trim()
   .split('\n');
 
-const N = +input[0];
-const K = +input[1];
-const sensors = input[2]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => a - b);
+let [n, m, r] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let graph = Array.from({ length: n + 1 }, () => []);
 
-const distances = [];
-for (let i = 1; i < N; i++) {
-  distances.push(sensors[i] - sensors[i - 1]);
+for (let [u, v] of arr) {
+  graph[u].push(v);
+  graph[v].push(u);
 }
 
-distances.sort((a, b) => b - a);
-const minSum = distances.slice(K - 1).reduce((sum, dist) => sum + dist, 0);
+graph.forEach((adj) => adj.sort((a, b) => a - b));
 
-console.log(minSum);
+const bfs = (start) => {
+  let visited = Array(n + 1).fill(false);
+  let order = Array(n + 1).fill(0);
+  let count = 1;
+
+  visited[start] = true;
+  order[start] = count++;
+  let q = [start];
+
+  while (q.length) {
+    let node = q.shift();
+
+    for (let next of graph[node]) {
+      if (!visited[next]) {
+        visited[next] = true;
+        order[next] = count++;
+        q.push(next);
+      }
+    }
+  }
+
+  return order.slice(1);
+};
+
+console.log(bfs(r).join('\n'));
