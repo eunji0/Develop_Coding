@@ -925,6 +925,51 @@
 // console.log(minSum);
 
 //24444-알고리즘 수업 - 너비 우선 탐색 1
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, m, r] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// for (let [u, v] of arr) {
+//   graph[u].push(v);
+//   graph[v].push(u);
+// }
+
+// graph.forEach((adj) => adj.sort((a, b) => a - b));
+
+// const bfs = (start) => {
+//   let visited = Array(n + 1).fill(false);
+//   let order = Array(n + 1).fill(0);
+//   let count = 1;
+
+//   visited[start] = true;
+//   order[start] = count++;
+//   let q = [start];
+
+//   while (q.length) {
+//     let node = q.shift();
+
+//     for (let next of graph[node]) {
+//       if (!visited[next]) {
+//         visited[next] = true;
+//         order[next] = count++;
+//         q.push(next);
+//       }
+//     }
+//   }
+
+//   return order.slice(1);
+// };
+
+// console.log(bfs(r).join('\n'));
+
+//2170-선긋기
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -932,39 +977,26 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, m, r] = input[0].split(' ').map(Number);
+let n = +input[0];
 let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
 
-for (let [u, v] of arr) {
-  graph[u].push(v);
-  graph[v].push(u);
+arr.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+
+let totalLength = 0;
+let [start, end] = arr[0];
+
+for (let i = 1; i < n; i++) {
+  let [nStart, nEnd] = arr[i];
+
+  if (nStart <= end) {
+    end = Math.max(end, nEnd);
+  } else {
+    totalLength += end - start;
+    start = nStart;
+    end = nEnd;
+  }
 }
 
-graph.forEach((adj) => adj.sort((a, b) => a - b));
+totalLength += end - start;
 
-const bfs = (start) => {
-  let visited = Array(n + 1).fill(false);
-  let order = Array(n + 1).fill(0);
-  let count = 1;
-
-  visited[start] = true;
-  order[start] = count++;
-  let q = [start];
-
-  while (q.length) {
-    let node = q.shift();
-
-    for (let next of graph[node]) {
-      if (!visited[next]) {
-        visited[next] = true;
-        order[next] = count++;
-        q.push(next);
-      }
-    }
-  }
-
-  return order.slice(1);
-};
-
-console.log(bfs(r).join('\n'));
+console.log(totalLength);
