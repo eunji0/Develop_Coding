@@ -970,6 +970,38 @@
 // console.log(bfs(r).join('\n'));
 
 //2170-선긋기
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+
+// arr.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+
+// let totalLength = 0;
+// let [start, end] = arr[0];
+
+// for (let i = 1; i < n; i++) {
+//   let [nStart, nEnd] = arr[i];
+
+//   if (nStart <= end) {
+//     end = Math.max(end, nEnd);
+//   } else {
+//     totalLength += end - start;
+//     start = nStart;
+//     end = nEnd;
+//   }
+// }
+
+// totalLength += end - start;
+
+// console.log(totalLength);
+
+//2776-암기왕
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -977,26 +1009,25 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let t = +input[0];
+let index = 1;
+let result = [];
 
-arr.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+for (let i = 0; i < t; i++) {
+  let n = +input[index];
+  let no = new Set(input[index + 1].split(' ').map(Number));
+  let m = +input[index + 2];
+  let mo = input[index + 3].split(' ').map(Number);
 
-let totalLength = 0;
-let [start, end] = arr[0];
+  mo.forEach((v) => {
+    if (no.has(v)) {
+      result.push(1);
+    } else {
+      result.push(0);
+    }
+  });
 
-for (let i = 1; i < n; i++) {
-  let [nStart, nEnd] = arr[i];
-
-  if (nStart <= end) {
-    end = Math.max(end, nEnd);
-  } else {
-    totalLength += end - start;
-    start = nStart;
-    end = nEnd;
-  }
+  index += 4;
 }
 
-totalLength += end - start;
-
-console.log(totalLength);
+console.log(result.join('\n'));
