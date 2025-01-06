@@ -1002,32 +1002,150 @@
 // console.log(totalLength);
 
 //2776-암기왕
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let t = +input[0];
+// let index = 1;
+// let result = [];
+
+// for (let i = 0; i < t; i++) {
+//   let n = +input[index];
+//   let no = new Set(input[index + 1].split(' ').map(Number));
+//   let m = +input[index + 2];
+//   let mo = input[index + 3].split(' ').map(Number);
+
+//   mo.forEach((v) => {
+//     if (no.has(v)) {
+//       result.push(1);
+//     } else {
+//       result.push(0);
+//     }
+//   });
+
+//   index += 4;
+// }
+
+// console.log(result.join('\n'));
+
+//17140-이차원 배열과 연산
 const fs = require('fs');
-const input = fs
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
-  .toString()
-  .trim()
-  .split('\n');
+const input = fs.readFileSync('./dev/stdin').toString().trim().split('\n');
+const [r, c, k] = input.shift().split(' ').map(Number);
+let Arr = input.map((v) => v.split(' ').map(Number));
+let time = 0;
 
-let t = +input[0];
-let index = 1;
-let result = [];
+function funnySort(a, b) {
+  if (a[1] > b[1]) {
+    return 1;
+  } else if (a[1] < b[1]) {
+    return -1;
+  } else {
+    return a[0] - b[0];
+  }
+}
+while (time <= 100) {
+  if (r - 1 < Arr.length && c - 1 < Arr[0].length && Arr[r - 1][c - 1] == k) {
+    console.log(time);
+    return;
+  }
+  time += 1;
+  const R = Arr.length;
+  const C = Arr[0].length;
+  if (R >= C) {
+    let length = C;
+    Arr = Arr.map((row) => {
+      let numObj = {};
 
-for (let i = 0; i < t; i++) {
-  let n = +input[index];
-  let no = new Set(input[index + 1].split(' ').map(Number));
-  let m = +input[index + 2];
-  let mo = input[index + 3].split(' ').map(Number);
+      for (let i = 0; i < row.length; i++) {
+        const num = row[i];
+        if (num == 0) continue;
+        if (numObj[num]) {
+          numObj[num] += 1;
+        } else {
+          numObj[num] = 1;
+        }
+      }
 
-  mo.forEach((v) => {
-    if (no.has(v)) {
-      result.push(1);
-    } else {
-      result.push(0);
+      const result = Object.entries(numObj)
+        .map((v) => [+v[0], v[1]])
+        .sort(funnySort)
+        .flat(1);
+      length = result.length > length ? result.length : length;
+      if (length > 100) {
+        length = 100;
+      }
+      return result;
+    });
+
+    Arr = Arr.map((row) => {
+      if (row.length < length) {
+        while (row.length < length) {
+          row.push(0);
+        }
+      } else if (row.length > length) {
+        row = row.slice(0, length);
+      }
+      return row;
+    });
+  } else {
+    let tempArr = Array.from(Array(C), () => Array(R).fill(null));
+    for (let i = 0; i < R; i++) {
+      for (let j = 0; j < C; j++) {
+        tempArr[j][i] = Arr[i][j];
+      }
     }
-  });
 
-  index += 4;
+    let length = R;
+    tempArr = tempArr.map((row) => {
+      let numObj = {};
+
+      for (let i = 0; i < row.length; i++) {
+        const num = row[i];
+        if (num == 0) continue;
+        if (numObj[num]) {
+          numObj[num] += 1;
+        } else {
+          numObj[num] = 1;
+        }
+      }
+
+      const result = Object.entries(numObj)
+        .map((v) => [+v[0], v[1]])
+        .sort(funnySort)
+        .flat(1);
+      length = result.length > length ? result.length : length;
+      if (length > 100) {
+        length = 100;
+      }
+      return result;
+    });
+
+    tempArr = tempArr.map((row) => {
+      if (row.length < length) {
+        while (row.length < length) {
+          row.push(0);
+        }
+      } else if (row.length > length) {
+        row = row.slice(0, length);
+      }
+      return row;
+    });
+
+    const newR = tempArr[0].length;
+    const newC = tempArr.length;
+    Arr = Array.from(Array(newR), () => Array(newC));
+
+    for (let i = 0; i < newR; i++) {
+      for (let j = 0; j < newC; j++) {
+        Arr[i][j] = tempArr[j][i];
+      }
+    }
+  }
 }
 
-console.log(result.join('\n'));
+console.log(-1);
