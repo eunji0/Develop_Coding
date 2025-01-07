@@ -1034,118 +1034,93 @@
 
 //17140-이차원 배열과 연산
 const fs = require('fs');
-const input = fs.readFileSync('./dev/stdin').toString().trim().split('\n');
-const [r, c, k] = input.shift().split(' ').map(Number);
-let Arr = input.map((v) => v.split(' ').map(Number));
-let time = 0;
+const input = fs
+  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+  .toString()
+  .trim()
+  .split('\n');
 
-function funnySort(a, b) {
-  if (a[1] > b[1]) {
-    return 1;
-  } else if (a[1] < b[1]) {
-    return -1;
-  } else {
-    return a[0] - b[0];
+let [r, c, k] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+
+const calculateR = (arr, rLength, cLength) => {
+  let newArr = [];
+  let maxL = 0;
+
+  for (let i = 0; i < rLength; i++) {
+    let countMap = new Map();
+
+    arr[i].forEach((v) => {
+      if (v !== 0) countMap.set(v, (countMap.get(v) || 0) + 1);
+    });
+
+    let sorted = [...countMap].sort((a, b) => {
+      if (a[1] === b[1]) return a[0] - b[0];
+      return a[1] - b[1];
+    });
+
+    let flattened = sorted.flat();
+    newArr.push(flattened);
+    maxL = Math.max(maxL, flattened.length);
   }
-}
-while (time <= 100) {
-  if (r - 1 < Arr.length && c - 1 < Arr[0].length && Arr[r - 1][c - 1] == k) {
-    console.log(time);
+
+  return newArr.map((row) => {
+    while (row.length < maxL) row.push(0);
+    return row.slice(0, 100);
+  });
+};
+
+const calculateC = (arr, rLength, cLength) => {
+  let newArr = [];
+  let maxL = 0;
+
+  for (let col = 0; col < cLength; col++) {
+    let countMap = new Map();
+
+    for (let row = 0; row < rLength; row++) {
+      if (arr[row][col] !== 0) countMap.set(arr[row][col], (countMap.get(arr[row][col]) || 0) + 1);
+    }
+
+    let sorted = [...countMap].sort((a, b) => {
+      if (a[1] === b[1]) return a[0] - b[0];
+      return a[1] - b[1];
+    });
+
+    let flattened = sorted.flat();
+    newArr.push(flattened);
+    maxL = Math.max(maxL, flattened.length);
+  }
+
+  let paddedArr = Array.from({ length: maxL }, () => Array(cLength).fill(0));
+  newArr.forEach((col, colIndex) => {
+    for (let rowIndex = 0; rowIndex < col.length; rowIndex++) {
+      paddedArr[rowIndex][colIndex] = col[rowIndex];
+    }
+  });
+
+  return paddedArr.slice(0, 100);
+};
+
+let count = 0;
+
+while (true) {
+  if (arr[r - 1]?.[c - 1] === k) {
+    console.log(count);
     return;
   }
-  time += 1;
-  const R = Arr.length;
-  const C = Arr[0].length;
-  if (R >= C) {
-    let length = C;
-    Arr = Arr.map((row) => {
-      let numObj = {};
-
-      for (let i = 0; i < row.length; i++) {
-        const num = row[i];
-        if (num == 0) continue;
-        if (numObj[num]) {
-          numObj[num] += 1;
-        } else {
-          numObj[num] = 1;
-        }
-      }
-
-      const result = Object.entries(numObj)
-        .map((v) => [+v[0], v[1]])
-        .sort(funnySort)
-        .flat(1);
-      length = result.length > length ? result.length : length;
-      if (length > 100) {
-        length = 100;
-      }
-      return result;
-    });
-
-    Arr = Arr.map((row) => {
-      if (row.length < length) {
-        while (row.length < length) {
-          row.push(0);
-        }
-      } else if (row.length > length) {
-        row = row.slice(0, length);
-      }
-      return row;
-    });
-  } else {
-    let tempArr = Array.from(Array(C), () => Array(R).fill(null));
-    for (let i = 0; i < R; i++) {
-      for (let j = 0; j < C; j++) {
-        tempArr[j][i] = Arr[i][j];
-      }
-    }
-
-    let length = R;
-    tempArr = tempArr.map((row) => {
-      let numObj = {};
-
-      for (let i = 0; i < row.length; i++) {
-        const num = row[i];
-        if (num == 0) continue;
-        if (numObj[num]) {
-          numObj[num] += 1;
-        } else {
-          numObj[num] = 1;
-        }
-      }
-
-      const result = Object.entries(numObj)
-        .map((v) => [+v[0], v[1]])
-        .sort(funnySort)
-        .flat(1);
-      length = result.length > length ? result.length : length;
-      if (length > 100) {
-        length = 100;
-      }
-      return result;
-    });
-
-    tempArr = tempArr.map((row) => {
-      if (row.length < length) {
-        while (row.length < length) {
-          row.push(0);
-        }
-      } else if (row.length > length) {
-        row = row.slice(0, length);
-      }
-      return row;
-    });
-
-    const newR = tempArr[0].length;
-    const newC = tempArr.length;
-    Arr = Array.from(Array(newR), () => Array(newC));
-
-    for (let i = 0; i < newR; i++) {
-      for (let j = 0; j < newC; j++) {
-        Arr[i][j] = tempArr[j][i];
-      }
-    }
+  if (count > 100) {
+    console.log(-1);
+    return;
   }
-}
 
-console.log(-1);
+  let rLength = arr.length;
+  let cLength = arr[0].length;
+
+  if (rLength >= cLength) {
+    arr = calculateR(arr, rLength, cLength);
+  } else {
+    arr = calculateC(arr, rLength, cLength);
+  }
+
+  count++;
+}
