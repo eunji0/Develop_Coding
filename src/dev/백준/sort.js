@@ -1033,6 +1033,99 @@
 // console.log(result.join('\n'));
 
 //17140-이차원 배열과 연산
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [r, c, k] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+
+// const calculateR = (arr, rLength, cLength) => {
+//   let newArr = [];
+//   let maxL = 0;
+
+//   for (let i = 0; i < rLength; i++) {
+//     let countMap = new Map();
+
+//     arr[i].forEach((v) => {
+//       if (v !== 0) countMap.set(v, (countMap.get(v) || 0) + 1);
+//     });
+
+//     let sorted = [...countMap].sort((a, b) => {
+//       if (a[1] === b[1]) return a[0] - b[0];
+//       return a[1] - b[1];
+//     });
+
+//     let flattened = sorted.flat();
+//     newArr.push(flattened);
+//     maxL = Math.max(maxL, flattened.length);
+//   }
+
+//   return newArr.map((row) => {
+//     while (row.length < maxL) row.push(0);
+//     return row.slice(0, 100);
+//   });
+// };
+
+// const calculateC = (arr, rLength, cLength) => {
+//   let newArr = [];
+//   let maxL = 0;
+
+//   for (let col = 0; col < cLength; col++) {
+//     let countMap = new Map();
+
+//     for (let row = 0; row < rLength; row++) {
+//       if (arr[row][col] !== 0) countMap.set(arr[row][col], (countMap.get(arr[row][col]) || 0) + 1);
+//     }
+
+//     let sorted = [...countMap].sort((a, b) => {
+//       if (a[1] === b[1]) return a[0] - b[0];
+//       return a[1] - b[1];
+//     });
+
+//     let flattened = sorted.flat();
+//     newArr.push(flattened);
+//     maxL = Math.max(maxL, flattened.length);
+//   }
+
+//   let paddedArr = Array.from({ length: maxL }, () => Array(cLength).fill(0));
+//   newArr.forEach((col, colIndex) => {
+//     for (let rowIndex = 0; rowIndex < col.length; rowIndex++) {
+//       paddedArr[rowIndex][colIndex] = col[rowIndex];
+//     }
+//   });
+
+//   return paddedArr.slice(0, 100);
+// };
+
+// let count = 0;
+
+// while (true) {
+//   if (arr[r - 1]?.[c - 1] === k) {
+//     console.log(count);
+//     return;
+//   }
+//   if (count > 100) {
+//     console.log(-1);
+//     return;
+//   }
+
+//   let rLength = arr.length;
+//   let cLength = arr[0].length;
+
+//   if (rLength >= cLength) {
+//     arr = calculateR(arr, rLength, cLength);
+//   } else {
+//     arr = calculateC(arr, rLength, cLength);
+//   }
+
+//   count++;
+// }
+
+//24060-알고리즘 수업 - 병합 정렬 1
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1040,87 +1133,51 @@ const input = fs
   .trim()
   .split('\n');
 
-let [r, c, k] = input[0].split(' ').map(Number);
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-
-const calculateR = (arr, rLength, cLength) => {
-  let newArr = [];
-  let maxL = 0;
-
-  for (let i = 0; i < rLength; i++) {
-    let countMap = new Map();
-
-    arr[i].forEach((v) => {
-      if (v !== 0) countMap.set(v, (countMap.get(v) || 0) + 1);
-    });
-
-    let sorted = [...countMap].sort((a, b) => {
-      if (a[1] === b[1]) return a[0] - b[0];
-      return a[1] - b[1];
-    });
-
-    let flattened = sorted.flat();
-    newArr.push(flattened);
-    maxL = Math.max(maxL, flattened.length);
-  }
-
-  return newArr.map((row) => {
-    while (row.length < maxL) row.push(0);
-    return row.slice(0, 100);
-  });
-};
-
-const calculateC = (arr, rLength, cLength) => {
-  let newArr = [];
-  let maxL = 0;
-
-  for (let col = 0; col < cLength; col++) {
-    let countMap = new Map();
-
-    for (let row = 0; row < rLength; row++) {
-      if (arr[row][col] !== 0) countMap.set(arr[row][col], (countMap.get(arr[row][col]) || 0) + 1);
-    }
-
-    let sorted = [...countMap].sort((a, b) => {
-      if (a[1] === b[1]) return a[0] - b[0];
-      return a[1] - b[1];
-    });
-
-    let flattened = sorted.flat();
-    newArr.push(flattened);
-    maxL = Math.max(maxL, flattened.length);
-  }
-
-  let paddedArr = Array.from({ length: maxL }, () => Array(cLength).fill(0));
-  newArr.forEach((col, colIndex) => {
-    for (let rowIndex = 0; rowIndex < col.length; rowIndex++) {
-      paddedArr[rowIndex][colIndex] = col[rowIndex];
-    }
-  });
-
-  return paddedArr.slice(0, 100);
-};
+let [n, k] = input[0].split(' ').map(Number);
+let arr = input[1].split(' ').map(Number);
 
 let count = 0;
+let result = -1;
 
-while (true) {
-  if (arr[r - 1]?.[c - 1] === k) {
-    console.log(count);
-    return;
+function mergeSort(array, left, right) {
+  if (left < right) {
+    const mid = Math.floor((left + right) / 2);
+    mergeSort(array, left, mid);
+    mergeSort(array, mid + 1, right);
+    merge(array, left, mid, right);
   }
-  if (count > 100) {
-    console.log(-1);
-    return;
-  }
-
-  let rLength = arr.length;
-  let cLength = arr[0].length;
-
-  if (rLength >= cLength) {
-    arr = calculateR(arr, rLength, cLength);
-  } else {
-    arr = calculateC(arr, rLength, cLength);
-  }
-
-  count++;
 }
+
+function merge(array, left, mid, right) {
+  let i = left;
+  let j = mid + 1;
+  let temp = [];
+
+  while (i <= mid && j <= right) {
+    if (array[i] <= array[j]) {
+      temp.push(array[i++]);
+    } else {
+      temp.push(array[j++]);
+    }
+  }
+
+  while (i <= mid) {
+    temp.push(array[i++]);
+  }
+
+  while (j <= right) {
+    temp.push(array[j++]);
+  }
+
+  for (let t = 0; t < temp.length; t++) {
+    array[left + t] = temp[t];
+    count++;
+    if (count === k) {
+      result = temp[t];
+    }
+  }
+}
+
+mergeSort(arr, 0, n - 1);
+
+console.log(result);
