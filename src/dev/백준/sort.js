@@ -1126,6 +1126,63 @@
 // }
 
 //24060-알고리즘 수업 - 병합 정렬 1
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, k] = input[0].split(' ').map(Number);
+// let arr = input[1].split(' ').map(Number);
+
+// let count = 0;
+// let result = -1;
+
+// function mergeSort(array, left, right) {
+//   if (left < right) {
+//     const mid = Math.floor((left + right) / 2);
+//     mergeSort(array, left, mid);
+//     mergeSort(array, mid + 1, right);
+//     merge(array, left, mid, right);
+//   }
+// }
+
+// function merge(array, left, mid, right) {
+//   let i = left;
+//   let j = mid + 1;
+//   let temp = [];
+
+//   while (i <= mid && j <= right) {
+//     if (array[i] <= array[j]) {
+//       temp.push(array[i++]);
+//     } else {
+//       temp.push(array[j++]);
+//     }
+//   }
+
+//   while (i <= mid) {
+//     temp.push(array[i++]);
+//   }
+
+//   while (j <= right) {
+//     temp.push(array[j++]);
+//   }
+
+//   for (let t = 0; t < temp.length; t++) {
+//     array[left + t] = temp[t];
+//     count++;
+//     if (count === k) {
+//       result = temp[t];
+//     }
+//   }
+// }
+
+// mergeSort(arr, 0, n - 1);
+
+// console.log(result);
+
+//24480-알고리즘 수업 - 깊이 우선 탐색 2
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1133,51 +1190,31 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, k] = input[0].split(' ').map(Number);
-let arr = input[1].split(' ').map(Number);
+const [n, m, r] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let graph = Array.from({ length: n + 1 }, () => []);
+
+for (const [u, v] of arr) {
+  graph[u].push(v);
+  graph[v].push(u);
+}
+
+for (let i = 1; i <= n; i++) {
+  graph[i].sort((a, b) => b - a);
+}
 
 let count = 0;
-let result = -1;
+let order = Array(n + 1).fill(0);
 
-function mergeSort(array, left, right) {
-  if (left < right) {
-    const mid = Math.floor((left + right) / 2);
-    mergeSort(array, left, mid);
-    mergeSort(array, mid + 1, right);
-    merge(array, left, mid, right);
-  }
-}
-
-function merge(array, left, mid, right) {
-  let i = left;
-  let j = mid + 1;
-  let temp = [];
-
-  while (i <= mid && j <= right) {
-    if (array[i] <= array[j]) {
-      temp.push(array[i++]);
-    } else {
-      temp.push(array[j++]);
+const dfs = (node) => {
+  order[node] = ++count;
+  for (const next of graph[node]) {
+    if (!order[next]) {
+      dfs(next);
     }
   }
+};
 
-  while (i <= mid) {
-    temp.push(array[i++]);
-  }
+dfs(r);
 
-  while (j <= right) {
-    temp.push(array[j++]);
-  }
-
-  for (let t = 0; t < temp.length; t++) {
-    array[left + t] = temp[t];
-    count++;
-    if (count === k) {
-      result = temp[t];
-    }
-  }
-}
-
-mergeSort(arr, 0, n - 1);
-
-console.log(result);
+console.log(order.slice(1).join('\n'));
