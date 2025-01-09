@@ -1220,6 +1220,48 @@
 // console.log(order.slice(1).join('\n'));
 
 //7795-먹을 것인가 먹힐 것인가
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let t = +input[0];
+// let index = 1;
+
+// const cal = (arr, target) => {
+//   let left = 0;
+//   let right = arr.length;
+
+//   while (left < right) {
+//     let mid = Math.floor((left + right) / 2);
+//     if (arr[mid] < target) left = mid + 1;
+//     else right = mid;
+//   }
+
+//   return left;
+// };
+// for (let i = 0; i < t; i++) {
+//   let [n, m] = input[index++].split(' ').map(Number);
+//   let Aarr = input[index++]
+//     .split(' ')
+//     .map(Number)
+//     .sort((a, b) => a - b);
+//   let Barr = input[index++]
+//     .split(' ')
+//     .map(Number)
+//     .sort((a, b) => a - b);
+
+//   let count = 0;
+//   Aarr.forEach((v) => {
+//     count += cal(Barr, v);
+//   });
+
+//   console.log(count);
+// }
+
+//1517-버블 소트
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1227,36 +1269,43 @@ const input = fs
   .trim()
   .split('\n');
 
-let t = +input[0];
-let index = 1;
+const N = +input[0];
+const arr = input[1].split(' ').map(Number);
 
-const cal = (arr, target) => {
-  let left = 0;
-  let right = arr.length;
+let swapCount = 0;
 
-  while (left < right) {
-    let mid = Math.floor((left + right) / 2);
-    if (arr[mid] < target) left = mid + 1;
-    else right = mid;
+const mergeSort = (array, start, end) => {
+  if (start >= end) return;
+
+  let mid = Math.floor((start + end) / 2);
+  mergeSort(array, start, mid);
+  mergeSort(array, mid + 1, end);
+
+  merge(array, start, mid, end);
+};
+
+const merge = (array, start, mid, end) => {
+  let temp = [];
+  let i = start;
+  let j = mid + 1;
+
+  while (i <= mid && j <= end) {
+    if (array[i] <= array[j]) {
+      temp.push(array[i++]);
+    } else {
+      temp.push(array[j++]);
+
+      swapCount += mid - i + 1;
+    }
   }
 
-  return left;
+  while (i <= mid) temp.push(array[i++]);
+  while (j <= end) temp.push(array[j++]);
+
+  for (let k = start; k <= end; k++) {
+    array[k] = temp[k - start];
+  }
 };
-for (let i = 0; i < t; i++) {
-  let [n, m] = input[index++].split(' ').map(Number);
-  let Aarr = input[index++]
-    .split(' ')
-    .map(Number)
-    .sort((a, b) => a - b);
-  let Barr = input[index++]
-    .split(' ')
-    .map(Number)
-    .sort((a, b) => a - b);
 
-  let count = 0;
-  Aarr.forEach((v) => {
-    count += cal(Barr, v);
-  });
-
-  console.log(count);
-}
+mergeSort(arr, 0, N - 1);
+console.log(swapCount);
