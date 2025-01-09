@@ -1183,6 +1183,43 @@
 // console.log(result);
 
 //24480-알고리즘 수업 - 깊이 우선 탐색 2
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// const [n, m, r] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// for (const [u, v] of arr) {
+//   graph[u].push(v);
+//   graph[v].push(u);
+// }
+
+// for (let i = 1; i <= n; i++) {
+//   graph[i].sort((a, b) => b - a);
+// }
+
+// let count = 0;
+// let order = Array(n + 1).fill(0);
+
+// const dfs = (node) => {
+//   order[node] = ++count;
+//   for (const next of graph[node]) {
+//     if (!order[next]) {
+//       dfs(next);
+//     }
+//   }
+// };
+
+// dfs(r);
+
+// console.log(order.slice(1).join('\n'));
+
+//7795-먹을 것인가 먹힐 것인가
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1190,31 +1227,36 @@ const input = fs
   .trim()
   .split('\n');
 
-const [n, m, r] = input[0].split(' ').map(Number);
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
+let t = +input[0];
+let index = 1;
 
-for (const [u, v] of arr) {
-  graph[u].push(v);
-  graph[v].push(u);
-}
+const cal = (arr, target) => {
+  let left = 0;
+  let right = arr.length;
 
-for (let i = 1; i <= n; i++) {
-  graph[i].sort((a, b) => b - a);
-}
-
-let count = 0;
-let order = Array(n + 1).fill(0);
-
-const dfs = (node) => {
-  order[node] = ++count;
-  for (const next of graph[node]) {
-    if (!order[next]) {
-      dfs(next);
-    }
+  while (left < right) {
+    let mid = Math.floor((left + right) / 2);
+    if (arr[mid] < target) left = mid + 1;
+    else right = mid;
   }
+
+  return left;
 };
+for (let i = 0; i < t; i++) {
+  let [n, m] = input[index++].split(' ').map(Number);
+  let Aarr = input[index++]
+    .split(' ')
+    .map(Number)
+    .sort((a, b) => a - b);
+  let Barr = input[index++]
+    .split(' ')
+    .map(Number)
+    .sort((a, b) => a - b);
 
-dfs(r);
+  let count = 0;
+  Aarr.forEach((v) => {
+    count += cal(Barr, v);
+  });
 
-console.log(order.slice(1).join('\n'));
+  console.log(count);
+}
