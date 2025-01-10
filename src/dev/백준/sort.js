@@ -1332,6 +1332,50 @@
 // console.log(l);
 
 //7453-합이 0인 네 정수
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// const n = +input[0];
+// const A = [],
+//   B = [],
+//   C = [],
+//   D = [];
+
+// for (let i = 1; i <= n; i++) {
+//   const [a, b, c, d] = input[i].split(' ').map(Number);
+//   A.push(a);
+//   B.push(b);
+//   C.push(c);
+//   D.push(d);
+// }
+
+// const mapAB = new Map();
+
+// for (let a of A) {
+//   for (let b of B) {
+//     let sum = a + b;
+//     mapAB.set(sum, (mapAB.get(sum) || 0) + 1);
+//   }
+// }
+
+// let count = 0;
+
+// for (let c of C) {
+//   for (let d of D) {
+//     let sum = c + d;
+//     if (mapAB.has(-sum)) {
+//       count += mapAB.get(-sum);
+//     }
+//   }
+// }
+
+// console.log(count);
+
+//2230-수 고르기
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1339,38 +1383,24 @@ const input = fs
   .trim()
   .split('\n');
 
-const n = +input[0];
-const A = [],
-  B = [],
-  C = [],
-  D = [];
+const [N, M] = input[0].split(' ').map(Number);
+const arr = input.slice(1).map(Number);
 
-for (let i = 1; i <= n; i++) {
-  const [a, b, c, d] = input[i].split(' ').map(Number);
-  A.push(a);
-  B.push(b);
-  C.push(c);
-  D.push(d);
-}
+arr.sort((a, b) => a - b);
 
-const mapAB = new Map();
+let i = 0,
+  j = 0;
+let min = Infinity;
 
-for (let a of A) {
-  for (let b of B) {
-    let sum = a + b;
-    mapAB.set(sum, (mapAB.get(sum) || 0) + 1);
+while (j < N) {
+  let dif = arr[j] - arr[i];
+
+  if (dif >= M) {
+    min = Math.min(min, dif);
+    i++;
+  } else {
+    j++;
   }
 }
 
-let count = 0;
-
-for (let c of C) {
-  for (let d of D) {
-    let sum = c + d;
-    if (mapAB.has(-sum)) {
-      count += mapAB.get(-sum);
-    }
-  }
-}
-
-console.log(count);
+console.log(min);
