@@ -1311,6 +1311,27 @@
 // console.log(swapCount);
 
 //16435-스네이크버드
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, l] = input[0].split(' ').map(Number);
+// let arr = input[1].split(' ').map(Number);
+
+// arr.sort((a, b) => a - b);
+
+// arr.forEach((v) => {
+//   if (v <= l) {
+//     l += 1;
+//   }
+// });
+
+// console.log(l);
+
+//7453-합이 0인 네 정수
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1318,15 +1339,38 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, l] = input[0].split(' ').map(Number);
-let arr = input[1].split(' ').map(Number);
+const n = +input[0];
+const A = [],
+  B = [],
+  C = [],
+  D = [];
 
-arr.sort((a, b) => a - b);
+for (let i = 1; i <= n; i++) {
+  const [a, b, c, d] = input[i].split(' ').map(Number);
+  A.push(a);
+  B.push(b);
+  C.push(c);
+  D.push(d);
+}
 
-arr.forEach((v) => {
-  if (v <= l) {
-    l += 1;
+const mapAB = new Map();
+
+for (let a of A) {
+  for (let b of B) {
+    let sum = a + b;
+    mapAB.set(sum, (mapAB.get(sum) || 0) + 1);
   }
-});
+}
 
-console.log(l);
+let count = 0;
+
+for (let c of C) {
+  for (let d of D) {
+    let sum = c + d;
+    if (mapAB.has(-sum)) {
+      count += mapAB.get(-sum);
+    }
+  }
+}
+
+console.log(count);
