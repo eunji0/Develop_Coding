@@ -1262,6 +1262,55 @@
 // }
 
 //1517-버블 소트
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// const N = +input[0];
+// const arr = input[1].split(' ').map(Number);
+
+// let swapCount = 0;
+
+// const mergeSort = (array, start, end) => {
+//   if (start >= end) return;
+
+//   let mid = Math.floor((start + end) / 2);
+//   mergeSort(array, start, mid);
+//   mergeSort(array, mid + 1, end);
+
+//   merge(array, start, mid, end);
+// };
+
+// const merge = (array, start, mid, end) => {
+//   let temp = [];
+//   let i = start;
+//   let j = mid + 1;
+
+//   while (i <= mid && j <= end) {
+//     if (array[i] <= array[j]) {
+//       temp.push(array[i++]);
+//     } else {
+//       temp.push(array[j++]);
+
+//       swapCount += mid - i + 1;
+//     }
+//   }
+
+//   while (i <= mid) temp.push(array[i++]);
+//   while (j <= end) temp.push(array[j++]);
+
+//   for (let k = start; k <= end; k++) {
+//     array[k] = temp[k - start];
+//   }
+// };
+
+// mergeSort(arr, 0, N - 1);
+// console.log(swapCount);
+
+//16435-스네이크버드
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1269,43 +1318,15 @@ const input = fs
   .trim()
   .split('\n');
 
-const N = +input[0];
-const arr = input[1].split(' ').map(Number);
+let [n, l] = input[0].split(' ').map(Number);
+let arr = input[1].split(' ').map(Number);
 
-let swapCount = 0;
+arr.sort((a, b) => a - b);
 
-const mergeSort = (array, start, end) => {
-  if (start >= end) return;
-
-  let mid = Math.floor((start + end) / 2);
-  mergeSort(array, start, mid);
-  mergeSort(array, mid + 1, end);
-
-  merge(array, start, mid, end);
-};
-
-const merge = (array, start, mid, end) => {
-  let temp = [];
-  let i = start;
-  let j = mid + 1;
-
-  while (i <= mid && j <= end) {
-    if (array[i] <= array[j]) {
-      temp.push(array[i++]);
-    } else {
-      temp.push(array[j++]);
-
-      swapCount += mid - i + 1;
-    }
+arr.forEach((v) => {
+  if (v <= l) {
+    l += 1;
   }
+});
 
-  while (i <= mid) temp.push(array[i++]);
-  while (j <= end) temp.push(array[j++]);
-
-  for (let k = start; k <= end; k++) {
-    array[k] = temp[k - start];
-  }
-};
-
-mergeSort(arr, 0, N - 1);
-console.log(swapCount);
+console.log(l);
