@@ -1406,6 +1406,46 @@
 // console.log(min);
 
 //1092-배
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let crain = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => b - a);
+// let m = +input[2];
+// let box = input[3]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => b - a);
+
+// if (box[0] > crain[0]) {
+//   console.log(-1);
+//   return;
+// }
+
+// let time = 0;
+
+// while (box.length > 0) {
+//   time += 1;
+//   for (let i = 0; i < crain.length; i++) {
+//     for (let j = 0; j < box.length; j++) {
+//       if (crain[i] >= box[j]) {
+//         box.splice(j, 1);
+//         break;
+//       }
+//     }
+//   }
+// }
+
+// console.log(time);
+
+//24445-알고리즘 수업 - 너비 우선 탐색 2
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1413,34 +1453,31 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let crain = input[1]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => b - a);
-let m = +input[2];
-let box = input[3]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => b - a);
+let [n, m, r] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let graph = Array.from({ length: n + 1 }, () => []);
 
-if (box[0] > crain[0]) {
-  console.log(-1);
-  return;
+for (let [a, b] of arr) {
+  graph[a].push(b);
+  graph[b].push(a);
 }
 
-let time = 0;
+graph.sort((v) => v.sort((a, b) => b - a));
 
-while (box.length > 0) {
-  time += 1;
-  for (let i = 0; i < crain.length; i++) {
-    for (let j = 0; j < box.length; j++) {
-      if (crain[i] >= box[j]) {
-        box.splice(j, 1);
-        break;
-      }
+let visited = Array(n + 1).fill(0);
+let order = 1;
+let q = [r];
+visited[r] = order++;
+
+while (q.length) {
+  let node = q.shift();
+
+  for (const next of graph[node]) {
+    if (!visited[next]) {
+      visited[next] = order++;
+      q.push(next);
     }
   }
 }
 
-console.log(time);
+console.log(visited.slice(1).join('\n'));
