@@ -1376,6 +1376,36 @@
 // console.log(count);
 
 //2230-수 고르기
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// const [N, M] = input[0].split(' ').map(Number);
+// const arr = input.slice(1).map(Number);
+
+// arr.sort((a, b) => a - b);
+
+// let i = 0,
+//   j = 0;
+// let min = Infinity;
+
+// while (j < N) {
+//   let dif = arr[j] - arr[i];
+
+//   if (dif >= M) {
+//     min = Math.min(min, dif);
+//     i++;
+//   } else {
+//     j++;
+//   }
+// }
+
+// console.log(min);
+
+//1092-배
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1383,24 +1413,34 @@ const input = fs
   .trim()
   .split('\n');
 
-const [N, M] = input[0].split(' ').map(Number);
-const arr = input.slice(1).map(Number);
+let n = +input[0];
+let crain = input[1]
+  .split(' ')
+  .map(Number)
+  .sort((a, b) => b - a);
+let m = +input[2];
+let box = input[3]
+  .split(' ')
+  .map(Number)
+  .sort((a, b) => b - a);
 
-arr.sort((a, b) => a - b);
+if (box[0] > crain[0]) {
+  console.log(-1);
+  return;
+}
 
-let i = 0,
-  j = 0;
-let min = Infinity;
+let time = 0;
 
-while (j < N) {
-  let dif = arr[j] - arr[i];
-
-  if (dif >= M) {
-    min = Math.min(min, dif);
-    i++;
-  } else {
-    j++;
+while (box.length > 0) {
+  time += 1;
+  for (let i = 0; i < crain.length; i++) {
+    for (let j = 0; j < box.length; j++) {
+      if (crain[i] >= box[j]) {
+        box.splice(j, 1);
+        break;
+      }
+    }
   }
 }
 
-console.log(min);
+console.log(time);
