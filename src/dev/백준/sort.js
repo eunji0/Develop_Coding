@@ -1483,6 +1483,23 @@
 // console.log(visited.slice(1).join('\n'));
 
 //18310-안테나
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// let c = Math.floor((n - 1) / 2);
+// console.log(arr[c]);
+
+//5800-성적 통계
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1491,10 +1508,22 @@ const input = fs
   .split('\n');
 
 let n = +input[0];
-let arr = input[1]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => a - b);
 
-let c = Math.floor((n - 1) / 2);
-console.log(arr[c]);
+for (let i = 1; i <= n; i++) {
+  let arr = input[i]
+    .split(' ')
+    .map(Number)
+    .slice(1)
+    .sort((a, b) => b - a);
+
+  let max = arr[0];
+  let min = arr[arr.length - 1];
+
+  let m = 0;
+  for (let j = 0; j < arr.length - 1; j++) {
+    m = Math.max(m, arr[j] - arr[j + 1]);
+  }
+
+  console.log(`Class ${i}`);
+  console.log(`Max ${max}, Min ${min}, Largest gap ${m}`);
+}
