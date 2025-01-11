@@ -1446,6 +1446,43 @@
 // console.log(time);
 
 //24445-알고리즘 수업 - 너비 우선 탐색 2
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, m, r] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// for (let [a, b] of arr) {
+//   graph[a].push(b);
+//   graph[b].push(a);
+// }
+
+// graph.sort((v) => v.sort((a, b) => b - a));
+
+// let visited = Array(n + 1).fill(0);
+// let order = 1;
+// let q = [r];
+// visited[r] = order++;
+
+// while (q.length) {
+//   let node = q.shift();
+
+//   for (const next of graph[node]) {
+//     if (!visited[next]) {
+//       visited[next] = order++;
+//       q.push(next);
+//     }
+//   }
+// }
+
+// console.log(visited.slice(1).join('\n'));
+
+//18310-안테나
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1453,31 +1490,11 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, m, r] = input[0].split(' ').map(Number);
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
+let n = +input[0];
+let arr = input[1]
+  .split(' ')
+  .map(Number)
+  .sort((a, b) => a - b);
 
-for (let [a, b] of arr) {
-  graph[a].push(b);
-  graph[b].push(a);
-}
-
-graph.sort((v) => v.sort((a, b) => b - a));
-
-let visited = Array(n + 1).fill(0);
-let order = 1;
-let q = [r];
-visited[r] = order++;
-
-while (q.length) {
-  let node = q.shift();
-
-  for (const next of graph[node]) {
-    if (!visited[next]) {
-      visited[next] = order++;
-      q.push(next);
-    }
-  }
-}
-
-console.log(visited.slice(1).join('\n'));
+let c = Math.floor((n - 1) / 2);
+console.log(arr[c]);
