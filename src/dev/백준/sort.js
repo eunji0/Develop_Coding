@@ -1500,6 +1500,35 @@
 // console.log(arr[c]);
 
 //5800-성적 통계
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+
+// for (let i = 1; i <= n; i++) {
+//   let arr = input[i]
+//     .split(' ')
+//     .map(Number)
+//     .slice(1)
+//     .sort((a, b) => b - a);
+
+//   let max = arr[0];
+//   let min = arr[arr.length - 1];
+
+//   let m = 0;
+//   for (let j = 0; j < arr.length - 1; j++) {
+//     m = Math.max(m, arr[j] - arr[j + 1]);
+//   }
+
+//   console.log(`Class ${i}`);
+//   console.log(`Max ${max}, Min ${min}, Largest gap ${m}`);
+// }
+
+//5576-콘테스트
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1507,23 +1536,17 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-
-for (let i = 1; i <= n; i++) {
-  let arr = input[i]
-    .split(' ')
-    .map(Number)
-    .slice(1)
-    .sort((a, b) => b - a);
-
-  let max = arr[0];
-  let min = arr[arr.length - 1];
-
-  let m = 0;
-  for (let j = 0; j < arr.length - 1; j++) {
-    m = Math.max(m, arr[j] - arr[j + 1]);
-  }
-
-  console.log(`Class ${i}`);
-  console.log(`Max ${max}, Min ${min}, Largest gap ${m}`);
-}
+const a = input
+  .slice(0, 10)
+  .map(Number)
+  .sort((a, b) => b - a)
+  .slice(0, 3);
+const b = input
+  .slice(10)
+  .map(Number)
+  .sort((a, b) => b - a)
+  .slice(0, 3);
+console.log(
+  a.reduce((a, c) => a + c, 0),
+  b.reduce((a, c) => a + c, 0),
+);
