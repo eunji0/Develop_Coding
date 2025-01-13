@@ -1616,6 +1616,43 @@
 // console.log(maxH * maxV);
 
 //2910-빈도정렬
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, c] = input[0].split(' ').map(Number);
+// let arr = input[1].split(' ').map(Number);
+// let map = new Map();
+// let sliceArr = new Set([...arr]);
+
+// for (let i = 0; i < arr.length; i++) {
+//   map.set(arr[i], (map.get(arr[i]) || 0) + 1);
+// }
+
+// sliceArr = [...sliceArr];
+// map = [...map];
+// let result = '';
+
+// map.sort((a, b) => {
+//   if (a[1] === b[1]) {
+//     //같을 경우 먼저 나온
+//     return sliceArr[b[0]] - sliceArr[a[0]];
+//   }
+//   return b[1] - a[1];
+// });
+
+// for (let [a, b] of map) {
+//   for (let i = 0; i < b; i++) {
+//     result += a + ' ';
+//   }
+// }
+
+// console.log(result);
+
+//2012-등수 매기기
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1623,31 +1660,15 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, c] = input[0].split(' ').map(Number);
-let arr = input[1].split(' ').map(Number);
-let map = new Map();
-let sliceArr = new Set([...arr]);
+let n = +input[0];
+let arr = input
+  .slice(1)
+  .map(Number)
+  .sort((a, b) => a - b);
 
-for (let i = 0; i < arr.length; i++) {
-  map.set(arr[i], (map.get(arr[i]) || 0) + 1);
+let sum = 0;
+for (let i = 0; i < n; i++) {
+  sum += Math.abs(arr[i] - (i + 1));
 }
 
-sliceArr = [...sliceArr];
-map = [...map];
-let result = '';
-
-map.sort((a, b) => {
-  if (a[1] === b[1]) {
-    //같을 경우 먼저 나온
-    return sliceArr[b[0]] - sliceArr[a[0]];
-  }
-  return b[1] - a[1];
-});
-
-for (let [a, b] of map) {
-  for (let i = 0; i < b; i++) {
-    result += a + ' ';
-  }
-}
-
-console.log(result);
+console.log(sum);
