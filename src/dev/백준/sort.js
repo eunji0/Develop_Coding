@@ -1552,6 +1552,70 @@
 // );
 
 //1251-단어 나누기
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let word = input[0];
+// let result = '';
+
+// for (let i = 1; i < word.length - 1; i++) {
+//   for (let j = i + 1; j < word.length; j++) {
+//     let part1 = word.slice(0, i).split('').reverse().join('');
+//     let part2 = word.slice(i, j).split('').reverse().join('');
+//     let part3 = word.slice(j).split('').reverse().join('');
+//     let combined = part1 + part2 + part3;
+
+//     if (!result || combined < result) {
+//       result = combined;
+//     }
+//   }
+// }
+
+// console.log(result);
+
+//2628-종이 자르기
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let count = +input[1];
+// let arr = input.slice(2).map((v) => v.split(' ').map(Number));
+
+// let h = [0, m];
+// let v = [0, n];
+// for (let [a, b] of arr) {
+//   if (a === 0) {
+//     h.push(b);
+//   } else {
+//     v.push(b);
+//   }
+// }
+
+// h.sort((a, b) => a - b);
+// v.sort((a, b) => a - b);
+
+// let maxH = 0;
+// let maxV = 0;
+
+// for (let i = 1; i < h.length; i++) {
+//   maxH = Math.max(maxH, h[i] - h[i - 1]);
+// }
+
+// for (let i = 1; i < v.length; i++) {
+//   maxV = Math.max(maxV, v[i] - v[i - 1]);
+// }
+
+// console.log(maxH * maxV);
+
+//2910-빈도정렬
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1559,19 +1623,30 @@ const input = fs
   .trim()
   .split('\n');
 
-let word = input[0];
+let [n, c] = input[0].split(' ').map(Number);
+let arr = input[1].split(' ').map(Number);
+let map = new Map();
+let sliceArr = new Set([...arr]);
+
+for (let i = 0; i < arr.length; i++) {
+  map.set(arr[i], (map.get(arr[i]) || 0) + 1);
+}
+
+sliceArr = [...sliceArr];
+map = [...map];
 let result = '';
 
-for (let i = 1; i < word.length - 1; i++) {
-  for (let j = i + 1; j < word.length; j++) {
-    let part1 = word.slice(0, i).split('').reverse().join('');
-    let part2 = word.slice(i, j).split('').reverse().join('');
-    let part3 = word.slice(j).split('').reverse().join('');
-    let combined = part1 + part2 + part3;
+map.sort((a, b) => {
+  if (a[1] === b[1]) {
+    //같을 경우 먼저 나온
+    return sliceArr[b[0]] - sliceArr[a[0]];
+  }
+  return b[1] - a[1];
+});
 
-    if (!result || combined < result) {
-      result = combined;
-    }
+for (let [a, b] of map) {
+  for (let i = 0; i < b; i++) {
+    result += a + ' ';
   }
 }
 
