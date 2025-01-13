@@ -1653,6 +1653,27 @@
 // console.log(result);
 
 //2012-등수 매기기
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input
+//   .slice(1)
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// let sum = 0;
+// for (let i = 0; i < n; i++) {
+//   sum += Math.abs(arr[i] - (i + 1));
+// }
+
+// console.log(sum);
+
+//1377-버블소트
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1661,14 +1682,22 @@ const input = fs
   .split('\n');
 
 let n = +input[0];
-let arr = input
-  .slice(1)
-  .map(Number)
-  .sort((a, b) => a - b);
+const arr = input.slice(1).map(Number);
 
-let sum = 0;
-for (let i = 0; i < n; i++) {
-  sum += Math.abs(arr[i] - (i + 1));
+let changed = false;
+let count = 0;
+
+for (let i = 1; i <= n; i++) {
+  changed = false;
+  for (let j = 0; j < n - i; j++) {
+    if (arr[j] > arr[j + 1]) {
+      [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+      changed = true;
+    }
+  }
+  count++;
+  if (!changed) {
+    console.log(count);
+    break;
+  }
 }
-
-console.log(sum);
