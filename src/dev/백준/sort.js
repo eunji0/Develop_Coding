@@ -1552,33 +1552,23 @@
 // );
 
 //1251-단어 나누기
-// const fs = require('fs');
-// const input = fs
-//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
-//   .toString()
-//   .trim()
-//   .split('\n');
+const fs = require('fs');
+const input = fs
+  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+  .toString()
+  .trim()
+  .split('\n');
 
-// let str = input[0].split('');
-// console.log(str.sort());
-
-const input = require('fs').readFileSync('/dev/stdin').toString().trim();
-
-const word = input;
-const length = word.length;
+let word = input[0];
 let result = '';
 
-for (let i = 1; i < length - 1; i++) {
-  for (let j = i + 1; j < length; j++) {
-    // 단어를 세 부분으로 나누기
-    const part1 = word.slice(0, i).split('').reverse().join('');
-    const part2 = word.slice(i, j).split('').reverse().join('');
-    const part3 = word.slice(j).split('').reverse().join('');
+for (let i = 1; i < word.length - 1; i++) {
+  for (let j = i + 1; j < word.length; j++) {
+    let part1 = word.slice(0, i).split('').reverse().join('');
+    let part2 = word.slice(i, j).split('').reverse().join('');
+    let part3 = word.slice(j).split('').reverse().join('');
+    let combined = part1 + part2 + part3;
 
-    // 나눠진 단어를 합친 결과
-    const combined = part1 + part2 + part3;
-
-    // 결과 갱신
     if (!result || combined < result) {
       result = combined;
     }
