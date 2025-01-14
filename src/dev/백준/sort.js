@@ -1682,22 +1682,20 @@ const input = fs
   .split('\n');
 
 let n = +input[0];
-const arr = input.slice(1).map(Number);
+let arr = input
+  .slice(1)
+  .map((v, i) => {
+    return {
+      value: v,
+      index: i,
+    };
+  })
+  .sort((a, b) => a.value - b.value);
 
-let changed = false;
-let count = 0;
+let max = 0;
 
-for (let i = 1; i <= n; i++) {
-  changed = false;
-  for (let j = 0; j < n - i; j++) {
-    if (arr[j] > arr[j + 1]) {
-      [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-      changed = true;
-    }
-  }
-  count++;
-  if (!changed) {
-    console.log(count);
-    break;
-  }
+for (let i = 0; i < n; i++) {
+  max = Math.max(max, arr[i].index - i);
 }
+
+console.log(max + 1);
