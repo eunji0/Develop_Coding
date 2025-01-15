@@ -1700,7 +1700,7 @@
 
 // console.log(max + 1);
 
-//11497통나무 건너뛰기
+//20291-파일 정리
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1708,24 +1708,45 @@ const input = fs
   .trim()
   .split('\n');
 
-let t = +input[0];
-let idx = 1;
-let result = [];
+let n = +input[0];
+let arr = input.slice(1).map((v) => v.trim().split('.'));
 
-for (let i = 0; i < t; i++) {
-  let n = +input[idx++];
-  let arr = input[idx++]
-    .split(' ')
-    .map(Number)
-    .sort((a, b) => a - b);
+let newArr = new Map();
 
-  let max = 0;
+arr.forEach((v) => {
+  newArr.set(v[1], (newArr.get(v[1]) || 0) + 1);
+});
 
-  for (let j = 0; j < n - 2; j++) {
-    max = Math.max(max, Math.abs(arr[j] - arr[j + 2]));
-  }
+newArr = [...newArr].sort((a, b) => a[0].localeCompare(b[0]));
 
-  result.push(max);
-}
+console.log(newArr.map((v) => v.join(' ')).join('\n'));
 
-console.log(result.join('\n'));
+//11497통나무 건너뛰기
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let t = +input[0];
+// let idx = 1;
+// let result = [];
+
+// for (let i = 0; i < t; i++) {
+//   let n = +input[idx++];
+//   let arr = input[idx++]
+//     .split(' ')
+//     .map(Number)
+//     .sort((a, b) => a - b);
+
+//   let max = 0;
+
+//   for (let j = 0; j < n - 2; j++) {
+//     max = Math.max(max, Math.abs(arr[j] - arr[j + 2]));
+//   }
+
+//   result.push(max);
+// }
+
+// console.log(result.join('\n'));
