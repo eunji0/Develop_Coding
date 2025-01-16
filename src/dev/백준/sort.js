@@ -1674,6 +1674,33 @@
 // console.log(sum);
 
 //1377-버블소트
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input
+//   .slice(1)
+//   .map((v, i) => {
+//     return {
+//       value: v,
+//       index: i,
+//     };
+//   })
+//   .sort((a, b) => a.value - b.value);
+
+// let max = 0;
+
+// for (let i = 0; i < n; i++) {
+//   max = Math.max(max, arr[i].index - i);
+// }
+
+// console.log(max + 1);
+
+//11497통나무 건너뛰기
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1681,21 +1708,24 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let arr = input
-  .slice(1)
-  .map((v, i) => {
-    return {
-      value: v,
-      index: i,
-    };
-  })
-  .sort((a, b) => a.value - b.value);
+let t = +input[0];
+let idx = 1;
+let result = [];
 
-let max = 0;
+for (let i = 0; i < t; i++) {
+  let n = +input[idx++];
+  let arr = input[idx++]
+    .split(' ')
+    .map(Number)
+    .sort((a, b) => a - b);
 
-for (let i = 0; i < n; i++) {
-  max = Math.max(max, arr[i].index - i);
+  let max = 0;
+
+  for (let j = 0; j < n - 2; j++) {
+    max = Math.max(max, Math.abs(arr[j] - arr[j + 2]));
+  }
+
+  result.push(max);
 }
 
-console.log(max + 1);
+console.log(result.join('\n'));
