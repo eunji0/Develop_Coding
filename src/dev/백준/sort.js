@@ -1752,6 +1752,73 @@
 // // console.log(result.join('\n'));
 
 //1461-도서관
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// let aBox = [];
+// let bBox = [];
+
+// arr.forEach((v) => {
+//   if (v > 0) {
+//     aBox.push(v);
+//   } else {
+//     bBox.push(-v);
+//   }
+// });
+// aBox.sort((a, b) => b - a);
+// bBox.sort((a, b) => b - a);
+
+// let sum = 0;
+// let max = 0;
+
+// if (aBox.length > 0) max = Math.max(max, aBox[0]);
+// if (bBox.length > 0) max = Math.max(max, bBox[0]);
+
+// for (let i = 0; i < aBox.length; i += m) {
+//   sum += aBox[i] * 2;
+// }
+
+// for (let i = 0; i < bBox.length; i += m) {
+//   sum += bBox[i] * 2;
+// }
+
+// sum -= max;
+
+// console.log(sum);
+
+//1822-차집합
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let a = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
+// let b = new Set(input[2].split(' ').map(Number));
+
+// a = a.filter((v) => !b.has(v));
+
+// console.log(a.length);
+// if (a.length > 0) {
+//   console.log(a.join(' '));
+// }
+
+//15688-수 정렬하기5
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1759,39 +1826,9 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, m] = input[0].split(' ').map(Number);
-let arr = input[1]
-  .split(' ')
+let n = +input[0];
+let arr = input
+  .slice(1)
   .map(Number)
   .sort((a, b) => a - b);
-
-let aBox = [];
-let bBox = [];
-
-arr.forEach((v) => {
-  if (v > 0) {
-    aBox.push(v);
-  } else {
-    bBox.push(-v);
-  }
-});
-aBox.sort((a, b) => b - a);
-bBox.sort((a, b) => b - a);
-
-let sum = 0;
-let max = 0;
-
-if (aBox.length > 0) max = Math.max(max, aBox[0]);
-if (bBox.length > 0) max = Math.max(max, bBox[0]);
-
-for (let i = 0; i < aBox.length; i += m) {
-  sum += aBox[i] * 2;
-}
-
-for (let i = 0; i < bBox.length; i += m) {
-  sum += bBox[i] * 2;
-}
-
-sum -= max;
-
-console.log(sum);
+console.log(arr.join('\n'));
