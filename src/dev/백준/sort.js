@@ -1834,6 +1834,42 @@
 // console.log(arr.join('\n'));
 
 //13904-과제
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// arr.sort((a, b) => b[1] - a[1]);
+
+// let max = 0;
+
+// arr.forEach((v) => {
+//   max = Math.max(v[0], max);
+// });
+
+// let map = Array(max + 1).fill(false);
+
+// let sum = 0;
+
+// arr.forEach((v) => {
+//   let [day, score] = v;
+
+//   for (let i = day; i > 0; i--) {
+//     if (!map[i]) {
+//       map[i] = true;
+//       sum += score;
+//       break;
+//     }
+//   }
+// });
+
+// console.log(sum);
+
+//9076-점수 집계
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1841,30 +1877,21 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
+let t = +input[0];
 let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-arr.sort((a, b) => b[1] - a[1]);
 
-let max = 0;
+for (let i = 0; i < t; i++) {
+  arr[i].sort((a, b) => a - b);
+  let newArr = [];
 
-arr.forEach((v) => {
-  max = Math.max(v[0], max);
-});
-
-let map = Array(max + 1).fill(false);
-
-let sum = 0;
-
-arr.forEach((v) => {
-  let [day, score] = v;
-
-  for (let i = day; i > 0; i--) {
-    if (!map[i]) {
-      map[i] = true;
-      sum += score;
-      break;
-    }
+  for (let j = 1; j < arr[i].length - 1; j++) {
+    newArr.push(arr[i][j]);
   }
-});
 
-console.log(sum);
+  if (newArr[newArr.length - 1] - newArr[0] > 3) {
+    console.log('KIN');
+  } else {
+    let sum = newArr.reduce((a, c) => a + c, 0);
+    console.log(sum);
+  }
+}
