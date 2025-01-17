@@ -1819,6 +1819,21 @@
 // }
 
 //15688-수 정렬하기5
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input
+//   .slice(1)
+//   .map(Number)
+//   .sort((a, b) => a - b);
+// console.log(arr.join('\n'));
+
+//13904-과제
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1827,8 +1842,29 @@ const input = fs
   .split('\n');
 
 let n = +input[0];
-let arr = input
-  .slice(1)
-  .map(Number)
-  .sort((a, b) => a - b);
-console.log(arr.join('\n'));
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+arr.sort((a, b) => b[1] - a[1]);
+
+let max = 0;
+
+arr.forEach((v) => {
+  max = Math.max(v[0], max);
+});
+
+let map = Array(max + 1).fill(false);
+
+let sum = 0;
+
+arr.forEach((v) => {
+  let [day, score] = v;
+
+  for (let i = day; i > 0; i--) {
+    if (!map[i]) {
+      map[i] = true;
+      sum += score;
+      break;
+    }
+  }
+});
+
+console.log(sum);
