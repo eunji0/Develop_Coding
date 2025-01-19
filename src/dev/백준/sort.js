@@ -1870,6 +1870,33 @@
 // console.log(sum);
 
 //9076-점수 집계
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let t = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+
+// for (let i = 0; i < t; i++) {
+//   arr[i].sort((a, b) => a - b);
+//   let newArr = [];
+
+//   for (let j = 1; j < arr[i].length - 1; j++) {
+//     newArr.push(arr[i][j]);
+//   }
+
+//   if (newArr[newArr.length - 1] - newArr[0] > 3) {
+//     console.log('KIN');
+//   } else {
+//     let sum = newArr.reduce((a, c) => a + c, 0);
+//     console.log(sum);
+//   }
+// }
+
+//1059-좋은 구간
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1877,21 +1904,55 @@ const input = fs
   .trim()
   .split('\n');
 
-let t = +input[0];
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+const l = parseInt(input[0], 10);
+let data = input[1]
+  .split(' ')
+  .map(Number)
+  .sort((a, b) => a - b);
+const n = parseInt(input[2], 10);
 
-for (let i = 0; i < t; i++) {
-  arr[i].sort((a, b) => a - b);
-  let newArr = [];
+let startPoint = -1;
+let endPoint = 10000;
 
-  for (let j = 1; j < arr[i].length - 1; j++) {
-    newArr.push(arr[i][j]);
+for (const number of data) {
+  if (number < n) {
+    startPoint = number;
+  } else if (number > n) {
+    if (endPoint > number) {
+      endPoint = number;
+    }
+  } else {
+    console.log(0);
+    return;
   }
 
-  if (newArr[newArr.length - 1] - newArr[0] > 3) {
-    console.log('KIN');
-  } else {
-    let sum = newArr.reduce((a, c) => a + c, 0);
-    console.log(sum);
+  if (startPoint !== -1 && endPoint !== 10000) {
+    break;
   }
 }
+
+if (startPoint === -1) {
+  startPoint = 0;
+}
+if (endPoint === 10000) {
+  endPoint = 1001;
+}
+
+let answer = 0;
+
+// i: 시작점
+for (let i = startPoint + 1; i < endPoint; i++) {
+  if (i > n) {
+    break;
+  }
+
+  // j: 끝점
+  for (let j = n; j < endPoint; j++) {
+    if (i === j) {
+      continue;
+    }
+    answer++;
+  }
+}
+
+console.log(answer);
