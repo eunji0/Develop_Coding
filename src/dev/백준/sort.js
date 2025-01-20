@@ -1904,55 +1904,42 @@ const input = fs
   .trim()
   .split('\n');
 
-const l = parseInt(input[0], 10);
-let data = input[1]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => a - b);
-const n = parseInt(input[2], 10);
+let l = +input[0];
+let arr = input[1].split(' ').map(Number);
+let n = +input[2];
 
-let startPoint = -1;
-let endPoint = 10000;
+arr.sort((a, b) => a - b);
 
-for (const number of data) {
-  if (number < n) {
-    startPoint = number;
-  } else if (number > n) {
-    if (endPoint > number) {
-      endPoint = number;
-    }
-  } else {
-    console.log(0);
-    return;
-  }
-
-  if (startPoint !== -1 && endPoint !== 10000) {
+let startPoint = 0;
+let endpoint = 0;
+for (let i = 0; i < l; i++) {
+  if (arr[i] > n) {
+    startPoint = i > 0 ? arr[i - 1] : 0;
+    endpoint = arr[i];
     break;
   }
 }
 
-if (startPoint === -1) {
+if (n < arr[0]) {
   startPoint = 0;
-}
-if (endPoint === 10000) {
-  endPoint = 1001;
+  endpoint = arr[0];
 }
 
-let answer = 0;
+if (n > arr[l - 1]) {
+  console.log(0);
+  return;
+}
 
-// i: 시작점
-for (let i = startPoint + 1; i < endPoint; i++) {
-  if (i > n) {
-    break;
-  }
+startPoint += 1;
+endpoint -= 1;
 
-  // j: 끝점
-  for (let j = n; j < endPoint; j++) {
-    if (i === j) {
-      continue;
+let count = 0;
+for (let A = startPoint; A <= n; A++) {
+  for (let B = n; B <= endpoint; B++) {
+    if (A < B) {
+      count++;
     }
-    answer++;
   }
 }
 
-console.log(answer);
+console.log(count);
