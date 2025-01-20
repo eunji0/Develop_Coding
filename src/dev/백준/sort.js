@@ -1896,7 +1896,55 @@
 //   }
 // }
 
-//1059-좋은 구간
+// //1059-좋은 구간
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let l = +input[0];
+// let arr = input[1].split(' ').map(Number);
+// let n = +input[2];
+
+// arr.sort((a, b) => a - b);
+
+// let startPoint = 0;
+// let endpoint = 0;
+// for (let i = 0; i < l; i++) {
+//   if (arr[i] > n) {
+//     startPoint = i > 0 ? arr[i - 1] : 0;
+//     endpoint = arr[i];
+//     break;
+//   }
+// }
+
+// if (n < arr[0]) {
+//   startPoint = 0;
+//   endpoint = arr[0];
+// }
+
+// if (n > arr[l - 1]) {
+//   console.log(0);
+//   return;
+// }
+
+// startPoint += 1;
+// endpoint -= 1;
+
+// let count = 0;
+// for (let A = startPoint; A <= n; A++) {
+//   for (let B = n; B <= endpoint; B++) {
+//     if (A < B) {
+//       count++;
+//     }
+//   }
+// }
+
+// console.log(count);
+
+//2109-순회강연-//런타임에러ㅜㅜ
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -1904,42 +1952,23 @@ const input = fs
   .trim()
   .split('\n');
 
-let l = +input[0];
-let arr = input[1].split(' ').map(Number);
-let n = +input[2];
+let n = +input[0];
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+arr.sort((a, b) => b[0] - a[0]);
 
-arr.sort((a, b) => a - b);
+let max = Math.max(...arr.map((v) => v[1]));
+let map = Array(max + 1).fill(0);
 
-let startPoint = 0;
-let endpoint = 0;
-for (let i = 0; i < l; i++) {
-  if (arr[i] > n) {
-    startPoint = i > 0 ? arr[i - 1] : 0;
-    endpoint = arr[i];
-    break;
-  }
-}
+let total = 0;
 
-if (n < arr[0]) {
-  startPoint = 0;
-  endpoint = arr[0];
-}
-
-if (n > arr[l - 1]) {
-  console.log(0);
-  return;
-}
-
-startPoint += 1;
-endpoint -= 1;
-
-let count = 0;
-for (let A = startPoint; A <= n; A++) {
-  for (let B = n; B <= endpoint; B++) {
-    if (A < B) {
-      count++;
+for (let [p, d] of arr) {
+  for (let i = d; i > 0; i--) {
+    if (!map[i]) {
+      map[i] = 1;
+      total += p;
+      break;
     }
   }
 }
 
-console.log(count);
+console.log(total);
