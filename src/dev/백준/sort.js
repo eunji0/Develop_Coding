@@ -2113,23 +2113,51 @@
 // console.log(sum);
 
 //13164-행복 유치원
-const fs = require('fs');
-const input = fs
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
-  .toString()
-  .trim()
-  .split('\n');
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
 
-let [n, k] = input[0].split(' ').map(Number);
-let arr = input[1].split(' ').map(Number);
+// let [n, k] = input[0].split(' ').map(Number);
+// let arr = input[1].split(' ').map(Number);
 
-let box = [];
+// let box = [];
 
-for (let i = 1; i < n; i++) {
-  box.push(arr[i] - arr[i - 1]);
-}
+// for (let i = 1; i < n; i++) {
+//   box.push(arr[i] - arr[i - 1]);
+// }
 
-box.sort((a, b) => b - a);
+// box.sort((a, b) => b - a);
 
-box = box.slice(k - 1);
-console.log(box.reduce((a, c) => a + c, 0));
+// box = box.slice(k - 1);
+// console.log(box.reduce((a, c) => a + c, 0));
+
+//11508-2+1세일
+const readline = require('readline');
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+const input = [];
+rl.on('line', (line) => {
+  input.push(line);
+}).on('close', () => {
+  let n = +input[0];
+  let arr = input
+    .slice(1)
+    .map(Number)
+    .sort((a, b) => a - b);
+
+  let sum = 0;
+
+  for (let i = n - 1; i >= 0; i -= 3) {
+    sum += arr[i];
+    if (i - 1 >= 0) sum += arr[i - 1];
+  }
+
+  console.log(sum);
+});
