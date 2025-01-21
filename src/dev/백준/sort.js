@@ -2068,6 +2068,28 @@
 // console.log(answer);
 
 //9237-이장님 초대
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => b - a);
+
+// let day = 0;
+
+// for (let i = 0; i < n; i++) {
+//   day = Math.max(day, arr[i] + i + 1);
+// }
+
+// console.log((day += 1));
+
+//1758-알바생 강호
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2076,15 +2098,16 @@ const input = fs
   .split('\n');
 
 let n = +input[0];
-let arr = input[1]
-  .split(' ')
+let arr = input
+  .slice(1)
   .map(Number)
-  .sort((a, b) => b - a);
+  .sort((a, b) => b - a)
+  .map((v, i) => (v = [v, i + 1]));
 
-let day = 0;
+let sum = 0;
 
-for (let i = 0; i < n; i++) {
-  day = Math.max(day, arr[i] + i + 1);
+for (let [a, b] of arr) {
+  sum += a - (b - 1) > 0 ? a - (b - 1) : 0;
 }
 
-console.log((day += 1));
+console.log(sum);
