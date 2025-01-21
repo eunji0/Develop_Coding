@@ -2090,6 +2090,29 @@
 // console.log((day += 1));
 
 //1758-알바생 강호
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input
+//   .slice(1)
+//   .map(Number)
+//   .sort((a, b) => b - a)
+//   .map((v, i) => (v = [v, i + 1]));
+
+// let sum = 0;
+
+// for (let [a, b] of arr) {
+//   sum += a - (b - 1) > 0 ? a - (b - 1) : 0;
+// }
+
+// console.log(sum);
+
+//13164-행복 유치원
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2097,17 +2120,16 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let arr = input
-  .slice(1)
-  .map(Number)
-  .sort((a, b) => b - a)
-  .map((v, i) => (v = [v, i + 1]));
+let [n, k] = input[0].split(' ').map(Number);
+let arr = input[1].split(' ').map(Number);
 
-let sum = 0;
+let box = [];
 
-for (let [a, b] of arr) {
-  sum += a - (b - 1) > 0 ? a - (b - 1) : 0;
+for (let i = 1; i < n; i++) {
+  box.push(arr[i] - arr[i - 1]);
 }
 
-console.log(sum);
+box.sort((a, b) => b - a);
+
+box = box.slice(k - 1);
+console.log(box.reduce((a, c) => a + c, 0));
