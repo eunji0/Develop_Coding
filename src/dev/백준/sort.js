@@ -2163,6 +2163,30 @@
 // });
 
 //2457-공주님의 정원
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let flowers = input
+//   .slice(1)
+//   .map((v) => {
+//     let [a, b, c, d] = v.split(' ').map(Number);
+//     return [a * 100 + b, c * 100 + d];
+//   })
+//   .sort((a, b) => {
+//     if (a[0] === b[0]) {
+//       return b[1] - a[1];
+//     }
+//     return a[0] - b[0];
+//   });
+
+// console.log(flowers);
+
+//10431-줄세우기
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2170,18 +2194,24 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let flowers = input
-  .slice(1)
-  .map((v) => {
-    let [a, b, c, d] = v.split(' ').map(Number);
-    return [a * 100 + b, c * 100 + d];
-  })
-  .sort((a, b) => {
-    if (a[0] === b[0]) {
-      return b[1] - a[1];
-    }
-    return a[0] - b[0];
-  });
+let p = +input[0];
+let results = [];
 
-console.log(flowers);
+for (let i = 1; i <= p; i++) {
+  let [t, ...students] = input[i].split(' ').map(Number);
+  let line = [];
+  let moves = 0;
+
+  for (let s of students) {
+    let insertIdx = line.findIndex((v) => v > s);
+    if (insertIdx === -1) {
+      line.push(s);
+    } else {
+      line.splice(insertIdx, 0, s);
+      moves += line.length - insertIdx - 1;
+    }
+  }
+  results.push(`${t} ${moves}`);
+}
+
+console.log(results.join('\n'));
