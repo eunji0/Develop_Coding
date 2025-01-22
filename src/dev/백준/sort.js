@@ -2187,6 +2187,36 @@
 // console.log(flowers);
 
 //10431-줄세우기
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let p = +input[0];
+// let results = [];
+
+// for (let i = 1; i <= p; i++) {
+//   let [t, ...students] = input[i].split(' ').map(Number);
+//   let line = [];
+//   let moves = 0;
+
+//   for (let s of students) {
+//     let insertIdx = line.findIndex((v) => v > s);
+//     if (insertIdx === -1) {
+//       line.push(s);
+//     } else {
+//       line.splice(insertIdx, 0, s);
+//       moves += line.length - insertIdx - 1;
+//     }
+//   }
+//   results.push(`${t} ${moves}`);
+// }
+
+// console.log(results.join('\n'));
+
+//2870-수학숙제
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2194,24 +2224,27 @@ const input = fs
   .trim()
   .split('\n');
 
-let p = +input[0];
-let results = [];
+let t = +input[0];
+let result = [];
 
-for (let i = 1; i <= p; i++) {
-  let [t, ...students] = input[i].split(' ').map(Number);
-  let line = [];
-  let moves = 0;
+for (let i = 1; i <= t; i++) {
+  let line = input[i];
+  let number = '';
 
-  for (let s of students) {
-    let insertIdx = line.findIndex((v) => v > s);
-    if (insertIdx === -1) {
-      line.push(s);
+  for (let char of line) {
+    if (char >= '0' && char <= '9') {
+      number += char;
     } else {
-      line.splice(insertIdx, 0, s);
-      moves += line.length - insertIdx - 1;
+      if (number.length > 0) {
+        result.push(BigInt(number));
+        number = '';
+      }
     }
   }
-  results.push(`${t} ${moves}`);
+
+  if (number.length > 0) {
+    result.push(BigInt(number));
+  }
 }
 
-console.log(results.join('\n'));
+console.log(result.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)).join('\n'));
