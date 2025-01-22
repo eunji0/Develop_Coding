@@ -2135,29 +2135,53 @@
 // console.log(box.reduce((a, c) => a + c, 0));
 
 //11508-2+1세일
-const readline = require('readline');
+// const readline = require('readline');
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
 
-const input = [];
-rl.on('line', (line) => {
-  input.push(line);
-}).on('close', () => {
-  let n = +input[0];
-  let arr = input
-    .slice(1)
-    .map(Number)
-    .sort((a, b) => a - b);
+// const input = [];
+// rl.on('line', (line) => {
+//   input.push(line);
+// }).on('close', () => {
+//   let n = +input[0];
+//   let arr = input
+//     .slice(1)
+//     .map(Number)
+//     .sort((a, b) => a - b);
 
-  let sum = 0;
+//   let sum = 0;
 
-  for (let i = n - 1; i >= 0; i -= 3) {
-    sum += arr[i];
-    if (i - 1 >= 0) sum += arr[i - 1];
-  }
+//   for (let i = n - 1; i >= 0; i -= 3) {
+//     sum += arr[i];
+//     if (i - 1 >= 0) sum += arr[i - 1];
+//   }
 
-  console.log(sum);
-});
+//   console.log(sum);
+// });
+
+//2457-공주님의 정원
+const fs = require('fs');
+const input = fs
+  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+  .toString()
+  .trim()
+  .split('\n');
+
+let n = +input[0];
+let flowers = input
+  .slice(1)
+  .map((v) => {
+    let [a, b, c, d] = v.split(' ').map(Number);
+    return [a * 100 + b, c * 100 + d];
+  })
+  .sort((a, b) => {
+    if (a[0] === b[0]) {
+      return b[1] - a[1];
+    }
+    return a[0] - b[0];
+  });
+
+console.log(flowers);
