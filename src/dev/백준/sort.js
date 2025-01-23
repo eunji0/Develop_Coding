@@ -2250,6 +2250,33 @@
 // console.log(result.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)).join('\n'));
 
 //6996-애너그램
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let t = +input[0];
+// let arr = input.slice(1).map((v) => v.trim().split(' '));
+
+// let result = [];
+
+// for (let i = 0; i < t; i++) {
+//   let [a, b] = arr[i];
+//   let aSlice = a.split('').sort().join('');
+//   let bSlice = b.split('').sort().join('');
+
+//   if (aSlice === bSlice) {
+//     result.push(`${a} & ${b} are anagrams.`);
+//   } else {
+//     result.push(`${a} & ${b} are NOT anagrams.`);
+//   }
+// }
+
+// console.log(result.join('\n'));
+
+//8980-택배
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2257,21 +2284,27 @@ const input = fs
   .trim()
   .split('\n');
 
-let t = +input[0];
-let arr = input.slice(1).map((v) => v.trim().split(' '));
+let [n, c] = input[0].split(' ').map(Number);
+let m = +input[1];
+let arr = input
+  .slice(2)
+  .map((v) => v.split(' ').map(Number))
+  .sort((a, b) => a[1] - b[1]);
 
-let result = [];
+let result = 0;
+let truck = Array(n + 1).fill(0);
 
-for (let i = 0; i < t; i++) {
-  let [a, b] = arr[i];
-  let aSlice = a.split('').sort().join('');
-  let bSlice = b.split('').sort().join('');
+for (let [s, e, t] of arr) {
+  let max = Math.max(...truck.slice(s, e));
+  let min = Math.min(c - max, t);
 
-  if (aSlice === bSlice) {
-    result.push(`${a} & ${b} are anagrams.`);
-  } else {
-    result.push(`${a} & ${b} are NOT anagrams.`);
+  if (min > 0) {
+    for (let i = s; i < e; i++) {
+      truck[i] += min;
+    }
   }
+
+  result += min;
 }
 
-console.log(result.join('\n'));
+console.log(result);
