@@ -2277,6 +2277,39 @@
 // console.log(result.join('\n'));
 
 //8980-택배
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, c] = input[0].split(' ').map(Number);
+// let m = +input[1];
+// let arr = input
+//   .slice(2)
+//   .map((v) => v.split(' ').map(Number))
+//   .sort((a, b) => a[1] - b[1]);
+
+// let result = 0;
+// let truck = Array(n + 1).fill(0);
+
+// for (let [s, e, t] of arr) {
+//   let max = Math.max(...truck.slice(s, e));
+//   let min = Math.min(c - max, t);
+
+//   if (min > 0) {
+//     for (let i = s; i < e; i++) {
+//       truck[i] += min;
+//     }
+//   }
+
+//   result += min;
+// }
+
+// console.log(result);
+
+//8983-사냥꾼
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2284,27 +2317,37 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, c] = input[0].split(' ').map(Number);
-let m = +input[1];
-let arr = input
-  .slice(2)
-  .map((v) => v.split(' ').map(Number))
-  .sort((a, b) => a[1] - b[1]);
+let [m, n, l] = input[0].split(' ').map(Number);
+let xs = input[1]
+  .split(' ')
+  .map(Number)
+  .sort((a, b) => a - b);
+let arr = input.slice(2).map((v) => v.split(' ').map(Number));
 
-let result = 0;
-let truck = Array(n + 1).fill(0);
+let count = 0;
 
-for (let [s, e, t] of arr) {
-  let max = Math.max(...truck.slice(s, e));
-  let min = Math.min(c - max, t);
+for (let [x, y] of arr) {
+  if (y > l) continue;
 
-  if (min > 0) {
-    for (let i = s; i < e; i++) {
-      truck[i] += min;
-    }
+  let left = 0;
+  let right = m - 1;
+
+  while (left < right) {
+    let mid = Math.floor((left + right) / 2);
+    if (xs[mid] < x) left = mid + 1;
+    else right = mid;
   }
 
-  result += min;
+  let near = [];
+  if (left > 0) near.push(xs[left - 1]);
+  if (left < m) near.push(xs[left]);
+
+  for (let xx of near) {
+    if (Math.abs(xx - x) + y <= l) {
+      count++;
+      break;
+    }
+  }
 }
 
-console.log(result);
+console.log(count);
