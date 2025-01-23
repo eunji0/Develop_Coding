@@ -2310,6 +2310,49 @@
 // console.log(result);
 
 //8983-사냥꾼
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [m, n, l] = input[0].split(' ').map(Number);
+// let xs = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
+// let arr = input.slice(2).map((v) => v.split(' ').map(Number));
+
+// let count = 0;
+
+// for (let [x, y] of arr) {
+//   if (y > l) continue;
+
+//   let left = 0;
+//   let right = m - 1;
+
+//   while (left < right) {
+//     let mid = Math.floor((left + right) / 2);
+//     if (xs[mid] < x) left = mid + 1;
+//     else right = mid;
+//   }
+
+//   let near = [];
+//   if (left > 0) near.push(xs[left - 1]);
+//   if (left < m) near.push(xs[left]);
+
+//   for (let xx of near) {
+//     if (Math.abs(xx - x) + y <= l) {
+//       count++;
+//       break;
+//     }
+//   }
+// }
+
+// console.log(count);
+
+//1755-숫자놀이
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2317,37 +2360,34 @@ const input = fs
   .trim()
   .split('\n');
 
-let [m, n, l] = input[0].split(' ').map(Number);
-let xs = input[1]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => a - b);
-let arr = input.slice(2).map((v) => v.split(' ').map(Number));
+let box = [];
 
-let count = 0;
-
-for (let [x, y] of arr) {
-  if (y > l) continue;
-
-  let left = 0;
-  let right = m - 1;
-
-  while (left < right) {
-    let mid = Math.floor((left + right) / 2);
-    if (xs[mid] < x) left = mid + 1;
-    else right = mid;
-  }
-
-  let near = [];
-  if (left > 0) near.push(xs[left - 1]);
-  if (left < m) near.push(xs[left]);
-
-  for (let xx of near) {
-    if (Math.abs(xx - x) + y <= l) {
-      count++;
-      break;
-    }
+let [m, n] = input[0].split(' ').map(Number);
+let str = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+for (let i = m; i <= n; i++) {
+  let len = i.toString().split('');
+  if (len.length < 2) {
+    box.push(str[i]);
+  } else {
+    box.push(str[+len[0]] + ' ' + str[+len[1]]);
   }
 }
 
-console.log(count);
+box.sort();
+
+let result = [];
+box.forEach((v) => {
+  let len = v.split(' ').length;
+  if (len < 2) {
+    result.push(str.indexOf(v));
+  } else {
+    v = v.split(' ');
+    result.push(str.indexOf(v[0]).toString() + str.indexOf(v[1]).toString());
+  }
+});
+
+let answer = [];
+for (let i = 0; i < result.length; i += 10) {
+  answer.push(result.slice(i, i + 10).join(' '));
+}
+console.log(answer.join('\n'));
