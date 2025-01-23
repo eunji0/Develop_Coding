@@ -2217,6 +2217,39 @@
 // console.log(results.join('\n'));
 
 //2870-수학숙제
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let t = +input[0];
+// let result = [];
+
+// for (let i = 1; i <= t; i++) {
+//   let line = input[i];
+//   let number = '';
+
+//   for (let char of line) {
+//     if (char >= '0' && char <= '9') {
+//       number += char;
+//     } else {
+//       if (number.length > 0) {
+//         result.push(BigInt(number));
+//         number = '';
+//       }
+//     }
+//   }
+
+//   if (number.length > 0) {
+//     result.push(BigInt(number));
+//   }
+// }
+
+// console.log(result.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)).join('\n'));
+
+//6996-애너그램
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2225,26 +2258,20 @@ const input = fs
   .split('\n');
 
 let t = +input[0];
+let arr = input.slice(1).map((v) => v.trim().split(' '));
+
 let result = [];
 
-for (let i = 1; i <= t; i++) {
-  let line = input[i];
-  let number = '';
+for (let i = 0; i < t; i++) {
+  let [a, b] = arr[i];
+  let aSlice = a.split('').sort().join('');
+  let bSlice = b.split('').sort().join('');
 
-  for (let char of line) {
-    if (char >= '0' && char <= '9') {
-      number += char;
-    } else {
-      if (number.length > 0) {
-        result.push(BigInt(number));
-        number = '';
-      }
-    }
-  }
-
-  if (number.length > 0) {
-    result.push(BigInt(number));
+  if (aSlice === bSlice) {
+    result.push(`${a} & ${b} are anagrams.`);
+  } else {
+    result.push(`${a} & ${b} are NOT anagrams.`);
   }
 }
 
-console.log(result.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0)).join('\n'));
+console.log(result.join('\n'));
