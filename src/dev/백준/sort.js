@@ -2420,6 +2420,46 @@
 // console.log(count);
 
 //1448-삼각형 만들기
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input
+//   .slice(1)
+//   .map(Number)
+//   .sort((a, b) => b - a);
+
+// for (let i = 0; i < n - 2; i++) {
+//   if (arr[i] < arr[i + 1] + arr[i + 2]) {
+//     console.log(arr[i] + arr[i + 1] + arr[i + 2]);
+//     return;
+//   }
+// }
+
+// console.log(-1);
+
+//소가 길을 건너간 이유3
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input
+//   .slice(1)
+//   .map((v) => v.split(' ').map(Number))
+//   .sort((a, b) => a[0] - b[0]);
+
+// let cur = arr[0][0];
+
+// console.log(arr);
+
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2427,17 +2467,21 @@ const input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let arr = input
+const n = +input[0];
+const cows = input
   .slice(1)
-  .map(Number)
-  .sort((a, b) => b - a);
+  .map((line) => line.split(' ').map(Number))
+  .sort((a, b) => a[0] - b[0]); // 도착 시간 기준 정렬
 
-for (let i = 0; i < n - 2; i++) {
-  if (arr[i] < arr[i + 1] + arr[i + 2]) {
-    console.log(arr[i] + arr[i + 1] + arr[i + 2]);
-    return;
+let currentTime = 0;
+
+for (let [arrival, check] of cows) {
+  // 소가 도착한 시간이 현재 시간보다 빠르면 대기해야 함
+  if (arrival > currentTime) {
+    currentTime = arrival;
   }
+  // 검문 시작 시간에서 검문 시간 추가
+  currentTime += check;
 }
 
-console.log(-1);
+console.log(currentTime);
