@@ -2353,6 +2353,46 @@
 // console.log(count);
 
 //1755-숫자놀이
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let box = [];
+
+// let [m, n] = input[0].split(' ').map(Number);
+// let str = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+// for (let i = m; i <= n; i++) {
+//   let len = i.toString().split('');
+//   if (len.length < 2) {
+//     box.push(str[i]);
+//   } else {
+//     box.push(str[+len[0]] + ' ' + str[+len[1]]);
+//   }
+// }
+
+// box.sort();
+
+// let result = [];
+// box.forEach((v) => {
+//   let len = v.split(' ').length;
+//   if (len < 2) {
+//     result.push(str.indexOf(v));
+//   } else {
+//     v = v.split(' ');
+//     result.push(str.indexOf(v[0]).toString() + str.indexOf(v[1]).toString());
+//   }
+// });
+
+// let answer = [];
+// for (let i = 0; i < result.length; i += 10) {
+//   answer.push(result.slice(i, i + 10).join(' '));
+// }
+// console.log(answer.join('\n'));
+
+//1911-흙길 보수하기
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2360,34 +2400,21 @@ const input = fs
   .trim()
   .split('\n');
 
-let box = [];
+let [n, l] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+arr.sort((a, b) => a[0] - b[0]);
+let count = 0;
+let current = 0;
 
-let [m, n] = input[0].split(' ').map(Number);
-let str = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
-for (let i = m; i <= n; i++) {
-  let len = i.toString().split('');
-  if (len.length < 2) {
-    box.push(str[i]);
-  } else {
-    box.push(str[+len[0]] + ' ' + str[+len[1]]);
+for (let [a, b] of arr) {
+  if (current < a) {
+    current = a;
+  }
+
+  while (current < b) {
+    current += l;
+    count++;
   }
 }
 
-box.sort();
-
-let result = [];
-box.forEach((v) => {
-  let len = v.split(' ').length;
-  if (len < 2) {
-    result.push(str.indexOf(v));
-  } else {
-    v = v.split(' ');
-    result.push(str.indexOf(v[0]).toString() + str.indexOf(v[1]).toString());
-  }
-});
-
-let answer = [];
-for (let i = 0; i < result.length; i += 10) {
-  answer.push(result.slice(i, i + 10).join(' '));
-}
-console.log(answer.join('\n'));
+console.log(count);
