@@ -2393,6 +2393,33 @@
 // console.log(answer.join('\n'));
 
 //1911-흙길 보수하기
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, l] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// arr.sort((a, b) => a[0] - b[0]);
+// let count = 0;
+// let current = 0;
+
+// for (let [a, b] of arr) {
+//   if (current < a) {
+//     current = a;
+//   }
+
+//   while (current < b) {
+//     current += l;
+//     count++;
+//   }
+// }
+
+// console.log(count);
+
+//1448-삼각형 만들기
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2400,21 +2427,17 @@ const input = fs
   .trim()
   .split('\n');
 
-let [n, l] = input[0].split(' ').map(Number);
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-arr.sort((a, b) => a[0] - b[0]);
-let count = 0;
-let current = 0;
+let n = +input[0];
+let arr = input
+  .slice(1)
+  .map(Number)
+  .sort((a, b) => b - a);
 
-for (let [a, b] of arr) {
-  if (current < a) {
-    current = a;
-  }
-
-  while (current < b) {
-    current += l;
-    count++;
+for (let i = 0; i < n - 2; i++) {
+  if (arr[i] < arr[i + 1] + arr[i + 2]) {
+    console.log(arr[i] + arr[i + 1] + arr[i + 2]);
+    return;
   }
 }
 
-console.log(count);
+console.log(-1);
