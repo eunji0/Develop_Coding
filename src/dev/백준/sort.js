@@ -2442,7 +2442,7 @@
 
 // console.log(-1);
 
-//소가 길을 건너간 이유3
+//14469-소가 길을 건너간 이유3
 // const fs = require('fs');
 // const input = fs
 //   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2460,6 +2460,7 @@
 
 // console.log(arr);
 
+//13334-철로
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2468,20 +2469,34 @@ const input = fs
   .split('\n');
 
 const n = +input[0];
-const cows = input
-  .slice(1)
-  .map((line) => line.split(' ').map(Number))
-  .sort((a, b) => a[0] - b[0]); // 도착 시간 기준 정렬
+const intervals = input.slice(1, n + 1).map((line) => {
+  const [h, o] = line.split(' ').map(Number);
+  return [Math.min(h, o), Math.max(h, o)]; // 작은 값 → 큰 값으로 변환
+});
+const d = +input[n + 1];
 
-let currentTime = 0;
+// 1. 끝점을 기준으로 정렬
+intervals.sort((a, b) => a[1] - b[1]);
 
-for (let [arrival, check] of cows) {
-  // 소가 도착한 시간이 현재 시간보다 빠르면 대기해야 함
-  if (arrival > currentTime) {
-    currentTime = arrival;
+// 2. 슬라이딩 윈도우
+let maxCount = 0;
+let startIndex = 0;
+
+const window = [];
+for (let i = 0; i < n; i++) {
+  const [start, end] = intervals[i];
+  const leftBound = end - d;
+
+  // 슬라이딩 윈도우: 범위를 벗어나는 시작점 제거
+  while (startIndex < window.length && window[startIndex][0] < leftBound) {
+    startIndex++;
   }
-  // 검문 시작 시간에서 검문 시간 추가
-  currentTime += check;
+
+  // 현재 구간 추가
+  window.push([start, end]);
+
+  // 현재 포함된 구간의 수
+  maxCount = Math.max(maxCount, window.length);
 }
 
-console.log(currentTime);
+console.log(maxCount);
