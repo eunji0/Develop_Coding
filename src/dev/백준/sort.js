@@ -2461,42 +2461,65 @@
 // console.log(arr);
 
 //13334-철로
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  push(value) {
+    this.heap.push(value);
+    this.heap.sort((a, b) => a - b);
+  }
+
+  pop() {
+    return this.heap.shift();
+  }
+
+  peek() {
+    return this.heap.length ? this.heap[0] : null;
+  }
+
+  size() {
+    return this.heap.length;
+  }
+}
+
 const fs = require('fs');
 const input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
   .toString()
   .trim()
   .split('\n');
+const N = parseInt(input[0]);
+const pairs = [];
 
-const n = +input[0];
-const intervals = input.slice(1, n + 1).map((line) => {
-  const [h, o] = line.split(' ').map(Number);
-  return [Math.min(h, o), Math.max(h, o)]; // 작은 값 → 큰 값으로 변환
-});
-const d = +input[n + 1];
-
-// 1. 끝점을 기준으로 정렬
-intervals.sort((a, b) => a[1] - b[1]);
-
-// 2. 슬라이딩 윈도우
-let maxCount = 0;
-let startIndex = 0;
-
-const window = [];
-for (let i = 0; i < n; i++) {
-  const [start, end] = intervals[i];
-  const leftBound = end - d;
-
-  // 슬라이딩 윈도우: 범위를 벗어나는 시작점 제거
-  while (startIndex < window.length && window[startIndex][0] < leftBound) {
-    startIndex++;
-  }
-
-  // 현재 구간 추가
-  window.push([start, end]);
-
-  // 현재 포함된 구간의 수
-  maxCount = Math.max(maxCount, window.length);
+for (let i = 1; i <= N; i++) {
+  let [a, b] = input[i].split(' ').map(Number);
+  if (a > b) [a, b] = [b, a]; // 항상 a <= b가 되도록 정렬
+  pairs.push([a, b]);
 }
 
-console.log(maxCount);
+const length = parseInt(input[N + 1]);
+
+// 종료 위치 기준 정렬
+pairs.sort((a, b) => a[1] - b[1]);
+
+const pq = new MinHeap();
+let count = 0,
+  maximum = 0;
+
+for (const [start, end] of pairs) {
+  while (pq.size() && pq.peek() < end - length) {
+    pq.pop();
+    count--;
+  }
+
+  if (start >= end - length) {
+    count++;
+    pq.push(start);
+  }
+
+  maximum = Math.max(maximum, count);
+}
+
+console.log(maximum);
