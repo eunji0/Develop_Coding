@@ -2461,65 +2461,161 @@
 // console.log(arr);
 
 //13334-철로
-class MinHeap {
-  constructor() {
-    this.heap = [];
-  }
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
 
-  push(value) {
-    this.heap.push(value);
-    this.heap.sort((a, b) => a - b);
-  }
+//   push(value) {
+//     this.heap.push(value);
+//     this.heap.sort((a, b) => a - b);
+//   }
 
-  pop() {
-    return this.heap.shift();
-  }
+//   pop() {
+//     return this.heap.shift();
+//   }
 
-  peek() {
-    return this.heap.length ? this.heap[0] : null;
-  }
+//   peek() {
+//     return this.heap.length ? this.heap[0] : null;
+//   }
 
-  size() {
-    return this.heap.length;
-  }
-}
+//   size() {
+//     return this.heap.length;
+//   }
+// }
 
+// const fs = require('fs');
+// const input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+// const N = parseInt(input[0]);
+// const pairs = [];
+
+// for (let i = 1; i <= N; i++) {
+//   let [a, b] = input[i].split(' ').map(Number);
+//   if (a > b) [a, b] = [b, a]; // 항상 a <= b가 되도록 정렬
+//   pairs.push([a, b]);
+// }
+
+// const length = parseInt(input[N + 1]);
+
+// // 종료 위치 기준 정렬
+// pairs.sort((a, b) => a[1] - b[1]);
+
+// const pq = new MinHeap();
+// let count = 0,
+//   maximum = 0;
+
+// for (const [start, end] of pairs) {
+//   while (pq.size() && pq.peek() < end - length) {
+//     pq.pop();
+//     count--;
+//   }
+
+//   if (start >= end - length) {
+//     count++;
+//     pq.push(start);
+//   }
+
+//   maximum = Math.max(maximum, count);
+// }
+
+// console.log(maximum);
+
+//1374-강의실
 const fs = require('fs');
-const input = fs
+let input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
   .toString()
   .trim()
   .split('\n');
-const N = parseInt(input[0]);
-const pairs = [];
+let N = input.shift();
+input = input
+  .map((v) => v.split(' ').map(Number))
+  .sort((a, b) => {
+    if (a[1] === b[1]) {
+      return a[2] - b[2];
+    }
+    return a[1] - b[1];
+  });
 
-for (let i = 1; i <= N; i++) {
-  let [a, b] = input[i].split(' ').map(Number);
-  if (a > b) [a, b] = [b, a]; // 항상 a <= b가 되도록 정렬
-  pairs.push([a, b]);
-}
-
-const length = parseInt(input[N + 1]);
-
-// 종료 위치 기준 정렬
-pairs.sort((a, b) => a[1] - b[1]);
-
-const pq = new MinHeap();
-let count = 0,
-  maximum = 0;
-
-for (const [start, end] of pairs) {
-  while (pq.size() && pq.peek() < end - length) {
-    pq.pop();
-    count--;
+class MinHeap {
+  constructor() {
+    this.heap = [null];
   }
 
-  if (start >= end - length) {
-    count++;
-    pq.push(start);
+  insert(item) {
+    let current = this.heap.length;
+    while (current > 1) {
+      const parent = Math.floor(current / 2);
+      if (this.heap[parent] > item) {
+        this.heap[current] = this.heap[parent];
+        current = parent;
+      } else break;
+    }
+    this.heap[current] = item;
   }
 
-  maximum = Math.max(maximum, count);
+  remove() {
+    let min = this.heap[1];
+    if (this.heap.length > 2) {
+      this.heap[1] = this.heap[this.heap.length - 1];
+      this.heap.splice(this.heap.length - 1);
+
+      let current = 1;
+      let leftChild = current * 2;
+      let rightChild = current * 2 + 1;
+      while (this.heap[leftChild]) {
+        let CompareItem = leftChild;
+        if (this.heap[rightChild] && this.heap[CompareItem] > this.heap[rightChild]) {
+          CompareItem = rightChild;
+        }
+        if (this.heap[current] > this.heap[CompareItem]) {
+          [this.heap[current], this.heap[CompareItem]] = [this.heap[CompareItem], this.heap[current]];
+          current = CompareItem;
+        } else break;
+
+        leftChild = current * 2;
+        rightChild = current * 2 + 1;
+      }
+    } else if (this.heap.length === 2) {
+      this.heap.splice(1, 1);
+    } else {
+      return null;
+    }
+    return min;
+  }
+
+  getMin() {
+    return this.heap[1];
+  }
+
+  getHeap() {
+    return this.heap;
+  }
+
+  getSize() {
+    return this.heap.length - 1;
+  }
 }
 
-console.log(maximum);
+function CHECK_BOUNDERY(INPUT) {
+  let Priority_Queue = new MinHeap();
+  Priority_Queue.insert(INPUT[0][2]);
+
+  if (INPUT.length === 1) return 1;
+
+  for (let i = 1; i < INPUT.length; i++) {
+    if (INPUT[i][1] < Priority_Queue.getMin()) {
+      Priority_Queue.insert(INPUT[i][2]);
+    } else {
+      Priority_Queue.remove();
+      Priority_Queue.insert(INPUT[i][2]);
+    }
+  }
+  return Priority_Queue.getSize();
+}
+
+console.log(CHECK_BOUNDERY(input));
