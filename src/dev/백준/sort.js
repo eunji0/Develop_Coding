@@ -2525,97 +2525,135 @@
 // console.log(maximum);
 
 //1374-강의실
+// const fs = require('fs');
+// let input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+// let N = input.shift();
+// input = input
+//   .map((v) => v.split(' ').map(Number))
+//   .sort((a, b) => {
+//     if (a[1] === b[1]) {
+//       return a[2] - b[2];
+//     }
+//     return a[1] - b[1];
+//   });
+
+// class MinHeap {
+//   constructor() {
+//     this.heap = [null];
+//   }
+
+//   insert(item) {
+//     let current = this.heap.length;
+//     while (current > 1) {
+//       const parent = Math.floor(current / 2);
+//       if (this.heap[parent] > item) {
+//         this.heap[current] = this.heap[parent];
+//         current = parent;
+//       } else break;
+//     }
+//     this.heap[current] = item;
+//   }
+
+//   remove() {
+//     let min = this.heap[1];
+//     if (this.heap.length > 2) {
+//       this.heap[1] = this.heap[this.heap.length - 1];
+//       this.heap.splice(this.heap.length - 1);
+
+//       let current = 1;
+//       let leftChild = current * 2;
+//       let rightChild = current * 2 + 1;
+//       while (this.heap[leftChild]) {
+//         let CompareItem = leftChild;
+//         if (this.heap[rightChild] && this.heap[CompareItem] > this.heap[rightChild]) {
+//           CompareItem = rightChild;
+//         }
+//         if (this.heap[current] > this.heap[CompareItem]) {
+//           [this.heap[current], this.heap[CompareItem]] = [this.heap[CompareItem], this.heap[current]];
+//           current = CompareItem;
+//         } else break;
+
+//         leftChild = current * 2;
+//         rightChild = current * 2 + 1;
+//       }
+//     } else if (this.heap.length === 2) {
+//       this.heap.splice(1, 1);
+//     } else {
+//       return null;
+//     }
+//     return min;
+//   }
+
+//   getMin() {
+//     return this.heap[1];
+//   }
+
+//   getHeap() {
+//     return this.heap;
+//   }
+
+//   getSize() {
+//     return this.heap.length - 1;
+//   }
+// }
+
+// function CHECK_BOUNDERY(INPUT) {
+//   let Priority_Queue = new MinHeap();
+//   Priority_Queue.insert(INPUT[0][2]);
+
+//   if (INPUT.length === 1) return 1;
+
+//   for (let i = 1; i < INPUT.length; i++) {
+//     if (INPUT[i][1] < Priority_Queue.getMin()) {
+//       Priority_Queue.insert(INPUT[i][2]);
+//     } else {
+//       Priority_Queue.remove();
+//       Priority_Queue.insert(INPUT[i][2]);
+//     }
+//   }
+//   return Priority_Queue.getSize();
+// }
+
+// console.log(CHECK_BOUNDERY(input));
+
+//2535-아시아 정보올림피아드
 const fs = require('fs');
 let input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
   .toString()
   .trim()
   .split('\n');
-let N = input.shift();
-input = input
-  .map((v) => v.split(' ').map(Number))
-  .sort((a, b) => {
-    if (a[1] === b[1]) {
-      return a[2] - b[2];
-    }
-    return a[1] - b[1];
-  });
 
-class MinHeap {
-  constructor() {
-    this.heap = [null];
+let n = +input[0];
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let resultNum = [];
+let result = [];
+arr.sort((a, b) => b[2] - a[2]);
+
+//map함수로 result개수 확인
+while (result.length < 3) {
+  let map = new Map();
+  let [num, st, score] = arr.shift();
+
+  if (result.length < 2) {
+    result.push([num, st, score]);
+    resultNum.push(num);
+    continue;
+  }
+  for (let a of resultNum) {
+    map.set(a, (map.get(a) || 0) + 1);
   }
 
-  insert(item) {
-    let current = this.heap.length;
-    while (current > 1) {
-      const parent = Math.floor(current / 2);
-      if (this.heap[parent] > item) {
-        this.heap[current] = this.heap[parent];
-        current = parent;
-      } else break;
-    }
-    this.heap[current] = item;
-  }
-
-  remove() {
-    let min = this.heap[1];
-    if (this.heap.length > 2) {
-      this.heap[1] = this.heap[this.heap.length - 1];
-      this.heap.splice(this.heap.length - 1);
-
-      let current = 1;
-      let leftChild = current * 2;
-      let rightChild = current * 2 + 1;
-      while (this.heap[leftChild]) {
-        let CompareItem = leftChild;
-        if (this.heap[rightChild] && this.heap[CompareItem] > this.heap[rightChild]) {
-          CompareItem = rightChild;
-        }
-        if (this.heap[current] > this.heap[CompareItem]) {
-          [this.heap[current], this.heap[CompareItem]] = [this.heap[CompareItem], this.heap[current]];
-          current = CompareItem;
-        } else break;
-
-        leftChild = current * 2;
-        rightChild = current * 2 + 1;
-      }
-    } else if (this.heap.length === 2) {
-      this.heap.splice(1, 1);
-    } else {
-      return null;
-    }
-    return min;
-  }
-
-  getMin() {
-    return this.heap[1];
-  }
-
-  getHeap() {
-    return this.heap;
-  }
-
-  getSize() {
-    return this.heap.length - 1;
+  if (map.get(num) > 1) {
+    continue;
+  } else {
+    result.push([num, st, score]);
+    resultNum.push(num);
   }
 }
 
-function CHECK_BOUNDERY(INPUT) {
-  let Priority_Queue = new MinHeap();
-  Priority_Queue.insert(INPUT[0][2]);
-
-  if (INPUT.length === 1) return 1;
-
-  for (let i = 1; i < INPUT.length; i++) {
-    if (INPUT[i][1] < Priority_Queue.getMin()) {
-      Priority_Queue.insert(INPUT[i][2]);
-    } else {
-      Priority_Queue.remove();
-      Priority_Queue.insert(INPUT[i][2]);
-    }
-  }
-  return Priority_Queue.getSize();
-}
-
-console.log(CHECK_BOUNDERY(input));
+console.log(result.map((v) => [v[0], v[1]].join(' ')).join('\n'));
