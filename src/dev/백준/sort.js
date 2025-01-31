@@ -2747,6 +2747,50 @@
 // console.log(pq.size());
 
 //15970-화살표 그리기
+// const readline = require('readline');
+
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+// });
+
+// let input = [];
+
+// rl.on('line', (line) => {
+//   input.push(line);
+// }).on('close', () => {
+//   processInput(input);
+//   process.exit(0);
+// });
+
+// function processInput(input) {
+//   let n = +input[0];
+//   let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+
+//   let group = {};
+
+//   for (const [x, color] of arr) {
+//     if (!group[color]) group[color] = [];
+//     group[color].push(x);
+//   }
+
+//   let t = 0;
+
+//   for (const c in group) {
+//     let p = group[c];
+//     p.sort((a, b) => a - b);
+
+//     for (let i = 0; i < p.length; i++) {
+//       let left = i > 0 ? p[i] - p[i - 1] : Infinity;
+//       let right = i < p.length - 1 ? p[i + 1] - p[i] : Infinity;
+//       t += Math.min(left, right);
+//     }
+//   }
+
+//   console.log(t);
+// }
+
+//1296-팀이름 정하기
 const fs = require('fs');
 let input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2754,27 +2798,37 @@ let input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+const yeondu = input[0];
+const N = parseInt(input[1]);
+const teams = input.slice(2);
 
-let group = {};
+const countLetters = (str) => {
+  let count = { L: 0, O: 0, V: 0, E: 0 };
+  for (let ch of str) {
+    if (count[ch] !== undefined) count[ch]++;
+  }
+  return count;
+};
 
-for (const [x, color] of arr) {
-  if (!group[color]) group[color] = [];
-  group[color].push(x);
-}
+const yeonduCount = countLetters(yeondu);
 
-let t = 0;
+let bestTeam = '';
+let maxScore = -1;
 
-for (const c in group) {
-  let p = group[c];
-  p.sort((a, b) => a - b);
+for (let team of teams) {
+  const teamCount = countLetters(team);
 
-  for (let i = 0; i < p.length; i++) {
-    let left = i > 0 ? p[i] - p[i - 1] : Infinity;
-    let right = i < p.length - 1 ? p[i + 1] - p[i] : Infinity;
-    t += Math.min(left, right);
+  let L = yeonduCount.L + teamCount.L;
+  let O = yeonduCount.O + teamCount.O;
+  let V = yeonduCount.V + teamCount.V;
+  let E = yeonduCount.E + teamCount.E;
+
+  let score = ((L + O) * (L + V) * (L + E) * (O + V) * (O + E) * (V + E)) % 100;
+
+  if (score > maxScore || (score === maxScore && team < bestTeam)) {
+    maxScore = score;
+    bestTeam = team;
   }
 }
 
-console.log(t);
+console.log(bestTeam);
