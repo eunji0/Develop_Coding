@@ -2791,6 +2791,49 @@
 // }
 
 //1296-팀이름 정하기
+// const fs = require('fs');
+// let input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// const yeondu = input[0];
+// const N = parseInt(input[1]);
+// const teams = input.slice(2);
+
+// const countLetters = (str) => {
+//   let count = { L: 0, O: 0, V: 0, E: 0 };
+//   for (let ch of str) {
+//     if (count[ch] !== undefined) count[ch]++;
+//   }
+//   return count;
+// };
+
+// const yeonduCount = countLetters(yeondu);
+
+// let bestTeam = '';
+// let maxScore = -1;
+
+// for (let team of teams) {
+//   const teamCount = countLetters(team);
+
+//   let L = yeonduCount.L + teamCount.L;
+//   let O = yeonduCount.O + teamCount.O;
+//   let V = yeonduCount.V + teamCount.V;
+//   let E = yeonduCount.E + teamCount.E;
+
+//   let score = ((L + O) * (L + V) * (L + E) * (O + V) * (O + E) * (V + E)) % 100;
+
+//   if (score > maxScore || (score === maxScore && team < bestTeam)) {
+//     maxScore = score;
+//     bestTeam = team;
+//   }
+// }
+
+// console.log(bestTeam);
+
+//10800-컬러볼
 const fs = require('fs');
 let input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2798,37 +2841,62 @@ let input = fs
   .trim()
   .split('\n');
 
-const yeondu = input[0];
-const N = parseInt(input[1]);
-const teams = input.slice(2);
+const n = +input[0];
+let p = [];
+let cnt = Array(n + 1)
+  .fill(null)
+  .map(() => []);
+let ans = Array(n).fill(0);
 
-const countLetters = (str) => {
-  let count = { L: 0, O: 0, V: 0, E: 0 };
-  for (let ch of str) {
-    if (count[ch] !== undefined) count[ch]++;
-  }
-  return count;
-};
+// 입력 처리 및 데이터 저장
+for (let i = 0; i < n; i++) {
+  let [c, s] = input[i + 1].split(' ').map(Number);
+  p.push([s, c, i]); // (크기, 색상, 원래 인덱스)
+  cnt[c].push([s, s]); // (크기, 누적합 초기값)
+}
 
-const yeonduCount = countLetters(yeondu);
-
-let bestTeam = '';
-let maxScore = -1;
-
-for (let team of teams) {
-  const teamCount = countLetters(team);
-
-  let L = yeonduCount.L + teamCount.L;
-  let O = yeonduCount.O + teamCount.O;
-  let V = yeonduCount.V + teamCount.V;
-  let E = yeonduCount.E + teamCount.E;
-
-  let score = ((L + O) * (L + V) * (L + E) * (O + V) * (O + E) * (V + E)) % 100;
-
-  if (score > maxScore || (score === maxScore && team < bestTeam)) {
-    maxScore = score;
-    bestTeam = team;
+// 색상별 공 크기 정렬 및 누적합 계산
+for (let i = 1; i <= n; i++) {
+  if (cnt[i].length === 0) continue;
+  cnt[i].sort((a, b) => a[0] - b[0]); // 크기 기준 정렬
+  for (let j = 1; j < cnt[i].length; j++) {
+    cnt[i][j][1] += cnt[i][j - 1][1]; // 누적합 저장
   }
 }
 
-console.log(bestTeam);
+// 공 크기 기준 정렬
+p.sort((a, b) => a[0] - b[0]);
+
+let sum = 0,
+  res = p[0][0];
+
+for (let i = 1; i < p.length; i++) {
+  let [s, c, idx] = p[i];
+
+  if (p[i - 1][0] !== s) {
+    sum += res;
+    res = 0;
+  }
+
+  // 이분 탐색 (upper_bound)
+  let cntArr = cnt[c];
+  let left = 0,
+    right = cntArr.length - 1,
+    pos = -1;
+
+  while (left <= right) {
+    let mid = Math.floor((left + right) / 2);
+    if (cntArr[mid][0] < s) {
+      pos = mid;
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  ans[idx] = sum - (pos !== -1 ? cntArr[pos][1] : 0);
+  res += s;
+}
+
+// 결과 출력
+console.log(ans.join('\n'));
