@@ -2977,6 +2977,22 @@
 // console.log(arr[Math.floor((n - 1) / 2)]);
 
 //16212-정열적인 정렬
+// const fs = require('fs');
+// let input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// console.log(
+//   input[1]
+//     .split(' ')
+//     .map(Number)
+//     .sort((a, b) => a - b)
+//     .join(' '),
+// );
+
+//16496-큰 수 만들기
 const fs = require('fs');
 let input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2984,10 +3000,7 @@ let input = fs
   .trim()
   .split('\n');
 
-console.log(
-  input[1]
-    .split(' ')
-    .map(Number)
-    .sort((a, b) => a - b)
-    .join(' '),
-);
+let n = +input[0];
+let arr = input[1].split(' ').sort((a, b) => (b + a).localeCompare(a + b));
+
+console.log(arr.join(' '));
