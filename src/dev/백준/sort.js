@@ -3003,4 +3003,6 @@ let input = fs
 let n = +input[0];
 let arr = input[1].split(' ').sort((a, b) => (b + a).localeCompare(a + b));
 
-console.log(arr.join(' '));
+let result = arr.join('');
+
+console.log(result[0] === '0' ? '0' : result);
