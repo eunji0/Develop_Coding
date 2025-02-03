@@ -2961,6 +2961,22 @@
 // console.log(arr.join(' '));
 
 //2548-대표 자연수
+// const fs = require('fs');
+// let input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// console.log(arr[Math.floor((n - 1) / 2)]);
+
+//16212-정열적인 정렬
 const fs = require('fs');
 let input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2968,10 +2984,10 @@ let input = fs
   .trim()
   .split('\n');
 
-let n = +input[0];
-let arr = input[1]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => a - b);
-
-console.log(arr[Math.floor((n - 1) / 2)]);
+console.log(
+  input[1]
+    .split(' ')
+    .map(Number)
+    .sort((a, b) => a - b)
+    .join(' '),
+);
