@@ -2932,6 +2932,35 @@
 // console.log(bestPrice, max);
 
 //1083-소트
+// const fs = require('fs');
+// let input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+// let s = +input[2];
+
+// for (let i = 0; i < n && s > 0; i++) {
+//   let max = i;
+//   for (let j = i + 1; j < n && j <= s + i; j++) {
+//     if (arr[j] > arr[max]) {
+//       max = j;
+//     }
+//   }
+
+//   for (let j = max; j > i; j--) {
+//     [arr[j], arr[j - 1]] = [arr[j - 1], arr[j]];
+//   }
+
+//   s -= max - i;
+// }
+
+// console.log(arr.join(' '));
+
+//2548-대표 자연수
 const fs = require('fs');
 let input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2940,22 +2969,9 @@ let input = fs
   .split('\n');
 
 let n = +input[0];
-let arr = input[1].split(' ').map(Number);
-let s = +input[2];
+let arr = input[1]
+  .split(' ')
+  .map(Number)
+  .sort((a, b) => a - b);
 
-for (let i = 0; i < n && s > 0; i++) {
-  let max = i;
-  for (let j = i + 1; j < n && j <= s + i; j++) {
-    if (arr[j] > arr[max]) {
-      max = j;
-    }
-  }
-
-  for (let j = max; j > i; j--) {
-    [arr[j], arr[j - 1]] = [arr[j - 1], arr[j]];
-  }
-
-  s -= max - i;
-}
-
-console.log(arr.join(' '));
+console.log(arr[Math.floor((n - 1) / 2)]);
