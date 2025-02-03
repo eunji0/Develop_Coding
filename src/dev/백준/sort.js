@@ -2901,6 +2901,37 @@
 // console.log(ans.join('\n'));
 
 //1246-온라인 판매
+// const fs = require('fs');
+// let input = fs
+//   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input
+//   .slice(1)
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// let max = 0;
+// let bestPrice = 0;
+
+// for (let i = 0; i < m; i++) {
+//   let price = arr[i];
+//   let buyers = m - i;
+//   let eggSold = Math.min(n, buyers);
+//   let revenue = price * eggSold;
+
+//   if (revenue > max) {
+//     max = revenue;
+//     bestPrice = price;
+//   }
+// }
+
+// console.log(bestPrice, max);
+
+//1083-소트
 const fs = require('fs');
 let input = fs
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
@@ -2908,25 +2939,23 @@ let input = fs
   .trim()
   .split('\n');
 
-let [n, m] = input[0].split(' ').map(Number);
-let arr = input
-  .slice(1)
-  .map(Number)
-  .sort((a, b) => a - b);
+let n = +input[0];
+let arr = input[1].split(' ').map(Number);
+let s = +input[2];
 
-let max = 0;
-let bestPrice = 0;
-
-for (let i = 0; i < m; i++) {
-  let price = arr[i];
-  let buyers = m - i;
-  let eggSold = Math.min(n, buyers);
-  let revenue = price * eggSold;
-
-  if (revenue > max) {
-    max = revenue;
-    bestPrice = price;
+for (let i = 0; i < n && s > 0; i++) {
+  let max = i;
+  for (let j = i + 1; j < n && j <= s + i; j++) {
+    if (arr[j] > arr[max]) {
+      max = j;
+    }
   }
+
+  for (let j = max; j > i; j--) {
+    [arr[j], arr[j - 1]] = [arr[j - 1], arr[j]];
+  }
+
+  s -= max - i;
 }
 
-console.log(bestPrice, max);
+console.log(arr.join(' '));
