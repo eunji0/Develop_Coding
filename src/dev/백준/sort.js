@@ -2848,7 +2848,6 @@ let cnt = Array(n + 1)
   .map(() => []);
 let ans = Array(n).fill(0);
 
-// 입력 처리 및 데이터 저장
 for (let i = 0; i < n; i++) {
   let [c, s] = input[i + 1].split(' ').map(Number);
   p.push([s, c, i]); // (크기, 색상, 원래 인덱스)
