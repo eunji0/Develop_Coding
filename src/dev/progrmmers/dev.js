@@ -1565,20 +1565,9 @@ function solution(plans) {
   return stack.sort((a, b) => a[1] - b[1]).map((v) => v[0]);
 }
 
-//광물 캐기
-
-//더 사용할 곡괭이가 없거나
-//광산에 있는 모든 광물을 캘 때까지
-
-//pickIndex = 0
-//result = 0//결과
-//let pick = pick[pickIndex] picks에서 맨 앞걸로 초기화
-//0일시 다음으로 이동 pickIndex+=1
-//let sum = picks의 sum
-//while문으로 minerals순환 조건:minerals가 남을때,picks의 sum이 0보다 클때
-//let count =0//5번 반복했는지 확인
-//let now = minerals의 shift()
-//pickIndex 로 다이아, 철, 돌 구분
-//구분한 광물을 result+=
-//반복
-//5번 반복했다면 pickIndex+=1, 처음부터 반복
+//폰켓몬
+function solution(nums) {
+  let a = new Set(nums).size;
+  let b = Math.floor(nums.length / 2);
+  return Math.min(a, b);
+}
