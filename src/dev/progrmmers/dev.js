@@ -1637,8 +1637,6 @@ function solution(genres, plays) {
 
   let map = new Map();
 
-  let result = [];
-
   for (let [a, b, c] of arr) {
     map.set(a, (map.get(a) || 0) + b);
   }
@@ -1672,4 +1670,43 @@ function solution(genres, plays) {
   }
 
   return answer;
+}
+
+//같은 숫자는 싫어
+function solution(arr) {
+  let result = [];
+  for (let i = 0; i < arr.length; i++) {
+    let now = arr[i];
+    if (now === arr[i + 1]) {
+      continue;
+    } else {
+      result.push(now);
+      now = arr[i + 1];
+    }
+  }
+
+  return result;
+}
+
+//기능개발
+function solution(progresses, speeds) {
+  let days = progresses.map((v, i) => Math.ceil((100 - v) / speeds[i]));
+  let result = [];
+
+  let maxDay = days[0];
+  let count = 0;
+
+  for (let day of days) {
+    if (day <= maxDay) {
+      count++;
+    } else {
+      result.push(count);
+      count = 1;
+      maxDay = day;
+    }
+  }
+
+  result.push(count);
+
+  return result;
 }
