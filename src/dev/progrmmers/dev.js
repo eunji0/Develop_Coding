@@ -1609,3 +1609,20 @@ function solution(phone_book) {
   }
   return answer;
 }
+
+//의상
+function solution(clothes) {
+  let map = new Map();
+
+  for (let [a, b] of clothes) {
+    map.set(b, (map.get(b) || 0) + 1);
+  }
+
+  let sum = 1;
+
+  for (let count of map.values()) {
+    sum *= count + 1;
+  }
+
+  return (sum -= 1);
+}
