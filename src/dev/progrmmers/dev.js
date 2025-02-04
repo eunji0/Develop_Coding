@@ -1571,3 +1571,29 @@ function solution(nums) {
   let b = Math.floor(nums.length / 2);
   return Math.min(a, b);
 }
+
+//완주하지 못한 선수
+function solution(participant, completion) {
+  participant.sort();
+  completion.sort();
+
+  let map = new Map();
+
+  participant.forEach((v) => {
+    map.set(v, (map.get(v) || 0) + 1);
+  });
+
+  completion.forEach((v) => {
+    if (map.get(v) > 0) {
+      map.set(v, map.get(v) - 1);
+    }
+  });
+
+  let result = '';
+  for (let [a, b] of map) {
+    if (b > 0) {
+      result += a.repeat(b);
+    }
+  }
+  return result;
+}
