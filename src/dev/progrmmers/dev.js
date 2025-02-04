@@ -1626,3 +1626,50 @@ function solution(clothes) {
 
   return (sum -= 1);
 }
+
+//베스트앨범
+function solution(genres, plays) {
+  let arr = [];
+
+  for (let i = 0; i < genres.length; i++) {
+    arr.push([genres[i], plays[i], i]);
+  }
+
+  let map = new Map();
+
+  let result = [];
+
+  for (let [a, b, c] of arr) {
+    map.set(a, (map.get(a) || 0) + b);
+  }
+
+  map = [...map].sort((a, b) => b[1] - a[1]);
+
+  let graph = new Map();
+
+  for (let [genre, plays, idx] of arr) {
+    if (!graph.has(genre)) {
+      graph.set(genre, []);
+    }
+    graph.get(genre).push([plays, idx]);
+  }
+
+  for (let [genres, arr] of graph) {
+    graph.set(
+      genres,
+      arr.sort((a, b) => b[0] - a[0]),
+    );
+  }
+
+  let answer = [];
+
+  for (let [g, sum] of map) {
+    let songs = graph.get(g);
+    answer.push(songs[0][1]);
+    if (songs.length > 1) {
+      answer.push(songs[1][1]);
+    }
+  }
+
+  return answer;
+}
