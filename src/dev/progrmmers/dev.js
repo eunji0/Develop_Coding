@@ -1710,3 +1710,21 @@ function solution(progresses, speeds) {
 
   return result;
 }
+
+//올바른 괄호
+function solution(s) {
+  let box = 0;
+
+  for (let v of s) {
+    if (v === '(') {
+      box++;
+    } else {
+      if (box === 0) return false;
+      box--;
+    }
+  }
+
+  return box === 0;
+
+  return box === 0;
+}
