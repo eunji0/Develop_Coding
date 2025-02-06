@@ -1748,3 +1748,32 @@ function solution(priorities, location) {
     }
   }
 }
+
+//다리를 지나는 트럭
+function solution(bridge_length, weight, truck_weights) {
+  let time = 0;
+  let bridge = [];
+
+  let bridge_weight = 0;
+
+  while (truck_weights.length > 0 || bridge.length > 0) {
+    time++;
+
+    if (bridge.length > 0 && bridge[0][1] === 0) {
+      bridge_weight -= bridge.shift()[0];
+    }
+
+    if (truck_weights.length > 0) {
+      let nextTruck = truck_weights[0];
+      if (bridge_weight + nextTruck <= weight) {
+        bridge.push([nextTruck, bridge_length]);
+        bridge_weight += nextTruck;
+        truck_weights.shift();
+      }
+    }
+
+    bridge.forEach((truck) => truck[1]--);
+  }
+
+  return time;
+}
