@@ -1777,3 +1777,20 @@ function solution(bridge_length, weight, truck_weights) {
 
   return time;
 }
+
+//주식가격
+function solution(prices) {
+  var answer = [];
+  for (let i = 0; i < prices.length; i++) {
+    let now = prices[i];
+    let count = 1;
+    for (let j = i + 1; j < prices.length; j++) {
+      count++;
+      if (now > prices[j]) {
+        break;
+      }
+    }
+    answer.push(count);
+  }
+  return answer;
+}
