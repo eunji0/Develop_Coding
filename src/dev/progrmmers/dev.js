@@ -1728,3 +1728,23 @@ function solution(s) {
 
   return box === 0;
 }
+
+//프로세스
+function solution(priorities, location) {
+  let list = priorities.map((v, i) => ({
+    my: i === location,
+    val: v,
+  }));
+
+  let count = 0;
+
+  while (true) {
+    let cur = list.splice(0, 1)[0];
+    if (list.some((a) => a.val > cur.val)) {
+      list.push(cur);
+    } else {
+      count++;
+      if (cur.my) return count;
+    }
+  }
+}
