@@ -1794,3 +1794,150 @@ function solution(prices) {
   }
   return answer;
 }
+
+//더 맵게
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  push(v) {
+    this.heap.push(v);
+    this.bubbleUp();
+  }
+
+  bubbleUp() {
+    let index = this.heap.length - 1;
+    while (index > 0) {
+      let parentIdx = Math.floor((index - 1) / 2);
+      if (this.heap[parentIdx] <= this.heap[index]) break;
+      [this.heap[parentIdx], this.heap[index]] = [this.heap[index], this.heap[parentIdx]];
+      index = parentIdx;
+    }
+  }
+
+  pop() {
+    if (this.heap.length === 1) return this.heap.pop();
+    let top = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.bubbleDown();
+    return top;
+  }
+
+  bubbleDown() {
+    let index = 0;
+    let length = this.heap.length;
+    while (true) {
+      let leftIdx = index * 2 + 1;
+      let rigthIdx = index * 2 + 2;
+      let smallest = index;
+    }
+  }
+}
+function solution(scoville, K) {
+  let count = 0;
+  let minH = new MinHeap();
+
+  scoville.forEach((v) => minH.push(v));
+
+  while (minH.size() > 1) {
+    let first = minH.pop();
+
+    if (first >= K) return count;
+    let sec = minH.pop();
+    let newC = first + sec * 2;
+
+    minH.push(newC);
+    count++;
+  }
+
+  return minH.pop() >= K ? count : -1;
+}
+
+//디스크 컨트롤러
+function solution(jobs) {
+  const count = jobs.length;
+  const minHeap = new MinHeap();
+  jobs.sort((a, b) => a[0] - b[0]);
+
+  let time = 0;
+  let complete = 0;
+  let total = 0;
+
+  while (jobs.length || minHeap.size()) {
+    while (jobs.length) {
+      if (jobs[0][0] === time) {
+        minHeap.heappush(jobs.shift());
+      } else break;
+    }
+
+    if (minHeap.size() && time >= complete) {
+      const task = minHeap.heappop();
+      complete = task[1] + time;
+      total += complete - task[0];
+    }
+    time++;
+  }
+
+  return (total / count) >> 0;
+}
+
+class MinHeap {
+  constructor() {
+    this.heap = [null];
+  }
+
+  size() {
+    return this.heap.length - 1;
+  }
+
+  getMin() {
+    return this.heap[1] ? this.heap[1] : null;
+  }
+
+  swap(a, b) {
+    [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
+  }
+
+  heappush(value) {
+    this.heap.push(value);
+    let curIdx = this.heap.length - 1;
+    let parIdx = (curIdx / 2) >> 0;
+
+    while (curIdx > 1 && this.heap[parIdx][1] > this.heap[curIdx][1]) {
+      this.swap(parIdx, curIdx);
+      curIdx = parIdx;
+      parIdx = (curIdx / 2) >> 0;
+    }
+  }
+
+  heappop() {
+    const min = this.heap[1];
+    if (this.heap.length <= 2) this.heap = [null];
+    else this.heap[1] = this.heap.pop();
+
+    let curIdx = 1;
+    let leftIdx = curIdx * 2;
+    let rightIdx = curIdx * 2 + 1;
+
+    if (!this.heap[leftIdx]) return min;
+    if (!this.heap[rightIdx]) {
+      if (this.heap[leftIdx][1] < this.heap[curIdx][1]) {
+        this.swap(leftIdx, curIdx);
+      }
+      return min;
+    }
+
+    while (this.heap[leftIdx][1] < this.heap[curIdx][1] || this.heap[rightIdx][1] < this.heap[curIdx][1]) {
+      const minIdx = this.heap[leftIdx][1] > this.heap[rightIdx][1] ? rightIdx : leftIdx;
+      this.swap(minIdx, curIdx);
+      curIdx = minIdx;
+      leftIdx = curIdx * 2;
+      rightIdx = curIdx * 2 + 1;
+
+      if (leftIdx >= this.size()) break;
+    }
+
+    return min;
+  }
+}
