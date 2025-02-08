@@ -1801,9 +1801,17 @@ class MinHeap {
     this.heap = [];
   }
 
-  push(v) {
-    this.heap.push(v);
+  push(val) {
+    this.heap.push(val);
     this.bubbleUp();
+  }
+
+  pop() {
+    if (this.heap.length === 1) return this.heap.pop();
+    let top = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.bubbleDown();
+    return top;
   }
 
   bubbleUp() {
@@ -1816,24 +1824,32 @@ class MinHeap {
     }
   }
 
-  pop() {
-    if (this.heap.length === 1) return this.heap.pop();
-    let top = this.heap[0];
-    this.heap[0] = this.heap.pop();
-    this.bubbleDown();
-    return top;
+  size() {
+    return this.heap.length;
   }
 
   bubbleDown() {
     let index = 0;
     let length = this.heap.length;
+
     while (true) {
       let leftIdx = index * 2 + 1;
-      let rigthIdx = index * 2 + 2;
+      let rightIdx = index * 2 + 2;
       let smallest = index;
+      if (leftIdx < length && this.heap[leftIdx] < this.heap[smallest]) {
+        smallest = leftIdx;
+      }
+      if (rightIdx < length && this.heap[rightIdx] < this.heap[smallest]) {
+        smallest = rightIdx;
+      }
+
+      if (smallest === index) break;
+      [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+      index = smallest;
     }
   }
 }
+
 function solution(scoville, K) {
   let count = 0;
   let minH = new MinHeap();
@@ -1855,89 +1871,87 @@ function solution(scoville, K) {
 }
 
 //디스크 컨트롤러
-function solution(jobs) {
-  const count = jobs.length;
-  const minHeap = new MinHeap();
-  jobs.sort((a, b) => a[0] - b[0]);
-
-  let time = 0;
-  let complete = 0;
-  let total = 0;
-
-  while (jobs.length || minHeap.size()) {
-    while (jobs.length) {
-      if (jobs[0][0] === time) {
-        minHeap.heappush(jobs.shift());
-      } else break;
-    }
-
-    if (minHeap.size() && time >= complete) {
-      const task = minHeap.heappop();
-      complete = task[1] + time;
-      total += complete - task[0];
-    }
-    time++;
-  }
-
-  return (total / count) >> 0;
-}
-
 class MinHeap {
   constructor() {
-    this.heap = [null];
+    this.heap = [];
+  }
+
+  push(val) {
+    this.heap.push(val);
+    this.bubbleUp();
+  }
+
+  pop() {
+    if (this.heap.length === 1) return this.heap.pop();
+    let top = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.bubbleDown();
+    return top;
   }
 
   size() {
-    return this.heap.length - 1;
+    return this.heap.length;
   }
 
-  getMin() {
-    return this.heap[1] ? this.heap[1] : null;
-  }
-
-  swap(a, b) {
-    [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
-  }
-
-  heappush(value) {
-    this.heap.push(value);
-    let curIdx = this.heap.length - 1;
-    let parIdx = (curIdx / 2) >> 0;
-
-    while (curIdx > 1 && this.heap[parIdx][1] > this.heap[curIdx][1]) {
-      this.swap(parIdx, curIdx);
-      curIdx = parIdx;
-      parIdx = (curIdx / 2) >> 0;
+  bubbleUp() {
+    let index = this.heap.length - 1;
+    while (index > 0) {
+      let parentIdx = Math.floor((index - 1) / 2);
+      if (this.heap[parentIdx][1] <= this.heap[index][1]) break;
+      [this.heap[parentIdx], this.heap[index]] = [this.heap[index], this.heap[parentIdx]];
+      index = parentIdx;
     }
   }
 
-  heappop() {
-    const min = this.heap[1];
-    if (this.heap.length <= 2) this.heap = [null];
-    else this.heap[1] = this.heap.pop();
+  bubbleDown() {
+    let index = 0;
+    let length = this.heap.length;
 
-    let curIdx = 1;
-    let leftIdx = curIdx * 2;
-    let rightIdx = curIdx * 2 + 1;
+    while (true) {
+      let leftIdx = index * 2 + 1;
+      let rightIdx = index * 2 + 2;
+      let smallest = index;
 
-    if (!this.heap[leftIdx]) return min;
-    if (!this.heap[rightIdx]) {
-      if (this.heap[leftIdx][1] < this.heap[curIdx][1]) {
-        this.swap(leftIdx, curIdx);
+      if (leftIdx < length && this.heap[leftIdx][1] < this.heap[smallest][1]) {
+        smallest = leftIdx;
       }
-      return min;
+      if (rightIdx < length && this.heap[rightIdx][1] < this.heap[smallest][1]) {
+        smallest = rightIdx;
+      }
+
+      if (smallest === index) break;
+      [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+      index = smallest;
     }
-
-    while (this.heap[leftIdx][1] < this.heap[curIdx][1] || this.heap[rightIdx][1] < this.heap[curIdx][1]) {
-      const minIdx = this.heap[leftIdx][1] > this.heap[rightIdx][1] ? rightIdx : leftIdx;
-      this.swap(minIdx, curIdx);
-      curIdx = minIdx;
-      leftIdx = curIdx * 2;
-      rightIdx = curIdx * 2 + 1;
-
-      if (leftIdx >= this.size()) break;
-    }
-
-    return min;
   }
+}
+
+function solution(jobs) {
+  let answer = 0;
+  let currentTime = 0;
+  let totalTime = 0;
+  let jobIndex = 0;
+  let jobCount = jobs.length;
+  jobs.sort((a, b) => a[0] - b[0]); // 1️⃣ 요청 시각 기준으로 정렬
+
+  let minHeap = new MinHeap();
+
+  while (jobIndex < jobCount || minHeap.size() > 0) {
+    // 2️⃣ 현재 시간이 작업 요청 시간 이상이 될 때까지 대기 큐에 넣기
+    while (jobIndex < jobCount && jobs[jobIndex][0] <= currentTime) {
+      minHeap.push(jobs[jobIndex]);
+      jobIndex++;
+    }
+
+    if (minHeap.size() > 0) {
+      let [start, duration] = minHeap.pop(); // 3️⃣ 소요 시간이 가장 짧은 작업 수행
+      currentTime += duration;
+      totalTime += currentTime - start; // 반환 시간 = 종료 시간 - 요청 시간
+    } else {
+      // 4️⃣ 작업이 없을 경우 현재 시간을 다음 작업의 요청 시간으로 이동
+      currentTime = jobs[jobIndex][0];
+    }
+  }
+
+  return Math.floor(totalTime / jobCount); // 5️⃣ 평균 반환 시간 반환 (정수 부분)
 }
