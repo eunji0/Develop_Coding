@@ -1927,31 +1927,185 @@ class MinHeap {
 }
 
 function solution(jobs) {
-  let answer = 0;
-  let currentTime = 0;
+  let curTime = 0;
   let totalTime = 0;
   let jobIndex = 0;
   let jobCount = jobs.length;
-  jobs.sort((a, b) => a[0] - b[0]); // 1️⃣ 요청 시각 기준으로 정렬
 
-  let minHeap = new MinHeap();
+  jobs.sort((a, b) => a[0] - b[0]);
 
-  while (jobIndex < jobCount || minHeap.size() > 0) {
-    // 2️⃣ 현재 시간이 작업 요청 시간 이상이 될 때까지 대기 큐에 넣기
-    while (jobIndex < jobCount && jobs[jobIndex][0] <= currentTime) {
-      minHeap.push(jobs[jobIndex]);
+  let minH = new MinHeap();
+
+  while (jobIndex < jobCount || minH.size() > 0) {
+    while (jobIndex < jobCount && jobs[jobIndex][0] <= curTime) {
+      minH.push(jobs[jobIndex]);
       jobIndex++;
     }
 
-    if (minHeap.size() > 0) {
-      let [start, duration] = minHeap.pop(); // 3️⃣ 소요 시간이 가장 짧은 작업 수행
-      currentTime += duration;
-      totalTime += currentTime - start; // 반환 시간 = 종료 시간 - 요청 시간
+    if (minH.size() > 0) {
+      let [start, dur] = minH.pop();
+      curTime += dur;
+      totalTime += curTime - start;
     } else {
-      // 4️⃣ 작업이 없을 경우 현재 시간을 다음 작업의 요청 시간으로 이동
-      currentTime = jobs[jobIndex][0];
+      curTime = jobs[jobIndex][0];
     }
   }
 
-  return Math.floor(totalTime / jobCount); // 5️⃣ 평균 반환 시간 반환 (정수 부분)
+  return Math.floor(totalTime / jobCount);
+}
+
+//이중우선순위큐
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  push(val) {
+    this.heap.push(val);
+    this.bubbleUp();
+  }
+
+  pop() {
+    if (this.heap.length === 1) return this.heap.pop();
+    let top = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.bubbleDown();
+    return top;
+  }
+
+  top() {
+    return this.heap.length ? this.heap[0] : null;
+  }
+
+  size() {
+    return this.heap.length;
+  }
+
+  bubbleUp() {
+    let index = this.heap.length - 1;
+    while (index > 0) {
+      let parentIdx = Math.floor((index - 1) / 2);
+      if (this.heap[parentIdx] <= this.heap[index]) break;
+      [this.heap[parentIdx], this.heap[index]] = [this.heap[index], this.heap[parentIdx]];
+      index = parentIdx;
+    }
+  }
+
+  bubbleDown() {
+    let index = 0;
+    let length = this.heap.length;
+
+    while (true) {
+      let leftIdx = index * 2 + 1;
+      let rightIdx = index * 2 + 2;
+      let smallest = index;
+
+      if (leftIdx < length && this.heap[leftIdx] < this.heap[smallest]) {
+        smallest = leftIdx;
+      }
+      if (rightIdx < length && this.heap[rightIdx] < this.heap[smallest]) {
+        smallest = rightIdx;
+      }
+
+      if (smallest === index) break;
+      [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+      index = smallest;
+    }
+  }
+}
+
+class MaxHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  push(val) {
+    this.heap.push(val);
+    this.bubbleUp();
+  }
+
+  pop() {
+    if (this.heap.length === 1) return this.heap.pop();
+    let top = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.bubbleDown();
+    return top;
+  }
+
+  top() {
+    return this.heap.length ? this.heap[0] : null;
+  }
+
+  size() {
+    return this.heap.length;
+  }
+
+  bubbleUp() {
+    let index = this.heap.length - 1;
+    while (index > 0) {
+      let parentIdx = Math.floor((index - 1) / 2);
+      if (this.heap[parentIdx] >= this.heap[index]) break;
+      [this.heap[parentIdx], this.heap[index]] = [this.heap[index], this.heap[parentIdx]];
+      index = parentIdx;
+    }
+  }
+
+  bubbleDown() {
+    let index = 0;
+    let length = this.heap.length;
+
+    while (true) {
+      let leftIdx = index * 2 + 1;
+      let rightIdx = index * 2 + 2;
+      let largest = index;
+
+      if (leftIdx < length && this.heap[leftIdx] > this.heap[largest]) {
+        largest = leftIdx;
+      }
+      if (rightIdx < length && this.heap[rightIdx] > this.heap[largest]) {
+        largest = rightIdx;
+      }
+
+      if (largest === index) break;
+      [this.heap[index], this.heap[largest]] = [this.heap[largest], this.heap[index]];
+      index = largest;
+    }
+  }
+}
+
+function solution(operations) {
+  let minH = new MinHeap();
+  let maxH = new MaxHeap();
+  let count = 0;
+  let deleted = new Set(); // 삭제된 값 추적
+
+  operations.forEach((v) => {
+    let [op, num] = v.split(' ');
+    num = +num;
+
+    if (op === 'I') {
+      minH.push(num);
+      maxH.push(num);
+      count++;
+    } else if (num === -1 && count > 0) {
+      while (minH.size() && deleted.has(minH.top())) minH.pop();
+      deleted.add(minH.pop());
+      count--;
+    } else if (num === 1 && count > 0) {
+      while (maxH.size() && deleted.has(maxH.top())) maxH.pop();
+      deleted.add(maxH.pop());
+      count--;
+    }
+
+    if (count === 0) {
+      minH = new MinHeap();
+      maxH = new MaxHeap();
+      deleted.clear();
+    }
+  });
+
+  while (minH.size() && deleted.has(minH.top())) minH.pop();
+  while (maxH.size() && deleted.has(maxH.top())) maxH.pop();
+
+  return count > 0 ? [maxH.top(), minH.top()] : [0, 0];
 }
