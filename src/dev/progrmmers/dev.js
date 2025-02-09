@@ -2124,3 +2124,9 @@ function solution(numbers) {
     .join('');
   return answer[0] === '0' ? '0' : answer;
 }
+
+//h-index
+function solution(citations) {
+  citations.sort((a, b) => b - a);
+  return citations.filter((el, idx) => el >= idx + 1).length;
+}
