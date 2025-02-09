@@ -2105,3 +2105,13 @@ function solution(operations) {
 
   return count > 0 ? [maxH.top(), minH.top()] : [0, 0];
 }
+
+//k번째수
+function solution(array, commands) {
+  let result = [];
+  commands.forEach((v) => {
+    let [a, b, c] = v;
+    result.push(array.slice(a - 1, b).sort((a, b) => a - b)[c - 1]);
+  });
+  return result;
+}
