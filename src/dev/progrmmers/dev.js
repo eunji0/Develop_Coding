@@ -2130,3 +2130,13 @@ function solution(citations) {
   citations.sort((a, b) => b - a);
   return citations.filter((el, idx) => el >= idx + 1).length;
 }
+
+//최소직사각형
+function solution(sizes) {
+  var answer = 0;
+  sizes = sizes.map((v) => v.sort((a, b) => a - b));
+  let maxA = Math.max(...sizes.map((v) => v[0]));
+  let maxB = Math.max(...sizes.map((v) => v[1]));
+
+  return maxA * maxB;
+}
