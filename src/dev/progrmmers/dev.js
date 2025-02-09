@@ -2019,6 +2019,10 @@ class MaxHeap {
     this.heap = [];
   }
 
+  top() {
+    return this.heap.length > 0 ? this.heap[0] : null;
+  }
+
   push(val) {
     this.heap.push(val);
     this.bubbleUp();
@@ -2032,20 +2036,12 @@ class MaxHeap {
     return top;
   }
 
-  top() {
-    return this.heap.length ? this.heap[0] : null;
-  }
-
-  size() {
-    return this.heap.length;
-  }
-
   bubbleUp() {
     let index = this.heap.length - 1;
     while (index > 0) {
       let parentIdx = Math.floor((index - 1) / 2);
       if (this.heap[parentIdx] >= this.heap[index]) break;
-      [this.heap[parentIdx], this.heap[index]] = [this.heap[index], this.heap[parentIdx]];
+      [this.heap[index], this.heap[parentIdx]] = [this.heap[parentIdx], this.heap[index]];
       index = parentIdx;
     }
   }
@@ -2053,7 +2049,6 @@ class MaxHeap {
   bubbleDown() {
     let index = 0;
     let length = this.heap.length;
-
     while (true) {
       let leftIdx = index * 2 + 1;
       let rightIdx = index * 2 + 2;
@@ -2062,6 +2057,7 @@ class MaxHeap {
       if (leftIdx < length && this.heap[leftIdx] > this.heap[largest]) {
         largest = leftIdx;
       }
+
       if (rightIdx < length && this.heap[rightIdx] > this.heap[largest]) {
         largest = rightIdx;
       }
@@ -2077,7 +2073,7 @@ function solution(operations) {
   let minH = new MinHeap();
   let maxH = new MaxHeap();
   let count = 0;
-  let deleted = new Set(); // 삭제된 값 추적
+  let deleted = new Set();
 
   operations.forEach((v) => {
     let [op, num] = v.split(' ');
