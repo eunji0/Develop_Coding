@@ -2131,7 +2131,7 @@ function solution(citations) {
   return citations.filter((el, idx) => el >= idx + 1).length;
 }
 
-//최소직사각형
+//최소 직사각형
 function solution(sizes) {
   var answer = 0;
   sizes = sizes.map((v) => v.sort((a, b) => a - b));
@@ -2139,4 +2139,31 @@ function solution(sizes) {
   let maxB = Math.max(...sizes.map((v) => v[1]));
 
   return maxA * maxB;
+}
+
+//모의고사
+function solution(answers) {
+  let one = [1, 2, 3, 4, 5];
+  let two = [2, 1, 2, 3, 2, 4, 2, 5];
+  let three = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5];
+
+  let aCount = 0,
+    bCount = 0,
+    cCount = 0;
+
+  for (let i = 0; i < answers.length; i++) {
+    if (answers[i] === one[i % one.length]) aCount++;
+    if (answers[i] === two[i % two.length]) bCount++;
+    if (answers[i] === three[i % three.length]) cCount++;
+  }
+
+  let scores = [
+    [1, aCount],
+    [2, bCount],
+    [3, cCount],
+  ];
+
+  let maxScore = Math.max(...scores.map((v) => v[1]));
+
+  return scores.filter((v) => v[1] === maxScore).map((v) => v[0]);
 }
