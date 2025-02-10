@@ -2167,3 +2167,32 @@ function solution(answers) {
 
   return scores.filter((v) => v[1] === maxScore).map((v) => v[0]);
 }
+
+//소수찾기
+function solution(numbers) {
+  const isPrime = (n) => {
+    if (n < 2) return false;
+    for (let i = 2; i <= Math.sqrt(n); i++) {
+      if (n % i === 0) return false;
+    }
+    return true;
+  };
+
+  var answer = new Set();
+
+  const pp = (arr, fixed) => {
+    if (arr.length) {
+      for (let i = 0; i < arr.length; i++) {
+        let newF = arr[i] + fixed;
+        answer.add(+newF);
+        let rest = arr.slice(0, i).concat(arr.slice(i + 1));
+
+        pp(rest, newF);
+      }
+    }
+  };
+
+  pp(numbers.split(''), '');
+
+  return [...answer].filter(isPrime).length;
+}
