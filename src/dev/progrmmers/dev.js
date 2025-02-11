@@ -2211,3 +2211,25 @@ function solution(brown, yellow) {
     }
   }
 }
+
+//피로도
+function solution(k, dungeons) {
+  let len = dungeons.length;
+  let ans = 0;
+  let visited = Array(len).fill(0);
+
+  const dfs = (k, cnt) => {
+    ans = Math.max(cnt, ans);
+
+    for (let j = 0; j < len; j++) {
+      if (k >= dungeons[j][0] && !visited[j]) {
+        visited[j] = 1;
+        dfs(k - dungeons[j][1], cnt + 1);
+        visited[j] = 0;
+      }
+    }
+  };
+
+  dfs(k, 0);
+  return ans;
+}
