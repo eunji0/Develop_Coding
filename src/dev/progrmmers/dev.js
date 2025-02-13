@@ -2304,3 +2304,34 @@ function solution(n, wires) {
 function solution(words) {
   return words.split('').reduce((r, c, i) => r + [781, 156, 31, 6, 1][i] * ['A', 'E', 'I', 'O', 'U'].indexOf(c) + 1, 0);
 }
+
+//체육복
+
+//시작 체육복 소지자 count = reserve.length
+//lost forEach문 순회(v)
+//v-1이 reserve에 있으면 , reserve에서 해당 splice후 count++
+//v-1이 없으면 v+1
+function solution(n, lost, reserve) {
+  var answer = 0;
+  let graph = Array(n + 1).fill(1);
+
+  lost.forEach((v) => (graph[v] -= 1));
+  reserve.forEach((v) => (graph[v] += 1));
+
+  for (let i = 1; i <= n; i++) {
+    if (graph[i] === 2 && graph[i - 1] === 0) {
+      graph[i - 1]++;
+      graph[i]--;
+    } else if (graph[i] === 2 && graph[i + 1] === 0) {
+      graph[i + 1]++;
+      graph[i]--;
+    }
+  }
+
+  for (let i of graph) {
+    if (i >= 1) {
+      answer++;
+    }
+  }
+  return (answer -= 1);
+}
