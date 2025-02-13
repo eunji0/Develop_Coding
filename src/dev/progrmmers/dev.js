@@ -2258,28 +2258,44 @@ function solution(k, dungeons) {
 
 //전력망을 둘로 나누기
 function solution(n, wires) {
-  const g = Array.from({ length: n }, () => []);
-  for (const e of wires) {
-    g[e[0] - 1].push(e[1] - 1);
-    g[e[1] - 1].push(e[0] - 1);
+  let min = n;
+  let graph = Array.from({ length: n + 1 }, () => []);
+  for (const [a, b] of wires) {
+    graph[a].push(b);
+    graph[b].push(a);
   }
-  const p = new Array(n).fill(-1);
-  const q = [0];
-  for (let i = 0; i < q.length; ++i) {
-    const u = q[i];
-    for (const v of g[u])
-      if (v != p[u]) {
-        p[v] = u;
-        q.push(v);
+
+  const bfs = (start, removedArr) => {
+    let q = [start];
+    let visited = Array(n + 1).fill(false);
+    let count = 0;
+    visited[start] = true;
+
+    while (q.length) {
+      let node = q.shift();
+      count++;
+
+      for (const next of graph[node]) {
+        if (
+          !visited[next] &&
+          !(node === removedArr[0] && next === removedArr[1]) &&
+          !(next === removedArr[0] && node === removedArr[1])
+        ) {
+          visited[next] = true;
+          q.push(next);
+        }
       }
+    }
+
+    return count;
+  };
+
+  for (const [a, b] of wires) {
+    let c1 = bfs(a, [a, b]);
+    let c2 = n - c1;
+
+    min = Math.min(min, Math.abs(c1 - c2));
   }
-  let ans = n;
-  const dp = new Array(n).fill(1);
-  for (let i = q.length; --i > 0; ) {
-    const v = q[i];
-    dp[p[v]] += dp[v];
-    let a = Math.abs(n - 2 * dp[v]);
-    if (ans > a) ans = a;
-  }
-  return ans;
+
+  return min;
 }
