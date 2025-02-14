@@ -2335,3 +2335,19 @@ function solution(n, lost, reserve) {
   }
   return (answer -= 1);
 }
+
+//조이스틱
+function solution(name) {
+  let total = 0;
+  let move = name.length - 1;
+
+  for (let i = 0; i < name.length; i++) {
+    total += Math.min(name.charCodeAt(i) - 'A'.charCodeAt(0), 'Z'.charCodeAt(0) - name.charCodeAt(i) + 1);
+    let next = i + 1;
+    while (next < name.length && name[next] === 'A') next++;
+
+    move = Math.min(move, i * 2 + (name.length - next), (name.length - next) * 2 + i);
+  }
+
+  return total + move;
+}
