@@ -2351,3 +2351,19 @@ function solution(name) {
 
   return total + move;
 }
+
+//큰 수 만들기
+function solution(number, k) {
+  let stack = [];
+
+  for (let num of number) {
+    while (stack.length > 0 && k > 0 && stack[stack.length - 1] < num) {
+      stack.pop();
+      k--;
+    }
+    stack.push(num);
+  }
+
+  stack = stack.slice(0, stack.length - k);
+  return stack.join('');
+}
