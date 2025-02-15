@@ -2384,3 +2384,36 @@ function solution(people, limit) {
   }
   return count;
 }
+
+//섬 연결하기
+function solution(n, costs) {
+  costs.sort((a, b) => a[2] - b[2]);
+  let parent = Array(n)
+    .fill(0)
+    .map((_, i) => i);
+
+  function find(x) {
+    if (parent[x] === x) return x;
+    return (parent[x] = find(parent[x]));
+  }
+
+  function union(a, b) {
+    let rootA = find(a);
+    let rootB = find(b);
+    if (rootA !== rootB) parent[rootB] = rootA;
+  }
+
+  let answer = 0;
+  let count = 0;
+
+  for (let [a, b, c] of costs) {
+    if (find(a) !== find(b)) {
+      union(a, b);
+      answer += c;
+      count++;
+    }
+
+    if (count === n - 1) break;
+  }
+  return answer;
+}
