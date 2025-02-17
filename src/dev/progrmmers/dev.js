@@ -2417,3 +2417,20 @@ function solution(n, costs) {
   }
   return answer;
 }
+
+//단속카메라
+function solution(routes) {
+  routes.sort((a, b) => a[1] - b[1]);
+
+  let count = 0;
+  let startCount = -30001;
+
+  for (let [start, end] of routes) {
+    if (startCount < start) {
+      count++;
+      startCount = end;
+    }
+  }
+
+  return count;
+}
