@@ -2434,3 +2434,29 @@ function solution(routes) {
 
   return count;
 }
+
+//n으로 표현
+function solution(N, number) {
+  if (N === number) return 1;
+
+  let dp = Array.from({ length: 9 }, () => new Set());
+
+  for (let i = 1; i <= 8; i++) {
+    dp[i].add(Number(String(N).repeat(i)));
+
+    for (let j = 1; j < i; j++) {
+      for (let n1 of dp[j]) {
+        for (let n2 of dp[i - j]) {
+          dp[i].add(n1 + n2);
+          dp[i].add(n1 - n2);
+          dp[i].add(n1 * n2);
+          if (n2 !== 0) dp[i].add(Math.floor(n1 / n2));
+        }
+      }
+    }
+
+    if (dp[i].has(number)) return i;
+  }
+
+  return -1;
+}
