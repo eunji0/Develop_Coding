@@ -2573,3 +2573,36 @@ function solution(maps) {
   }
   return -1;
 }
+
+//단어 변환
+function solution(begin, target, words) {
+  if (!words.includes(target)) return 0;
+
+  let queue = [[begin, 0]];
+  let visited = new Set();
+
+  while (queue.length) {
+    let [cur, steps] = queue.shift();
+
+    if (cur == target) return steps;
+
+    for (let word of words) {
+      if (!visited.has(word) && canTrans(cur, word)) {
+        visited.add(word);
+        queue.push([word, steps + 1]);
+      }
+    }
+  }
+
+  return 0;
+}
+
+const canTrans = (word1, word2) => {
+  let count = 0;
+  for (let i = 0; i < word1.length; i++) {
+    if (word1[i] !== word2[i]) count++;
+    if (count > 1) return false;
+  }
+
+  return count === 1;
+};
