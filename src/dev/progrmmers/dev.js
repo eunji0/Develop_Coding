@@ -2500,3 +2500,20 @@ function solution(m, n, puddles) {
 
   return dp[n][m];
 }
+
+//타겟 넘버
+function solution(numbers, target) {
+  let answer = 0;
+  getAnswer(0, 0);
+  function getAnswer(x, values) {
+    if (x < numbers.length) {
+      getAnswer(x + 1, values + numbers[x]);
+      getAnswer(x + 1, values - numbers[x]);
+    } else {
+      if (values === target) {
+        answer++;
+      }
+    }
+  }
+  return answer;
+}
