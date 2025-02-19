@@ -2606,3 +2606,30 @@ const canTrans = (word1, word2) => {
 
   return count === 1;
 };
+
+//여행경로
+function solution(tickets) {
+  let routes = {};
+  let answer = [];
+
+  tickets.forEach(([from, to]) => {
+    if (!routes[from]) routes[from] = [];
+    routes[from].push(to);
+  });
+
+  for (let route in routes) {
+    routes[route].sort();
+  }
+
+  const dfs = (airport) => {
+    while (routes[airport] && routes[airport].length) {
+      let nextAirport = routes[airport].shift();
+      dfs(nextAirport);
+    }
+    answer.push(airport);
+  };
+
+  dfs('ICN');
+
+  return answer.reverse();
+}
