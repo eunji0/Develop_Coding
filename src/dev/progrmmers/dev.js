@@ -1,4 +1,5 @@
 const { configure } = require('@testing-library/react');
+const { map } = require('jquery');
 
 //완주하지 못한 선수
 function solution(participant, completion) {
@@ -2540,4 +2541,35 @@ function solution(n, computers) {
   }
 
   return count;
+}
+
+//게임 맵 최단거리
+function solution(maps) {
+  let n = maps.length;
+  let m = maps[0].length;
+
+  let queue = [[0, 0, 1]];
+  let dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+
+  while (queue.length) {
+    let [x, y, dist] = queue.shift();
+
+    if (x === n - 1 && y === m - 1) return dist;
+
+    for (const [dx, dy] of dir) {
+      let nx = x + dx;
+      let ny = y + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < n && ny < m && maps[nx][ny] === 1) {
+        queue.push([nx, ny, dist + 1]);
+        maps[nx][ny] = 0;
+      }
+    }
+  }
+  return -1;
 }
