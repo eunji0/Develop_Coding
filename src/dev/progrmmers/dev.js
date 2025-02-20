@@ -2633,3 +2633,92 @@ function solution(tickets) {
 
   return answer.reverse();
 }
+
+//퍼즐 조각 채우기
+function solution(game_board, table) {
+  let dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+  let n = game_board.length;
+
+  const visitedBoard = Array.from({ length: n }, () => Array(n).fill(false));
+  const visitedTable = Array.from({ length: n }, () => Array(n).fill(false));
+
+  const bfs = (board, x, y, target, visited) => {
+    let queue = [[x, y]];
+    let blocks = [[x, y]];
+    visited[x][y] = true;
+
+    while (queue.length) {
+      let [cx, cy] = queue.shift();
+
+      for (const [dx, dy] of dir) {
+        const nx = cx + dx;
+        const ny = cy + dy;
+
+        if (nx >= 0 && ny >= 0 && nx < n && ny < n && !visited[nx][ny] && board[nx][ny] === target) {
+          visited[nx][ny] = true;
+          queue.push([nx, ny]);
+          blocks.push([nx, ny]);
+        }
+      }
+    }
+    return normalizeShape(blocks);
+  };
+
+  const normalizeShape = (blocks) => {
+    let minX = Math.min(...blocks.map((v) => v[0]));
+    let minY = Math.min(...blocks.map((v) => v[1]));
+
+    return blocks.map(([x, y]) => [x - minX, y - minY]).sort();
+  };
+
+  const rotate90 = (shape) => {
+    let rotated = shape.map(([x, y]) => [y, -x]);
+    return normalizeShape(rotated);
+  };
+
+  let emptySpaces = [];
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (game_board[i][j] === 0 && !visitedBoard[i][j]) {
+        emptySpaces.push(bfs(game_board, i, j, 0, visitedBoard));
+      }
+    }
+  }
+
+  let puzzlePieces = [];
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (table[i][j] === 1 && !visitedTable[i][j]) {
+        puzzlePieces.push(bfs(table, i, j, 1, visitedTable));
+      }
+    }
+  }
+
+  function matchPiece(space, piece) {
+    for (let i = 0; i < 4; i++) {
+      if (JSON.stringify(space) === JSON.stringify(piece)) return true;
+      piece = rotate90(piece);
+    }
+    return false;
+  }
+
+  let filledCount = 0;
+  let usedPieces = new Array(puzzlePieces.length).fill(false);
+
+  for (let space of emptySpaces) {
+    for (let i = 0; i < puzzlePieces.length; i++) {
+      if (!usedPieces[i] && matchPiece(space, puzzlePieces[i])) {
+        filledCount += space.length;
+        usedPieces[i] = true;
+        break;
+      }
+    }
+  }
+
+  return filledCount;
+}
