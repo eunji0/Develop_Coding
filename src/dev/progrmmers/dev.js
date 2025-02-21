@@ -2774,3 +2774,31 @@ function solution(distance, rocks, n) {
 
   return answer;
 }
+
+//가장 먼 노드
+function solution(n, edge) {
+  let graph = Array.from({ length: n + 1 }, () => []);
+
+  for (let [a, b] of edge) {
+    graph[a].push(b);
+    graph[b].push(a);
+  }
+
+  let queue = [1];
+  let distances = Array(n + 1).fill(-1);
+  distances[1] = 0;
+
+  while (queue.length) {
+    let node = queue.shift();
+
+    for (let next of graph[node]) {
+      if (distances[next] === -1) {
+        queue.push(next);
+        distances[next] = distances[node] + 1;
+      }
+    }
+  }
+
+  let maxDist = Math.max(...distances);
+  return distances.filter((v) => v === maxDist).length;
+}
