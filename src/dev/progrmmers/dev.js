@@ -2741,3 +2741,36 @@ function solution(n, times) {
 
   return low;
 }
+
+//징검다리
+function solution(distance, rocks, n) {
+  rocks.push(distance);
+  rocks.sort((a, b) => a - b);
+
+  let low = 1;
+  let high = distance;
+  let answer = 0;
+
+  while (low <= high) {
+    let mid = Math.floor((low + high) / 2);
+    let prev = 0;
+    let removed = 0;
+
+    for (let rock of rocks) {
+      if (rock - prev < mid) {
+        removed++;
+      } else {
+        prev = rock;
+      }
+    }
+
+    if (removed > n) {
+      high = mid - 1;
+    } else {
+      answer = mid;
+      low = mid + 1;
+    }
+  }
+
+  return answer;
+}
