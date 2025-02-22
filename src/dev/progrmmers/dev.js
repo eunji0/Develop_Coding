@@ -2802,3 +2802,36 @@ function solution(n, edge) {
   let maxDist = Math.max(...distances);
   return distances.filter((v) => v === maxDist).length;
 }
+
+//순위
+function solution(n, results) {
+  let graph = Array.from({ length: n + 1 }, () => Array(n + 1).fill(0));
+
+  for (let [a, b] of results) {
+    graph[a][b] = 1;
+    graph[b][a] = -1;
+  }
+
+  for (let k = 1; k <= n; k++) {
+    for (let i = 1; i <= n; i++) {
+      for (let j = 1; j <= n; j++) {
+        if (graph[i][k] === 1 && graph[k][j] === 1) {
+          graph[i][j] = 1;
+          graph[j][i] = -1;
+        }
+      }
+    }
+  }
+
+  let answer = 0;
+  for (let i = 1; i <= n; i++) {
+    let count = 0;
+    for (let j = 1; j <= n; j++) {
+      if (graph[i][j] !== 0) count++;
+    }
+
+    if (count === n - 1) answer++;
+  }
+
+  return answer;
+}
