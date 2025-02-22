@@ -2835,3 +2835,48 @@ function solution(n, results) {
 
   return answer;
 }
+
+//방의 개수
+function solution(arrows) {
+  let answer = 0;
+  const directions = [
+    [0, 1],
+    [1, 1],
+    [1, 0],
+    [1, -1],
+    [0, -1],
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+  ];
+
+  let visitedNodes = new Set();
+  let visitedEdges = new Set();
+
+  let x = 0,
+    y = 0;
+  visitedNodes.add(`0,0`);
+
+  for (let arrow of arrows) {
+    for (let step = 0; step < 2; step++) {
+      let nx = x + directions[arrow][0];
+      let ny = y + directions[arrow][1];
+
+      let nodeKey = `${nx},${ny}`;
+      let edgeKey = `${x},${y}-${nx},${ny}`;
+      let edgeReverseKey = `${nx},${ny}-${x},${y}`;
+      if (visitedNodes.has(nodeKey) && !visitedEdges.has(edgeKey)) {
+        answer++;
+      }
+
+      visitedNodes.add(nodeKey);
+      visitedEdges.add(edgeKey);
+      visitedEdges.add(edgeReverseKey);
+
+      x = nx;
+      y = ny;
+    }
+  }
+
+  return answer;
+}
