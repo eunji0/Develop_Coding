@@ -2880,3 +2880,60 @@ function solution(arrows) {
 
   return answer;
 }
+
+//리코쳇 로봇
+function solution(board) {
+  let dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+
+  board = board.map((v) => v.split(''));
+  let start = [];
+  let goal = [];
+
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[0].length; j++) {
+      if (board[i][j] === 'R') {
+        start = [i, j];
+      }
+      if (board[i][j] === 'G') {
+        goal = [i, j];
+      }
+    }
+  }
+
+  let queue = [[...start, 0]];
+  let visited = Array.from({ length: board.length }, () => Array(board[0].length).fill(false));
+  visited[start[0]][start[1]] = true;
+
+  while (queue.length) {
+    let [x, y, count] = queue.shift();
+
+    if (x === goal[0] && y === goal[1]) return count;
+
+    for (let [dx, dy] of dir) {
+      let nx = x,
+        ny = y;
+
+      while (
+        nx + dx >= 0 &&
+        nx + dx < board.length &&
+        ny + dy >= 0 &&
+        ny + dy < board[0].length &&
+        board[nx + dx][ny + dy] !== 'D'
+      ) {
+        nx += dx;
+        ny += dy;
+      }
+
+      if (!visited[nx][ny]) {
+        visited[nx][ny] = true;
+        queue.push([nx, ny, count + 1]);
+      }
+    }
+  }
+  return -1;
+}
