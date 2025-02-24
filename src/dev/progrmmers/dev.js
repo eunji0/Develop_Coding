@@ -2966,3 +2966,25 @@ function solution(info, n, m) {
 
   return minA;
 }
+
+//서버 증설 횟수
+function solution(players, m, k) {
+  let servers = Array(24).fill(0);
+  let answer = 0;
+
+  players.forEach((player, idx) => {
+    if (Math.floor(player / m) > servers[idx]) {
+      let newCnt = Math.floor(player / m) - servers[idx];
+
+      for (let i = 0; i < k; ++i) {
+        if (idx + i < 24) {
+          servers[idx + i] += newCnt;
+        }
+      }
+
+      answer += newCnt;
+    }
+  });
+
+  return answer;
+}
