@@ -2937,3 +2937,32 @@ function solution(board) {
   }
   return -1;
 }
+
+//완전범죄
+function solution(info, n, m) {
+  let dp = Array.from({ length: info.length + 1 }, () => Array(n).fill(Infinity));
+
+  dp[0][0] = 0;
+
+  for (let i = 0; i < info.length; i++) {
+    let [a, b] = info[i];
+
+    for (let j = n - 1; j >= 0; j--) {
+      if (dp[i][j] < Infinity) {
+        if (j + a < n) dp[i + 1][j + a] = Math.min(dp[i + 1][j + a], dp[i][j]);
+
+        if (dp[i][j] + b < m) dp[i + 1][j] = Math.min(dp[i + 1][j], dp[i][j] + b);
+      }
+    }
+  }
+
+  let minA = -1;
+  for (let j = 0; j < n; j++) {
+    if (dp[info.length][j] < m) {
+      minA = j;
+      break;
+    }
+  }
+
+  return minA;
+}
