@@ -3092,3 +3092,67 @@ function solution(storage, requests) {
 
   return containerCnt;
 }
+
+//[PCCP 기출문제] 2번 / 퍼즐 게임 챌린지
+//sum=0
+//diff ≤ level
+//sum+=time_cur
+//diff > level
+//diff - level번 틀립
+//틀릴 때마다, time_cur만큼의 시간을 사용
+// 추가로 time_prev만큼의 시간을 사용
+//diff - level번 틀린 이후에 다시 퍼즐을 풀면 time_cur만큼의 시간을 사용
+
+function solution(diffs, times, limit) {
+  let max = 100000,
+    min = 1,
+    mid = undefined;
+  let answer = max;
+  while (min <= max) {
+    mid = Math.floor((max + min) / 2);
+    let spendTime = 0,
+      over = false;
+    for (let i = 0; i < diffs.length; ++i) {
+      if (mid - diffs[i] < 0) {
+        spendTime = spendTime + (diffs[i] - mid) * (times[i] + times[i - 1]) + times[i];
+      } else {
+        spendTime += times[i];
+      }
+
+      if (limit < spendTime) {
+        over = true;
+        break;
+      }
+    }
+
+    if (over) {
+      min = mid + 1;
+    } else {
+      answer = mid;
+      max = mid - 1;
+    }
+  }
+  return answer;
+}
+
+//호텔 대실
+function solution(book_time) {
+  let calTime = book_time.map((v) => {
+    let [a, b] = v.map((vv) => vv.split(':').map(Number));
+    return [a[0] * 60 + a[1], b[0] * 60 + b[1] + 10];
+  });
+
+  calTime.sort((a, b) => a[0] - b[0]);
+
+  let minHeap = [];
+
+  for (let [start, end] of calTime) {
+    if (minHeap.length > 0 && minHeap[0] <= start) {
+      minHeap.shift();
+    }
+    minHeap.push(end);
+    minHeap.sort((a, b) => a - b);
+  }
+
+  return minHeap.length;
+}
