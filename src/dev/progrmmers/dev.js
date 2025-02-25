@@ -3202,3 +3202,22 @@ function solution(maps) {
   }
   return result.length > 0 ? result.sort((a, b) => a - b) : [-1];
 }
+
+//뒤에 있는 큰수 찾기
+//for문으로 numbers[i]가 기준
+//i부터 끝까지 비교
+//자신보다 큰 수가 없다면 -1
+//자신보다 큰 수가 나온다면 stop
+
+function solution(numbers) {
+  let stack = [];
+  let result = Array(numbers.length).fill(-1);
+
+  for (let i = 0; i < numbers.length; i++) {
+    while (stack.length && numbers[stack[stack.length - 1]] < numbers[i]) {
+      result[stack.pop()] = numbers[i];
+    }
+    stack.push(i);
+  }
+  return result;
+}
