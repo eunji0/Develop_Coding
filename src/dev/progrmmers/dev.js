@@ -3156,3 +3156,49 @@ function solution(book_time) {
 
   return minHeap.length;
 }
+
+//무인도 여행
+function solution(maps) {
+  maps = maps.map((v) => v.split('').map(Number));
+  let visited = Array.from({ length: maps.length }, () => Array(maps[0].length).fill(false));
+  let dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+
+  const bfs = (i, j) => {
+    let queue = [[i, j]];
+    let sum = 0;
+
+    sum += maps[i][j];
+    while (queue.length) {
+      let [x, y] = queue.shift();
+
+      for (let [dx, dy] of dir) {
+        let nx = x + dx;
+        let ny = y + dy;
+
+        if (nx >= 0 && ny >= 0 && nx < maps.length && ny < maps[0].length && maps[nx][ny] > 0 && !visited[nx][ny]) {
+          visited[nx][ny] = true;
+          queue.push([nx, ny]);
+          sum += maps[nx][ny];
+        }
+      }
+    }
+
+    return sum;
+  };
+
+  let result = [];
+  for (let i = 0; i < maps.length; i++) {
+    for (let j = 0; j < maps[0].length; j++) {
+      if (maps[i][j] > 0 && !visited[i][j]) {
+        visited[i][j] = true;
+        result.push(bfs(i, j));
+      }
+    }
+  }
+  return result.length > 0 ? result.sort((a, b) => a - b) : [-1];
+}
