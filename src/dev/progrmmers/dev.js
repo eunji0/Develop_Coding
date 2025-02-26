@@ -3265,3 +3265,23 @@ function solution(weights) {
   }
   return count;
 }
+
+//택배 배달과 수거하기
+function solution(cap, n, deliveries, pickups) {
+  let total = 0;
+  let dRemail = 0,
+    pRemail = 0;
+
+  for (let i = n - 1; i >= 0; i--) {
+    dRemail += deliveries[i];
+    pRemail += pickups[i];
+
+    while (dRemail > 0 || pRemail > 0) {
+      dRemail -= cap;
+      pRemail -= cap;
+      total += (i + 1) * 2;
+    }
+  }
+
+  return total;
+}
