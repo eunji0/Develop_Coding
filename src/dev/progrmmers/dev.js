@@ -3221,3 +3221,25 @@ function solution(numbers) {
   }
   return result;
 }
+
+//숫자 변환하기
+function solution(x, y, n) {
+  if (x === y) return 0;
+
+  let queue = [[x, 0]];
+  let visited = new Set();
+  let front = 0;
+
+  while (front < queue.length) {
+    let [cur, count] = queue[front++];
+
+    for (let next of [cur + n, cur * 2, cur * 3]) {
+      if (next === y) return count + 1;
+      if (next <= y && !visited.has(next)) {
+        visited.add(next);
+        queue.push([next, count + 1]);
+      }
+    }
+  }
+  return -1;
+}
