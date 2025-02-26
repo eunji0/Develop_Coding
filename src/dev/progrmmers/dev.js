@@ -3243,3 +3243,25 @@ function solution(x, y, n) {
   }
   return -1;
 }
+
+//시소 짝꿍
+function solution(weights) {
+  let count = 0;
+  let map = new Map();
+
+  for (let w of weights) {
+    map.set(w, (map.get(w) || 0) + 1);
+  }
+
+  for (let [num, c] of map) {
+    if (c > 1) count += (c * (c - 1)) / 2;
+
+    for (let ratio of [1 / 2, 2 / 3, 3 / 4]) {
+      let pair = num * ratio;
+      if (map.has(pair)) {
+        count += c * map.get(pair);
+      }
+    }
+  }
+  return count;
+}
