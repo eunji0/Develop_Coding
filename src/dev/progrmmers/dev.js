@@ -3306,3 +3306,19 @@ function solution(storey) {
 
   return answer;
 }
+
+//테이블 해시 함수
+function solution(data, col, row_begin, row_end) {
+  data.sort((a, b)=>{
+    if(a[col-1]===b[col-1]){
+      return b[0]-a[0] 
+    }
+    return a[col-1]-b[col-1]  
+  })
+
+  let sum =0
+  for(let i=row_begin-1; i<row_end; i++){
+    sum^=data[i].reduce((a, c)=>a+c%(i+1), 0)
+  }
+  return sum
+}
