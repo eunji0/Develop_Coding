@@ -3309,16 +3309,90 @@ function solution(storey) {
 
 //테이블 해시 함수
 function solution(data, col, row_begin, row_end) {
-  data.sort((a, b)=>{
-    if(a[col-1]===b[col-1]){
-      return b[0]-a[0] 
+  data.sort((a, b) => {
+    if (a[col - 1] === b[col - 1]) {
+      return b[0] - a[0];
     }
-    return a[col-1]-b[col-1]  
-  })
+    return a[col - 1] - b[col - 1];
+  });
 
-  let sum =0
-  for(let i=row_begin-1; i<row_end; i++){
-    sum^=data[i].reduce((a, c)=>a+c%(i+1), 0)
+  let sum = 0;
+  for (let i = row_begin - 1; i < row_end; i++) {
+    sum ^= data[i].reduce((a, c) => a + (c % (i + 1)), 0);
   }
-  return sum
+  return sum;
 }
+
+//디펜스 게임
+class MaxHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  push(value) {
+    this.heap.push(value);
+    let idx = this.heap.length - 1;
+    while (idx > 0) {
+      let parent = Math.floor((idx - 1) / 2);
+      if (this.heap[parent] >= this.heap[idx]) break;
+      [this.heap[parent], this.heap[idx]] = [this.heap[idx], this.heap[parent]];
+      idx = parent;
+    }
+  }
+
+  pop() {
+    if (this.heap.length === 1) return this.heap.pop();
+    const max = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    let idx = 0;
+
+    while (true) {
+      let left = idx * 2 + 1;
+      let right = idx * 2 + 2;
+      let largest = idx;
+
+      if (left < this.heap.length && this.heap[left] > this.heap[largest]) {
+        largest = left;
+      }
+      if (right < this.heap.length && this.heap[right] > this.heap[largest]) {
+        largest = right;
+      }
+      if (largest === idx) break;
+      [this.heap[idx], this.heap[largest]] = [this.heap[largest], this.heap[idx]];
+      idx = largest;
+    }
+    return max;
+  }
+
+  size() {
+    return this.heap.length;
+  }
+}
+
+function solution(n, k, enemy) {
+  let maxHeap = new MaxHeap();
+  let total = n;
+
+  for (let i = 0; i < enemy.length; i++) {
+    maxHeap.push(enemy[i]);
+    total -= enemy[i];
+
+    if (total < 0) {
+      if (k > 0) {
+        total += maxHeap.pop();
+        k--;
+      } else {
+        return i;
+      }
+    }
+  }
+
+  return enemy.length;
+}
+
+//매 라운드마다 enemy[i]마리의 적이 등장
+//남은 병사 중 enemy[i]명 만큼 소모하여 enemy[i]마리의 적을 막을 수
+//무적권을 사용하면 병사의 소모없이 한 라운드의 공격을 막을 수
+//무적권은 최대 k번 사용
+//남은 병사의 수보다 현재 라운드의 적의 수가 더 많으면 게임이 종료
+//무적권은 소모하는 병사 수가 가장 많을때 사용하는게 좋음
