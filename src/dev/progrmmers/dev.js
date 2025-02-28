@@ -3431,3 +3431,33 @@ function solution(arrayA, arrayB) {
 //A끼리 나눌 수 있고 B끼리 나눌 수 없는 경우
 //반대
 //최대 공약수를 구하는 함수
+
+//롤케이크 자르기
+function solution(topping) {
+  let answer = 0;
+  let left = new Map();
+  let right = new Map();
+
+  for (let i = 0; i < topping.length; i++) {
+    right.set(topping[i], (right.get(topping[i]) || 0) + 1);
+  }
+  let uL = 0;
+  let uR = right.size;
+
+  for (let i = 0; i < topping.length; i++) {
+    left.set(topping[i], (left.get(topping[i]) || 0) + 1);
+    if (left.get(topping[i]) === 1) {
+      uL++;
+    }
+    right.set(topping[i], right.get(topping[i]) - 1);
+    if (right.get(topping[i]) === 0) {
+      uR--;
+    }
+
+    if (uL === uR) {
+      answer++;
+    }
+  }
+
+  return answer;
+}
