@@ -1,5 +1,6 @@
 const { configure } = require('@testing-library/react');
 const { map } = require('jquery');
+const { get } = require('request');
 
 //완주하지 못한 선수
 function solution(participant, completion) {
@@ -3407,3 +3408,26 @@ function solution(k, d) {
 
   return count;
 }
+
+//숫자 카드 나누기
+function solution(arrayA, arrayB) {
+  const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+
+  let getA = arrayA.reduce((a, c) => gcd(a, c));
+  let getB = arrayB.reduce((a, c) => gcd(a, c));
+
+  const getGCD = (arr) => arr.reduce((acc, cur) => gcd(acc, cur));
+
+  let gcdA = getGCD(arrayA);
+  let gcdB = getGCD(arrayB);
+
+  const isValid = (g, a) => a.every((n) => n % g !== 0);
+
+  let rA = isValid(gcdA, arrayB) ? gcdA : 0;
+  let rB = isValid(gcdB, arrayA) ? gcdB : 0;
+
+  return Math.max(rA, rB);
+}
+//A끼리 나눌 수 있고 B끼리 나눌 수 없는 경우
+//반대
+//최대 공약수를 구하는 함수
