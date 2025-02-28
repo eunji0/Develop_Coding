@@ -3396,3 +3396,14 @@ function solution(n, k, enemy) {
 //무적권은 최대 k번 사용
 //남은 병사의 수보다 현재 라운드의 적의 수가 더 많으면 게임이 종료
 //무적권은 소모하는 병사 수가 가장 많을때 사용하는게 좋음
+
+//점찍기
+function solution(k, d) {
+  let count = 0;
+  for (let x = 0; x <= d; x += k) {
+    let maxY = Math.sqrt(d * d - x * x);
+    count += Math.floor(maxY / k) + 1;
+  }
+
+  return count;
+}
