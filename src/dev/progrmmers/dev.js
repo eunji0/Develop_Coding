@@ -3479,3 +3479,42 @@ function solution(order) {
   }
   return count;
 }
+
+//할인행사
+//자신이 원하는 제품과 수량이 할인하는 날짜와 10일 연속으로 일치할 경우에 맞춰서 회원가입
+//바나나 3개, 사과 2개, 쌀 2개, 돼지고기 2개, 냄비 1개
+//XYZ 마트에서 14일간 회원을 대상으로 할인하는 제품이 날짜 순서대로 치킨, 사과, 사과, 바나나, 쌀, 사과, 돼지고기, 바나나, 돼지고기, 쌀, 냄비, 바나나, 사과, 바나나인 경우
+function solution(want, number, discount) {
+  let sum = number.reduce((a, c) => a + c, 0);
+  let map = new Map();
+  let count = 0;
+
+  want.forEach((v, i) => {
+    map.set(v, number[i]);
+  });
+
+  const mapEqual = (m1, m2) => {
+    if (m1.size !== m2.size) return false;
+
+    for (let [key, value] of m1) {
+      if (!m2.has(key) || m2.get(key) !== value) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  for (let i = 0; i <= discount.length - sum; i++) {
+    let box = discount.slice(i, i + sum);
+    let newBox = new Map();
+    box.forEach((v) => {
+      newBox.set(v, (newBox.get(v) || 0) + 1);
+    });
+    if (mapEqual(map, newBox)) {
+      count += 1;
+    }
+  }
+
+  return count;
+}
