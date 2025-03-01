@@ -3461,3 +3461,21 @@ function solution(topping) {
 
   return answer;
 }
+
+//택배 상자
+function solution(order) {
+  let queue = [];
+  let idx = 0;
+  let count = 0;
+
+  for (let i = 1; i <= order.length; i++) {
+    queue.push(i);
+
+    while (queue.length > 0 && queue[queue.length - 1] === order[idx]) {
+      queue.pop();
+      idx++;
+      count++;
+    }
+  }
+  return count;
+}
