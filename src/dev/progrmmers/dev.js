@@ -3634,3 +3634,17 @@ function solution(n, k) {
   box.map((v) => (isTrue(v) ? (count += 1) : count));
   return count;
 }
+
+//n^2 배열 자르기
+//n행 n열 크기의 비어있는 2차원 배열
+function solution(n, left, right) {
+  let result = [];
+
+  for (let k = left; k <= right; k++) {
+    let r = Math.floor(k / n);
+    let c = k % n;
+    result.push(Math.max(r, c) + 1);
+  }
+
+  return result;
+}
