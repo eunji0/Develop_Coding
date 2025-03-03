@@ -3518,3 +3518,67 @@ function solution(want, number, discount) {
 
   return count;
 }
+
+//양궁대회
+// 라이언과 어피치는 10점~0점 과녁에 화살을 쏠 수 있음.
+// 어피치가 이미 쏜 화살 개수가 info[i]에 주어짐.
+// 라이언은 해당 점수를 얻으려면 어피치보다 1발 더 많이 쏘아야 함.
+// 라이언이 점수를 따지 못하는 경우도 가능.
+// 승리 조건:
+// 총 점수 비교: 라이언이 어피치보다 점수가 높아야 함.
+// 여러 가지 방법이 있다면 낮은 점수를 많이 맞힌 경우 선택.
+function solution(n, info) {
+  let maxDiff = 0;
+  let bestShot = Array(11).fill(0);
+
+  function dfs(index, arrows, ryan) {
+    if (arrows > n) return;
+
+    if (index === 11) {
+      let appeachScore = 0,
+        ryanScore = 0;
+
+      for (let i = 0; i < 11; i++) {
+        if (info[i] === 0 && ryan[i] === 0) continue;
+        if (info[i] >= ryan[i]) {
+          appeachScore += 10 - i;
+        } else {
+          ryanScore += 10 - i;
+        }
+      }
+
+      let diff = ryanScore - appeachScore;
+      if (diff > maxDiff) {
+        maxDiff = diff;
+        bestShot = [...ryan];
+      } else if (diff === maxDiff) {
+        for (let i = 10; i >= 0; i--) {
+          if (ryan[i] !== bestShot[i]) {
+            if (ryan[i] > bestShot[i]) {
+              bestShot = [...ryan];
+            }
+            break;
+          }
+        }
+      }
+      return;
+    }
+
+    if (info[index] + 1 <= n - arrows) {
+      ryan[index] = info[index] + 1;
+      dfs(index + 1, arrows + ryan[index], ryan);
+      ryan[index] = 0;
+    }
+
+    dfs(index + 1, arrows, ryan);
+  }
+
+  dfs(0, 0, Array(11).fill(0));
+
+  if (maxDiff > 0) {
+    let remainingArrows = n - bestShot.reduce((a, b) => a + b, 0);
+    bestShot[10] += remainingArrows;
+  }
+
+  return maxDiff === 0 ? [-1] : bestShot;
+}
