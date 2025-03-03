@@ -3648,3 +3648,50 @@ function solution(n, left, right) {
 
   return result;
 }
+
+//행렬 테두리 회전하기
+
+//rows, columns로 배열 생성(false)
+//queries forEach로 순회
+//해당부분 true로 변경
+//가운데 부분 false로 변경
+//true인 부분에서 가장 작은 것 result에 푸쉬쉬
+
+function solution(rows, columns, queries) {
+  let matrix = Array.from({ length: rows }, (_, i) => Array.from({ length: columns }, (_, j) => i * columns + j + 1));
+
+  let result = [];
+  for (let [x1, y1, x2, y2] of queries) {
+    x1--;
+    y1--;
+    x2--;
+    y2--;
+
+    let prev = matrix[x1][y1];
+    let minValue = prev;
+
+    for (let y = y1 + 1; y <= y2; y++) {
+      [matrix[x1][y], prev] = [prev, matrix[x1][y]];
+      minValue = Math.min(minValue, prev);
+    }
+
+    for (let x = x1 + 1; x <= x2; x++) {
+      [matrix[x][y2], prev] = [prev, matrix[x][y2]];
+      minValue = Math.min(minValue, prev);
+    }
+
+    for (let y = y2 - 1; y >= y1; y--) {
+      [matrix[x2][y], prev] = [prev, matrix[x2][y]];
+      minValue = Math.min(minValue, prev);
+    }
+
+    for (let x = x2 - 1; x >= x1; x--) {
+      [matrix[x][y1], prev] = [prev, matrix[x][y1]];
+      minValue = Math.min(minValue, prev);
+    }
+
+    result.push(minValue);
+  }
+
+  return result;
+}
