@@ -3582,3 +3582,55 @@ function solution(n, info) {
 
   return maxDiff === 0 ? [-1] : bestShot;
 }
+
+//k진수에서 소수 개수 구하기
+
+// 0P0처럼 소수 양쪽에 0이 있는 경우
+// P0처럼 소수 오른쪽에만 0이 있고 왼쪽에는 아무것도 없는 경우
+// 0P처럼 소수 왼쪽에만 0이 있고 오른쪽에는 아무것도 없는 경우
+// P처럼 소수 양쪽에 아무것도 없는 경우
+// 단, P는 각 자릿수에 0을 포함하지 않는 소수입니다.
+// 예를 들어, 101은 P가 될 수 없습니다.
+
+//n.toString(k)를 통해 변환
+//let queue=[]생성
+//let box=[]
+//[i]가 >0이상이면 큐에 푸쉬
+//0이 나오면 스탑
+//box에 큐 조인해 푸쉬
+//큐를 비우고 0을 넣음
+//다시 이어서 0이 나올때까지 푸쉬.
+//0이 아니면 큐에 푸쉬
+//0이 나오면 box에 조인해서 푸쉬
+//큐를 비우고 0을 넣음
+//길이가 끝나면 끝
+
+function solution(n, k) {
+  let transNum = n.toString(k).split('').map(Number);
+  let queue = [transNum[0]];
+  let box = [];
+
+  function isTrue(num) {
+    if (num < 2) return false;
+
+    for (let i = 2; i * i <= num; i++) {
+      if (num % i === 0) return false;
+    }
+    return true;
+  }
+
+  for (let i = 1; i < transNum.length; i++) {
+    if (transNum[i] > 0) {
+      queue.push(transNum[i]);
+    } else {
+      box.push(+queue.join(''));
+      queue = [0];
+    }
+  }
+
+  box.push(+queue.join(''));
+
+  let count = 0;
+  box.map((v) => (isTrue(v) ? (count += 1) : count));
+  return count;
+}
