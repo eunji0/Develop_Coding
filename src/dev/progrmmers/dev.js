@@ -3726,3 +3726,34 @@ function solution(s) {
 
   return answer;
 }
+
+//쿼드압축 후 개수 세기
+//0202
+//2424
+//0224
+//2402
+function solution(arr) {
+  let result = [0, 0];
+
+  function compress(x, y, size) {
+    let first = arr[x][y];
+
+    for (let i = x; i < x + size; i++) {
+      for (let j = y; j < y + size; j++) {
+        if (arr[i][j] !== first) {
+          let half = size / 2;
+          compress(x, y, half);
+          compress(x, y + half, half);
+          compress(x + half, y, half);
+          compress(x + half, y + half, half);
+          return;
+        }
+      }
+    }
+
+    result[first]++;
+  }
+
+  compress(0, 0, arr.length);
+  return result;
+}
