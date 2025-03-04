@@ -3695,3 +3695,34 @@ function solution(rows, columns, queries) {
 
   return result;
 }
+
+//괄호 회전하기
+function solution(s) {
+  function isValid(str) {
+    let stack = [];
+    let pairs = { ')': '(', ']': '[', '}': '{' };
+
+    for (let char of str) {
+      if (char === '(' || char === '[' || char === '{') {
+        stack.push(char);
+      } else {
+        if (stack.length === 0 || stack.pop() !== pairs[char]) {
+          return false;
+        }
+      }
+    }
+    return stack.length === 0;
+  }
+
+  let answer = 0;
+  let n = s.length;
+
+  for (let i = 0; i < n; i++) {
+    let rotated = s.slice(i) + s.slice(0, i);
+    if (isValid(rotated)) {
+      answer++;
+    }
+  }
+
+  return answer;
+}
