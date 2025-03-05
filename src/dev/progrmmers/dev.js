@@ -3880,3 +3880,23 @@ function solution(n) {
 
   return cur;
 }
+
+//짝지어 제거하기
+function solution(s) {
+  s = s.split('');
+  let stack = [];
+
+  s.forEach((v) => {
+    if (stack.length === 0) {
+      stack.push(v);
+    } else {
+      if (stack[stack.length - 1] === v) {
+        stack.pop();
+      } else {
+        stack.push(v);
+      }
+    }
+  });
+
+  return stack.length === 0 ? 1 : 0;
+}
