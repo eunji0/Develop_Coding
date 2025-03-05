@@ -3843,3 +3843,25 @@ function solution(n) {
 
   return count;
 }
+
+//다음 큰 숫자
+function solution(n) {
+  let nCount = n
+    .toString(2)
+    .split('')
+    .filter((v) => v === '1').length;
+  let nextNum = n + 1;
+  while (true) {
+    let nextNumLength = nextNum
+      .toString(2)
+      .split('')
+      .filter((v) => v === '1').length;
+    if (nCount === nextNumLength) {
+      return nextNum;
+    }
+    nextNum++;
+  }
+}
+//n+1부터 확인
+//n 2진수로 변환 1의 개수 count
+//n+1 2진수로 변환 1의 개수 count
