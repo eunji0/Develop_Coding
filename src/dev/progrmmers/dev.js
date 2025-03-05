@@ -3830,3 +3830,16 @@ function solution(s) {
   }
   return [change, count];
 }
+
+//숫자의 표현
+function solution(n) {
+  let count = 0;
+
+  for (let m = 1; (m * (m - 1)) / 2 < n; m++) {
+    if ((n - (m * (m - 1)) / 2) % m === 0) {
+      count++;
+    }
+  }
+
+  return count;
+}
