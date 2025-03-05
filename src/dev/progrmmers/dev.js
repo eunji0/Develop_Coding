@@ -3776,3 +3776,19 @@ function solution(A, B) {
   B.sort((a, b) => b - a);
   return A.reduce((a, c, i) => a + c * B[i], 0);
 }
+
+//JadenCase 문자열 만들기
+function solution(s) {
+  s = s.split(' ').map((v) => {
+    v = v.split('');
+    return v.length > 0
+      ? v[0].toUpperCase() +
+          v
+            .slice(1)
+            .map((s) => s.toLowerCase())
+            .join('')
+      : '';
+  });
+
+  return s.join(' ');
+}
