@@ -3757,3 +3757,15 @@ function solution(arr) {
   compress(0, 0, arr.length);
   return result;
 }
+
+//최댓값과 최솟값
+function solution(s) {
+  let result = [];
+  s = s
+    .split(' ')
+    .map(Number)
+    .sort((a, b) => a - b);
+  result.push(s[0]);
+  result.push(s[s.length - 1]);
+  return result.join(' ');
+}
