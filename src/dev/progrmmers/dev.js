@@ -3792,3 +3792,23 @@ function solution(s) {
 
   return s.join(' ');
 }
+
+//올바른 괄호
+function solution(s) {
+  let strMap = { '(': ')', '{': '}', '[': ']' };
+  s = s.split('');
+  let stack = [];
+
+  for (let char of s) {
+    if (strMap[char]) {
+      stack.push(char);
+    } else {
+      let last = stack.pop();
+      if (strMap[last] !== char) {
+        return false;
+      }
+    }
+  }
+
+  return stack.length === 0;
+}
