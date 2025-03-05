@@ -3865,3 +3865,18 @@ function solution(n) {
 //n+1부터 확인
 //n 2진수로 변환 1의 개수 count
 //n+1 2진수로 변환 1의 개수 count
+
+//피보나치 수
+function solution(n) {
+  const MOD = 1234567;
+  let prev = 0,
+    cur = 1;
+
+  for (let i = 2; i <= n; i++) {
+    let next = (prev + cur) % MOD;
+    prev = cur;
+    cur = next;
+  }
+
+  return cur;
+}
