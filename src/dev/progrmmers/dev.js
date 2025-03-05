@@ -3812,3 +3812,21 @@ function solution(s) {
 
   return stack.length === 0;
 }
+
+//이진 변환 반복하기
+function solution(s) {
+  s = s.split('');
+  let change = 0;
+  let count = 0;
+
+  while (s.join(' ') !== '1') {
+    change += 1;
+    count += s.filter((v) => v === '0').length;
+    s = s
+      .filter((v) => v === '1')
+      .join('')
+      .length.toString(2)
+      .split('');
+  }
+  return [change, count];
+}
