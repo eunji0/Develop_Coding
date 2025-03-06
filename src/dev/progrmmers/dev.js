@@ -3900,3 +3900,32 @@ function solution(s) {
 
   return stack.length === 0 ? 1 : 0;
 }
+
+//카펫
+function solution(brown, yellow) {
+  let sum = brown + yellow;
+  let start = Math.floor(sum / 2);
+  for (let i = start; i > 0; i--) {
+    if (sum % i === 0) {
+      if ((i - 2) * (sum / i - 2) === yellow) {
+        return [i, sum / i];
+      }
+    }
+  }
+}
+
+//구명보트
+function solution(people, limit) {
+  people.sort((a, b) => a - b);
+  let count = 0;
+  let low = 0,
+    high = people.length - 1;
+  while (low <= high) {
+    if (people[low] + people[high] <= limit) {
+      low++;
+    }
+    high--;
+    count++;
+  }
+  return count;
+}
