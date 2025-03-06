@@ -3929,3 +3929,18 @@ function solution(people, limit) {
   }
   return count;
 }
+
+//점프와 순간 이동
+function solution(n) {
+  let count = 0;
+
+  while (n > 0) {
+    if (n % 2 === 1) {
+      count++;
+      n--;
+    }
+    n /= 2;
+  }
+
+  return count;
+}
