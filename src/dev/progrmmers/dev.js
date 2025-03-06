@@ -3944,3 +3944,24 @@ function solution(n) {
 
   return count;
 }
+
+//귤 고르기
+function solution(k, tangerine) {
+  let map = new Map();
+
+  tangerine.forEach((v) => {
+    map.set(v, (map.get(v) || 0) + 1);
+  });
+
+  let counts = [...map.values()].sort((a, b) => b - a);
+  let total = 0;
+  let kind = 0;
+
+  for (let count of counts) {
+    total += count;
+    kind++;
+    if (total >= k) break;
+  }
+
+  return kind;
+}
