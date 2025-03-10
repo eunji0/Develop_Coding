@@ -4046,3 +4046,35 @@ function solution(elements) {
 
   return map.size;
 }
+
+//괄호 회전하기
+function isValid(s) {
+  let stack = [];
+  let pairs = { ')': '(', ']': '[', '}': '{' };
+
+  for (let ch of s) {
+    if (ch === '(' || ch === '[' || ch === '{') {
+      stack.push(ch);
+    } else {
+      if (stack.length === 0 || stack.pop() !== pairs[ch]) {
+        return false;
+      }
+    }
+  }
+
+  return stack.length === 0;
+}
+
+function solution(s) {
+  let count = 0;
+  let n = s.length;
+
+  for (let i = 0; i < n; i++) {
+    let rotated = s.slice(i) + s.slice(0, i);
+    if (isValid(rotated)) {
+      count++;
+    }
+  }
+
+  return count;
+}
