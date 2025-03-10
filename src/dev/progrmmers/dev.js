@@ -4078,3 +4078,28 @@ function solution(s) {
 
   return count;
 }
+
+//할인행사
+function solution(want, number, discount) {
+  let map = new Map();
+  let sum = number.reduce((a, c) => a + c, 0);
+  let count = 0;
+
+  want.forEach((v, i) => {
+    map.set(v, number[i]);
+  });
+
+  for (let i = 0; i <= discount.length - sum; i++) {
+    let newMap = new Map();
+    let arr = discount.slice(i, i + sum);
+    arr.forEach((v) => {
+      newMap.set(v, (newMap.get(v) || 0) + 1);
+    });
+
+    let isValid = [...map].every(([key, value]) => newMap.get(key) === value);
+
+    if (isValid) count += 1;
+  }
+
+  return count;
+}
