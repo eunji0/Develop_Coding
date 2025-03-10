@@ -3991,3 +3991,29 @@ function lcm(a, b) {
 function solution(arr) {
   return arr.reduce((a, c) => lcm(a, c));
 }
+
+//영어 끝말잇기
+function solution(n, words) {
+  let count = 0;
+  let map = new Map();
+  let nowStr = '';
+
+  for (let i = 0; i < words.length; i += n) {
+    count++;
+    let arr = words.slice(i, i + n);
+    for (let j = 0; j < n; j++) {
+      if (nowStr !== arr[j][0] && nowStr.length > 0) {
+        return [j + 1, count];
+      } else {
+        nowStr = arr[j][arr[j].length - 1];
+        if (map.get(arr[j])) {
+          return [j + 1, count];
+        } else {
+          map.set(arr[j], 1);
+        }
+      }
+    }
+  }
+
+  return [0, 0];
+}
