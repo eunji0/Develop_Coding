@@ -4030,3 +4030,19 @@ function solution(n, a, b) {
 
   return count;
 }
+
+//연속 부분 수열 합의 개수
+function solution(elements) {
+  let n = elements.length;
+  let map = new Set();
+  let ee = elements.concat(elements);
+
+  for (let len = 1; len <= n; len++) {
+    for (let i = 0; i < n; i++) {
+      let sum = ee.slice(i, i + len).reduce((a, c) => a + c, 0);
+      map.add(sum);
+    }
+  }
+
+  return map.size;
+}
