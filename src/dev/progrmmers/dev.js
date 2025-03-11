@@ -4116,3 +4116,26 @@ function solution(n, left, right) {
 
   return arr;
 }
+
+//행렬의 곱셈
+function solution(arr1, arr2) {
+  var answer = [[]];
+  return answer;
+}
+
+//의상
+function solution(clothes) {
+  let map = new Map();
+
+  clothes.forEach((v) => {
+    map.set(v[1], (map.get(v[1]) || 0) + 1);
+  });
+
+  let answer = 1;
+
+  for (let count of map.values()) {
+    answer *= count + 1;
+  }
+
+  return answer - 1;
+}
