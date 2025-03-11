@@ -4139,3 +4139,39 @@ function solution(clothes) {
 
   return answer - 1;
 }
+
+//H-index
+function solution(citations) {
+  citations.sort((a, b) => b - a);
+  let answer = 0;
+
+  for (let i = 0; i < citations.length; i++) {
+    if (i < citations[i]) {
+      answer++;
+    }
+  }
+
+  return answer;
+}
+
+//기능개발
+function solution(progresses, speeds) {
+  let days = [];
+  progresses.forEach((v, i) => {
+    days.push(Math.ceil((100 - v) / speeds[i]));
+  });
+
+  let box = [];
+  let result = [];
+
+  for (let i = 0; i < days.length; i++) {
+    if (box.length === 0 || box[0] >= days[i]) {
+      box.push(days[i]);
+    } else {
+      result.push(box.length);
+      box = [days[i]];
+    }
+  }
+  result.push(box.length);
+  return result;
+}
