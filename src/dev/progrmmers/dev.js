@@ -4175,3 +4175,31 @@ function solution(progresses, speeds) {
   result.push(box.length);
   return result;
 }
+
+//1차 캐시
+function solution(cacheSize, cities) {
+  let box = [];
+  let result = 0;
+
+  if (cacheSize === 0) {
+    return cities.length * 5;
+  }
+
+  cities.forEach((v) => {
+    v = v.toLowerCase();
+
+    if (box.includes(v)) {
+      result += 1;
+      box.splice(box.indexOf(v), 1);
+    } else {
+      result += 5;
+      if (box.length >= cacheSize) {
+        box.shift();
+      }
+    }
+
+    box.push(v);
+  });
+
+  return result;
+}
