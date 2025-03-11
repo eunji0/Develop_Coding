@@ -4225,3 +4225,16 @@ function solution(k, dungeons) {
 
   return maxCount;
 }
+
+//튜플
+function solution(s) {
+  let arr = [];
+  s = s
+    .slice(2, -2)
+    .split('},{')
+    .map((s) => s.split(',').map(Number));
+  s.sort((a, b) => a.length - b.length);
+
+  arr = new Set(s.flat());
+  return [...arr];
+}
