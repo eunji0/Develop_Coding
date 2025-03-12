@@ -4251,3 +4251,21 @@ function solution(phone_book) {
 
   return true;
 }
+
+//프로세스
+function solution(priorities, location) {
+  let queue = priorities.map((v, i) => (v = [i, v]));
+  let count = 0;
+
+  while (queue.length > 0) {
+    let cur = queue.shift();
+    let hasP = queue.some(([_, priority]) => priority > cur[1]);
+    if (hasP) {
+      queue.push(cur);
+    } else {
+      count++;
+      if (cur[0] === location) return count;
+    }
+  }
+  return priorities;
+}
