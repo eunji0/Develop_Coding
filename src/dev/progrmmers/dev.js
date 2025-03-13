@@ -4312,3 +4312,32 @@ function solution(topping) {
 
   return result;
 }
+
+//게임 맵 최단거리
+function solution(maps) {
+  let queue = [[0, 0, 1]];
+  let dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+
+  while (queue.length) {
+    let [x, y, count] = queue.shift();
+
+    if (x === maps.length - 1 && y === maps[0].length - 1) return count;
+
+    for (const [dx, dy] of dir) {
+      let nx = x + dx;
+      let ny = y + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < maps.length && ny < maps[0].length && maps[nx][ny] === 1) {
+        queue.push([nx, ny, count + 1]);
+        maps[nx][ny] = 0;
+      }
+    }
+  }
+
+  return -1;
+}
