@@ -4383,3 +4383,38 @@ function solution(word) {
 
   return answer;
 }
+
+//k진수에서 소수 개수 구하기
+function solution(n, k) {
+  n = n.toString(k).split('');
+  let result = [];
+  let queue = [];
+
+  n.forEach((v) => {
+    if (v !== '0') {
+      queue.push(v);
+    } else {
+      result.push(+queue.join(''));
+      queue = [];
+    }
+  });
+  result.push(+queue.join(''));
+
+  function isPrime(n) {
+    if (n < 2) return false;
+    if (n === 2) return true;
+    if (n % 2 === 0) return false;
+
+    for (let i = 3; i <= Math.sqrt(n); i += 2) {
+      if (n % i === 0) return false;
+    }
+
+    return true;
+  }
+
+  result = result.filter((v) => isPrime(v));
+  return result.length;
+}
+//0이 나올때까지 큐에 삽입
+//0이 나오면 큐를 join('')후 result에 삽입
+//continue
