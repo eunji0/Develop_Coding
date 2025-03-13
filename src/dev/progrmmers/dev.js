@@ -4341,3 +4341,30 @@ function solution(maps) {
 
   return -1;
 }
+
+//방문길이
+//Set으로 방향저장
+//나중에 Set size return
+//map사이즈를 넘기는지 확인
+function solution(dirs) {
+  let now = [0, 0];
+  let dirMap = { U: [0, 1], D: [0, -1], R: [1, 0], L: [-1, 0] };
+  let dirSet = new Set();
+
+  for (let curStr of dirs) {
+    let [dx, dy] = dirMap[curStr];
+    let nx = now[0] + dx;
+    let ny = now[1] + dy;
+
+    if (nx >= -5 && nx <= 5 && ny >= -5 && ny <= 5) {
+      let path1 = `${now[0]}${now[1]}${nx}${ny}`;
+      let path2 = `${nx}${ny}${now[0]}${now[1]}`;
+      dirSet.add(path1);
+      dirSet.add(path2);
+
+      now = [nx, ny];
+    }
+  }
+
+  return dirSet.size / 2;
+}
