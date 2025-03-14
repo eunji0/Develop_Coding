@@ -4508,3 +4508,20 @@ function solution(scoville, K) {
 
   return heap.peek() >= K ? count : -1;
 }
+
+//주식가격
+function solution(prices) {
+  let arr = Array(prices.length).fill(0);
+  let stack = [];
+
+  prices.forEach((price, i) => {
+    while (stack.length && prices[stack[stack.length - 1]] > price) {
+      let idx = stack.pop();
+      arr[idx] = i - idx;
+    }
+    stack.push(i);
+  });
+  stack.forEach((idx) => (arr[idx] = prices.length - 1 - idx));
+
+  return arr;
+}
