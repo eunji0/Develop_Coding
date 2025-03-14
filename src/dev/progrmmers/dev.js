@@ -4537,3 +4537,30 @@ function solution(land) {
 
   return Math.max(...land[land.length - 1]);
 }
+
+//스킬트리
+function solution(skill, skill_trees) {
+  skill = skill.split('');
+  let count = 0;
+
+  skill_trees.forEach((v) => {
+    let s = [];
+    v.split('').forEach((vv) => {
+      if (skill.includes(vv)) {
+        s.push(vv);
+      }
+    });
+
+    let isValid = true;
+
+    for (let i = 0; i < s.length; i++) {
+      if (s[i] !== skill[i]) {
+        isValid = false;
+        break;
+      }
+    }
+
+    if (isValid) count++;
+  });
+  return count;
+}
