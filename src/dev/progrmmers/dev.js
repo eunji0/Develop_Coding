@@ -4582,3 +4582,43 @@ function solution(order) {
   }
   return count;
 }
+
+//주차요금계산
+function solution(fees, records) {
+  let [basicTime, basicPrice, unitTime, unitPrice] = fees;
+  let maps = {};
+  let resultMaps = {};
+
+  const calTime = (arr) => {
+    let [hour, min] = arr.split(':').map(Number);
+    return hour * 60 + min;
+  };
+
+  records.forEach((v) => {
+    let [time, carNum, state] = v.split(' ');
+    time = calTime(time);
+
+    if (state === 'IN') {
+      maps[carNum] = time;
+    } else {
+      let parkingTime = time - maps[carNum];
+      resultMaps[carNum] = (resultMaps[carNum] || 0) + parkingTime;
+      delete maps[carNum];
+    }
+  });
+
+  let endTime = 23 * 60 + 59;
+  for (let carNum in maps) {
+    let parkingTime = endTime - maps[carNum];
+    resultMaps[carNum] = (resultMaps[carNum] || 0) + parkingTime;
+  }
+
+  const calFee = (t) => {
+    if (t <= basicTime) return basicPrice;
+    return basicPrice + Math.ceil((t - basicTime) / unitTime) * unitPrice;
+  };
+
+  return Object.entries(resultMaps)
+    .sort((a, b) => a[0] - b[0])
+    .map(([_, time]) => calFee(time));
+}
