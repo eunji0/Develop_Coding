@@ -4622,3 +4622,25 @@ function solution(fees, records) {
     .sort((a, b) => a[0] - b[0])
     .map(([_, time]) => calFee(time));
 }
+
+//숫자 변환하기
+function solution(x, y, n) {
+  const arr = (num) => [num + n, num * 2, num * 3];
+
+  let queue = [[x, 0]];
+  let visited = new Set(); //중복 확인
+
+  while (queue.length) {
+    let [cur, count] = queue.shift();
+
+    if (cur === y) return count;
+
+    for (let cal of arr(cur)) {
+      if (cal <= y && !visited.has(cal)) {
+        visited.add(cal);
+        queue.push([cal, count + 1]);
+      }
+    }
+  }
+  return -1;
+}
