@@ -4737,3 +4737,47 @@ function solution(n) {
 
   return dp[n];
 }
+
+//[1차] 프렌즈4블록
+function solution(m, n, board) {
+  board = board.map((row) => row.split(''));
+  let totalRemoved = 0;
+
+  while (true) {
+    let toRemove = new Set();
+
+    for (let i = 0; i < m - 1; i++) {
+      for (let j = 0; j < n - 1; j++) {
+        let block = board[i][j];
+        if (block && block === board[i + 1][j] && block === board[i][j + 1] && block === board[i + 1][j + 1]) {
+          toRemove.add(`${i},${j}`);
+          toRemove.add(`${i + 1},${j}`);
+          toRemove.add(`${i},${j + 1}`);
+          toRemove.add(`${i + 1},${j + 1}`);
+        }
+      }
+    }
+
+    if (toRemove.size === 0) break;
+    totalRemoved += toRemove.size;
+
+    for (let pos of toRemove) {
+      let [x, y] = pos.split(',').map(Number);
+      board[x][y] = null;
+    }
+
+    for (let j = 0; j < n; j++) {
+      let stack = [];
+      for (let i = m - 1; i >= 0; i--) {
+        if (board[i][j] !== null) {
+          stack.push(board[i][j]);
+        }
+      }
+      for (let i = m - 1; i >= 0; i--) {
+        board[i][j] = stack.length > 0 ? stack.shift() : null;
+      }
+    }
+  }
+
+  return totalRemoved;
+}
