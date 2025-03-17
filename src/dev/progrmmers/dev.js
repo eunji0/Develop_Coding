@@ -4692,3 +4692,29 @@ function solution(files) {
 
   return parsedFiles.map((v) => v.original);
 }
+
+//오픈 채팅방
+function solution(record) {
+  let result = []; //결과 배열
+  let map = {}; //id당 현재 name 상태 업데이트
+
+  record.forEach((v) => {
+    let [inout, id, name] = v.split(' ');
+    if (inout === 'Enter') {
+      map[id] = name;
+      result.push([id, `${name}`, '님이 들어왔습니다.']);
+    } else if (inout === 'Leave') {
+      if (name !== undefined) {
+        map[id] = name;
+        result.push([id, `${name}`, '님이 나갔습니다.']);
+      } else {
+        result.push([id, `${map[id]}`, '님이 나갔습니다.']);
+      }
+    } else {
+      map[id] = name;
+    }
+  });
+
+  result.map((v) => (v[1] = map[v[0]]));
+  return result.map((v) => v[1] + v[2]);
+}
