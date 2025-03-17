@@ -1,6 +1,6 @@
 const { configure } = require('@testing-library/react');
 const { map } = require('jquery');
-const { get } = require('request');
+const { get, head } = require('request');
 
 //완주하지 못한 선수
 function solution(participant, completion) {
@@ -4653,4 +4653,42 @@ function solution(numbers) {
     .join('');
 
   return result[0] === '0' ? '0' : result;
+}
+
+//3차 파일명 정렬
+function solution(files) {
+  let parsedFiles = files.map((file, index) => {
+    let head = '';
+    let number = '';
+    let tail = '';
+    let i = 0;
+
+    while (i < file.length && !/[0-9]/.test(file[i])) {
+      head += file[i];
+      i++;
+    }
+
+    while (i < file.length && /[0-9]/.test(file[i]) && number.length < 5) {
+      number += file[i];
+      i++;
+    }
+
+    tail = file.slice(i);
+
+    return {
+      original: file,
+      head: head.toLowerCase(),
+      number: parseInt(number, 10),
+      index: index,
+    };
+  });
+
+  parsedFiles.sort((a, b) => {
+    if (a.head < b.head) return -1;
+    if (a.head > b.head) return 1;
+    if (a.number !== b.number) return a.number - b.number;
+    return a.index - b.index;
+  });
+
+  return parsedFiles.map((v) => v.original);
 }
