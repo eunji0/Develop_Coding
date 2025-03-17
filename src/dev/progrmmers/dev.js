@@ -4781,3 +4781,16 @@ function solution(m, n, board) {
 
   return totalRemoved;
 }
+
+//2개 이하로 다른 비트
+function solution(numbers) {
+  return numbers.map((n) => {
+    if (n % 2 === 0) return n + 1;
+
+    let bin = '0' + n.toString(2);
+    let index = bin.lastIndexOf('0');
+    bin = bin.substring(0, index) + '10' + bin.substring(index + 2);
+
+    return parseInt(bin, 2);
+  });
+}
