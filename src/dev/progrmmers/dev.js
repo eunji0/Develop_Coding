@@ -4835,3 +4835,35 @@ function solution(arr) {
   calArr(0, 0, arr.length);
   return [zeroCount, oneCount];
 }
+
+//두 큐 합 같게 만들기
+function solution(queue1, queue2) {
+  let sum1 = queue1.reduce((a, c) => a + c, 0);
+  let sum2 = queue2.reduce((a, c) => a + c, 0);
+  let total = sum1 + sum2;
+
+  if (!Number.isInteger(total / 2)) return -1;
+
+  let target = total / 2;
+  let arr = queue1.concat(queue2);
+  let left = 0;
+  let right = queue1.length;
+  let count = 0;
+
+  while (left < arr.length && right < arr.length) {
+    if (sum1 === target) return count;
+
+    if (sum1 < target) {
+      sum1 += arr[right];
+      right++;
+    } else {
+      sum1 -= arr[left];
+      left++;
+    }
+
+    count++;
+    if (count > queue1.length * 3) return -1;
+  }
+
+  return -1;
+}
