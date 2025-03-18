@@ -4893,3 +4893,28 @@ function solution(numbers) {
 
   return [...arr].filter(isPrime).length;
 }
+
+//다리를 지나는 트럭
+function solution(bridge_length, weight, truck_weights) {
+  let time = 0;
+  let bridge = Array(bridge_length).fill(0);
+  let bridge_weight = 0;
+
+  while (truck_weights.length > 0 || bridge_weight > 0) {
+    time++;
+
+    bridge_weight -= bridge.shift();
+
+    if (truck_weights.length > 0) {
+      if (truck_weights[0] + bridge_weight <= weight) {
+        let a = truck_weights.shift();
+        bridge.push(a);
+        bridge_weight += a;
+      } else {
+        bridge.push(0);
+      }
+    }
+  }
+
+  return time;
+}
