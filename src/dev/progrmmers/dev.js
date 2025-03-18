@@ -4867,3 +4867,29 @@ function solution(queue1, queue2) {
 
   return -1;
 }
+
+//소수찾기
+function solution(numbers) {
+  function isPrime(n) {
+    if (n < 2) return false;
+    for (let i = 2; i * i <= n; i++) {
+      if (n % i === 0) return false;
+    }
+    return true;
+  }
+
+  let arr = new Set();
+
+  function isTrue(cur, remaining) {
+    if (cur.length > 0) arr.add(+cur);
+    for (let i = 0; i < remaining.length; i++) {
+      let newRemaining = [...remaining];
+      let next = newRemaining.splice(i, 1);
+      isTrue(cur + next, newRemaining);
+    }
+  }
+
+  isTrue('', numbers.split(''));
+
+  return [...arr].filter(isPrime).length;
+}
