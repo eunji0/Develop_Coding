@@ -4918,3 +4918,20 @@ function solution(bridge_length, weight, truck_weights) {
 
   return time;
 }
+
+//큰 수 만들기
+function solution(number, k) {
+  let stack = [];
+
+  for (let n of number) {
+    while (k > 0 && stack.length && stack[stack.length - 1] < n) {
+      stack.pop();
+      k--;
+    }
+    stack.push(n);
+  }
+
+  stack = stack.slice(0, stack.length - k);
+
+  return stack.join('');
+}
