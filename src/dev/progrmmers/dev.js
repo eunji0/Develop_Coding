@@ -4794,3 +4794,44 @@ function solution(numbers) {
     return parseInt(bin, 2);
   });
 }
+
+//쿼드압축 후 개수 세기
+
+//같은지 확인하는 메서드(x, y, size)
+//x부터 x+size, y, y+size까지 arr[x][y]와 같으면 true 다르면 false
+//같은지 확인하는 메서드가 true면 0은 0Count++
+//또 분리해서 확인
+//0,0 size/2부터 시작
+function solution(arr) {
+  let zeroCount = 0;
+  let oneCount = 0;
+
+  const trueSame = (x, y, size) => {
+    let num = arr[x][y];
+
+    for (let i = x; i < x + size; i++) {
+      for (let j = y; j < y + size; j++) {
+        if (num !== arr[i][j]) return false;
+      }
+    }
+
+    return true;
+  };
+
+  const calArr = (x, y, size) => {
+    if (trueSame(x, y, size)) {
+      if (arr[x][y] === 0) zeroCount++;
+      else oneCount++;
+      return;
+    }
+
+    let half = size / 2;
+    calArr(x, y, half);
+    calArr(x + half, y, half);
+    calArr(x, y + half, half);
+    calArr(x + half, y + half, half);
+  };
+
+  calArr(0, 0, arr.length);
+  return [zeroCount, oneCount];
+}
