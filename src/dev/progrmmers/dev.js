@@ -4935,3 +4935,24 @@ function solution(number, k) {
 
   return stack.join('');
 }
+
+//마법의 엘리베이터
+function solution(storey) {
+  let answer = 0;
+
+  while (storey > 0) {
+    let digit = storey % 10;
+
+    let nextDigit = Math.floor(storey / 10) % 10;
+    if (digit > 5 || (digit === 5 && nextDigit >= 5)) {
+      storey += 10;
+      answer += 10 - digit;
+    } else {
+      answer += digit;
+    }
+
+    storey = Math.floor(storey / 10);
+  }
+
+  return answer;
+}
