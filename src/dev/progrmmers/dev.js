@@ -4956,3 +4956,29 @@ function solution(storey) {
 
   return answer;
 }
+
+//시소 짝꿍
+function solution(weights) {
+  let count = 0;
+  let map = new Map();
+
+  for (let w of weights) {
+    map.set(w, (map.get(w) || 0) + 1);
+  }
+
+  for (let [w, cnt] of map) {
+    if (cnt > 1) {
+      count += (cnt * (cnt - 1)) / 2;
+    }
+
+    let pairs = [(w * 2) / 3, (w * 2) / 4, (w * 3) / 4];
+
+    for (let pair of pairs) {
+      if (map.has(pair)) {
+        count += map.get(pair) * cnt;
+      }
+    }
+  }
+
+  return count;
+}
