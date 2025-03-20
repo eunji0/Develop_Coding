@@ -5055,3 +5055,32 @@ function solution(n, wires) {
 
   return min;
 }
+
+//숫자카드 나누기
+function solution(arrayA, arrayB) {
+  function getGCD(a, b) {
+    while (b !== 0) {
+      let temp = b;
+      b = a % b;
+      a = temp;
+    }
+
+    return a;
+  }
+
+  function calGCD(arr) {
+    return arr.reduce((a, c) => getGCD(a, c));
+  }
+
+  function isValid(div, arr) {
+    return arr.every((v) => v % div !== 0);
+  }
+
+  let gcdA = calGCD(arrayA);
+  let gcdB = calGCD(arrayB);
+
+  let resultA = isValid(gcdA, arrayB) ? gcdA : 0;
+  let resultB = isValid(gcdB, arrayA) ? gcdB : 0;
+
+  return Math.max(resultA, resultB);
+}
