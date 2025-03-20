@@ -4982,3 +4982,35 @@ function solution(weights) {
 
   return count;
 }
+
+//연속된 부분 수열의 합
+function solution(sequence, k) {
+  let result = [];
+  let start = 0,
+    end = 0;
+  let sum = sequence[0];
+
+  while (start < sequence.length) {
+    if (sum === k) {
+      result.push([start, end]);
+    }
+
+    if (sum < k) {
+      end++;
+      if (end === sequence.length) break;
+      sum += sequence[end];
+    } else {
+      sum -= sequence[start];
+      start++;
+    }
+  }
+
+  return result.length === 1
+    ? result[0]
+    : result.sort((a, b) => {
+        if (b[1] - b[0] === a[1] - a[0]) {
+          return a[0] - b[0];
+        }
+        return a[1] - a[0] - (b[1] - b[0]);
+      })[0];
+}
