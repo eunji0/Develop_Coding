@@ -5014,3 +5014,44 @@ function solution(sequence, k) {
         return a[1] - a[0] - (b[1] - b[0]);
       })[0];
 }
+
+//전력망을 둘로 나누기
+function solution(n, wires) {
+  let graph = Array.from({ length: n + 1 }, () => []);
+
+  for (let [a, b] of wires) {
+    graph[a].push(b);
+    graph[b].push(a);
+  }
+
+  function bfs(start, removed) {
+    let queue = [start];
+    let visited = Array(n).fill(false);
+    visited[start] = true;
+    let count = 1;
+
+    while (queue.length > 0) {
+      let node = queue.shift();
+
+      for (const next of graph[node]) {
+        if (!visited[next] && !(node === removed[0] && next === removed[1])) {
+          count++;
+          visited[next] = true;
+          queue.push(next);
+        }
+      }
+    }
+
+    return count;
+  }
+
+  let min = Infinity;
+
+  for (let [a, b] of wires) {
+    let c1 = bfs(a, [a, b]);
+    let c2 = n - c1;
+    min = Math.min(min, Math.abs(c1 - c2));
+  }
+
+  return min;
+}
