@@ -5084,3 +5084,42 @@ function solution(arrayA, arrayB) {
 
   return Math.max(resultA, resultB);
 }
+
+//호텔 대실
+function solution(book_time) {
+  book_time = book_time.map((v) => {
+    v[0] = v[0].split(':').map(Number);
+    v[0] = v[0][0] * 60 + v[0][1];
+    v[1] = v[1].split(':').map(Number);
+    v[1] = v[1][0] * 60 + v[1][1];
+    return [v[0], v[1] + 10];
+  });
+  book_time.sort((a, b) => a[0] - b[0]);
+
+  let room = [];
+
+  for (let [start, end] of book_time) {
+    let as = false;
+
+    for (let i = 0; i < room.length; i++) {
+      if (room[i] <= start) {
+        as = true;
+        room[i] = end;
+        break;
+      }
+    }
+
+    if (!as) {
+      room.push(end);
+    }
+
+    room.sort((a, b) => a - b);
+  }
+  return room.length;
+}
+//배열은 모두 시간*60+분으로 변환
+//배열이 비어있으면 넣음
+//[1]번째 배열에 +10
+//끝배열보다 작은지 확인
+//작다면 새로 생성
+//크다면 이어 붙이기
