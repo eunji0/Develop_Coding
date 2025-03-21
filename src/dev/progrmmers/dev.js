@@ -5137,3 +5137,35 @@ function solution(n) {
 
   return result;
 }
+
+//배달
+function solution(N, road, K) {
+  let graph = Array.from({ length: N + 1 }, () => []);
+
+  for (let [a, b, c] of road) {
+    graph[a].push([b, c]);
+    graph[b].push([a, c]);
+  }
+
+  let dist = Array(N + 1).fill(Infinity);
+  let pq = [[1, 0]];
+  dist[1] = 0;
+
+  while (pq.length) {
+    pq.sort((a, b) => a[1] - b[1]);
+
+    let [curNode, curDist] = pq.shift();
+
+    if (dist[curNode] < curDist) continue;
+
+    for (const [nextNode, nextDist] of graph[curNode]) {
+      let newDist = nextDist + curDist;
+      if (newDist < dist[nextNode]) {
+        dist[nextNode] = newDist;
+        pq.push([nextNode, newDist]);
+      }
+    }
+  }
+
+  return dist.filter((v) => v <= K).length;
+}
