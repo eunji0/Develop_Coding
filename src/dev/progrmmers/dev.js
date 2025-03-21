@@ -5123,3 +5123,17 @@ function solution(book_time) {
 //끝배열보다 작은지 확인
 //작다면 새로 생성
 //크다면 이어 붙이기
+
+//124 나라의 숫자
+function solution(n) {
+  let result = '';
+  let arr = ['4', '1', '2'];
+
+  while (n > 0) {
+    let remainder = n % 3;
+    n = Math.floor((n - 1) / 3);
+    result = arr[remainder] + result;
+  }
+
+  return result;
+}
