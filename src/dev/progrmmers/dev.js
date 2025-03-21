@@ -5169,3 +5169,63 @@ function solution(N, road, K) {
 
   return dist.filter((v) => v <= K).length;
 }
+
+//미로 탈출
+function solution(maps) {
+  let start = [],
+    end = [],
+    switchBtn = [];
+  let dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+
+  for (let i = 0; i < maps.length; i++) {
+    for (let j = 0; j < maps[i].length; j++) {
+      if (maps[i][j] === 'S') {
+        start = [i, j];
+      }
+
+      if (maps[i][j] === 'E') {
+        end = [i, j];
+      }
+
+      if (maps[i][j] === 'L') {
+        switchBtn = [i, j];
+      }
+    }
+  }
+
+  const bfs = (start, map, target) => {
+    let [startX, startY] = start;
+    let [targetX, targetY] = target;
+    let visited = Array.from({ length: map.length }, () => Array(map[0].length).fill(false));
+    let queue = [[startX, startY, 0]];
+    visited[startX][startY] = true;
+
+    while (queue.length) {
+      let [curX, curY, count] = queue.shift();
+
+      if (curX === targetX && curY === targetY) return count;
+
+      for (const [dx, dy] of dir) {
+        let nx = curX + dx;
+        let ny = curY + dy;
+
+        if (nx >= 0 && ny >= 0 && nx < map.length && ny < map[0].length && !visited[nx][ny] && map[nx][ny] !== 'X') {
+          visited[nx][ny] = true;
+          queue.push([nx, ny, count + 1]);
+        }
+      }
+    }
+    return -1;
+  };
+
+  let n1 = bfs(start, maps, switchBtn);
+  let n2 = bfs(switchBtn, maps, end);
+
+  if (n1 === -1 || n2 === -1) return -1;
+  return n1 + n2;
+}
