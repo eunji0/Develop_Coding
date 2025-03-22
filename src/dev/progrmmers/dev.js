@@ -5229,3 +5229,41 @@ function solution(maps) {
   if (n1 === -1 || n2 === -1) return -1;
   return n1 + n2;
 }
+
+//방금그곡
+function solution(m, musicinfos) {
+  const result = {};
+  let timeout = 0;
+  let text = '';
+  for (let music of musicinfos) {
+    text = '';
+    let time = 0;
+    let [firstTime, sectime, title, context] = music.split(',');
+    let [firstHour, firstMin] = firstTime.split(':');
+    let [secHour, secMin] = sectime.split(':');
+    timeout = (secHour - firstHour) * 60 + (secMin - firstMin);
+
+    let words = context.split('');
+    while (timeout >= time) {
+      for (let idx in words) {
+        if (time > timeout) break;
+        if (words[Number(idx) + 1] === '#') {
+          text += words[idx];
+          continue;
+        }
+
+        text += words[idx];
+        ++time;
+
+        if (m.length <= text.length) {
+          let textIdx = text.lastIndexOf(m);
+          if (textIdx !== -1 && text[textIdx + m.length] !== '#') result[title] = timeout;
+        }
+      }
+    }
+  }
+  const longtime = Math.max.apply(null, Object.values(result));
+
+  if (!Object.keys(result).length) return '(None)';
+  return Object.keys(result).find((key) => result[key] === longtime);
+}
