@@ -5232,38 +5232,27 @@ function solution(maps) {
 
 //방금그곡
 function solution(m, musicinfos) {
-  const result = {};
-  let timeout = 0;
-  let text = '';
-  for (let music of musicinfos) {
-    text = '';
-    let time = 0;
-    let [firstTime, sectime, title, context] = music.split(',');
-    let [firstHour, firstMin] = firstTime.split(':');
-    let [secHour, secMin] = sectime.split(':');
-    timeout = (secHour - firstHour) * 60 + (secMin - firstMin);
+  const convert = (melody) =>
+    melody.replace(/C#/g, 'c').replace(/D#/g, 'd').replace(/F#/g, 'f').replace(/G#/g, 'g').replace(/A#/g, 'a');
 
-    let words = context.split('');
-    while (timeout >= time) {
-      for (let idx in words) {
-        if (time > timeout) break;
-        if (words[Number(idx) + 1] === '#') {
-          text += words[idx];
-          continue;
-        }
+  m = convert(m);
+  let answer = '(None)';
+  let maxTime = 0;
 
-        text += words[idx];
-        ++time;
+  for (let info of musicinfos) {
+    let [start, end, title, melody] = info.split(',');
+    let [sh, sm] = start.split(':').map(Number);
+    let [eh, em] = end.split(':').map(Number);
+    let playTime = eh * 60 + em - (sh * 60 + sm);
 
-        if (m.length <= text.length) {
-          let textIdx = text.lastIndexOf(m);
-          if (textIdx !== -1 && text[textIdx + m.length] !== '#') result[title] = timeout;
-        }
-      }
+    melody = convert(melody);
+    let played = melody.repeat(Math.ceil(playTime / melody.length)).slice(0, playTime);
+
+    if (played.includes(m) && playTime > maxTime) {
+      maxTime = playTime;
+      answer = title;
     }
   }
-  const longtime = Math.max.apply(null, Object.values(result));
 
-  if (!Object.keys(result).length) return '(None)';
-  return Object.keys(result).find((key) => result[key] === longtime);
+  return answer;
 }
