@@ -5256,3 +5256,53 @@ function solution(m, musicinfos) {
 
   return answer;
 }
+
+//무인도 여행
+function solution(maps) {
+  const dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+  let n = maps.length;
+  let m = maps[0].length;
+  let visited = Array.from({ length: n }, () => Array(m).fill(false));
+  let result = [];
+
+  const bfs = (i, j) => {
+    visited[i][j] = true;
+    let queue = [[i, j]];
+    let sum = +maps[i][j];
+
+    while (queue.length) {
+      let [x, y] = queue.shift();
+
+      for (const [dx, dy] of dir) {
+        let nx = x + dx;
+        let ny = y + dy;
+
+        if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && maps[nx][ny] !== 'X') {
+          visited[nx][ny] = true;
+          sum += +maps[nx][ny];
+          queue.push([nx, ny]);
+        }
+      }
+    }
+    return sum;
+  };
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      if (maps[i][j] !== 'X' && !visited[i][j]) {
+        result.push(bfs(i, j));
+      }
+    }
+  }
+
+  return result.length === 0 ? [-1] : result.sort((a, b) => a - b);
+}
+
+//maps를 for()순회
+//const dir
+//상하좌우로 연결
+//visited maps만큼 생성
