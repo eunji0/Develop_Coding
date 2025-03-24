@@ -5449,3 +5449,74 @@ function solution(rows, columns, queries) {
 
   return result;
 }
+
+//디펜스 게임
+class MaxHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  push(v) {
+    this.heap.push(v);
+    this.bubbleUp();
+  }
+
+  pop() {
+    if (this.heap.length === 1) return this.heap.pop();
+    let t = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.bubbleDown();
+    return t;
+  }
+
+  bubbleUp() {
+    let index = this.heap.length - 1;
+    while (index > 0) {
+      let parentIdx = Math.floor((index - 1) / 2);
+      if (this.heap[index] <= this.heap[parentIdx]) break;
+      [this.heap[index], this.heap[parentIdx]] = [this.heap[parentIdx], this.heap[index]];
+      index = parentIdx;
+    }
+  }
+
+  bubbleDown() {
+    let index = 0;
+    while (index * 2 + 1 < this.heap.length) {
+      let left = index * 2 + 1;
+      let right = index * 2 + 2;
+      let largest = index;
+
+      if (this.heap[left] > this.heap[largest]) {
+        largest = left;
+      }
+
+      if (right < this.heap.length && this.heap[right] > this.heap[largest]) {
+        largest = right;
+      }
+
+      if (largest === index) break;
+      [this.heap[index], this.heap[largest]] = [this.heap[largest], this.heap[index]];
+      index = largest;
+    }
+  }
+}
+
+function solution(n, k, enemy) {
+  let maxheap = new MaxHeap();
+
+  for (let i = 0; i < enemy.length; i++) {
+    maxheap.push(enemy[i]);
+    n -= enemy[i];
+
+    if (n < 0) {
+      if (k > 0) {
+        n += maxheap.pop();
+        k--;
+      } else {
+        return i;
+      }
+    }
+  }
+
+  return enemy.length;
+}
