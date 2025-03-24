@@ -5540,3 +5540,112 @@ function solution(data, col, row_begin, row_end) {
   }
   return arr.reduce((a, c) => (a ^= c), 0);
 }
+
+//거리두기 확인하기
+function solution(places) {
+  let n = places[0].length;
+  let m = places[0][0].length;
+  let dir = [
+    [0, 1],
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+  ];
+  let diagonalDir = [
+    [1, 1],
+    [-1, -1],
+    [-1, 1],
+    [1, -1],
+  ];
+  let bridgeDir = [
+    [0, 2],
+    [0, -2],
+    [2, 0],
+    [-2, 0],
+  ];
+  let result = [];
+
+  //맨해튼 거리 계산
+  function calP(a, b, c, d) {
+    return Math.abs(a - c) + Math.abs(b - d) <= 2;
+  }
+
+  //상하좌우 확인 함수
+  //p가 나타나면 false
+  function checkP(i, j, map) {
+    for (let [dx, dy] of dir) {
+      let nx = i + dx;
+      let ny = j + dy;
+      if (nx >= 0 && ny >= 0 && nx < n && ny < m && map[nx][ny] === 'P') {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  //건너편 확인 함수
+  function checkBridgeP(i, j, map) {
+    for (let [dx, dy] of bridgeDir) {
+      let nx = i + dx;
+      let ny = j + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < n && ny < m && map[nx][ny] === 'P') {
+        if (nx !== i && map[i + 1][ny] === '0') {
+          return false;
+        }
+        if (ny !== j && map[i][j + 1] === '0') {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  //대각선 확인 함수
+  function diagonalCheck(i, j, map) {
+    for (let [dx, dy] of diagonalDir) {
+      let nx = i + dx;
+      let ny = j + dy;
+      //대각선에 P가 있을때
+      if (nx >= 0 && ny >= 0 && nx < n && ny < m && map[nx][ny] === 'P') {
+        if (map[i][ny] === '0' || map[nx][j] === '0') {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  places.forEach((v) => {
+    v = v.map((v) => v.split(''));
+
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < m; j++) {
+        if (v[i][j] === 'P') {
+          if (!checkP(i, j, v)) {
+            result.push(0);
+            return;
+          }
+          if (!diagonalCheck(i, j, v)) {
+            result.push(0);
+            return;
+          }
+          if (!checkBridgeP(i, j, v)) {
+            result.push(0);
+            return;
+          }
+        }
+      }
+    }
+    result.push(1);
+  });
+
+  return result;
+}
+//(r1, c1), (r2, c2)  |r1 - r2| + |c1 - c2| <=2
+//맨해튼 거리 확인
+//맨해튼 거리 2이고 사이에 빈 테이블이 있는 경우
+
+//상하좌우에 p가 있으면 false
+//대각선(맨해튼)에 p가 있고 둘 사이에 테이블이 있으면 false
+//두개의 p사이에 테이블이 있으면 false
