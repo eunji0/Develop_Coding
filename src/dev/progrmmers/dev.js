@@ -5520,3 +5520,23 @@ function solution(n, k, enemy) {
 
   return enemy.length;
 }
+
+//테이블 해시 함수
+function solution(data, col, row_begin, row_end) {
+  data.sort((a, b) => {
+    if (a[col - 1] === b[col - 1]) {
+      return b[0] - a[0];
+    }
+    return a[col - 1] - b[col - 1];
+  });
+
+  let arr = [];
+  for (let i = row_begin - 1; i < row_end; i++) {
+    let sum = 0;
+    data[i].forEach((v) => {
+      sum += v % (i + 1);
+    });
+    arr.push(sum);
+  }
+  return arr.reduce((a, c) => (a ^= c), 0);
+}
