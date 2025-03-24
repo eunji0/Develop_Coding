@@ -5407,3 +5407,45 @@ function solution(p) {
     return '(' + solution(v.join('')) + ')' + reverse(u);
   }
 }
+
+//행렬 테두리 회전하기
+function solution(rows, columns, queries) {
+  let map = Array.from({ length: rows }, (_, i) => Array.from({ length: columns }, (_, j) => i * columns + j + 1));
+
+  let result = [];
+
+  function rotate(r1, c1, r2, c2) {
+    let temp = map[r1][c1];
+    let minVal = temp;
+
+    for (let r = r1; r < r2; r++) {
+      map[r][c1] = map[r + 1][c1];
+      minVal = Math.min(minVal, map[r][c1]);
+    }
+
+    for (let c = c1; c < c2; c++) {
+      map[r2][c] = map[r2][c + 1];
+      minVal = Math.min(minVal, map[r2][c]);
+    }
+
+    for (let r = r2; r > r1; r--) {
+      map[r][c2] = map[r - 1][c2];
+      minVal = Math.min(minVal, map[r][c2]);
+    }
+
+    for (let c = c2; c > c1 + 1; c--) {
+      map[r1][c] = map[r1][c - 1];
+      minVal = Math.min(minVal, map[r1][c]);
+    }
+
+    map[r1][c1 + 1] = temp;
+
+    return minVal;
+  }
+
+  queries.forEach(([r1, c1, r2, c2]) => {
+    result.push(rotate(r1 - 1, c1 - 1, r2 - 1, c2 - 1));
+  });
+
+  return result;
+}
