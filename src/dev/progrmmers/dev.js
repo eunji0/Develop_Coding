@@ -5361,3 +5361,49 @@ function solution(board) {
 
   return -1;
 }
+
+//괄호 변환
+function solution(p) {
+  if (p.length === 0) return p;
+
+  function checkString(arr) {
+    let stack = [];
+    for (let n of arr) {
+      if (n === '(') {
+        stack.push(n);
+      } else {
+        if (stack.length > 0 && stack[stack.length - 1] === '(') {
+          stack.pop();
+        } else {
+          return false;
+        }
+      }
+    }
+    return stack.length === 0;
+  }
+
+  function splitUV(arr) {
+    let balance = 0;
+    for (let i = 0; i < arr.length; i++) {
+      balance += arr[i] === '(' ? 1 : -1;
+      if (balance === 0) return [arr.slice(0, i + 1), arr.slice(i + 1)];
+    }
+  }
+
+  function reverse(arr) {
+    return arr
+      .slice(1, arr.length - 1)
+      .map((v) => (v === '(' ? ')' : '('))
+      .join('');
+  }
+
+  if (checkString(p.split(''))) return p;
+
+  let [u, v] = splitUV(p.split(''));
+
+  if (checkString(u)) {
+    return u.join('') + solution(v.join(''));
+  } else {
+    return '(' + solution(v.join('')) + ')' + reverse(u);
+  }
+}
