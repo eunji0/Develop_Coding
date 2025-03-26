@@ -5611,3 +5611,37 @@ function solution(n) {
   hanoi(n, 1, 3, 2, answer);
   return answer;
 }
+
+//우박수열 정적분
+function calK(k) {
+  let answer = [k];
+  while (k > 1) {
+    if (k % 2 === 0) {
+      k /= 2;
+    } else {
+      k = k * 3 + 1;
+    }
+    answer.push(k);
+  }
+
+  return answer;
+}
+
+function solution(k, ranges) {
+  let sequence = calK(k);
+  let areas = [];
+  for (let i = 0; i < sequence.length - 1; i++) {
+    let area = (sequence[i] + sequence[i + 1]) / 2;
+    areas.push(area);
+  }
+
+  let totalLength = areas.length;
+
+  return ranges.map(([a, b]) => {
+    let end = totalLength + b;
+    if (a > end) return -1.0;
+
+    let integral = areas.slice(a, end).reduce((sum, val) => sum + val, 0);
+    return integral;
+  });
+}
