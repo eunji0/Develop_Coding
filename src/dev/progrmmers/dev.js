@@ -5683,3 +5683,48 @@ function gcd(a, b) {
 function solution(w, h) {
   return w * h - (w + h - gcd(w, h));
 }
+
+//광물 캐기
+function solution(picks, minerals) {
+  let fatigueTable = {
+    diamond: [1, 5, 25],
+    iron: [1, 1, 5],
+    stone: [1, 1, 1],
+  };
+
+  let groups = [];
+
+  for (let i = 0; i < minerals.length; i += 5) {
+    groups.push(minerals.slice(i, i + 5));
+  }
+
+  let totalPicks = picks.reduce((a, c) => a + c, 0);
+  groups = groups.slice(0, totalPicks);
+
+  let groupValues = groups.map((group) => {
+    let f = [0, 0, 0];
+    for (let m of group) {
+      f[0] += fatigueTable[m][0];
+      f[1] += fatigueTable[m][1];
+      f[2] += fatigueTable[m][2];
+    }
+    return { group, f };
+  });
+
+  groupValues.sort((a, b) => b.f[2] - a.f[2]);
+
+  let totalF = 0;
+  let pickIdx = 0;
+
+  for (let { f } of groupValues) {
+    while (pickIdx < 3 && picks[pickIdx] === 0) {
+      pickIdx++;
+    }
+    if (pickIdx === 3) break;
+
+    totalF += f[pickIdx];
+    picks[pickIdx]--;
+  }
+
+  return totalF;
+}
