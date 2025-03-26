@@ -5674,3 +5674,12 @@ function solution(s) {
   }
   return min;
 }
+
+//멀쩡한 사각형
+function gcd(a, b) {
+  return b === 0 ? a : gcd(b, a % b);
+}
+
+function solution(w, h) {
+  return w * h - (w + h - gcd(w, h));
+}
