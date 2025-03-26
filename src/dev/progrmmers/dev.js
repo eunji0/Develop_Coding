@@ -5645,3 +5645,32 @@ function solution(k, ranges) {
     return integral;
   });
 }
+
+//문자열 압축
+function compress(s, n) {
+  let compressed = '';
+  let prev = s.slice(0, n);
+  let count = 1;
+
+  for (let i = n; i < s.length; i += n) {
+    let cur = s.slice(i, i + n);
+    if (prev === cur) {
+      count++;
+    } else {
+      compressed += (count > 1 ? count : '') + prev;
+      prev = cur;
+      count = 1;
+    }
+  }
+  compressed += (count > 1 ? count : '') + prev;
+  return compressed.length;
+}
+function solution(s) {
+  if (s.length === 1) return 1;
+
+  let min = s.length;
+  for (let i = 1; i <= Math.floor(s.length / 2); i++) {
+    min = Math.min(min, compress(s, i));
+  }
+  return min;
+}
