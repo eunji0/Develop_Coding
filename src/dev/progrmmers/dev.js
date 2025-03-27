@@ -5738,3 +5738,43 @@ function solution(k, d) {
   }
   return count;
 }
+
+//[PCCP 기출문제] 2번 / 퍼즐 게임 챌린지
+function solution(diffs, times, limit) {
+  let left = 1,
+    right = 100000,
+    answer = right;
+
+  function canSolve(level) {
+    let totalTime = 0;
+    let prevTime = 0;
+
+    for (let i = 0; i < diffs.length; i++) {
+      let diff = diffs[i],
+        timeCur = times[i];
+
+      if (diff <= level) {
+        totalTime += timeCur;
+      } else {
+        let fail = diff - level;
+        totalTime += fail * (timeCur + prevTime) + timeCur;
+      }
+
+      if (totalTime > limit) return false;
+      prevTime = timeCur;
+    }
+    return totalTime <= limit;
+  }
+  while (left <= right) {
+    let mid = Math.floor((left + right) / 2);
+
+    if (canSolve(mid)) {
+      answer = mid;
+      right = mid - 1;
+    } else {
+      left = mid + 1;
+    }
+  }
+
+  return answer;
+}
