@@ -5728,3 +5728,13 @@ function solution(picks, minerals) {
 
   return totalF;
 }
+
+//점찍기
+function solution(k, d) {
+  let count = 0;
+  for (let i = 0; i <= d; i += k) {
+    let y = Math.floor(Math.sqrt(d * d - i * i));
+    count += Math.floor(y / k) + 1;
+  }
+  return count;
+}
