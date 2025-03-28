@@ -215,32 +215,63 @@
 // console.log(maxSum);
 
 //12015-가장 긴 증가하는 부분 수열 2
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+// let dp = [];
+
+// for (let num of arr) {
+//   let left = 0;
+//   let right = dp.length;
+
+//   while (left < right) {
+//     let mid = Math.floor((left + right) / 2);
+//     if (dp[mid] < num) {
+//       left = mid + 1;
+//     } else {
+//       right = mid;
+//     }
+//   }
+
+//   if (left === dp.length) {
+//     dp.push(num);
+//   } else {
+//     dp[left] = num;
+//   }
+// }
+
+// console.log(dp.length);
+
+//2470-두 용액
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
+const N = +input[0];
+const liquids = input[1].split(' ').map(Number);
 
-let n = +input[0];
-let arr = input[1].split(' ').map(Number);
-let dp = [];
+liquids.sort((a, b) => a - b);
 
-for (let num of arr) {
-  let left = 0;
-  let right = dp.length;
+let left = 0;
+let right = N - 1;
+let minDiff = Infinity;
+let result = [0, 0];
 
-  while (left < right) {
-    let mid = Math.floor((left + right) / 2);
-    if (dp[mid] < num) {
-      left = mid + 1;
-    } else {
-      right = mid;
-    }
+while (left < right) {
+  const sum = liquids[left] + liquids[right];
+
+  if (Math.abs(sum) < minDiff) {
+    minDiff = Math.abs(sum);
+    result = [liquids[left], liquids[right]];
   }
 
-  if (left === dp.length) {
-    dp.push(num);
+  if (sum < 0) {
+    left++;
   } else {
-    dp[left] = num;
+    right--;
   }
 }
 
-console.log(dp.length);
+console.log(result[0], result[1]);
