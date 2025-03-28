@@ -184,32 +184,63 @@
 // console.log(end);
 
 //2512-예산
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+// let m = +input[2];
+
+// let left = 1;
+// let right = Math.max(...arr);
+// let maxSum = 0;
+
+// while (left <= right) {
+//   let mid = Math.floor((left + right) / 2);
+//   let sum = 0;
+//   let min = 0;
+//   for (let i = 0; i < n; i++) {
+//     sum += Math.min(mid, arr[i]);
+//   }
+
+//   if (sum <= m) {
+//     maxSum = mid;
+//     left = mid + 1;
+//   } else {
+//     right = mid - 1;
+//   }
+// }
+
+// console.log(maxSum);
+
+//12015-가장 긴 증가하는 부분 수열 2
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
 let arr = input[1].split(' ').map(Number);
-let m = +input[2];
+let dp = [];
 
-let left = 1;
-let right = Math.max(...arr);
-let maxSum = 0;
+for (let num of arr) {
+  let left = 0;
+  let right = dp.length;
 
-while (left <= right) {
-  let mid = Math.floor((left + right) / 2);
-  let sum = 0;
-  let min = 0;
-  for (let i = 0; i < n; i++) {
-    sum += Math.min(mid, arr[i]);
+  while (left < right) {
+    let mid = Math.floor((left + right) / 2);
+    if (dp[mid] < num) {
+      left = mid + 1;
+    } else {
+      right = mid;
+    }
   }
 
-  if (sum <= m) {
-    maxSum = mid;
-    left = mid + 1;
+  if (left === dp.length) {
+    dp.push(num);
   } else {
-    right = mid - 1;
+    dp[left] = num;
   }
 }
 
-console.log(maxSum);
+console.log(dp.length);
