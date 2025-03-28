@@ -154,31 +154,62 @@
 // console.log(result.join(' '));
 
 //2110-공유기 설치
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// const arr = input
+//   .slice(1)
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// let start = 1;
+// let end = arr[arr.length - 1];
+
+// while (start <= end) {
+//   let mid = Math.floor((start + end) / 2);
+
+//   let count = 1;
+//   let prev = arr[0];
+//   for (let cur of arr) {
+//     if (cur - prev < mid) continue;
+//     prev = cur;
+//     count += 1;
+//   }
+
+//   if (count < m) end = mid - 1;
+//   else start = mid + 1;
+// }
+
+// console.log(end);
+
+//2512-예산
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [n, m] = input[0].split(' ').map(Number);
-const arr = input
-  .slice(1)
-  .map(Number)
-  .sort((a, b) => a - b);
 
-let start = 1;
-let end = arr[arr.length - 1];
+let n = +input[0];
+let arr = input[1].split(' ').map(Number);
+let m = +input[2];
 
-while (start <= end) {
-  let mid = Math.floor((start + end) / 2);
+let left = 1;
+let right = Math.max(...arr);
+let maxSum = 0;
 
-  let count = 1;
-  let prev = arr[0];
-  for (let cur of arr) {
-    if (cur - prev < mid) continue;
-    prev = cur;
-    count += 1;
+while (left <= right) {
+  let mid = Math.floor((left + right) / 2);
+  let sum = 0;
+  let min = 0;
+  for (let i = 0; i < n; i++) {
+    sum += Math.min(mid, arr[i]);
   }
 
-  if (count < m) end = mid - 1;
-  else start = mid + 1;
+  if (sum <= m) {
+    maxSum = mid;
+    left = mid + 1;
+  } else {
+    right = mid - 1;
+  }
 }
 
-console.log(end);
+console.log(maxSum);
