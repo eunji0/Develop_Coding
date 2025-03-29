@@ -246,25 +246,57 @@
 // console.log(dp.length);
 
 //2470-두 용액
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const N = +input[0];
+// const liquids = input[1].split(' ').map(Number);
+
+// liquids.sort((a, b) => a - b);
+
+// let left = 0;
+// let right = N - 1;
+// let minDiff = Infinity;
+// let result = [0, 0];
+
+// while (left < right) {
+//   const sum = liquids[left] + liquids[right];
+
+//   if (Math.abs(sum) < minDiff) {
+//     minDiff = Math.abs(sum);
+//     result = [liquids[left], liquids[right]];
+//   }
+
+//   if (sum < 0) {
+//     left++;
+//   } else {
+//     right--;
+//   }
+// }
+
+// console.log(result[0], result[1]);
+
+//2467-용액
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
-const N = +input[0];
-const liquids = input[1].split(' ').map(Number);
-
-liquids.sort((a, b) => a - b);
+let n = +input[0];
+let arr = input[1]
+  .split(' ')
+  .map(Number)
+  .sort((a, b) => a - b);
 
 let left = 0;
-let right = N - 1;
-let minDiff = Infinity;
+let right = arr.length - 1;
+let min = Infinity;
 let result = [0, 0];
 
 while (left < right) {
-  const sum = liquids[left] + liquids[right];
+  let sum = arr[left] + arr[right];
 
-  if (Math.abs(sum) < minDiff) {
-    minDiff = Math.abs(sum);
-    result = [liquids[left], liquids[right]];
+  if (Math.abs(sum) < min) {
+    min = Math.abs(sum);
+    result = [arr[left], arr[right]];
   }
 
   if (sum < 0) {
@@ -274,4 +306,4 @@ while (left < right) {
   }
 }
 
-console.log(result[0], result[1]);
+console.log(result.join(' '));
