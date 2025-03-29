@@ -277,33 +277,65 @@
 // console.log(result[0], result[1]);
 
 //2467-용액
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// let n = +input[0];
+// let arr = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// let left = 0;
+// let right = arr.length - 1;
+// let min = Infinity;
+// let result = [0, 0];
+
+// while (left < right) {
+//   let sum = arr[left] + arr[right];
+
+//   if (Math.abs(sum) < min) {
+//     min = Math.abs(sum);
+//     result = [arr[left], arr[right]];
+//   }
+
+//   if (sum < 0) {
+//     left++;
+//   } else {
+//     right--;
+//   }
+// }
+
+// console.log(result.join(' '));
+
+//1300-k번째 수
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 let n = +input[0];
-let arr = input[1]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => a - b);
+let m = +input[1];
 
-let left = 0;
-let right = arr.length - 1;
-let min = Infinity;
-let result = [0, 0];
+let left = 1;
+let right = n * n;
+let answer = 0;
 
-while (left < right) {
-  let sum = arr[left] + arr[right];
-
-  if (Math.abs(sum) < min) {
-    min = Math.abs(sum);
-    result = [arr[left], arr[right]];
+const countLessCal = (mid) => {
+  let count = 0;
+  for (let i = 1; i <= n; i++) {
+    count += Math.min(n, Math.floor(mid / i));
   }
+  return count;
+};
 
-  if (sum < 0) {
-    left++;
+while (left <= right) {
+  let mid = Math.floor((left + right) / 2);
+
+  if (countLessCal(mid) >= m) {
+    answer = mid;
+    right = mid - 1;
   } else {
-    right--;
+    left = mid + 1;
   }
 }
 
-console.log(result.join(' '));
+console.log(answer);
