@@ -309,33 +309,75 @@
 // console.log(result.join(' '));
 
 //1300-k번째 수
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// let n = +input[0];
+// let m = +input[1];
+
+// let left = 1;
+// let right = n * n;
+// let answer = 0;
+
+// const countLessCal = (mid) => {
+//   let count = 0;
+//   for (let i = 1; i <= n; i++) {
+//     count += Math.min(n, Math.floor(mid / i));
+//   }
+//   return count;
+// };
+
+// while (left <= right) {
+//   let mid = Math.floor((left + right) / 2);
+
+//   if (countLessCal(mid) >= m) {
+//     answer = mid;
+//     right = mid - 1;
+//   } else {
+//     left = mid + 1;
+//   }
+// }
+
+// console.log(answer);
+
+//1253-좋다
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 let n = +input[0];
-let m = +input[1];
+let arr = input[1]
+  .split(' ')
+  .map(Number)
+  .sort((a, b) => a - b);
+let count = 0;
 
-let left = 1;
-let right = n * n;
-let answer = 0;
+for (let i = 0; i < n; i++) {
+  let left = 0;
+  let right = n - 1;
+  let target = arr[i];
 
-const countLessCal = (mid) => {
-  let count = 0;
-  for (let i = 1; i <= n; i++) {
-    count += Math.min(n, Math.floor(mid / i));
-  }
-  return count;
-};
+  while (left < right) {
+    if (left === i) {
+      left++;
+      continue;
+    }
 
-while (left <= right) {
-  let mid = Math.floor((left + right) / 2);
+    if (right === i) {
+      right--;
+      continue;
+    }
 
-  if (countLessCal(mid) >= m) {
-    answer = mid;
-    right = mid - 1;
-  } else {
-    left = mid + 1;
+    let sum = arr[left] + arr[right];
+
+    if (sum === target) {
+      count++;
+      break;
+    } else if (sum < target) {
+      left++;
+    } else {
+      right--;
+    }
   }
 }
 
-console.log(answer);
+console.log(count);
