@@ -341,43 +341,77 @@
 // console.log(answer);
 
 //1253-좋다
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// let n = +input[0];
+// let arr = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
+// let count = 0;
+
+// for (let i = 0; i < n; i++) {
+//   let left = 0;
+//   let right = n - 1;
+//   let target = arr[i];
+
+//   while (left < right) {
+//     if (left === i) {
+//       left++;
+//       continue;
+//     }
+
+//     if (right === i) {
+//       right--;
+//       continue;
+//     }
+
+//     let sum = arr[left] + arr[right];
+
+//     if (sum === target) {
+//       count++;
+//       break;
+//     } else if (sum < target) {
+//       left++;
+//     } else {
+//       right--;
+//     }
+//   }
+// }
+
+// console.log(count);
+
+//2343-기타레슨
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
-let n = +input[0];
-let arr = input[1]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => a - b);
-let count = 0;
+let [n, m] = input[0].split(' ').map(Number);
+let arr = input[1].split(' ').map(Number);
 
-for (let i = 0; i < n; i++) {
-  let left = 0;
-  let right = n - 1;
-  let target = arr[i];
+let left = Math.max(...arr);
+let right = arr.reduce((a, c) => a + c, 0);
 
-  while (left < right) {
-    if (left === i) {
-      left++;
-      continue;
-    }
+while (left <= right) {
+  let mid = Math.floor((left + right) / 2);
+  let sum = 0;
+  let count = 1;
 
-    if (right === i) {
-      right--;
-      continue;
-    }
-
-    let sum = arr[left] + arr[right];
-
-    if (sum === target) {
+  for (let lec of arr) {
+    if (sum + lec > mid) {
       count++;
-      break;
-    } else if (sum < target) {
-      left++;
+      sum = lec;
     } else {
-      right--;
+      sum += lec;
     }
+  }
+
+  if (count <= m) {
+    result = mid;
+    right = mid - 1;
+  } else {
+    left = mid + 1;
   }
 }
 
-console.log(count);
+console.log(result);
