@@ -383,35 +383,68 @@
 // console.log(count);
 
 //2343-기타레슨
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input[1].split(' ').map(Number);
+
+// let left = Math.max(...arr);
+// let right = arr.reduce((a, c) => a + c, 0);
+
+// while (left <= right) {
+//   let mid = Math.floor((left + right) / 2);
+//   let sum = 0;
+//   let count = 1;
+
+//   for (let lec of arr) {
+//     if (sum + lec > mid) {
+//       count++;
+//       sum = lec;
+//     } else {
+//       sum += lec;
+//     }
+//   }
+
+//   if (count <= m) {
+//     result = mid;
+//     right = mid - 1;
+//   } else {
+//     left = mid + 1;
+//   }
+// }
+
+// console.log(result);
+
+//2473-세 용액
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
-let [n, m] = input[0].split(' ').map(Number);
-let arr = input[1].split(' ').map(Number);
+let n = +input[0];
+let arr = input[1]
+  .split(' ')
+  .map(Number)
+  .sort((a, b) => a - b);
 
-let left = Math.max(...arr);
-let right = arr.reduce((a, c) => a + c, 0);
+let result = [];
+let closetSum = Infinity;
+for (let i = 0; i < n - 2; i++) {
+  let left = i + 1;
+  let right = n - 1;
 
-while (left <= right) {
-  let mid = Math.floor((left + right) / 2);
-  let sum = 0;
-  let count = 1;
+  while (left < right) {
+    let sum = arr[i] + arr[left] + arr[right];
 
-  for (let lec of arr) {
-    if (sum + lec > mid) {
-      count++;
-      sum = lec;
-    } else {
-      sum += lec;
+    if (Math.abs(sum) < Math.abs(closetSum)) {
+      closetSum = sum;
+      result = [arr[i], arr[left], arr[right]];
     }
-  }
-
-  if (count <= m) {
-    result = mid;
-    right = mid - 1;
-  } else {
-    left = mid + 1;
+    if (sum < 0) {
+      left++;
+    } else {
+      right--;
+    }
   }
 }
 
-console.log(result);
+console.log(result.join(' '));
