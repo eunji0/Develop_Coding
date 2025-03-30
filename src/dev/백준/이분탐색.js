@@ -450,37 +450,64 @@
 // console.log(result.join(' '));
 
 //2143-두 배열의 합
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let t = +input[0];
+// let n = +input[1];
+// let nArr = input[2].split(' ').map(Number);
+// let m = +input[3];
+// let mArr = input[4].split(' ').map(Number);
+
+// let nMap = new Map();
+
+// for (let i = 0; i < n; i++) {
+//   let sum = 0;
+
+//   for (let j = i; j < n; j++) {
+//     sum += nArr[j];
+//     nMap.set(sum, (nMap.get(sum) || 0) + 1);
+//   }
+// }
+
+// let count = 0;
+// for (let i = 0; i < m; i++) {
+//   let sum = 0;
+//   for (let j = i; j < m; j++) {
+//     sum += mArr[j];
+//     let target = t - sum;
+//     if (nMap.has(target)) {
+//       count += nMap.get(target);
+//     }
+//   }
+// }
+
+// console.log(count);
+
+//2776-암기왕
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let t = +input[0];
-let n = +input[1];
-let nArr = input[2].split(' ').map(Number);
-let m = +input[3];
-let mArr = input[4].split(' ').map(Number);
+let idx = 0;
 
-let nMap = new Map();
+while (t--) {
+  let n = +input[idx + 1];
+  let nArr = new Set(input[idx + 2].split(' ').map(Number));
+  let m = +input[idx + 3];
+  let mArr = input[idx + 4].split(' ').map(Number);
 
-for (let i = 0; i < n; i++) {
-  let sum = 0;
-
-  for (let j = i; j < n; j++) {
-    sum += nArr[j];
-    nMap.set(sum, (nMap.get(sum) || 0) + 1);
-  }
-}
-
-let count = 0;
-for (let i = 0; i < m; i++) {
-  let sum = 0;
-  for (let j = i; j < m; j++) {
-    sum += mArr[j];
-    let target = t - sum;
-    if (nMap.has(target)) {
-      count += nMap.get(target);
+  let result = [];
+  mArr.forEach((v) => {
+    if (nArr.has(v)) {
+      result.push('1');
+    } else {
+      result.push('0');
     }
-  }
-}
+  });
 
-console.log(count);
+  console.log(result.join('\n'));
+  idx += 4;
+}
