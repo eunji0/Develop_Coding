@@ -417,34 +417,70 @@
 // console.log(result);
 
 //2473-세 용액
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// let n = +input[0];
+// let arr = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
+
+// let result = [];
+// let closetSum = Infinity;
+// for (let i = 0; i < n - 2; i++) {
+//   let left = i + 1;
+//   let right = n - 1;
+
+//   while (left < right) {
+//     let sum = arr[i] + arr[left] + arr[right];
+
+//     if (Math.abs(sum) < Math.abs(closetSum)) {
+//       closetSum = sum;
+//       result = [arr[i], arr[left], arr[right]];
+//     }
+//     if (sum < 0) {
+//       left++;
+//     } else {
+//       right--;
+//     }
+//   }
+// }
+
+// console.log(result.join(' '));
+
+//2143-두 배열의 합
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
-let n = +input[0];
-let arr = input[1]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => a - b);
 
-let result = [];
-let closetSum = Infinity;
-for (let i = 0; i < n - 2; i++) {
-  let left = i + 1;
-  let right = n - 1;
+let t = +input[0];
+let n = +input[1];
+let nArr = input[2].split(' ').map(Number);
+let m = +input[3];
+let mArr = input[4].split(' ').map(Number);
 
-  while (left < right) {
-    let sum = arr[i] + arr[left] + arr[right];
+let nMap = new Map();
 
-    if (Math.abs(sum) < Math.abs(closetSum)) {
-      closetSum = sum;
-      result = [arr[i], arr[left], arr[right]];
-    }
-    if (sum < 0) {
-      left++;
-    } else {
-      right--;
+for (let i = 0; i < n; i++) {
+  let sum = 0;
+
+  for (let j = i; j < n; j++) {
+    sum += nArr[j];
+    nMap.set(sum, (nMap.get(sum) || 0) + 1);
+  }
+}
+
+let count = 0;
+for (let i = 0; i < m; i++) {
+  let sum = 0;
+  for (let j = i; j < m; j++) {
+    sum += mArr[j];
+    let target = t - sum;
+    if (nMap.has(target)) {
+      count += nMap.get(target);
     }
   }
 }
 
-console.log(result.join(' '));
+console.log(count);
