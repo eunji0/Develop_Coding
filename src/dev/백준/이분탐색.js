@@ -486,6 +486,32 @@
 // console.log(count);
 
 //2776-암기왕
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let t = +input[0];
+// let idx = 0;
+
+// while (t--) {
+//   let n = +input[idx + 1];
+//   let nArr = new Set(input[idx + 2].split(' ').map(Number));
+//   let m = +input[idx + 3];
+//   let mArr = input[idx + 4].split(' ').map(Number);
+
+//   let result = [];
+//   mArr.forEach((v) => {
+//     if (nArr.has(v)) {
+//       result.push('1');
+//     } else {
+//       result.push('0');
+//     }
+//   });
+
+//   console.log(result.join('\n'));
+//   idx += 4;
+// }
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
@@ -495,19 +521,32 @@ let idx = 0;
 
 while (t--) {
   let n = +input[idx + 1];
-  let nArr = new Set(input[idx + 2].split(' ').map(Number));
+  let nArr = input[idx + 2]
+    .split(' ')
+    .map(Number)
+    .sort((a, b) => a - b);
   let m = +input[idx + 3];
   let mArr = input[idx + 4].split(' ').map(Number);
 
-  let result = [];
-  mArr.forEach((v) => {
-    if (nArr.has(v)) {
-      result.push('1');
-    } else {
-      result.push('0');
-    }
-  });
+  const checkTrue = (arr, target) => {
+    let left = 0;
+    let right = arr.length - 1;
 
+    while (left <= right) {
+      let mid = Math.floor((left + right) / 2);
+
+      if (arr[mid] === target) {
+        return 1;
+      } else if (arr[mid] < target) {
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
+    }
+    return 0;
+  };
+
+  let result = mArr.map((v) => checkTrue(nArr, v));
   console.log(result.join('\n'));
   idx += 4;
 }
