@@ -599,39 +599,95 @@
 // console.log(result.join('\n'));
 
 //7453-합이 0인 네 정수
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let A = [],
+//   B = [],
+//   C = [],
+//   D = [];
+
+// for (let i = 1; i <= n; i++) {
+//   let [a, b, c, d] = input[i].split(' ').map(Number);
+//   A.push(a);
+//   B.push(b);
+//   C.push(c);
+//   D.push(d);
+// }
+
+// let abSum = new Map();
+// for (let i = 0; i < n; i++) {
+//   for (let j = 0; j < n; j++) {
+//     let sum = A[i] + B[j];
+//     abSum.set(sum, (abSum.get(sum) || 0) + 1);
+//   }
+// }
+
+// let count = 0;
+// for (let i = 0; i < n; i++) {
+//   for (let j = 0; j < n; j++) {
+//     let sum = C[i] + D[j];
+//     if (abSum.has(-sum)) {
+//       count += abSum.get(-sum);
+//     }
+//   }
+// }
+// console.log(count);
+
+//1939-중량제한
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-let A = [],
-  B = [],
-  C = [],
-  D = [];
+let [n, m] = input[0].split(' ').map(Number);
+let arr = input.slice(1, 1 + m).map((v) => v.split(' ').map(Number));
+let [a, b] = input[1 + m].split(' ').map(Number);
 
-for (let i = 1; i <= n; i++) {
-  let [a, b, c, d] = input[i].split(' ').map(Number);
-  A.push(a);
-  B.push(b);
-  C.push(c);
-  D.push(d);
+let graph = Array.from({ length: n + 1 }, () => []);
+let maxWeight = 0;
+
+for (let [from, to, kg] of arr) {
+  graph[from].push([to, kg]);
+  graph[to].push([from, kg]);
+  maxWeight = Math.max(maxWeight, kg);
 }
 
-let abSum = new Map();
-for (let i = 0; i < n; i++) {
-  for (let j = 0; j < n; j++) {
-    let sum = A[i] + B[j];
-    abSum.set(sum, (abSum.get(sum) || 0) + 1);
-  }
-}
+const bfs = (mid) => {
+  let visited = Array(n + 1).fill(false);
+  visited[a] = true;
+  let queue = [a];
 
-let count = 0;
-for (let i = 0; i < n; i++) {
-  for (let j = 0; j < n; j++) {
-    let sum = C[i] + D[j];
-    if (abSum.has(-sum)) {
-      count += abSum.get(-sum);
+  while (queue.length) {
+    let cur = queue.shift();
+    visited[cur] = true;
+
+    if (cur === b) return true;
+
+    for (let [next, limit] of graph[cur]) {
+      if (!visited[next] && limit >= mid) {
+        visited[next] = true;
+        queue.push(next);
+      }
     }
   }
+  return false;
+};
+
+let left = 1;
+let right = maxWeight,
+  answer = 0;
+
+while (left <= right) {
+  let mid = Math.floor((left + right) / 2);
+
+  if (bfs(mid)) {
+    answer = mid;
+    left = mid + 1;
+  } else {
+    right = mid - 1;
+  }
 }
-console.log(count);
+
+console.log(answer);
