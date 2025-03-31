@@ -637,57 +637,89 @@
 // console.log(count);
 
 //1939-중량제한
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input.slice(1, 1 + m).map((v) => v.split(' ').map(Number));
+// let [a, b] = input[1 + m].split(' ').map(Number);
+
+// let graph = Array.from({ length: n + 1 }, () => []);
+// let maxWeight = 0;
+
+// for (let [from, to, kg] of arr) {
+//   graph[from].push([to, kg]);
+//   graph[to].push([from, kg]);
+//   maxWeight = Math.max(maxWeight, kg);
+// }
+
+// const bfs = (mid) => {
+//   let visited = Array(n + 1).fill(false);
+//   visited[a] = true;
+//   let queue = [a];
+
+//   while (queue.length) {
+//     let cur = queue.shift();
+//     visited[cur] = true;
+
+//     if (cur === b) return true;
+
+//     for (let [next, limit] of graph[cur]) {
+//       if (!visited[next] && limit >= mid) {
+//         visited[next] = true;
+//         queue.push(next);
+//       }
+//     }
+//   }
+//   return false;
+// };
+
+// let left = 1;
+// let right = maxWeight,
+//   answer = 0;
+
+// while (left <= right) {
+//   let mid = Math.floor((left + right) / 2);
+
+//   if (bfs(mid)) {
+//     answer = mid;
+//     left = mid + 1;
+//   } else {
+//     right = mid - 1;
+//   }
+// }
+
+// console.log(answer);
+
+//3020-개똥벌레
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [n, m] = input[0].split(' ').map(Number);
-let arr = input.slice(1, 1 + m).map((v) => v.split(' ').map(Number));
-let [a, b] = input[1 + m].split(' ').map(Number);
+const n = Number(input[0]);
+const ports = input[1].split(' ').map(Number);
 
-let graph = Array.from({ length: n + 1 }, () => []);
-let maxWeight = 0;
+let lis = [];
 
-for (let [from, to, kg] of arr) {
-  graph[from].push([to, kg]);
-  graph[to].push([from, kg]);
-  maxWeight = Math.max(maxWeight, kg);
-}
-
-const bfs = (mid) => {
-  let visited = Array(n + 1).fill(false);
-  visited[a] = true;
-  let queue = [a];
-
-  while (queue.length) {
-    let cur = queue.shift();
-    visited[cur] = true;
-
-    if (cur === b) return true;
-
-    for (let [next, limit] of graph[cur]) {
-      if (!visited[next] && limit >= mid) {
-        visited[next] = true;
-        queue.push(next);
-      }
-    }
+const binarySearch = (arr, target) => {
+  let left = 0,
+    right = arr.length;
+  while (left < right) {
+    let mid = Math.floor((left + right) / 2);
+    if (arr[mid] >= target) right = mid;
+    else left = mid + 1;
   }
-  return false;
+  return left;
 };
 
-let left = 1;
-let right = maxWeight,
-  answer = 0;
-
-while (left <= right) {
-  let mid = Math.floor((left + right) / 2);
-
-  if (bfs(mid)) {
-    answer = mid;
-    left = mid + 1;
+for (let port of ports) {
+  if (lis.length === 0 || lis[lis.length - 1] < port) {
+    lis.push(port);
   } else {
-    right = mid - 1;
+    let idx = binarySearch(lis, port);
+    lis[idx] = port;
   }
 }
 
-console.log(answer);
+console.log(lis.length);
