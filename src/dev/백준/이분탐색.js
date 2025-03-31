@@ -552,48 +552,86 @@
 // }
 
 //7795-먹을 것인가 먹힐 것인가
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let t = +input[0];
+// let idx = 1;
+// let result = [];
+
+// const binaryCal = (arr, target) => {
+//   let left = 0;
+//   let right = arr.length - 1;
+
+//   while (left <= right) {
+//     let mid = Math.floor((left + right) / 2);
+
+//     if (arr[mid] < target) {
+//       left = mid + 1;
+//     } else {
+//       right = mid - 1;
+//     }
+//   }
+//   return left;
+// };
+
+// while (t--) {
+//   let [n, m] = input[idx++].split(' ').map(Number);
+//   let nArr = input[idx++]
+//     .split(' ')
+//     .map(Number)
+//     .sort((a, b) => b - a);
+//   let mArr = input[idx++]
+//     .split(' ')
+//     .map(Number)
+//     .sort((a, b) => a - b);
+
+//   let count = 0;
+
+//   for (let i = 0; i < n; i++) {
+//     count += binaryCal(mArr, nArr[i]);
+//   }
+
+//   result.push(count);
+// }
+
+// console.log(result.join('\n'));
+
+//7453-합이 0인 네 정수
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let t = +input[0];
-let idx = 1;
-let result = [];
+let n = +input[0];
+let A = [],
+  B = [],
+  C = [],
+  D = [];
 
-const binaryCal = (arr, target) => {
-  let left = 0;
-  let right = arr.length - 1;
-
-  while (left <= right) {
-    let mid = Math.floor((left + right) / 2);
-
-    if (arr[mid] < target) {
-      left = mid + 1;
-    } else {
-      right = mid - 1;
-    }
-  }
-  return left;
-};
-
-while (t--) {
-  let [n, m] = input[idx++].split(' ').map(Number);
-  let nArr = input[idx++]
-    .split(' ')
-    .map(Number)
-    .sort((a, b) => b - a);
-  let mArr = input[idx++]
-    .split(' ')
-    .map(Number)
-    .sort((a, b) => a - b);
-
-  let count = 0;
-
-  for (let i = 0; i < n; i++) {
-    count += binaryCal(mArr, nArr[i]);
-  }
-
-  result.push(count);
+for (let i = 1; i <= n; i++) {
+  let [a, b, c, d] = input[i].split(' ').map(Number);
+  A.push(a);
+  B.push(b);
+  C.push(c);
+  D.push(d);
 }
 
-console.log(result.join('\n'));
+let abSum = new Map();
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < n; j++) {
+    let sum = A[i] + B[j];
+    abSum.set(sum, (abSum.get(sum) || 0) + 1);
+  }
+}
+
+let count = 0;
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < n; j++) {
+    let sum = C[i] + D[j];
+    if (abSum.has(-sum)) {
+      count += abSum.get(-sum);
+    }
+  }
+}
+console.log(count);
