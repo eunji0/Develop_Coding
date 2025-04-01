@@ -767,34 +767,97 @@
 // console.log(answer);
 
 //17951-흩날리는 시험지 속에서 내 평점이 느껴진거야
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [N, K] = input[0].split(' ').map(Number);
+// let score = input[1].split(' ').map(Number);
+
+// function binarySearch(start, end) {
+//   while (start <= end) {
+//     let mid = Math.floor((start + end) / 2);
+//     let sum = 0,
+//       groupCount = 0;
+
+//     for (let i = 0; i < N; i++) {
+//       sum += score[i];
+//       if (sum >= mid) {
+//         sum = 0;
+//         groupCount++;
+//       }
+//     }
+
+//     if (groupCount >= K) {
+//       start = mid + 1;
+//     } else {
+//       end = mid - 1;
+//     }
+//   }
+//   return end;
+// }
+
+// console.log(binarySearch(0, 2000000));
+
+//1321-군인
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [N, K] = input[0].split(' ').map(Number);
-let score = input[1].split(' ').map(Number);
+let N = parseInt(input[0]); // 부대 개수
+let soldiers = input[1].split(' ').map(Number); // 각 부대 병력 수
+let M = parseInt(input[2]); // 명령 개수
+let commands = input.slice(3); // 명령 리스트
 
-function binarySearch(start, end) {
-  while (start <= end) {
-    let mid = Math.floor((start + end) / 2);
-    let sum = 0,
-      groupCount = 0;
+// 누적 합 배열 생성
+let prefix = new Array(N).fill(0);
+prefix[0] = soldiers[0];
 
-    for (let i = 0; i < N; i++) {
-      sum += score[i];
-      if (sum >= mid) {
-        sum = 0;
-        groupCount++;
-      }
-    }
-
-    if (groupCount >= K) {
-      start = mid + 1;
-    } else {
-      end = mid - 1;
-    }
-  }
-  return end;
+for (let i = 1; i < N; i++) {
+  prefix[i] = prefix[i - 1] + soldiers[i];
 }
 
-console.log(binarySearch(0, 2000000));
+// 이분 탐색(lower bound) - 특정 군번이 속한 부대 찾기
+function findDivision(x) {
+  let left = 0,
+    right = N - 1,
+    ans = -1;
+  while (left <= right) {
+    let mid = Math.floor((left + right) / 2);
+    if (prefix[mid] >= x) {
+      // 해당 군번이 포함된 부대를 찾으면 저장
+      ans = mid + 1; // 1-based index
+      right = mid - 1;
+    } else {
+      left = mid + 1;
+    }
+  }
+  return ans;
+}
+
+// 결과 저장
+let result = [];
+
+for (let cmd of commands) {
+  let parts = cmd.split(' ');
+  let type = parseInt(parts[0]);
+
+  if (type === 1) {
+    // 1 i a : i번째 부대에 a명 추가
+    let index = parseInt(parts[1]) - 1; // 0-based index
+    let a = parseInt(parts[2]);
+    soldiers[index] += a;
+
+    // 누적 합(prefix sum) 업데이트
+    for (let i = index; i < N; i++) {
+      prefix[i] += a;
+    }
+  } else if (type === 2) {
+    // 2 x : 군번 x번이 속한 부대 찾기
+    let x = parseInt(parts[1]);
+    result.push(findDivision(x));
+  }
+}
+
+// 결과 출력
+console.log(result.join('\n'));
