@@ -725,43 +725,76 @@
 // console.log(lis.length);
 
 //13397-구간 나누기2
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input[1].split(' ').map(Number);
+
+// const isValid = (mid) => {
+//   let count = 1;
+//   let maxVal = arr[0],
+//     minVal = arr[0];
+
+//   for (let i = 1; i < n; i++) {
+//     minVal = Math.min(minVal, arr[i]);
+//     maxVal = Math.max(maxVal, arr[i]);
+//     if (maxVal - minVal > mid) {
+//       count++;
+//       minVal = maxVal = arr[i];
+//     }
+//   }
+
+//   return count <= m;
+// };
+
+// let left = 0;
+// let right = Math.max(...arr) - Math.min(...arr);
+// let answer = right;
+
+// while (left <= right) {
+//   let mid = Math.floor((left + right) / 2);
+
+//   if (isValid(mid)) {
+//     answer = mid;
+//     right = mid - 1;
+//   } else {
+//     left = mid + 1;
+//   }
+// }
+
+// console.log(answer);
+
+//17951-흩날리는 시험지 속에서 내 평점이 느껴진거야
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [n, m] = input[0].split(' ').map(Number);
-let arr = input[1].split(' ').map(Number);
+let [N, K] = input[0].split(' ').map(Number);
+let score = input[1].split(' ').map(Number);
 
-const isValid = (mid) => {
-  let count = 1;
-  let maxVal = arr[0],
-    minVal = arr[0];
+function binarySearch(start, end) {
+  while (start <= end) {
+    let mid = Math.floor((start + end) / 2);
+    let sum = 0,
+      groupCount = 0;
 
-  for (let i = 1; i < n; i++) {
-    minVal = Math.min(minVal, arr[i]);
-    maxVal = Math.max(maxVal, arr[i]);
-    if (maxVal - minVal > mid) {
-      count++;
-      minVal = maxVal = arr[i];
+    for (let i = 0; i < N; i++) {
+      sum += score[i];
+      if (sum >= mid) {
+        sum = 0;
+        groupCount++;
+      }
+    }
+
+    if (groupCount >= K) {
+      start = mid + 1;
+    } else {
+      end = mid - 1;
     }
   }
-
-  return count <= m;
-};
-
-let left = 0;
-let right = Math.max(...arr) - Math.min(...arr);
-let answer = right;
-
-while (left <= right) {
-  let mid = Math.floor((left + right) / 2);
-
-  if (isValid(mid)) {
-    answer = mid;
-    right = mid - 1;
-  } else {
-    left = mid + 1;
-  }
+  return end;
 }
 
-console.log(answer);
+console.log(binarySearch(0, 2000000));
