@@ -693,33 +693,75 @@
 // console.log(answer);
 
 //3020-개똥벌레
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const n = Number(input[0]);
+// const ports = input[1].split(' ').map(Number);
+
+// let lis = [];
+
+// const binarySearch = (arr, target) => {
+//   let left = 0,
+//     right = arr.length;
+//   while (left < right) {
+//     let mid = Math.floor((left + right) / 2);
+//     if (arr[mid] >= target) right = mid;
+//     else left = mid + 1;
+//   }
+//   return left;
+// };
+
+// for (let port of ports) {
+//   if (lis.length === 0 || lis[lis.length - 1] < port) {
+//     lis.push(port);
+//   } else {
+//     let idx = binarySearch(lis, port);
+//     lis[idx] = port;
+//   }
+// }
+
+// console.log(lis.length);
+
+//13397-구간 나누기2
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const n = Number(input[0]);
-const ports = input[1].split(' ').map(Number);
+let [n, m] = input[0].split(' ').map(Number);
+let arr = input[1].split(' ').map(Number);
 
-let lis = [];
+const isValid = (mid) => {
+  let count = 1;
+  let maxVal = arr[0],
+    minVal = arr[0];
 
-const binarySearch = (arr, target) => {
-  let left = 0,
-    right = arr.length;
-  while (left < right) {
-    let mid = Math.floor((left + right) / 2);
-    if (arr[mid] >= target) right = mid;
-    else left = mid + 1;
+  for (let i = 1; i < n; i++) {
+    minVal = Math.min(minVal, arr[i]);
+    maxVal = Math.max(maxVal, arr[i]);
+    if (maxVal - minVal > mid) {
+      count++;
+      minVal = maxVal = arr[i];
+    }
   }
-  return left;
+
+  return count <= m;
 };
 
-for (let port of ports) {
-  if (lis.length === 0 || lis[lis.length - 1] < port) {
-    lis.push(port);
+let left = 0;
+let right = Math.max(...arr) - Math.min(...arr);
+let answer = right;
+
+while (left <= right) {
+  let mid = Math.floor((left + right) / 2);
+
+  if (isValid(mid)) {
+    answer = mid;
+    right = mid - 1;
   } else {
-    let idx = binarySearch(lis, port);
-    lis[idx] = port;
+    left = mid + 1;
   }
 }
 
-console.log(lis.length);
+console.log(answer);
