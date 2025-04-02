@@ -800,37 +800,84 @@
 // console.log(binarySearch(0, 2000000));
 
 //12014-주식
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let T = parseInt(input[0]);
+// let idx = 1;
+// let result = '';
+
+// function binarySearchLIS(n, k, prices) {
+//   let dp = [];
+
+//   for (let price of prices) {
+//     let pos = lowerBound(dp, price);
+//     if (pos < dp.length) {
+//       dp[pos] = price;
+//     } else {
+//       dp.push(price);
+//     }
+//     if (dp.length >= k) return 1;
+//   }
+//   return 0;
+// }
+
+// function lowerBound(arr, target) {
+//   let left = 0;
+//   let right = arr.length;
+//   while (left < right) {
+//     let mid = Math.floor((left + right) / 2);
+
+//     if (arr[mid] >= target) {
+//       right = mid - 1;
+//     } else {
+//       left = mid + 1;
+//     }
+//   }
+//   return left;
+// }
+
+// for (let t = 1; t <= T; t++) {
+//   let [N, K] = input[idx++].split(' ').map(Number);
+//   let prices = input[idx++].split(' ').map(Number);
+
+//   result += `Case #${t}\n${binarySearchLIS(N, K, prices)}\n`;
+// }
+
+// console.log(result.trim());
+
+//3066-브리징 시그널
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let T = parseInt(input[0]);
+let t = +input[0];
 let idx = 1;
-let result = '';
 
-function binarySearchLIS(n, k, prices) {
+function findPosition(n, arr) {
   let dp = [];
 
-  for (let price of prices) {
-    let pos = lowerBound(dp, price);
+  for (let num of arr) {
+    let pos = lowerBound(num, dp);
     if (pos < dp.length) {
-      dp[pos] = price;
+      dp[pos] = num;
     } else {
-      dp.push(price);
+      dp.push(num);
     }
-    if (dp.length >= k) return 1;
   }
-  return 0;
+
+  return dp.length;
 }
 
-function lowerBound(arr, target) {
+function lowerBound(m, arr) {
   let left = 0;
   let right = arr.length;
   while (left < right) {
     let mid = Math.floor((left + right) / 2);
 
-    if (arr[mid] >= target) {
-      right = mid - 1;
+    if (arr[mid] >= m) {
+      right = mid;
     } else {
       left = mid + 1;
     }
@@ -838,11 +885,10 @@ function lowerBound(arr, target) {
   return left;
 }
 
-for (let t = 1; t <= T; t++) {
-  let [N, K] = input[idx++].split(' ').map(Number);
-  let prices = input[idx++].split(' ').map(Number);
-
-  result += `Case #${t}\n${binarySearchLIS(N, K, prices)}\n`;
+while (t--) {
+  let n = +input[idx];
+  idx += 1;
+  let kArr = input.slice(idx, idx + n).map(Number);
+  idx += n;
+  console.log(findPosition(n, kArr));
 }
-
-console.log(result.trim());
