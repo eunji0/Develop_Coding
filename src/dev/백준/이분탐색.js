@@ -799,65 +799,50 @@
 
 // console.log(binarySearch(0, 2000000));
 
-//1321-군인
+//12014-주식
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let N = parseInt(input[0]); // 부대 개수
-let soldiers = input[1].split(' ').map(Number); // 각 부대 병력 수
-let M = parseInt(input[2]); // 명령 개수
-let commands = input.slice(3); // 명령 리스트
+let T = parseInt(input[0]);
+let idx = 1;
+let result = '';
 
-// 누적 합 배열 생성
-let prefix = new Array(N).fill(0);
-prefix[0] = soldiers[0];
+function binarySearchLIS(n, k, prices) {
+  let dp = [];
 
-for (let i = 1; i < N; i++) {
-  prefix[i] = prefix[i - 1] + soldiers[i];
+  for (let price of prices) {
+    let pos = lowerBound(dp, price);
+    if (pos < dp.length) {
+      dp[pos] = price;
+    } else {
+      dp.push(price);
+    }
+    if (dp.length >= k) return 1;
+  }
+  return 0;
 }
 
-// 이분 탐색(lower bound) - 특정 군번이 속한 부대 찾기
-function findDivision(x) {
-  let left = 0,
-    right = N - 1,
-    ans = -1;
-  while (left <= right) {
+function lowerBound(arr, target) {
+  let left = 0;
+  let right = arr.length;
+  while (left < right) {
     let mid = Math.floor((left + right) / 2);
-    if (prefix[mid] >= x) {
-      // 해당 군번이 포함된 부대를 찾으면 저장
-      ans = mid + 1; // 1-based index
+
+    if (arr[mid] >= target) {
       right = mid - 1;
     } else {
       left = mid + 1;
     }
   }
-  return ans;
+  return left;
 }
 
-// 결과 저장
-let result = [];
+for (let t = 1; t <= T; t++) {
+  let [N, K] = input[idx++].split(' ').map(Number);
+  let prices = input[idx++].split(' ').map(Number);
 
-for (let cmd of commands) {
-  let parts = cmd.split(' ');
-  let type = parseInt(parts[0]);
-
-  if (type === 1) {
-    // 1 i a : i번째 부대에 a명 추가
-    let index = parseInt(parts[1]) - 1; // 0-based index
-    let a = parseInt(parts[2]);
-    soldiers[index] += a;
-
-    // 누적 합(prefix sum) 업데이트
-    for (let i = index; i < N; i++) {
-      prefix[i] += a;
-    }
-  } else if (type === 2) {
-    // 2 x : 군번 x번이 속한 부대 찾기
-    let x = parseInt(parts[1]);
-    result.push(findDivision(x));
-  }
+  result += `Case #${t}\n${binarySearchLIS(N, K, prices)}\n`;
 }
 
-// 결과 출력
-console.log(result.join('\n'));
+console.log(result.trim());
