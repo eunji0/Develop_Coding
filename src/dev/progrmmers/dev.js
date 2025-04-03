@@ -5824,3 +5824,42 @@ function solution(plans) {
 
   return answer;
 }
+
+//유연근무제
+function solution(schedules, timelogs, startday) {
+  let days = [];
+
+  while (days.length < 7) {
+    if (startday % 7 === 0) {
+      days.push(7);
+    } else {
+      days.push(startday % 7);
+    }
+    startday++;
+  }
+
+  schedules = schedules.map((v) => {
+    return Math.floor(v / 100) * 60 + (v % 100);
+  });
+
+  let count = 0;
+  timelogs.forEach((v, idx) => {
+    let arr = v;
+    let state = true;
+    for (let i = 0; i < v.length; i++) {
+      if (days[i] < 6) {
+        let sum = Math.floor(arr[i] / 100) * 60 + (arr[i] % 100);
+        if (sum > schedules[idx] + 10) {
+          state = false;
+        }
+      }
+    }
+    if (state) count++;
+  });
+
+  return count;
+}
+
+//5 6 7 1 2 3 4
+//6과 7은 주말이므로 제외
+//순차적으로 확인
