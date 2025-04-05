@@ -5865,103 +5865,6 @@ function solution(schedules, timelogs, startday) {
 //순차적으로 확인
 
 //지게차와 크레인
-
-2;
-3;
-4;
-5;
-6;
-7;
-8;
-9;
-10;
-11;
-12;
-13;
-14;
-15;
-16;
-17;
-18;
-19;
-20;
-21;
-22;
-23;
-24;
-25;
-26;
-27;
-28;
-29;
-30;
-31;
-32;
-33;
-34;
-35;
-36;
-37;
-38;
-39;
-40;
-41;
-42;
-43;
-44;
-45;
-46;
-47;
-48;
-49;
-50;
-51;
-52;
-53;
-54;
-55;
-56;
-57;
-58;
-59;
-60;
-61;
-62;
-63;
-64;
-65;
-66;
-67;
-68;
-69;
-70;
-71;
-72;
-73;
-74;
-75;
-76;
-77;
-78;
-79;
-80;
-81;
-82;
-83;
-84;
-85;
-86;
-87;
-88;
-89;
-90;
-91;
-92;
-93;
-94;
-95;
-96;
-97;
 function solution(storage, requests) {
   const maxRow = storage.length - 1,
     maxColumn = storage[0].length - 1;
@@ -6063,4 +5966,26 @@ function solution(storage, requests) {
   });
 
   return containerCnt;
+}
+
+
+//비밀코드해독
+function solution(n, q, ans) {
+  let count = 0;
+  const dfs = (idx, arr) => {
+      if (arr.length === 5) {
+          for (let i = 0; i < q.length; i++) {
+              const matchCount = q[i].filter(num => arr.includes(num)).length;
+              if (matchCount !== ans[i]) return; // 조건 불일치 -> 조기 종료
+          }
+          count++; // 모든 조건 만족하면 카운트 증가
+          return;
+      }
+      
+      for (let i = idx; i <= n; i++) {
+          dfs(i + 1, [...arr, i])
+      }
+  }
+  dfs(1, []);
+  return count;
 }
