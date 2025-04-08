@@ -50,6 +50,40 @@
 // console.log(result);
 
 //1725-트리의 부모 찾기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// for (let [a, b] of arr) {
+//   graph[a].push(b);
+//   graph[b].push(a);
+// }
+
+// let parents = Array(n + 1).fill(0);
+// let visited = Array(n + 1).fill(false);
+
+// let queue = [1];
+// visited[1] = true;
+
+// while (queue.length) {
+//   let node = queue.shift();
+
+//   for (const next of graph[node]) {
+//     if (!visited[next]) {
+//       visited[next] = true;
+//       parents[next] = node;
+//       queue.push(next);
+//     }
+//   }
+// }
+
+// console.log(parents.slice(2).join('\n'));
+
+//1967 - 트리의 지름
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
@@ -58,32 +92,32 @@ let n = +input[0];
 let arr = input.slice(1).map((v) => v.split(' ').map(Number));
 let graph = Array.from({ length: n + 1 }, () => []);
 
-for (let [a, b] of arr) {
-  graph[a].push(b);
-  graph[b].push(a);
+for (let [a, b, c] of arr) {
+  graph[a].push([b, c]);
+  graph[b].push([a, c]);
 }
 
-let parents = Array(n + 1).fill(0);
-let visited = Array(n + 1).fill(false);
+function dfs(node, visited, dist) {
+  visited[node] = true;
 
-let queue = [1];
-visited[1] = true;
+  let farthest = [node, dist];
 
-while (queue.length) {
-  let node = queue.shift();
-
-  for (const next of graph[node]) {
+  for (let [next, nextDist] of graph[node]) {
     if (!visited[next]) {
-      visited[next] = true;
-      parents[next] = node;
-      queue.push(next);
+      let result = dfs(next, visited, dist + nextDist);
+      if (result[1] > farthest[1]) {
+        farthest = result;
+      }
     }
   }
+
+  return farthest;
 }
 
-console.log(parents.slice(2).join('\n'));
+let visited = Array(n + 1).fill(false);
+let [farthestNode] = dfs(1, visited, 0);
 
-//1967 - 트리의 지름
-// const fs = require('fs');
-// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+visited = Array(n + 1).fill(false);
+let [, d] = dfs(farthestNode, visited, 0);
+
+console.log(d);
