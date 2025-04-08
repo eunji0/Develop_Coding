@@ -123,43 +123,101 @@
 // console.log(d);
 
 //1167-트리의 지름
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let v = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: v + 1 }, () => []);
+
+// for (let a of arr) {
+//   let num = a.shift();
+
+//   for (let i = 0; i < a.length - 1; i += 2) {
+//     graph[num].push([a[i], a[i + 1]]);
+//     graph[a[i]].push([num, a[i + 1]]);
+//   }
+// }
+
+// function dfs(node, visited, dist) {
+//   visited[node] = true;
+//   let father = [node, dist];
+
+//   for (let [next, nextDist] of graph[node]) {
+//     if (!visited[next]) {
+//       visited[next] = true;
+//       let result = dfs(next, visited, nextDist + dist);
+//       if (result[1] > father[1]) {
+//         father = result;
+//       }
+//     }
+//   }
+
+//   return father;
+// }
+
+// let visited = Array(v + 1).fill(false);
+// let fatherResult = dfs(1, visited, 0);
+
+// visited = Array(v + 1).fill(false);
+// let [, d] = dfs(fatherResult[0], visited, 0);
+// console.log(d);
+
+//1068-트리
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let v = +input[0];
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: v + 1 }, () => []);
+let n = +input[0];
+let arr = input[1].split(' ').map(Number);
+let v = +input[2];
 
-for (let a of arr) {
-  let num = a.shift();
+let parents = Array.from({ length: n }, () => []);
+let root;
 
-  for (let i = 0; i < a.length - 1; i += 2) {
-    graph[num].push([a[i], a[i + 1]]);
-    graph[a[i]].push([num, a[i + 1]]);
+arr.forEach((p, i) => {
+  if (p === -1) {
+    root = i;
+  } else {
+    parents[p].push(i);
   }
-}
+});
 
-function dfs(node, visited, dist) {
-  visited[node] = true;
-  let father = [node, dist];
+let visited = Array(n).fill(false);
 
-  for (let [next, nextDist] of graph[node]) {
-    if (!visited[next]) {
-      visited[next] = true;
-      let result = dfs(next, visited, nextDist + dist);
-      if (result[1] > father[1]) {
-        father = result;
+const bfs = (start) => {
+  visited[start] = true;
+  let queue = [start];
+
+  while (queue.length) {
+    let cur = queue.shift();
+
+    for (let next of parents[cur]) {
+      if (!visited[next]) {
+        visited[next] = true;
+        queue.push(next);
       }
     }
   }
+};
 
-  return father;
+bfs(v);
+
+let leafCount = 0;
+
+for (let i = 0; i < n; i++) {
+  if (visited[i]) continue;
+
+  let isLeaf = true;
+  for (let child of parents[i]) {
+    if (!visited[child]) {
+      isLeaf = false;
+      break;
+    }
+  }
+
+  if (isLeaf) leafCount++;
 }
 
-let visited = Array(v + 1).fill(false);
-let fatherResult = dfs(1, visited, 0);
-
-visited = Array(v + 1).fill(false);
-let [, d] = dfs(fatherResult[0], visited, 0);
-console.log(d);
+console.log(leafCount);
