@@ -165,59 +165,98 @@
 // console.log(d);
 
 //1068-트리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+// let v = +input[2];
+
+// let parents = Array.from({ length: n }, () => []);
+// let root;
+
+// arr.forEach((p, i) => {
+//   if (p === -1) {
+//     root = i;
+//   } else {
+//     parents[p].push(i);
+//   }
+// });
+
+// let visited = Array(n).fill(false);
+
+// const bfs = (start) => {
+//   visited[start] = true;
+//   let queue = [start];
+
+//   while (queue.length) {
+//     let cur = queue.shift();
+
+//     for (let next of parents[cur]) {
+//       if (!visited[next]) {
+//         visited[next] = true;
+//         queue.push(next);
+//       }
+//     }
+//   }
+// };
+
+// bfs(v);
+
+// let leafCount = 0;
+
+// for (let i = 0; i < n; i++) {
+//   if (visited[i]) continue;
+
+//   let isLeaf = true;
+//   for (let child of parents[i]) {
+//     if (!visited[child]) {
+//       isLeaf = false;
+//       break;
+//     }
+//   }
+
+//   if (isLeaf) leafCount++;
+// }
+
+// console.log(leafCount);
+
+//5629-이진 검색 트리
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n');
+const input = fs.readFileSync(filePath).toString().trim().split('\n').map(Number);
 
-let n = +input[0];
-let arr = input[1].split(' ').map(Number);
-let v = +input[2];
-
-let parents = Array.from({ length: n }, () => []);
-let root;
-
-arr.forEach((p, i) => {
-  if (p === -1) {
-    root = i;
-  } else {
-    parents[p].push(i);
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.left = null;
+    this.right = null;
   }
-});
 
-let visited = Array(n).fill(false);
-
-const bfs = (start) => {
-  visited[start] = true;
-  let queue = [start];
-
-  while (queue.length) {
-    let cur = queue.shift();
-
-    for (let next of parents[cur]) {
-      if (!visited[next]) {
-        visited[next] = true;
-        queue.push(next);
-      }
+  insert(newValue) {
+    if (newValue < this.value) {
+      if (this.left === null) this.left = new Node(newValue);
+      else this.left.insert(newValue);
+    } else {
+      if (this.right === null) this.right = new Node(newValue);
+      else this.right.insert(newValue);
     }
   }
-};
-
-bfs(v);
-
-let leafCount = 0;
-
-for (let i = 0; i < n; i++) {
-  if (visited[i]) continue;
-
-  let isLeaf = true;
-  for (let child of parents[i]) {
-    if (!visited[child]) {
-      isLeaf = false;
-      break;
-    }
-  }
-
-  if (isLeaf) leafCount++;
 }
 
-console.log(leafCount);
+const root = new Node(input[0]);
+for (let i = 1; i < input.length; i++) {
+  root.insert(input[i]);
+}
+
+let result = [];
+function postOrder(node) {
+  if (!node) return;
+  postOrder(node.left);
+  postOrder(node.right);
+  result.push(node.value);
+}
+
+postOrder(root);
+console.log(result.join('\n'));
