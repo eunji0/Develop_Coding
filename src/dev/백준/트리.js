@@ -84,40 +84,82 @@
 // console.log(parents.slice(2).join('\n'));
 
 //1967 - 트리의 지름
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// for (let [a, b, c] of arr) {
+//   graph[a].push([b, c]);
+//   graph[b].push([a, c]);
+// }
+
+// function dfs(node, visited, dist) {
+//   visited[node] = true;
+
+//   let farthest = [node, dist];
+
+//   for (let [next, nextDist] of graph[node]) {
+//     if (!visited[next]) {
+//       let result = dfs(next, visited, dist + nextDist);
+//       if (result[1] > farthest[1]) {
+//         farthest = result;
+//       }
+//     }
+//   }
+
+//   return farthest;
+// }
+
+// let visited = Array(n + 1).fill(false);
+// let [farthestNode] = dfs(1, visited, 0);
+
+// visited = Array(n + 1).fill(false);
+// let [, d] = dfs(farthestNode, visited, 0);
+
+// console.log(d);
+
+//1167-트리의 지름
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
+let v = +input[0];
 let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
+let graph = Array.from({ length: v + 1 }, () => []);
 
-for (let [a, b, c] of arr) {
-  graph[a].push([b, c]);
-  graph[b].push([a, c]);
+for (let a of arr) {
+  let num = a.shift();
+
+  for (let i = 0; i < a.length - 1; i += 2) {
+    graph[num].push([a[i], a[i + 1]]);
+    graph[a[i]].push([num, a[i + 1]]);
+  }
 }
 
 function dfs(node, visited, dist) {
   visited[node] = true;
-
-  let farthest = [node, dist];
+  let father = [node, dist];
 
   for (let [next, nextDist] of graph[node]) {
     if (!visited[next]) {
-      let result = dfs(next, visited, dist + nextDist);
-      if (result[1] > farthest[1]) {
-        farthest = result;
+      visited[next] = true;
+      let result = dfs(next, visited, nextDist + dist);
+      if (result[1] > father[1]) {
+        father = result;
       }
     }
   }
 
-  return farthest;
+  return father;
 }
 
-let visited = Array(n + 1).fill(false);
-let [farthestNode] = dfs(1, visited, 0);
+let visited = Array(v + 1).fill(false);
+let fatherResult = dfs(1, visited, 0);
 
-visited = Array(n + 1).fill(false);
-let [, d] = dfs(farthestNode, visited, 0);
-
+visited = Array(v + 1).fill(false);
+let [, d] = dfs(fatherResult[0], visited, 0);
 console.log(d);
