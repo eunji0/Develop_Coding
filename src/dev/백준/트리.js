@@ -223,40 +223,54 @@
 // console.log(leafCount);
 
 //5629-이진 검색 트리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n').map(Number);
+
+// class Node {
+//   constructor(value) {
+//     this.value = value;
+//     this.left = null;
+//     this.right = null;
+//   }
+
+//   insert(newValue) {
+//     if (newValue < this.value) {
+//       if (this.left === null) this.left = new Node(newValue);
+//       else this.left.insert(newValue);
+//     } else {
+//       if (this.right === null) this.right = new Node(newValue);
+//       else this.right.insert(newValue);
+//     }
+//   }
+// }
+
+// const root = new Node(input[0]);
+// for (let i = 1; i < input.length; i++) {
+//   root.insert(input[i]);
+// }
+
+// let result = [];
+// function postOrder(node) {
+//   if (!node) return;
+//   postOrder(node.left);
+//   postOrder(node.right);
+//   result.push(node.value);
+// }
+
+// postOrder(root);
+// console.log(result.join('\n'));
+
+//9372-상근이의 여행
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n').map(Number);
+const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-class Node {
-  constructor(value) {
-    this.value = value;
-    this.left = null;
-    this.right = null;
-  }
+let t = +input[0];
+let idx = 1;
 
-  insert(newValue) {
-    if (newValue < this.value) {
-      if (this.left === null) this.left = new Node(newValue);
-      else this.left.insert(newValue);
-    } else {
-      if (this.right === null) this.right = new Node(newValue);
-      else this.right.insert(newValue);
-    }
-  }
+while (t--) {
+  let [n, m] = input[idx++].split(' ').map(Number);
+  idx += m;
+  console.log(n - 1);
 }
-
-const root = new Node(input[0]);
-for (let i = 1; i < input.length; i++) {
-  root.insert(input[i]);
-}
-
-let result = [];
-function postOrder(node) {
-  if (!node) return;
-  postOrder(node.left);
-  postOrder(node.right);
-  result.push(node.value);
-}
-
-postOrder(root);
-console.log(result.join('\n'));
