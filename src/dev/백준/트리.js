@@ -262,6 +262,20 @@
 // console.log(result.join('\n'));
 
 //9372-상근이의 여행
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let t = +input[0];
+// let idx = 1;
+
+// while (t--) {
+//   let [n, m] = input[idx++].split(' ').map(Number);
+//   idx += m;
+//   console.log(n - 1);
+// }
+
+//5052-전화번호 목록
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
@@ -270,7 +284,19 @@ let t = +input[0];
 let idx = 1;
 
 while (t--) {
-  let [n, m] = input[idx++].split(' ').map(Number);
-  idx += m;
-  console.log(n - 1);
+  let n = +input[idx++];
+  let arr = input.slice(idx, idx + n);
+  idx += n;
+
+  arr.sort();
+
+  let isValid = true;
+  for (let i = 0; i < n - 1; i++) {
+    if (arr[i + 1].startsWith(arr[i])) {
+      isValid = false;
+      break;
+    }
+  }
+
+  console.log(isValid ? 'YES' : 'NO');
 }
