@@ -276,27 +276,60 @@
 // }
 
 //5052-전화번호 목록
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let t = +input[0];
+// let idx = 1;
+
+// while (t--) {
+//   let n = +input[idx++];
+//   let arr = input.slice(idx, idx + n);
+//   idx += n;
+
+//   arr.sort();
+
+//   let isValid = true;
+//   for (let i = 0; i < n - 1; i++) {
+//     if (arr[i + 1].startsWith(arr[i])) {
+//       isValid = false;
+//       break;
+//     }
+//   }
+
+//   console.log(isValid ? 'YES' : 'NO');
+// }
+
+//2263-트리의 순회
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let t = +input[0];
-let idx = 1;
+let n = +input[0];
+let inorder = input[1].split(' ').map(Number);
+let postorder = input[2].split(' ').map(Number);
 
-while (t--) {
-  let n = +input[idx++];
-  let arr = input.slice(idx, idx + n);
-  idx += n;
+const inorderIndex = {};
+inorder.forEach((v, i) => {
+  inorderIndex[v] = i;
+});
 
-  arr.sort();
+let result = [];
 
-  let isValid = true;
-  for (let i = 0; i < n - 1; i++) {
-    if (arr[i + 1].startsWith(arr[i])) {
-      isValid = false;
-      break;
-    }
-  }
+function buildP(inStart, inEnd, postStart, postEnd) {
+  if (inStart > inEnd || postStart > postEnd) return;
 
-  console.log(isValid ? 'YES' : 'NO');
+  const root = postorder[postEnd];
+  result.push(root);
+
+  const rootIdx = inorderIndex[root];
+  const leftSize = rootIdx - inStart;
+
+  buildP(inStart, rootIdx - 1, postStart, postStart + leftSize - 1);
+
+  buildP(rootIdx + 1, inEnd, postStart + leftSize, postEnd - 1);
 }
+
+buildP(0, n - 1, 0, n - 1);
+console.log(result);
