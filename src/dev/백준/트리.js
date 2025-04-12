@@ -335,34 +335,113 @@
 // console.log(result.join(' '));
 
 //2533-사회망 서비스(SNS)
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const n = +input[0];
+// const graph = Array.from({ length: n + 1 }, () => []);
+// for (let i = 1; i < n; i++) {
+//   const [u, v] = input[i].split(' ').map(Number);
+//   graph[u].push(v);
+//   graph[v].push(u);
+// }
+
+// const dp = Array.from({ length: n + 1 }, () => [0, 0]);
+// const visited = Array(n + 1).fill(false);
+
+// function dfs(node) {
+//   visited[node] = true;
+//   dp[node][0] = 0;
+//   dp[node][1] = 1;
+
+//   for (let child of graph[node]) {
+//     if (!visited[child]) {
+//       dfs(child);
+//       dp[node][0] += dp[child][1];
+//       dp[node][1] += Math.min(dp[child][0], dp[child][1]);
+//     }
+//   }
+// }
+
+// dfs(1);
+// console.log(Math.min(dp[1][0], dp[1][1]));
+
+//11438-LCA2
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const n = +input[0];
-const graph = Array.from({ length: n + 1 }, () => []);
-for (let i = 1; i < n; i++) {
-  const [u, v] = input[i].split(' ').map(Number);
-  graph[u].push(v);
-  graph[v].push(u);
+let idx = 0;
+const n = +input[idx++];
+const edges = input.slice(idx, idx + n - 1).map((v) => v.split(' ').map(Number));
+idx += n - 1;
+const m = +input[idx++];
+const queries = input.slice(idx, idx + m).map((v) => v.split(' ').map(Number));
+
+const graph = Array.from({ length: n }, () => []);
+for (const [u, v] of edges) {
+  graph[u - 1].push(v - 1);
+  graph[v - 1].push(u - 1);
 }
 
-const dp = Array.from({ length: n + 1 }, () => [0, 0]);
-const visited = Array(n + 1).fill(false);
+const depth = Array(n).fill(0);
+const parent = Array(n).fill(-1);
+const visited = Array(n).fill(false);
 
-function dfs(node) {
-  visited[node] = true;
-  dp[node][0] = 0;
-  dp[node][1] = 1;
+function dfs(cur, d) {
+  visited[cur] = true;
+  depth[cur] = d;
 
-  for (let child of graph[node]) {
-    if (!visited[child]) {
-      dfs(child);
-      dp[node][0] += dp[child][1];
-      dp[node][1] += Math.min(dp[child][0], dp[child][1]);
+  for (const next of graph[cur]) {
+    if (!visited[next]) {
+      parent[next] = cur;
+      dfs(next, d + 1);
     }
   }
 }
 
-dfs(1);
-console.log(Math.min(dp[1][0], dp[1][1]));
+dfs(0, 0);
+
+const maxK = 17;
+const dp = Array.from({ length: n }, () => Array(maxK + 1).fill(-1));
+
+for (let i = 0; i < n; i++) {
+  dp[i][0] = parent[i];
+}
+
+for (let k = 1; k <= maxK; k++) {
+  for (let i = 0; i < n; i++) {
+    if (dp[i][k - 1] !== -1) {
+      dp[i][k] = dp[dp[i][k - 1]][k - 1];
+    }
+  }
+}
+
+function lca(a, b) {
+  if (depth[a] < depth[b]) [a, b] = [b, a];
+
+  for (let k = maxK; k >= 0; k--) {
+    if (depth[a] - (1 << k) >= depth[b]) {
+      a = dp[a][k];
+    }
+  }
+
+  if (a === b) return a;
+
+  for (let k = maxK; k >= 0; k--) {
+    if (dp[a][k] !== -1 && dp[a][k] !== dp[b][k]) {
+      a = dp[a][k];
+      b = dp[b][k];
+    }
+  }
+
+  return parent[a];
+}
+
+let result = '';
+for (const [a, b] of queries) {
+  result += lca(a - 1, b - 1) + 1 + '\n';
+}
+
+console.log(result.trim());
