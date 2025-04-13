@@ -447,23 +447,63 @@
 // console.log(result.trim());
 
 //9934-완전 이진 트리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const K = +input[0];
+// const inorder = input[1].split(' ').map(Number);
+// const result = Array.from({ length: K }, () => []);
+
+// function buildNum(level, start, end) {
+//   if (start > end) return;
+
+//   let mid = Math.floor((start + end) / 2);
+//   result[level].push(inorder[mid]);
+
+//   buildNum(level + 1, start, mid - 1);
+//   buildNum(level + 1, mid + 1, end);
+// }
+
+// buildNum(0, 0, inorder.length - 1);
+// console.log(result.map((v) => v.join(' ')).join('\n'));
+
+//15681-트리와 쿼리
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const K = +input[0];
-const inorder = input[1].split(' ').map(Number);
-const result = Array.from({ length: K }, () => []);
+const [n, r, q] = input[0].split(' ').map(Number);
 
-function buildNum(level, start, end) {
-  if (start > end) return;
-
-  let mid = Math.floor((start + end) / 2);
-  result[level].push(inorder[mid]);
-
-  buildNum(level + 1, start, mid - 1);
-  buildNum(level + 1, mid + 1, end);
+const graph = Array.from({ length: n + 1 }, () => []);
+for (let i = 1; i < n; i++) {
+  const [u, v] = input[i].split(' ').map(Number);
+  graph[u].push(v);
+  graph[v].push(u);
 }
 
-buildNum(0, 0, inorder.length - 1);
-console.log(result.map((v) => v.join(' ')).join('\n'));
+const queries = [];
+for (let i = n; i < n + q; i++) {
+  queries.push(Number(input[i]));
+}
+
+const subtreeSizes = Array(n + 1).fill(0);
+const visited = Array(n + 1).fill(false);
+
+function dfs(node) {
+  visited[node] = true;
+  subtreeSizes[node] = 1;
+
+  for (const neighbor of graph[node]) {
+    if (!visited[neighbor]) {
+      subtreeSizes[node] += dfs(neighbor);
+    }
+  }
+  
+  return subtreeSizes[node];
+}
+
+dfs(r);
+
+const results = queries.map((query) => subtreeSizes[query]);
+console.log(results.join('\n'));
