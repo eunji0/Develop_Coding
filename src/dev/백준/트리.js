@@ -469,41 +469,99 @@
 // console.log(result.map((v) => v.join(' ')).join('\n'));
 
 //15681-트리와 쿼리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [n, r, q] = input[0].split(' ').map(Number);
+
+// const graph = Array.from({ length: n + 1 }, () => []);
+// for (let i = 1; i < n; i++) {
+//   const [u, v] = input[i].split(' ').map(Number);
+//   graph[u].push(v);
+//   graph[v].push(u);
+// }
+
+// const queries = [];
+// for (let i = n; i < n + q; i++) {
+//   queries.push(Number(input[i]));
+// }
+
+// const subtreeSizes = Array(n + 1).fill(0);
+// const visited = Array(n + 1).fill(false);
+
+// function dfs(node) {
+//   visited[node] = true;
+//   subtreeSizes[node] = 1;
+
+//   for (const neighbor of graph[node]) {
+//     if (!visited[neighbor]) {
+//       subtreeSizes[node] += dfs(neighbor);
+//     }
+//   }
+
+//   return subtreeSizes[node];
+// }
+
+// dfs(r);
+
+// const results = queries.map((query) => subtreeSizes[query]);
+// console.log(results.join('\n'));
+
+//3584-가장 가까운 공통 조상
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const [n, r, q] = input[0].split(' ').map(Number);
+let t = +input[0];
+let idx = 1;
 
-const graph = Array.from({ length: n + 1 }, () => []);
-for (let i = 1; i < n; i++) {
-  const [u, v] = input[i].split(' ').map(Number);
-  graph[u].push(v);
-  graph[v].push(u);
-}
+while (t--) {
+  let n = +input[idx++];
+  let arr = input.slice(idx, idx + n - 1).map((v) => v.split(' ').map(Number));
+  idx += n - 1;
+  let [a, b] = input[idx++].split(' ').map(Number);
 
-const queries = [];
-for (let i = n; i < n + q; i++) {
-  queries.push(Number(input[i]));
-}
+  const tree = Array.from({ length: n + 1 }, () => []);
+  const parent = Array(n + 1).fill(0);
+  const depth = Array(n + 1).fill(0);
+  const visited = Array(n + 1).fill(false);
 
-const subtreeSizes = Array(n + 1).fill(0);
-const visited = Array(n + 1).fill(false);
+  const isChild = Array(n + 1).fill(false);
+  for (let [p, c] of arr) {
+    tree[p].push(c);
+    tree[c].push(p);
+    isChild[c] = true; // 자식으로 등장한 노드 체크
+  }
 
-function dfs(node) {
-  visited[node] = true;
-  subtreeSizes[node] = 1;
-
-  for (const neighbor of graph[node]) {
-    if (!visited[neighbor]) {
-      subtreeSizes[node] += dfs(neighbor);
+  let root = 0;
+  for (let i = 1; i <= n; i++) {
+    if (!isChild[i]) {
+      root = i;
+      break;
     }
   }
-  
-  return subtreeSizes[node];
+
+  function dfs(cur, d) {
+    visited[cur] = true;
+    depth[cur] = d;
+    for (let next of tree[cur]) {
+      if (!visited[next]) {
+        parent[next] = cur;
+        dfs(next, d + 1);
+      }
+    }
+  }
+
+  dfs(root, 0);
+
+  while (depth[a] > depth[b]) a = parent[a];
+  while (depth[a] < depth[b]) b = parent[b];
+
+  while (a !== b) {
+    a = parent[a];
+    b = parent[b];
+  }
+
+  console.log(a);
 }
-
-dfs(r);
-
-const results = queries.map((query) => subtreeSizes[query]);
-console.log(results.join('\n'));
