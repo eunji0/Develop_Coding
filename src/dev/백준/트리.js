@@ -526,12 +526,12 @@ while (t--) {
   const parent = Array(n + 1).fill(0);
   const depth = Array(n + 1).fill(0);
   const visited = Array(n + 1).fill(false);
-
   const isChild = Array(n + 1).fill(false);
+
   for (let [p, c] of arr) {
     tree[p].push(c);
     tree[c].push(p);
-    isChild[c] = true; // 자식으로 등장한 노드 체크
+    isChild[c] = true;
   }
 
   let root = 0;
