@@ -509,59 +509,95 @@
 // console.log(results.join('\n'));
 
 //3584-가장 가까운 공통 조상
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let t = +input[0];
+// let idx = 1;
+
+// while (t--) {
+//   let n = +input[idx++];
+//   let arr = input.slice(idx, idx + n - 1).map((v) => v.split(' ').map(Number));
+//   idx += n - 1;
+//   let [a, b] = input[idx++].split(' ').map(Number);
+
+//   const tree = Array.from({ length: n + 1 }, () => []);
+//   const parent = Array(n + 1).fill(0);
+//   const depth = Array(n + 1).fill(0);
+//   const visited = Array(n + 1).fill(false);
+//   const isChild = Array(n + 1).fill(false);
+
+//   for (let [p, c] of arr) {
+//     tree[p].push(c);
+//     tree[c].push(p);
+//     isChild[c] = true;
+//   }
+
+//   let root = 0;
+//   for (let i = 1; i <= n; i++) {
+//     if (!isChild[i]) {
+//       root = i;
+//       break;
+//     }
+//   }
+
+//   function dfs(cur, d) {
+//     visited[cur] = true;
+//     depth[cur] = d;
+//     for (let next of tree[cur]) {
+//       if (!visited[next]) {
+//         parent[next] = cur;
+//         dfs(next, d + 1);
+//       }
+//     }
+//   }
+
+//   dfs(root, 0);
+
+//   while (depth[a] > depth[b]) a = parent[a];
+//   while (depth[a] < depth[b]) b = parent[b];
+
+//   while (a !== b) {
+//     a = parent[a];
+//     b = parent[b];
+//   }
+
+//   console.log(a);
+// }
+
+//1240-노드사이의 거리
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let t = +input[0];
-let idx = 1;
+let [n, m] = input[0].split(' ').map(Number);
+let nArr = input.slice(1, n).map((v) => v.split(' ').map(Number));
+let mArr = input.slice(n).map((v) => v.split(' ').map(Number));
+let graph = Array.from({ length: n + 1 }, () => []);
 
-while (t--) {
-  let n = +input[idx++];
-  let arr = input.slice(idx, idx + n - 1).map((v) => v.split(' ').map(Number));
-  idx += n - 1;
-  let [a, b] = input[idx++].split(' ').map(Number);
+for (let [a, b, c] of nArr) {
+  graph[a].push([b, c]);
+  graph[b].push([a, c]);
+}
 
-  const tree = Array.from({ length: n + 1 }, () => []);
-  const parent = Array(n + 1).fill(0);
-  const depth = Array(n + 1).fill(0);
+function dfs(cur, target, visited, dist) {
+  if (cur === target) return dist;
+
+  visited[cur] = true;
+
+  for (let [next, weight] of graph[cur]) {
+    if (!visited[next]) {
+      const result = dfs(next, target, visited, dist + weight);
+      if (result !== -1) return result;
+    }
+  }
+
+  return -1;
+}
+
+for (let [from, to] of mArr) {
   const visited = Array(n + 1).fill(false);
-  const isChild = Array(n + 1).fill(false);
-
-  for (let [p, c] of arr) {
-    tree[p].push(c);
-    tree[c].push(p);
-    isChild[c] = true;
-  }
-
-  let root = 0;
-  for (let i = 1; i <= n; i++) {
-    if (!isChild[i]) {
-      root = i;
-      break;
-    }
-  }
-
-  function dfs(cur, d) {
-    visited[cur] = true;
-    depth[cur] = d;
-    for (let next of tree[cur]) {
-      if (!visited[next]) {
-        parent[next] = cur;
-        dfs(next, d + 1);
-      }
-    }
-  }
-
-  dfs(root, 0);
-
-  while (depth[a] > depth[b]) a = parent[a];
-  while (depth[a] < depth[b]) b = parent[b];
-
-  while (a !== b) {
-    a = parent[a];
-    b = parent[b];
-  }
-
-  console.log(a);
+  const distance = dfs(from, to, visited, 0);
+  console.log(distance);
 }
