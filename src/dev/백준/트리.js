@@ -567,37 +567,68 @@
 // }
 
 //1240-노드사이의 거리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let nArr = input.slice(1, n).map((v) => v.split(' ').map(Number));
+// let mArr = input.slice(n).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// for (let [a, b, c] of nArr) {
+//   graph[a].push([b, c]);
+//   graph[b].push([a, c]);
+// }
+
+// function dfs(cur, target, visited, dist) {
+//   if (cur === target) return dist;
+
+//   visited[cur] = true;
+
+//   for (let [next, weight] of graph[cur]) {
+//     if (!visited[next]) {
+//       const result = dfs(next, target, visited, dist + weight);
+//       if (result !== -1) return result;
+//     }
+//   }
+
+//   return -1;
+// }
+
+// for (let [from, to] of mArr) {
+//   const visited = Array(n + 1).fill(false);
+//   const distance = dfs(from, to, visited, 0);
+//   console.log(distance);
+// }
+
+//14725-개미굴
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [n, m] = input[0].split(' ').map(Number);
-let nArr = input.slice(1, n).map((v) => v.split(' ').map(Number));
-let mArr = input.slice(n).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
+const n = +input[0];
+const trie = {};
 
-for (let [a, b, c] of nArr) {
-  graph[a].push([b, c]);
-  graph[b].push([a, c]);
-}
+for (let i = 1; i <= n; i++) {
+  let cur = trie;
+  let [_, ...foods] = input[i].split(' ');
 
-function dfs(cur, target, visited, dist) {
-  if (cur === target) return dist;
-
-  visited[cur] = true;
-
-  for (let [next, weight] of graph[cur]) {
-    if (!visited[next]) {
-      const result = dfs(next, target, visited, dist + weight);
-      if (result !== -1) return result;
+  for (let food of foods) {
+    if (!cur[food]) {
+      cur[food] = {};
     }
+    cur = cur[food];
   }
-
-  return -1;
 }
 
-for (let [from, to] of mArr) {
-  const visited = Array(n + 1).fill(false);
-  const distance = dfs(from, to, visited, 0);
-  console.log(distance);
+function printTrie(node, depth) {
+  let keys = Object.keys(node).sort();
+
+  for (let key of keys) {
+    console.log('--'.repeat(depth) + key);
+    printTrie(node[key], depth + 1);
+  }
 }
+
+printTrie(trie, 0);
