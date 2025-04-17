@@ -603,32 +603,69 @@
 // }
 
 //14725-개미굴
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const n = +input[0];
+// const trie = {};
+
+// for (let i = 1; i <= n; i++) {
+//   let cur = trie;
+//   let [_, ...foods] = input[i].split(' ');
+
+//   for (let food of foods) {
+//     if (!cur[food]) {
+//       cur[food] = {};
+//     }
+//     cur = cur[food];
+//   }
+// }
+
+// function printTrie(node, depth) {
+//   let keys = Object.keys(node).sort();
+
+//   for (let key of keys) {
+//     console.log('--'.repeat(depth) + key);
+//     printTrie(node[key], depth + 1);
+//   }
+// }
+
+// printTrie(trie, 0);
+
+//1949-우수 마을
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const n = +input[0];
-const trie = {};
+let n = +input[0];
+let nums = input[1].split(' ').map(Number);
+let arr = input.slice(2).map((v) => v.split(' ').map(Number));
+let graph = Array.from({ length: n + 1 }, () => []);
 
-for (let i = 1; i <= n; i++) {
-  let cur = trie;
-  let [_, ...foods] = input[i].split(' ');
+for (let [a, b] of arr) {
+  graph[a].push(b);
+  graph[b].push(a);
+}
 
-  for (let food of foods) {
-    if (!cur[food]) {
-      cur[food] = {};
+let dp = Array.from({ length: n + 1 }, () => [0, 0]);
+let visited = Array(n + 1).fill(false);
+
+function dfs(cur) {
+  visited[cur] = true;
+
+  dp[cur][0] = 0;
+  dp[cur][1] = nums[cur - 1];
+
+  for (let next of graph[cur]) {
+    if (!visited[next]) {
+      dfs(next);
+      dp[cur][0] += Math.max(dp[next][0], dp[next][1]);
+      dp[cur][1] += dp[next][0];
     }
-    cur = cur[food];
   }
 }
 
-function printTrie(node, depth) {
-  let keys = Object.keys(node).sort();
+dfs(1);
 
-  for (let key of keys) {
-    console.log('--'.repeat(depth) + key);
-    printTrie(node[key], depth + 1);
-  }
-}
-
-printTrie(trie, 0);
+console.log(Math.max(dp[1][0], dp[1][1]));
