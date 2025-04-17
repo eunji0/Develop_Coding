@@ -634,38 +634,88 @@
 // printTrie(trie, 0);
 
 //1949-우수 마을
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let nums = input[1].split(' ').map(Number);
+// let arr = input.slice(2).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// for (let [a, b] of arr) {
+//   graph[a].push(b);
+//   graph[b].push(a);
+// }
+
+// let dp = Array.from({ length: n + 1 }, () => [0, 0]);
+// let visited = Array(n + 1).fill(false);
+
+// function dfs(cur) {
+//   visited[cur] = true;
+
+//   dp[cur][0] = 0;
+//   dp[cur][1] = nums[cur - 1];
+
+//   for (let next of graph[cur]) {
+//     if (!visited[next]) {
+//       dfs(next);
+//       dp[cur][0] += Math.max(dp[next][0], dp[next][1]);
+//       dp[cur][1] += dp[next][0];
+//     }
+//   }
+// }
+
+// dfs(1);
+
+// console.log(Math.max(dp[1][0], dp[1][1]));
+
+//1991-트리 순회
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
-let nums = input[1].split(' ').map(Number);
-let arr = input.slice(2).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
+let result = '';
 
-for (let [a, b] of arr) {
-  graph[a].push(b);
-  graph[b].push(a);
+let tree = {};
+
+for (let i = 1; i <= n; i++) {
+  let [node, left, right] = input[i].split(' ').map((v) => v.trim());
+
+  tree[node] = [left, right];
 }
 
-let dp = Array.from({ length: n + 1 }, () => [0, 0]);
-let visited = Array(n + 1).fill(false);
-
-function dfs(cur) {
-  visited[cur] = true;
-
-  dp[cur][0] = 0;
-  dp[cur][1] = nums[cur - 1];
-
-  for (let next of graph[cur]) {
-    if (!visited[next]) {
-      dfs(next);
-      dp[cur][0] += Math.max(dp[next][0], dp[next][1]);
-      dp[cur][1] += dp[next][0];
-    }
-  }
+function preOrder(node) {
+  if (node === '.') return;
+  let [left, right] = tree[node];
+  result += node;
+  preOrder(left);
+  preOrder(right);
 }
 
-dfs(1);
+function inOrder(node) {
+  if (node === '.') return;
+  let [left, right] = tree[node];
+  inOrder(left);
+  result += node;
 
-console.log(Math.max(dp[1][0], dp[1][1]));
+  inOrder(right);
+}
+
+function posOrder(node) {
+  if (node === '.') return;
+  let [left, right] = tree[node];
+  posOrder(left);
+  posOrder(right);
+  result += node;
+}
+
+preOrder('A');
+result += '\n';
+inOrder('A');
+result += '\n';
+posOrder('A');
+result += '\n';
+
+console.log(result);
