@@ -671,51 +671,86 @@
 // console.log(Math.max(dp[1][0], dp[1][1]));
 
 //1991-트리 순회
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let result = '';
+
+// let tree = {};
+
+// for (let i = 1; i <= n; i++) {
+//   let [node, left, right] = input[i].split(' ').map((v) => v.trim());
+
+//   tree[node] = [left, right];
+// }
+
+// function preOrder(node) {
+//   if (node === '.') return;
+//   let [left, right] = tree[node];
+//   result += node;
+//   preOrder(left);
+//   preOrder(right);
+// }
+
+// function inOrder(node) {
+//   if (node === '.') return;
+//   let [left, right] = tree[node];
+//   inOrder(left);
+//   result += node;
+
+//   inOrder(right);
+// }
+
+// function posOrder(node) {
+//   if (node === '.') return;
+//   let [left, right] = tree[node];
+//   posOrder(left);
+//   posOrder(right);
+//   result += node;
+// }
+
+// preOrder('A');
+// result += '\n';
+// inOrder('A');
+// result += '\n';
+// posOrder('A');
+// result += '\n';
+
+// console.log(result);
+
+//11725-트리의 부모 찾기
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
-let result = '';
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let graph = Array.from({ length: n + 1 }, () => []);
+let parent = Array(n + 1).fill(0);
 
-let tree = {};
-
-for (let i = 1; i <= n; i++) {
-  let [node, left, right] = input[i].split(' ').map((v) => v.trim());
-
-  tree[node] = [left, right];
+for (let [a, b] of arr) {
+  graph[a].push(b);
+  graph[b].push(a);
 }
 
-function preOrder(node) {
-  if (node === '.') return;
-  let [left, right] = tree[node];
-  result += node;
-  preOrder(left);
-  preOrder(right);
+let queue = [1];
+let visited = Array(n + 1).fill(false);
+visited[1] = true;
+
+while (queue.length) {
+  let node = queue.shift();
+
+  for (let next of graph[node]) {
+    if (!visited[next]) {
+      visited[next] = true;
+      parent[next] = node;
+      queue.push(next);
+    }
+  }
 }
 
-function inOrder(node) {
-  if (node === '.') return;
-  let [left, right] = tree[node];
-  inOrder(left);
-  result += node;
-
-  inOrder(right);
+for (let i = 2; i <= n; i++) {
+  console.log(parent[i]);
 }
-
-function posOrder(node) {
-  if (node === '.') return;
-  let [left, right] = tree[node];
-  posOrder(left);
-  posOrder(right);
-  result += node;
-}
-
-preOrder('A');
-result += '\n';
-inOrder('A');
-result += '\n';
-posOrder('A');
-result += '\n';
-
-console.log(result);
