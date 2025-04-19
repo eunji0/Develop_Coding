@@ -799,46 +799,87 @@
 // console.log(d);
 
 //1167-트리의 지름
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let v = +input[0];
+// let graph = Array.from({ length: v + 1 }, () => []);
+
+// for (let i = 1; i <= v; i++) {
+//   let arr = input[i].split(' ').map(Number);
+//   let n = arr.shift();
+
+//   for (let j = 0; j < arr.length - 1; j += 2) {
+//     graph[n].push([arr[j], arr[j + 1]]);
+//   }
+// }
+
+// function bfs(start) {
+//   let visited = Array(v + 1).fill(false);
+//   visited[start] = true;
+//   let queue = [start];
+//   let dist = Array(v + 1).fill(0);
+
+//   while (queue.length) {
+//     let node = queue.shift();
+
+//     for (const [next, d] of graph[node]) {
+//       if (!visited[next]) {
+//         visited[next] = true;
+//         dist[next] = dist[node] + d;
+//         queue.push(next);
+//       }
+//     }
+//   }
+
+//   let maxDist = Math.max(...dist);
+//   let maxNum = dist.indexOf(maxDist);
+
+//   return [maxNum, maxDist];
+// }
+
+// let [fatherNum, fatherDist] = bfs(1);
+// let [_, dist] = bfs(fatherNum);
+// console.log(dist);
+
+//1068-트리
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let v = +input[0];
-let graph = Array.from({ length: v + 1 }, () => []);
+let n = +input[0];
+let arr = input[1].split(' ').map(Number);
+let v = +input[2];
+let root = 0;
+let tree = Array.from({ length: n + 1 }, () => []);
 
-for (let i = 1; i <= v; i++) {
-  let arr = input[i].split(' ').map(Number);
-  let n = arr.shift();
-
-  for (let j = 0; j < arr.length - 1; j += 2) {
-    graph[n].push([arr[j], arr[j + 1]]);
+for (let i = 0; i < n; i++) {
+  if (arr[i] === -1) {
+    root = i;
+  } else {
+    tree[arr[i]].push(i);
   }
 }
 
-function bfs(start) {
-  let visited = Array(v + 1).fill(false);
-  visited[start] = true;
-  let queue = [start];
-  let dist = Array(v + 1).fill(0);
+let count = 0;
 
-  while (queue.length) {
-    let node = queue.shift();
+function dfs(node) {
+  if (node === v) return;
 
-    for (const [next, d] of graph[node]) {
-      if (!visited[next]) {
-        visited[next] = true;
-        dist[next] = dist[node] + d;
-        queue.push(next);
-      }
-    }
+  let deleteCount = 0;
+
+  for (let next of tree[node]) {
+    if (next === v) continue;
+    dfs(next);
+    deleteCount++;
   }
 
-  let maxDist = Math.max(...dist);
-  let maxNum = dist.indexOf(maxDist);
-
-  return [maxNum, maxDist];
+  if (deleteCount === 0) count++;
 }
 
-let [fatherNum, fatherDist] = bfs(1);
-let [_, dist] = bfs(fatherNum);
-console.log(dist);
+if (root !== v) {
+  dfs(root);
+}
+
+console.log(count);
