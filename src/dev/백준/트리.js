@@ -721,6 +721,41 @@
 // console.log(result);
 
 //11725-트리의 부모 찾기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+// let parent = Array(n + 1).fill(0);
+
+// for (let [a, b] of arr) {
+//   graph[a].push(b);
+//   graph[b].push(a);
+// }
+
+// let queue = [1];
+// let visited = Array(n + 1).fill(false);
+// visited[1] = true;
+
+// while (queue.length) {
+//   let node = queue.shift();
+
+//   for (let next of graph[node]) {
+//     if (!visited[next]) {
+//       visited[next] = true;
+//       parent[next] = node;
+//       queue.push(next);
+//     }
+//   }
+// }
+
+// for (let i = 2; i <= n; i++) {
+//   console.log(parent[i]);
+// }
+
+//1967-트리의 지름
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
@@ -728,29 +763,37 @@ const input = fs.readFileSync(filePath).toString().trim().split('\n');
 let n = +input[0];
 let arr = input.slice(1).map((v) => v.split(' ').map(Number));
 let graph = Array.from({ length: n + 1 }, () => []);
-let parent = Array(n + 1).fill(0);
 
-for (let [a, b] of arr) {
-  graph[a].push(b);
-  graph[b].push(a);
+for (let [a, b, c] of arr) {
+  graph[a].push([b, c]);
+  graph[b].push([a, c]);
 }
 
-let queue = [1];
-let visited = Array(n + 1).fill(false);
-visited[1] = true;
+function bfs(start) {
+  let visited = Array(n + 1).fill(false);
+  let depth = Array(n + 1).fill(0);
 
-while (queue.length) {
-  let node = queue.shift();
+  visited[start] = true;
+  let queue = [start];
 
-  for (let next of graph[node]) {
-    if (!visited[next]) {
-      visited[next] = true;
-      parent[next] = node;
-      queue.push(next);
+  while (queue.length) {
+    let node = queue.shift();
+
+    for (let [next, dist] of graph[node]) {
+      if (!visited[next]) {
+        visited[next] = true;
+        depth[next] = dist + depth[node];
+        queue.push(next);
+      }
     }
   }
+
+  let maxDist = Math.max(...depth);
+  let maxNum = depth.indexOf(maxDist);
+  return [maxNum, maxDist];
 }
 
-for (let i = 2; i <= n; i++) {
-  console.log(parent[i]);
-}
+let [num, dist] = bfs(1);
+let [_, d] = bfs(num);
+
+console.log(d);
