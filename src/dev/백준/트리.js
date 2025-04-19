@@ -756,44 +756,89 @@
 // }
 
 //1967-트리의 지름
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// for (let [a, b, c] of arr) {
+//   graph[a].push([b, c]);
+//   graph[b].push([a, c]);
+// }
+
+// function bfs(start) {
+//   let visited = Array(n + 1).fill(false);
+//   let depth = Array(n + 1).fill(0);
+
+//   visited[start] = true;
+//   let queue = [start];
+
+//   while (queue.length) {
+//     let node = queue.shift();
+
+//     for (let [next, dist] of graph[node]) {
+//       if (!visited[next]) {
+//         visited[next] = true;
+//         depth[next] = dist + depth[node];
+//         queue.push(next);
+//       }
+//     }
+//   }
+
+//   let maxDist = Math.max(...depth);
+//   let maxNum = depth.indexOf(maxDist);
+//   return [maxNum, maxDist];
+// }
+
+// let [num, dist] = bfs(1);
+// let [_, d] = bfs(num);
+
+// console.log(d);
+
+//1167-트리의 지름
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
+let v = +input[0];
+let graph = Array.from({ length: v + 1 }, () => []);
 
-for (let [a, b, c] of arr) {
-  graph[a].push([b, c]);
-  graph[b].push([a, c]);
+for (let i = 1; i <= v; i++) {
+  let arr = input[i].split(' ').map(Number);
+  let n = arr.shift();
+
+  for (let j = 0; j < arr.length - 1; j += 2) {
+    graph[n].push([arr[j], arr[j + 1]]);
+  }
 }
 
 function bfs(start) {
-  let visited = Array(n + 1).fill(false);
-  let depth = Array(n + 1).fill(0);
-
+  let visited = Array(v + 1).fill(false);
   visited[start] = true;
   let queue = [start];
+  let dist = Array(v + 1).fill(0);
 
   while (queue.length) {
     let node = queue.shift();
 
-    for (let [next, dist] of graph[node]) {
+    for (const [next, d] of graph[node]) {
       if (!visited[next]) {
         visited[next] = true;
-        depth[next] = dist + depth[node];
+        dist[next] = dist[node] + d;
         queue.push(next);
       }
     }
   }
 
-  let maxDist = Math.max(...depth);
-  let maxNum = depth.indexOf(maxDist);
+  let maxDist = Math.max(...dist);
+  let maxNum = dist.indexOf(maxDist);
+
   return [maxNum, maxDist];
 }
 
-let [num, dist] = bfs(1);
-let [_, d] = bfs(num);
-
-console.log(d);
+let [fatherNum, fatherDist] = bfs(1);
+let [_, dist] = bfs(fatherNum);
+console.log(dist);
