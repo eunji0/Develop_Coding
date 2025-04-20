@@ -844,42 +844,67 @@
 // console.log(dist);
 
 //1068-트리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+// let v = +input[2];
+// let root = 0;
+// let tree = Array.from({ length: n + 1 }, () => []);
+
+// for (let i = 0; i < n; i++) {
+//   if (arr[i] === -1) {
+//     root = i;
+//   } else {
+//     tree[arr[i]].push(i);
+//   }
+// }
+
+// let count = 0;
+
+// function dfs(node) {
+//   if (node === v) return;
+
+//   let deleteCount = 0;
+
+//   for (let next of tree[node]) {
+//     if (next === v) continue;
+//     dfs(next);
+//     deleteCount++;
+//   }
+
+//   if (deleteCount === 0) count++;
+// }
+
+// if (root !== v) {
+//   dfs(root);
+// }
+
+// console.log(count);
+
+//5639-이진검색트리
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-let arr = input[1].split(' ').map(Number);
-let v = +input[2];
-let root = 0;
-let tree = Array.from({ length: n + 1 }, () => []);
+let arr = input.map(Number);
 
-for (let i = 0; i < n; i++) {
-  if (arr[i] === -1) {
-    root = i;
-  } else {
-    tree[arr[i]].push(i);
-  }
-}
+function postOrder(start, end) {
+  if (start > end) return;
 
-let count = 0;
+  let root = arr[start];
+  let divide = start + 1;
 
-function dfs(node) {
-  if (node === v) return;
-
-  let deleteCount = 0;
-
-  for (let next of tree[node]) {
-    if (next === v) continue;
-    dfs(next);
-    deleteCount++;
+  while (divide <= end && arr[divide] < root) {
+    divide++;
   }
 
-  if (deleteCount === 0) count++;
+  postOrder(start + 1, divide - 1);
+  postOrder(divide, end);
+
+  console.log(root);
 }
 
-if (root !== v) {
-  dfs(root);
-}
-
-console.log(count);
+postOrder(0, arr.length - 1);
