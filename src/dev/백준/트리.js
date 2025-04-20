@@ -910,16 +910,46 @@
 // postOrder(0, arr.length - 1);
 
 //9372-상근이의 여행
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let t = +input[0];
+// let idx = 1;
+
+// while (idx < input.length) {
+//   let [n, m] = input[idx++].split(' ').map(Number);
+//   let arr = input.slice(idx, (idx += m)).map((v) => v.split(' ').map(Number));
+
+//   console.log(n - 1);
+// }
+
+//5052-전화번호 목록
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let t = +input[0];
 let idx = 1;
+let result = [];
 
-while (idx < input.length) {
-  let [n, m] = input[idx++].split(' ').map(Number);
-  let arr = input.slice(idx, (idx += m)).map((v) => v.split(' ').map(Number));
+while (t--) {
+  let n = +input[idx++];
+  let arr = input.slice(idx, idx + n);
+  idx += n;
 
-  console.log(n - 1);
+  arr.sort();
+
+  let isValid = true;
+  for (let i = 0; i < n - 1; i++) {
+    if (arr[i + 1].startsWith(arr[i])) {
+      result.push('NO');
+      isValid = false;
+      break;
+    }
+  }
+
+  if (isValid) result.push('YES');
 }
+
+console.log(result.join('\n'));
