@@ -921,29 +921,5 @@ while (idx < input.length) {
   let [n, m] = input[idx++].split(' ').map(Number);
   let arr = input.slice(idx, (idx += m)).map((v) => v.split(' ').map(Number));
 
-  let graph = Array.from({ length: n + 1 }, () => []);
-  let visited = Array(n + 1).fill(false);
-
-  for (let [a, b] of arr) {
-    graph[a].push(b);
-    graph[b].push(a);
-  }
-
-  let queue = [1];
-  visited[1] = true;
-  let count = 0;
-
-  while (queue.length) {
-    let node = queue.shift();
-
-    for (let next of graph[node]) {
-      if (!visited[next]) {
-        visited[next] = true;
-        queue.push(next);
-        count++;
-      }
-    }
-  }
-
-  console.log(count);
+  console.log(n - 1);
 }
