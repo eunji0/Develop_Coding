@@ -885,26 +885,65 @@
 // console.log(count);
 
 //5639-이진검색트리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let arr = input.map(Number);
+
+// function postOrder(start, end) {
+//   if (start > end) return;
+
+//   let root = arr[start];
+//   let divide = start + 1;
+
+//   while (divide <= end && arr[divide] < root) {
+//     divide++;
+//   }
+
+//   postOrder(start + 1, divide - 1);
+//   postOrder(divide, end);
+
+//   console.log(root);
+// }
+
+// postOrder(0, arr.length - 1);
+
+//9372-상근이의 여행
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let arr = input.map(Number);
+let t = +input[0];
+let idx = 1;
 
-function postOrder(start, end) {
-  if (start > end) return;
+while (idx < input.length) {
+  let [n, m] = input[idx++].split(' ').map(Number);
+  let arr = input.slice(idx, (idx += m)).map((v) => v.split(' ').map(Number));
 
-  let root = arr[start];
-  let divide = start + 1;
+  let graph = Array.from({ length: n + 1 }, () => []);
+  let visited = Array(n + 1).fill(false);
 
-  while (divide <= end && arr[divide] < root) {
-    divide++;
+  for (let [a, b] of arr) {
+    graph[a].push(b);
+    graph[b].push(a);
   }
 
-  postOrder(start + 1, divide - 1);
-  postOrder(divide, end);
+  let queue = [1];
+  visited[1] = true;
+  let count = 0;
 
-  console.log(root);
+  while (queue.length) {
+    let node = queue.shift();
+
+    for (let next of graph[node]) {
+      if (!visited[next]) {
+        visited[next] = true;
+        queue.push(next);
+        count++;
+      }
+    }
+  }
+
+  console.log(count);
 }
-
-postOrder(0, arr.length - 1);
