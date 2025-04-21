@@ -955,33 +955,67 @@
 // console.log(result.join('\n'));
 
 //2263-트리의 순회
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let inOrder = input[1].split(' ').map(Number);
+// let postOrder = input[2].split(' ').map(Number);
+
+// let inOrderMap = {};
+// inOrder.forEach((v, i) => {
+//   inOrderMap[v] = i;
+// });
+
+// let result = [];
+
+// function buildP(inStart, inEnd, postStart, postEnd) {
+//   if (inStart > inEnd || postStart > postEnd) return;
+
+//   const root = postOrder[postEnd];
+//   result.push(root);
+
+//   const rootIdx = inOrderMap[root];
+//   const leftSize = rootIdx - inStart;
+
+//   buildP(inStart, rootIdx - 1, postStart, postStart + leftSize - 1);
+//   buildP(rootIdx + 1, inEnd, postStart + leftSize, postEnd - 1);
+// }
+
+// buildP(0, n - 1, 0, n - 1);
+// console.log(result.join(' '));
+
+//2533-사회망 서비스(SNS)
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
-let inOrder = input[1].split(' ').map(Number);
-let postOrder = input[2].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let graph = Array.from({ length: n + 1 }, () => []);
 
-let inOrderMap = {};
-inOrder.forEach((v, i) => {
-  inOrderMap[v] = i;
-});
-
-let result = [];
-
-function buildP(inStart, inEnd, postStart, postEnd) {
-  if (inStart > inEnd || postStart > postEnd) return;
-
-  const root = postOrder[postEnd];
-  result.push(root);
-
-  const rootIdx = inOrderMap[root];
-  const leftSize = rootIdx - inStart;
-
-  buildP(inStart, rootIdx - 1, postStart, postStart + leftSize - 1);
-  buildP(rootIdx + 1, inEnd, postStart + leftSize, postEnd - 1);
+for (let [a, b] of arr) {
+  graph[a].push(b);
+  graph[b].push(a);
 }
 
-buildP(0, n - 1, 0, n - 1);
-console.log(result.join(' '));
+const dp = Array.from({ length: n + 1 }, () => [0, 0]);
+const visited = Array(n + 1).fill(false);
+
+function dfs(node) {
+  visited[node] = true;
+  dp[node][0] = 0;
+  dp[node][1] = 1;
+
+  for (const next of graph[node]) {
+    if (!visited[next]) {
+      dfs(next);
+      dp[node][0] += dp[next][1];
+      dp[node][1] += Math.min(dp[next][0], dp[next][1]);
+    }
+  }
+}
+
+dfs(1);
+console.log(Math.min(dp[1][0], dp[1][1]));
