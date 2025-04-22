@@ -1021,41 +1021,64 @@
 // console.log(Math.min(dp[1][0], dp[1][1]));
 
 //15681-트리와 쿼리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [n, r, q] = input[0].split(' ').map(Number);
+
+// const graph = Array.from({ length: n + 1 }, () => []);
+// for (let i = 1; i < n; i++) {
+//   const [u, v] = input[i].split(' ').map(Number);
+//   graph[u].push(v);
+//   graph[v].push(u);
+// }
+
+// const queries = [];
+// for (let i = n; i < n + q; i++) {
+//   queries.push(Number(input[i]));
+// }
+
+// const subtreeSizes = Array(n + 1).fill(0);
+// const visited = Array(n + 1).fill(false);
+
+// function dfs(node) {
+//   visited[node] = true;
+//   subtreeSizes[node] = 1;
+
+//   for (const neighbor of graph[node]) {
+//     if (!visited[neighbor]) {
+//       subtreeSizes[node] += dfs(neighbor);
+//     }
+//   }
+
+//   return subtreeSizes[node];
+// }
+
+// dfs(r);
+
+// const results = queries.map((query) => subtreeSizes[query]);
+// console.log(results.join('\n'));
+
+//9934-완전 이진 트리
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const [n, r, q] = input[0].split(' ').map(Number);
+let n = +input[0];
+let buildings = input[1].split(' ').map(Number);
+let result = Array.from({ length: n }, () => []);
 
-const graph = Array.from({ length: n + 1 }, () => []);
-for (let i = 1; i < n; i++) {
-  const [u, v] = input[i].split(' ').map(Number);
-  graph[u].push(v);
-  graph[v].push(u);
+function build(arr, level) {
+  if (arr.length === 0 || level === n) return;
+
+  let mid = Math.floor(arr.length / 2);
+  result[level].push(arr[mid]);
+
+  build(arr.slice(0, mid), level + 1);
+  build(arr.slice(mid + 1), level + 1);
 }
 
-const queries = [];
-for (let i = n; i < n + q; i++) {
-  queries.push(Number(input[i]));
-}
+build(buildings, 0);
 
-const subtreeSizes = Array(n + 1).fill(0);
-const visited = Array(n + 1).fill(false);
-
-function dfs(node) {
-  visited[node] = true;
-  subtreeSizes[node] = 1;
-
-  for (const neighbor of graph[node]) {
-    if (!visited[neighbor]) {
-      subtreeSizes[node] += dfs(neighbor);
-    }
-  }
-
-  return subtreeSizes[node];
-}
-
-dfs(r);
-
-const results = queries.map((query) => subtreeSizes[query]);
-console.log(results.join('\n'));
+console.log(result.map((v) => v.join(' ')).join('\n'));
