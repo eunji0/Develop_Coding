@@ -1137,37 +1137,86 @@
 // }
 
 //15681-트리와 쿼리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [n, r, q] = input[0].split(' ').map(Number);
+// let uv = input.slice(1, n).map((v) => v.split(' ').map(Number));
+// let us = input.slice(n).map(Number);
+
+// let graph = Array.from({ length: n + 1 }, () => []);
+// let visited = Array(n + 1).fill(false);
+// let subtree = Array(n + 1).fill(0);
+
+// for (let [u, v] of uv) {
+//   graph[u].push(v);
+//   graph[v].push(u);
+// }
+
+// function dfs(node) {
+//   visited[node] = true;
+//   subtree[node] = 1;
+
+//   for (let next of graph[node]) {
+//     if (!visited[next]) {
+//       subtree[node] += dfs(next);
+//     }
+//   }
+
+//   return subtree[node];
+// }
+
+// dfs(r);
+// for (let v of us) {
+//   console.log(subtree[v]);
+// }
+
+//11437-lca
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [n, r, q] = input[0].split(' ').map(Number);
-let uv = input.slice(1, n).map((v) => v.split(' ').map(Number));
-let us = input.slice(n).map(Number);
-
+let n = +input[0];
+let nArr = input.slice(1, n).map((v) => v.split(' ').map(Number));
+let m = +input[n];
+let mArr = input.slice(n + 1).map((v) => v.split(' ').map(Number));
+let parent = Array(n + 1).fill(0);
 let graph = Array.from({ length: n + 1 }, () => []);
 let visited = Array(n + 1).fill(false);
-let subtree = Array(n + 1).fill(0);
+let depth = Array(n + 1).fill(0);
 
-for (let [u, v] of uv) {
-  graph[u].push(v);
-  graph[v].push(u);
+for (let [a, b] of nArr) {
+  graph[a].push(b);
+  graph[b].push(a);
 }
 
-function dfs(node) {
+function dfs(node, d) {
   visited[node] = true;
-  subtree[node] = 1;
+  depth[node] = d;
 
-  for (let next of graph[node]) {
+  for (const next of graph[node]) {
     if (!visited[next]) {
-      subtree[node] += dfs(next);
+      parent[next] = node;
+      dfs(next, d + 1);
     }
   }
-
-  return subtree[node];
 }
 
-dfs(r);
-for (let v of us) {
-  console.log(subtree[v]);
+dfs(1, 0);
+
+function lca(x, y) {
+  while (depth[x] > depth[y]) x = parent[x];
+  while (depth[x] < depth[y]) y = parent[y];
+
+  while (x !== y) {
+    x = parent[x];
+    y = parent[y];
+  }
+
+  return x;
+}
+
+for (let [q, w] of mArr) {
+  console.log(lca(q, w));
 }
