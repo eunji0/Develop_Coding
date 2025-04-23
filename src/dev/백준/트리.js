@@ -1173,50 +1173,73 @@
 // }
 
 //11437-lca
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let nArr = input.slice(1, n).map((v) => v.split(' ').map(Number));
+// let m = +input[n];
+// let mArr = input.slice(n + 1).map((v) => v.split(' ').map(Number));
+// let parent = Array(n + 1).fill(0);
+// let graph = Array.from({ length: n + 1 }, () => []);
+// let visited = Array(n + 1).fill(false);
+// let depth = Array(n + 1).fill(0);
+
+// for (let [a, b] of nArr) {
+//   graph[a].push(b);
+//   graph[b].push(a);
+// }
+
+// function dfs(node, d) {
+//   visited[node] = true;
+//   depth[node] = d;
+
+//   for (const next of graph[node]) {
+//     if (!visited[next]) {
+//       parent[next] = node;
+//       dfs(next, d + 1);
+//     }
+//   }
+// }
+
+// dfs(1, 0);
+
+// function lca(x, y) {
+//   while (depth[x] > depth[y]) x = parent[x];
+//   while (depth[x] < depth[y]) y = parent[y];
+
+//   while (x !== y) {
+//     x = parent[x];
+//     y = parent[y];
+//   }
+
+//   return x;
+// }
+
+// for (let [q, w] of mArr) {
+//   console.log(lca(q, w));
+// }
+
+//9934-완전 이진 트리
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-let nArr = input.slice(1, n).map((v) => v.split(' ').map(Number));
-let m = +input[n];
-let mArr = input.slice(n + 1).map((v) => v.split(' ').map(Number));
-let parent = Array(n + 1).fill(0);
-let graph = Array.from({ length: n + 1 }, () => []);
-let visited = Array(n + 1).fill(false);
-let depth = Array(n + 1).fill(0);
+let k = +input[0];
+let arr = input[1].split(' ').map(Number);
+let result = Array.from({ length: k }, () => []);
 
-for (let [a, b] of nArr) {
-  graph[a].push(b);
-  graph[b].push(a);
+function buildings(arr, level) {
+  if (arr.length === 0 || level === k) return;
+
+  let mid = Math.floor(arr.length / 2);
+  result[level].push(arr[mid]);
+
+  buildings(arr.slice(0, mid), level + 1);
+  buildings(arr.slice(mid + 1), level + 1);
 }
 
-function dfs(node, d) {
-  visited[node] = true;
-  depth[node] = d;
+buildings(arr, 0);
 
-  for (const next of graph[node]) {
-    if (!visited[next]) {
-      parent[next] = node;
-      dfs(next, d + 1);
-    }
-  }
-}
-
-dfs(1, 0);
-
-function lca(x, y) {
-  while (depth[x] > depth[y]) x = parent[x];
-  while (depth[x] < depth[y]) y = parent[y];
-
-  while (x !== y) {
-    x = parent[x];
-    y = parent[y];
-  }
-
-  return x;
-}
-
-for (let [q, w] of mArr) {
-  console.log(lca(q, w));
-}
+console.log(result.map((v) => v.join(' ')).join('\n'));
