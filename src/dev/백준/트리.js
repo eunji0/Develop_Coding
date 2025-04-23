@@ -1300,35 +1300,63 @@
 // }
 
 //1240-노드사이의 거리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input.slice(1, n).map((v) => v.split(' ').map(Number));
+// let queries = input.slice(n).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// for (let [a, b, c] of arr) {
+//   graph[a].push([b, c]);
+//   graph[b].push([a, c]);
+// }
+
+// function dfs(start, target, sum, visited) {
+//   if (start === target) return sum;
+//   visited[start] = true;
+
+//   for (let [next, dist] of graph[start]) {
+//     if (!visited[next]) {
+//       let result = dfs(next, target, sum + dist, visited);
+//       if (result !== -1) return result;
+//     }
+//   }
+
+//   return -1;
+// }
+
+// for (let [q, w] of queries) {
+//   let visited = Array(n + 1).fill(false);
+//   console.log(dfs(q, w, 0, visited));
+// }
+
+//14725-개미굴
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [n, m] = input[0].split(' ').map(Number);
-let arr = input.slice(1, n).map((v) => v.split(' ').map(Number));
-let queries = input.slice(n).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
+let n = +input[0];
+let root = {};
 
-for (let [a, b, c] of arr) {
-  graph[a].push([b, c]);
-  graph[b].push([a, c]);
-}
+for (let i = 1; i <= n; i++) {
+  let [, ...foods] = input[i].split(' ');
+  let node = root;
 
-function dfs(start, target, sum, visited) {
-  if (start === target) return sum;
-  visited[start] = true;
-
-  for (let [next, dist] of graph[start]) {
-    if (!visited[next]) {
-      let result = dfs(next, target, sum + dist, visited);
-      if (result !== -1) return result;
-    }
+  for (let food of foods) {
+    if (!node[food]) node[food] = {};
+    node = node[food];
   }
-
-  return -1;
 }
 
-for (let [q, w] of queries) {
-  let visited = Array(n + 1).fill(false);
-  console.log(dfs(q, w, 0, visited));
+function print(node, depth) {
+  const keys = Object.keys(node).sort();
+  for (let key of keys) {
+    console.log(`${'--'.repeat(depth)}${key}`);
+    print(node[key], depth + 1);
+  }
 }
+
+print(root, 0);
