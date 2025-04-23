@@ -1245,56 +1245,93 @@
 // console.log(result.map((v) => v.join(' ')).join('\n'));
 
 //3584-가장 가까운 공통 조상
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let t = +input[0];
+// let idx = 1;
+
+// while (t--) {
+//   let n = +input[idx++];
+//   let arr = input.slice(idx, (idx += n - 1)).map((v) => v.split(' ').map(Number));
+//   let [q, w] = input[idx++].split(' ').map(Number);
+//   let graph = Array.from({ length: n + 1 }, () => []);
+//   let depth = Array(n + 1).fill(0);
+//   let parent = Array(n + 1).fill(0);
+//   let visited = Array(n + 1).fill(false);
+//   let isParent = Array(n + 1).fill(false);
+
+//   for (let [a, b] of arr) {
+//     graph[a].push(b);
+//     graph[b].push(a);
+//     isParent[b] = true;
+//   }
+
+//   let root = isParent.findIndex((v, i) => !v && i > 0);
+
+//   function dfs(node, d) {
+//     visited[node] = true;
+//     depth[node] = d;
+
+//     for (const next of graph[node]) {
+//       if (!visited[next]) {
+//         parent[next] = node;
+//         dfs(next, d + 1);
+//       }
+//     }
+//   }
+
+//   dfs(root, 0);
+
+//   function lca(x, y) {
+//     while (depth[x] > depth[y]) x = parent[x];
+//     while (depth[x] < depth[y]) y = parent[y];
+
+//     while (x !== y) {
+//       x = parent[x];
+//       y = parent[y];
+//     }
+
+//     return x;
+//   }
+
+//   console.log(lca(q, w));
+// }
+
+//1240-노드사이의 거리
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let t = +input[0];
-let idx = 1;
+let [n, m] = input[0].split(' ').map(Number);
+let arr = input.slice(1, n).map((v) => v.split(' ').map(Number));
+let qw = input.slice(n).map((v) => v.split(' ').map(Number));
+let graph = Array.from({ length: n + 1 }, () => []);
 
-while (t--) {
-  let n = +input[idx++];
-  let arr = input.slice(idx, (idx += n - 1)).map((v) => v.split(' ').map(Number));
-  let [q, w] = input[idx++].split(' ').map(Number);
-  let graph = Array.from({ length: n + 1 }, () => []);
-  let depth = Array(n + 1).fill(0);
-  let parent = Array(n + 1).fill(0);
+for (let [a, b, c] of arr) {
+  graph[a].push([b, c]);
+  graph[b].push([a, c]);
+}
+
+for (let [q, w] of qw) {
   let visited = Array(n + 1).fill(false);
-  let isParent = Array(n + 1).fill(false);
+  let queue = [[q, 0]];
+  visited[q] = true;
 
-  for (let [a, b] of arr) {
-    graph[a].push(b);
-    graph[b].push(a);
-    isParent[b] = true;
-  }
+  while (queue.length) {
+    const [node, d] = queue.shift();
 
-  let root = isParent.findIndex((v, i) => !v && i > 0);
+    if (node === w) {
+      console.log(d);
+      break;
+    }
 
-  function dfs(node, d) {
-    visited[node] = true;
-    depth[node] = d;
-
-    for (const next of graph[node]) {
+    for (const [next, nextD] of graph[node]) {
       if (!visited[next]) {
-        parent[next] = node;
-        dfs(next, d + 1);
+        visited[next] = true;
+        queue.push([next, nextD + d]);
       }
     }
   }
-
-  dfs(root, 0);
-
-  function lca(x, y) {
-    while (depth[x] > depth[y]) x = parent[x];
-    while (depth[x] < depth[y]) y = parent[y];
-
-    while (x !== y) {
-      x = parent[x];
-      y = parent[y];
-    }
-
-    return x;
-  }
-
-  console.log(lca(q, w));
 }
