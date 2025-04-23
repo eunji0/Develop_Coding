@@ -1306,7 +1306,7 @@ const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let [n, m] = input[0].split(' ').map(Number);
 let arr = input.slice(1, n).map((v) => v.split(' ').map(Number));
-let qw = input.slice(n).map((v) => v.split(' ').map(Number));
+let queries = input.slice(n).map((v) => v.split(' ').map(Number));
 let graph = Array.from({ length: n + 1 }, () => []);
 
 for (let [a, b, c] of arr) {
@@ -1314,24 +1314,21 @@ for (let [a, b, c] of arr) {
   graph[b].push([a, c]);
 }
 
-for (let [q, w] of qw) {
-  let visited = Array(n + 1).fill(false);
-  let queue = [[q, 0]];
-  visited[q] = true;
+function dfs(start, target, sum, visited) {
+  if (start === target) return sum;
+  visited[start] = true;
 
-  while (queue.length) {
-    const [node, d] = queue.shift();
-
-    if (node === w) {
-      console.log(d);
-      break;
-    }
-
-    for (const [next, nextD] of graph[node]) {
-      if (!visited[next]) {
-        visited[next] = true;
-        queue.push([next, nextD + d]);
-      }
+  for (let [next, dist] of graph[start]) {
+    if (!visited[next]) {
+      let result = dfs(next, target, sum + dist, visited);
+      if (result !== -1) return result;
     }
   }
+
+  return -1;
+}
+
+for (let [q, w] of queries) {
+  let visited = Array(n + 1).fill(false);
+  console.log(dfs(q, w, 0, visited));
 }
