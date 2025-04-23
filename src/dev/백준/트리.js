@@ -1222,24 +1222,79 @@
 // }
 
 //9934-완전 이진 트리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let k = +input[0];
+// let arr = input[1].split(' ').map(Number);
+// let result = Array.from({ length: k }, () => []);
+
+// function buildings(arr, level) {
+//   if (arr.length === 0 || level === k) return;
+
+//   let mid = Math.floor(arr.length / 2);
+//   result[level].push(arr[mid]);
+
+//   buildings(arr.slice(0, mid), level + 1);
+//   buildings(arr.slice(mid + 1), level + 1);
+// }
+
+// buildings(arr, 0);
+
+// console.log(result.map((v) => v.join(' ')).join('\n'));
+
+//3584-가장 가까운 공통 조상
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let k = +input[0];
-let arr = input[1].split(' ').map(Number);
-let result = Array.from({ length: k }, () => []);
+let t = +input[0];
+let idx = 1;
 
-function buildings(arr, level) {
-  if (arr.length === 0 || level === k) return;
+while (t--) {
+  let n = +input[idx++];
+  let arr = input.slice(idx, (idx += n - 1)).map((v) => v.split(' ').map(Number));
+  let [q, w] = input[idx++].split(' ').map(Number);
+  let graph = Array.from({ length: n + 1 }, () => []);
+  let depth = Array(n + 1).fill(0);
+  let parent = Array(n + 1).fill(0);
+  let visited = Array(n + 1).fill(false);
+  let isParent = Array(n + 1).fill(false);
 
-  let mid = Math.floor(arr.length / 2);
-  result[level].push(arr[mid]);
+  for (let [a, b] of arr) {
+    graph[a].push(b);
+    graph[b].push(a);
+    isParent[b] = true;
+  }
 
-  buildings(arr.slice(0, mid), level + 1);
-  buildings(arr.slice(mid + 1), level + 1);
+  let root = isParent.findIndex((v, i) => !v && i > 0);
+
+  function dfs(node, d) {
+    visited[node] = true;
+    depth[node] = d;
+
+    for (const next of graph[node]) {
+      if (!visited[next]) {
+        parent[next] = node;
+        dfs(next, d + 1);
+      }
+    }
+  }
+
+  dfs(root, 0);
+
+  function lca(x, y) {
+    while (depth[x] > depth[y]) x = parent[x];
+    while (depth[x] < depth[y]) y = parent[y];
+
+    while (x !== y) {
+      x = parent[x];
+      y = parent[y];
+    }
+
+    return x;
+  }
+
+  console.log(lca(q, w));
 }
-
-buildings(arr, 0);
-
-console.log(result.map((v) => v.join(' ')).join('\n'));
