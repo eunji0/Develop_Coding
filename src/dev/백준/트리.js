@@ -1362,37 +1362,73 @@
 // print(root, 0);
 
 //1949-우수 마을
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let counts = input[1].split(' ').map(Number);
+// let arr = input.slice(2).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// for (let [a, b] of arr) {
+//   graph[a].push(b);
+//   graph[b].push(a);
+// }
+
+// let dp = Array.from({ length: n + 1 }, () => [0, 0]);
+// let visited = Array(n + 1).fill(false);
+
+// function dfs(node) {
+//   visited[node] = true;
+//   dp[node][0] = 0;
+//   dp[node][1] = counts[node - 1];
+
+//   for (const next of graph[node]) {
+//     if (!visited[next]) {
+//       dfs(next);
+//       dp[node][0] += Math.max(dp[next][0], dp[next][1]);
+//       dp[node][1] += dp[next][0];
+//     }
+//   }
+// }
+
+// dfs(1);
+
+// console.log(Math.max(dp[1][0], dp[1][1]));
+
+//4256-트리
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-let counts = input[1].split(' ').map(Number);
-let arr = input.slice(2).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
+let t = +input[0];
+let idx = 1;
 
-for (let [a, b] of arr) {
-  graph[a].push(b);
-  graph[b].push(a);
-}
+const output = [];
 
-let dp = Array.from({ length: n + 1 }, () => [0, 0]);
-let visited = Array(n + 1).fill(false);
+while (t--) {
+  let n = +input[idx++];
+  let preorder = input[idx++].split(' ').map(Number);
+  let inorder = input[idx++].split(' ').map(Number);
 
-function dfs(node) {
-  visited[node] = true;
-  dp[node][0] = 0;
-  dp[node][1] = counts[node - 1];
+  const inOrderMap = new Map();
+  inorder.forEach((v, i) => inOrderMap.set(v, i));
 
-  for (const next of graph[node]) {
-    if (!visited[next]) {
-      dfs(next);
-      dp[node][0] += Math.max(dp[next][0], dp[next][1]);
-      dp[node][1] += dp[next][0];
-    }
+  function build(preStart, preEnd, inStart, inEnd) {
+    if (preStart > preEnd || inStart > inEnd) return [];
+
+    let root = preorder[preStart];
+    let rootIndex = inOrderMap.get(root);
+    let leftSize = rootIndex - inStart;
+    let left = build(preStart + 1, preStart + leftSize, inStart, rootIndex - 1);
+    let right = build(preStart + leftSize + 1, preEnd, rootIndex + 1, inEnd);
+
+    return [...left, ...right, root];
   }
+
+  let result = build(0, n - 1, 0, n - 1);
+  output.push(result.join(' '));
 }
 
-dfs(1);
-
-console.log(Math.max(dp[1][0], dp[1][1]));
+console.log(output.join('\n'));
