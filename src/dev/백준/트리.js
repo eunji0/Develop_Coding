@@ -1334,29 +1334,65 @@
 // }
 
 //14725-개미굴
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let root = {};
+
+// for (let i = 1; i <= n; i++) {
+//   let [, ...foods] = input[i].split(' ');
+//   let node = root;
+
+//   for (let food of foods) {
+//     if (!node[food]) node[food] = {};
+//     node = node[food];
+//   }
+// }
+
+// function print(node, depth) {
+//   const keys = Object.keys(node).sort();
+//   for (let key of keys) {
+//     console.log(`${'--'.repeat(depth)}${key}`);
+//     print(node[key], depth + 1);
+//   }
+// }
+
+// print(root, 0);
+
+//1949-우수 마을
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
-let root = {};
+let counts = input[1].split(' ').map(Number);
+let arr = input.slice(2).map((v) => v.split(' ').map(Number));
+let graph = Array.from({ length: n + 1 }, () => []);
 
-for (let i = 1; i <= n; i++) {
-  let [, ...foods] = input[i].split(' ');
-  let node = root;
+for (let [a, b] of arr) {
+  graph[a].push(b);
+  graph[b].push(a);
+}
 
-  for (let food of foods) {
-    if (!node[food]) node[food] = {};
-    node = node[food];
+let dp = Array.from({ length: n + 1 }, () => [0, 0]);
+let visited = Array(n + 1).fill(false);
+
+function dfs(node) {
+  visited[node] = true;
+  dp[node][0] = 0;
+  dp[node][1] = counts[node - 1];
+
+  for (const next of graph[node]) {
+    if (!visited[next]) {
+      dfs(next);
+      dp[node][0] += Math.max(dp[next][0], dp[next][1]);
+      dp[node][1] += dp[next][0];
+    }
   }
 }
 
-function print(node, depth) {
-  const keys = Object.keys(node).sort();
-  for (let key of keys) {
-    console.log(`${'--'.repeat(depth)}${key}`);
-    print(node[key], depth + 1);
-  }
-}
+dfs(1);
 
-print(root, 0);
+console.log(Math.max(dp[1][0], dp[1][1]));
