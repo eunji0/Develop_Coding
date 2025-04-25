@@ -6016,3 +6016,34 @@ function solution(s) {
 
   return queue.length > 0 ? false : true;
 }
+
+//택배 상자 꺼내기
+function solution(n, w, num) {
+  const positions = Array(n + 1);
+
+  for (let i = 0; i < n; i++) {
+    const row = Math.floor(i / w);
+    const posInRow = i % w;
+
+    let col;
+    if (row % 2 === 0) {
+      col = posInRow;
+    } else {
+      col = w - 1 - posInRow;
+    }
+
+    positions[i + 1] = { row, col };
+  }
+
+  const { row: targetRow, col: targetCol } = positions[num];
+
+  let count = 0;
+  for (let i = 1; i <= n; i++) {
+    const { row, col } = positions[i];
+    if (col === targetCol && row > targetRow) {
+      count++;
+    }
+  }
+
+  return count + 1;
+}
