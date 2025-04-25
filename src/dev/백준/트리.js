@@ -1398,37 +1398,37 @@
 // console.log(Math.max(dp[1][0], dp[1][1]));
 
 //4256-트리
-const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let t = +input[0];
-let idx = 1;
+// let t = +input[0];
+// let idx = 1;
 
-const output = [];
+// const output = [];
 
-while (t--) {
-  let n = +input[idx++];
-  let preorder = input[idx++].split(' ').map(Number);
-  let inorder = input[idx++].split(' ').map(Number);
+// while (t--) {
+//   let n = +input[idx++];
+//   let preorder = input[idx++].split(' ').map(Number);
+//   let inorder = input[idx++].split(' ').map(Number);
 
-  const inOrderMap = new Map();
-  inorder.forEach((v, i) => inOrderMap.set(v, i));
+//   const inOrderMap = new Map();
+//   inorder.forEach((v, i) => inOrderMap.set(v, i));
 
-  function build(preStart, preEnd, inStart, inEnd) {
-    if (preStart > preEnd || inStart > inEnd) return [];
+//   function build(preStart, preEnd, inStart, inEnd) {
+//     if (preStart > preEnd || inStart > inEnd) return [];
 
-    let root = preorder[preStart];
-    let rootIndex = inOrderMap.get(root);
-    let leftSize = rootIndex - inStart;
-    let left = build(preStart + 1, preStart + leftSize, inStart, rootIndex - 1);
-    let right = build(preStart + leftSize + 1, preEnd, rootIndex + 1, inEnd);
+//     let root = preorder[preStart];
+//     let rootIndex = inOrderMap.get(root);
+//     let leftSize = rootIndex - inStart;
+//     let left = build(preStart + 1, preStart + leftSize, inStart, rootIndex - 1);
+//     let right = build(preStart + leftSize + 1, preEnd, rootIndex + 1, inEnd);
 
-    return [...left, ...right, root];
-  }
+//     return [...left, ...right, root];
+//   }
 
-  let result = build(0, n - 1, 0, n - 1);
-  output.push(result.join(' '));
-}
+//   let result = build(0, n - 1, 0, n - 1);
+//   output.push(result.join(' '));
+// }
 
-console.log(output.join('\n'));
+// console.log(output.join('\n'));

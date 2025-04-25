@@ -5967,3 +5967,21 @@ function solution(storage, requests) {
 
   return containerCnt;
 }
+
+//3차 압축
+function solution(n, t, m, p) {
+  let result = '';
+  let total = '';
+  let number = 0;
+
+  while (total.length < t * m) {
+    total += number.toString(n).toUpperCase();
+    number++;
+  }
+
+  for (let i = 0; i < t; i++) {
+    result += total[m * i + (p - 1)];
+  }
+
+  return result;
+}
