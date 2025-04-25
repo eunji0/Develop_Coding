@@ -5985,3 +5985,15 @@ function solution(n, t, m, p) {
 
   return result;
 }
+
+//최댓값과 최솟값
+function solution(s) {
+  let result = '';
+  s = s
+    .split(' ')
+    .map(Number)
+    .sort((a, b) => a - b);
+  result += s[0] + ' ';
+  result += s[s.length - 1];
+  return result;
+}
