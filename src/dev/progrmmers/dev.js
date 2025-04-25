@@ -6047,39 +6047,3 @@ function solution(n, w, num) {
 
   return count + 1;
 }
-
-//가장 많이 받은 선물
-function solution(friends, gifts) {
-  const N = friends.length;
-  const nameToIndex = new Map(friends.map((name, i) => [name, i]));
-
-  const giftCount = Array.from({ length: N }, () => Array(N).fill(0));
-  const send = Array(N).fill(0);
-  const receive = Array(N).fill(0);
-
-  for (const gift of gifts) {
-    const [from, to] = gift.split(' ');
-    const a = nameToIndex.get(from),
-      b = nameToIndex.get(to);
-    giftCount[a][b]++;
-    send[a]++;
-    receive[b]++;
-  }
-
-  const giftIndex = send.map((s, i) => s - receive[i]);
-  const nextMonth = Array(N).fill(0);
-
-  for (let i = 0; i < N; i++) {
-    for (let j = i + 1; j < N; j++) {
-      const aToB = giftCount[i][j];
-      const bToA = giftCount[j][i];
-
-      if (aToB > bToA) nextMonth[i]++;
-      else if (bToA > aToB) nextMonth[j]++;
-      else if (giftIndex[i] > giftIndex[j]) nextMonth[i]++;
-      else if (giftIndex[j] > giftIndex[i]) nextMonth[j]++;
-    }
-  }
-
-  return Math.max(...nextMonth);
-}
