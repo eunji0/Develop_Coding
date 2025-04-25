@@ -5997,3 +5997,22 @@ function solution(s) {
   result += s[s.length - 1];
   return result;
 }
+
+//올바른 괄호
+function solution(s) {
+  let strMap = { '}': '{', ')': '(' };
+
+  let queue = [];
+  for (let v of s) {
+    if (v === '{' || v === '(') {
+      queue.push(v);
+    } else {
+      if (queue.length === 0 || queue[queue.length - 1] !== strMap[v]) {
+        return false;
+      }
+      queue.pop();
+    }
+  }
+
+  return queue.length > 0 ? false : true;
+}
