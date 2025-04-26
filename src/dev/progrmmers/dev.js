@@ -1,7 +1,3 @@
-const { configure } = require('@testing-library/react');
-const { map } = require('jquery');
-const { get, head } = require('request');
-
 //완주하지 못한 선수
 function solution(participant, completion) {
   participant.sort();
