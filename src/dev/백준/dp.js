@@ -104,6 +104,30 @@
 // console.log(dp[n]);
 
 //2579-계단 오르기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split('\n')
+//   .map((v) => v.trim());
+
+// let n = +input[0];
+// let score = input.slice(1).map(Number);
+
+// let dp = Array(n).fill(0);
+// dp[0] = score[0];
+// dp[1] = score[0] + score[1];
+// dp[2] = Math.max(score[0] + score[2], score[1] + score[2]);
+
+// for (let i = 3; i < n; i++) {
+//   dp[i] = Math.max(dp[i - 2] + score[i], dp[i - 3] + score[i - 1] + score[i]);
+// }
+
+// console.log(dp[n - 1]);
+
+//2775-부녀회장이 될테야
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs
@@ -113,16 +137,24 @@ let input = fs
   .split('\n')
   .map((v) => v.trim());
 
-let n = +input[0];
-let score = input.slice(1).map(Number);
+let t = +input[0];
+let idx = 1;
 
-let dp = Array(n).fill(0);
-dp[0] = score[0];
-dp[1] = score[0] + score[1];
-dp[2] = Math.max(score[0] + score[2], score[1] + score[2]);
+const dp = Array.from({ length: 15 }, () => Array(15).fill(0));
 
-for (let i = 3; i < n; i++) {
-  dp[i] = Math.max(dp[i - 2] + score[i], dp[i - 3] + score[i - 1] + score[i]);
+for (let i = 1; i <= 14; i++) {
+  dp[0][i] = i;
 }
 
-console.log(dp[n - 1]);
+for (let k = 1; k <= 14; k++) {
+  for (let n = 1; n <= 14; n++) {
+    dp[k][n] = dp[k - 1][n] + dp[k][n - 1];
+  }
+}
+
+while (t--) {
+  let k = +input[idx++];
+  let n = +input[idx++];
+
+  console.log(dp[k][n]);
+}
