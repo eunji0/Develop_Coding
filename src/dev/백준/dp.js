@@ -81,6 +81,29 @@
 // }
 
 //11726-2×n 타일링
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split('\n')
+//   .map((v) => v.trim());
+
+// let n = +input[0];
+// let dp = Array(1001).fill(0);
+
+// dp[0] = 1;
+// dp[1] = 1;
+// dp[2] = 2;
+
+// for (let i = 3; i <= n; i++) {
+//   dp[i] = (dp[i - 1] + dp[i - 2]) % 10007;
+// }
+
+// console.log(dp[n]);
+
+//2579-계단 오르기
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs
@@ -91,14 +114,15 @@ let input = fs
   .map((v) => v.trim());
 
 let n = +input[0];
-let dp = Array(1001).fill(0);
+let score = input.slice(1).map(Number);
 
-dp[0] = 1;
-dp[1] = 1;
-dp[2] = 2;
+let dp = Array(n).fill(0);
+dp[0] = score[0];
+dp[1] = score[0] + score[1];
+dp[2] = Math.max(score[0] + score[2], score[1] + score[2]);
 
-for (let i = 3; i <= n; i++) {
-  dp[i] = (dp[i - 1] + dp[i - 2]) % 10007;
+for (let i = 3; i < n; i++) {
+  dp[i] = Math.max(dp[i - 2] + score[i], dp[i - 3] + score[i - 1] + score[i]);
 }
 
-console.log(dp[n]);
+console.log(dp[n - 1]);
