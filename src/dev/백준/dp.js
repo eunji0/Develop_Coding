@@ -211,6 +211,36 @@
 // console.log(Math.max(...dp));
 
 //1932-정수 삼각형
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split('\n')
+//   .map((v) => v.trim());
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let dp = Array.from({ length: n }, (_, i) => Array(i + 1).fill(0));
+
+// dp[0][0] = arr[0][0];
+
+// for (let i = 1; i < n; i++) {
+//   for (let j = 0; j <= i; j++) {
+//     if (j === 0) {
+//       dp[i][j] = dp[i - 1][j] + arr[i][j];
+//     } else if (j === i) {
+//       dp[i][j] = dp[i - 1][j - 1] + arr[i][j];
+//     } else {
+//       dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - 1]) + arr[i][j];
+//     }
+//   }
+// }
+
+// console.log(Math.max(...dp[n - 1]));
+
+//1010-다리 놓기
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs
@@ -220,22 +250,19 @@ let input = fs
   .split('\n')
   .map((v) => v.trim());
 
-let n = +input[0];
+let t = +input[0];
 let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let dp = Array.from({ length: n }, (_, i) => Array(i + 1).fill(0));
 
-dp[0][0] = arr[0][0];
-
-for (let i = 1; i < n; i++) {
-  for (let j = 0; j <= i; j++) {
-    if (j === 0) {
-      dp[i][j] = dp[i - 1][j] + arr[i][j];
-    } else if (j === i) {
-      dp[i][j] = dp[i - 1][j - 1] + arr[i][j];
-    } else {
-      dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - 1]) + arr[i][j];
-    }
-  }
+function factorial(n) {
+  let result = 1;
+  for (let i = 2; i <= n; i++) result *= i;
+  return result;
 }
 
-console.log(Math.max(...dp[n - 1]));
+function combination(n, r) {
+  return Math.round(factorial(n) / (factorial(r) * factorial(n - r)));
+}
+
+for (let [n, m] of arr) {
+  console.log(combination(m, n));
+}
