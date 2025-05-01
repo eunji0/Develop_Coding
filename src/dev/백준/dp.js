@@ -211,6 +211,36 @@
 // console.log(Math.max(...dp));
 
 //1932-정수 삼각형
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split('\n')
+//   .map((v) => v.trim());
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let dp = Array.from({ length: n }, (_, i) => Array(i + 1).fill(0));
+
+// dp[0][0] = arr[0][0];
+
+// for (let i = 1; i < n; i++) {
+//   for (let j = 0; j <= i; j++) {
+//     if (j === 0) {
+//       dp[i][j] = dp[i - 1][j] + arr[i][j];
+//     } else if (j === i) {
+//       dp[i][j] = dp[i - 1][j - 1] + arr[i][j];
+//     } else {
+//       dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - 1]) + arr[i][j];
+//     }
+//   }
+// }
+
+// console.log(Math.max(...dp[n - 1]));
+
+//9461-파도반 수열
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs
@@ -220,22 +250,17 @@ let input = fs
   .split('\n')
   .map((v) => v.trim());
 
-let n = +input[0];
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let dp = Array.from({ length: n }, (_, i) => Array(i + 1).fill(0));
+let t = +input[0];
+let arr = input.slice(1).map(Number);
 
-dp[0][0] = arr[0][0];
+let dp = Array(101).fill(0);
 
-for (let i = 1; i < n; i++) {
-  for (let j = 0; j <= i; j++) {
-    if (j === 0) {
-      dp[i][j] = dp[i - 1][j] + arr[i][j];
-    } else if (j === i) {
-      dp[i][j] = dp[i - 1][j - 1] + arr[i][j];
-    } else {
-      dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - 1]) + arr[i][j];
-    }
-  }
+dp[1] = 1;
+dp[2] = 1;
+dp[3] = 1;
+
+for (let i = 4; i < 101; i++) {
+  dp[i] = dp[i - 2] + dp[i - 3];
 }
 
-console.log(Math.max(...dp[n - 1]));
+arr.forEach((v) => console.log(dp[v]));
