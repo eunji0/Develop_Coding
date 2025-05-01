@@ -240,6 +240,33 @@
 
 // console.log(Math.max(...dp[n - 1]));
 
+//1010-다리 놓기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split('\n')
+//   .map((v) => v.trim());
+
+// let t = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+
+// function factorial(n) {
+//   let result = 1;
+//   for (let i = 2; i <= n; i++) result *= i;
+//   return result;
+// }
+
+// function combination(n, r) {
+//   return Math.round(factorial(n) / (factorial(r) * factorial(n - r)));
+// }
+
+// for (let [n, m] of arr) {
+//   console.log(combination(m, n));
+// }
+
 //9461-파도반 수열
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
