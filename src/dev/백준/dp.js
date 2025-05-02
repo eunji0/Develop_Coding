@@ -315,6 +315,32 @@
 // console.log(dp[n]);
 
 //14501-퇴사
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split('\n')
+//   .map((v) => v.trim());
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let dp = Array(n + 1).fill(0);
+
+// for (let i = n - 1; i >= 0; i--) {
+//   let [t, p] = arr[i];
+
+//   if (i + t <= n) {
+//     dp[i] = Math.max(p + dp[i + t], dp[i + 1]);
+//   } else {
+//     dp[i] = dp[i + 1];
+//   }
+// }
+
+// console.log(dp[0]);
+
+//2747-피보나치 수
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs
@@ -325,17 +351,12 @@ let input = fs
   .map((v) => v.trim());
 
 let n = +input[0];
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let dp = Array(n + 1).fill(0);
+let dp = Array(45).fill(0);
+dp[0] = 0;
+dp[1] = 1;
 
-for (let i = n - 1; i >= 0; i--) {
-  let [t, p] = arr[i];
-
-  if (i + t <= n) {
-    dp[i] = Math.max(p + dp[i + t], dp[i + 1]);
-  } else {
-    dp[i] = dp[i + 1];
-  }
+for (let i = 2; i <= 45; i++) {
+  dp[i] = dp[i - 1] + dp[i - 2];
 }
 
-console.log(dp[0]);
+console.log(dp[n]);
