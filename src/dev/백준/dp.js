@@ -293,6 +293,28 @@
 // arr.forEach((v) => console.log(dp[v]));
 
 //11727-2×n 타일링 2
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs
+//   .readFileSync(filePath)
+//   .toString()
+//   .trim()
+//   .split('\n')
+//   .map((v) => v.trim());
+
+// let n = +input[0];
+// let dp = Array(1001).fill(0);
+
+// dp[0] = 1;
+// dp[1] = 1;
+
+// for (let i = 2; i < 1001; i++) {
+//   dp[i] = (dp[i - 1] + dp[i - 2] * 2) % 10007;
+// }
+
+// console.log(dp[n]);
+
+//14501-퇴사
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs
@@ -303,13 +325,17 @@ let input = fs
   .map((v) => v.trim());
 
 let n = +input[0];
-let dp = Array(1001).fill(0);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let dp = Array(n + 1).fill(0);
 
-dp[0] = 1;
-dp[1] = 1;
+for (let i = n - 1; i >= 0; i--) {
+  let [t, p] = arr[i];
 
-for (let i = 2; i < 1001; i++) {
-  dp[i] = (dp[i - 1] + dp[i - 2] * 2) % 10007;
+  if (i + t <= n) {
+    dp[i] = Math.max(p + dp[i + t], dp[i + 1]);
+  } else {
+    dp[i] = dp[i + 1];
+  }
 }
 
-console.log(dp[n]);
+console.log(dp[0]);
