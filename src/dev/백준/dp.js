@@ -407,41 +407,37 @@
 //   }
 // }
 
-// console.log(dp[n]);
+// console.log(dp[n])
 
-//11054-가장 긴 바이토닉 부분 수열
+//1135-뉴스 전하기
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 const n = +input[0];
-const A = input[1].split(' ').map(Number);
+const parent = input[1].split(' ').map(Number);
 
-const LIS = Array(n).fill(1);
-const LDS = Array(n).fill(1);
+const tree = Array.from({ length: n }, () => []);
 
-// 가장 긴 증가 부분 수열 계산
-for (let i = 0; i < n; i++) {
-  for (let j = 0; j < i; j++) {
-    if (A[j] < A[i]) {
-      LIS[i] = Math.max(LIS[i], LIS[j] + 1);
-    }
+for (let i = 1; i < n; i++) {
+  tree[parent[i]].push(i);
+}
+
+function dfs(node) {
+  const times = [];
+
+  for (const child of tree[node]) {
+    times.push(dfs(child));
   }
-}
 
-// 가장 긴 감소 부분 수열 계산 (뒤에서부터)
-for (let i = n - 1; i >= 0; i--) {
-  for (let j = n - 1; j > i; j--) {
-    if (A[j] < A[i]) {
-      LDS[i] = Math.max(LDS[i], LDS[j] + 1);
-    }
+  times.sort((a, b) => b - a);
+
+  let maxTime = 0;
+  for (let i = 0; i < times.length; i++) {
+    maxTime = Math.max(maxTime, times[i] + i + 1);
   }
+
+  return maxTime;
 }
 
-// 각 인덱스를 기준으로 바이토닉 수열의 최대 길이 계산
-let maxLength = 0;
-for (let i = 0; i < n; i++) {
-  maxLength = Math.max(maxLength, LIS[i] + LDS[i] - 1);
-}
-
-console.log(maxLength);
+console.log(dfs(0));
