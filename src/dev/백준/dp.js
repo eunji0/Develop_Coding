@@ -392,19 +392,56 @@
 // }
 
 //11052-카드 구매하기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+
+// let dp = Array(n + 1).fill(0);
+
+// for (let i = 1; i <= n; i++) {
+//   for (let j = 1; j <= i; j++) {
+//     dp[i] = Math.max(dp[i], dp[i - j] + arr[j - 1]);
+//   }
+// }
+
+// console.log(dp[n]);
+
+//11054-가장 긴 바이토닉 부분 수열
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-let arr = input[1].split(' ').map(Number);
+const n = +input[0];
+const A = input[1].split(' ').map(Number);
 
-let dp = Array(n + 1).fill(0);
+const LIS = Array(n).fill(1);
+const LDS = Array(n).fill(1);
 
-for (let i = 1; i <= n; i++) {
-  for (let j = 1; j <= i; j++) {
-    dp[i] = Math.max(dp[i], dp[i - j] + arr[j - 1]);
+// 가장 긴 증가 부분 수열 계산
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < i; j++) {
+    if (A[j] < A[i]) {
+      LIS[i] = Math.max(LIS[i], LIS[j] + 1);
+    }
   }
 }
 
-console.log(dp[n]);
+// 가장 긴 감소 부분 수열 계산 (뒤에서부터)
+for (let i = n - 1; i >= 0; i--) {
+  for (let j = n - 1; j > i; j--) {
+    if (A[j] < A[i]) {
+      LDS[i] = Math.max(LDS[i], LDS[j] + 1);
+    }
+  }
+}
+
+// 각 인덱스를 기준으로 바이토닉 수열의 최대 길이 계산
+let maxLength = 0;
+for (let i = 0; i < n; i++) {
+  maxLength = Math.max(maxLength, LIS[i] + LDS[i] - 1);
+}
+
+console.log(maxLength);
