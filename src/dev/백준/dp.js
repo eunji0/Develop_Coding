@@ -409,35 +409,36 @@
 
 // console.log(dp[n])
 
-//1135-뉴스 전하기
+//11054-가장 긴 바이토닉 부분 수열
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const n = +input[0];
-const parent = input[1].split(' ').map(Number);
+let n = +input[0];
+let arr = input[1].split(' ').map(Number);
 
-const tree = Array.from({ length: n }, () => []);
+let dp = Array(n).fill(1);
+let rDp = Array(n).fill(1);
 
-for (let i = 1; i < n; i++) {
-  tree[parent[i]].push(i);
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < i; j++) {
+    if (arr[j] < arr[i]) {
+      dp[i] = Math.max(dp[i], dp[j] + 1);
+    }
+  }
 }
 
-function dfs(node) {
-  const times = [];
-
-  for (const child of tree[node]) {
-    times.push(dfs(child));
+for (let i = n - 1; i >= 0; i--) {
+  for (let j = n - 1; j > i; j--) {
+    if (arr[j] < arr[i]) {
+      rDp[i] = Math.max(rDp[i], rDp[j] + 1);
+    }
   }
-
-  times.sort((a, b) => b - a);
-
-  let maxTime = 0;
-  for (let i = 0; i < times.length; i++) {
-    maxTime = Math.max(maxTime, times[i] + i + 1);
-  }
-
-  return maxTime;
 }
 
-console.log(dfs(0));
+let maxLength = 0;
+for (let i = 0; i < n; i++) {
+  maxLength = Math.max(maxLength, dp[i] + rDp[i] - 1);
+}
+
+console.log(maxLength);
