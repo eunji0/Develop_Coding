@@ -410,35 +410,48 @@
 // console.log(dp[n])
 
 //11054-가장 긴 바이토닉 부분 수열
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+
+// let dp = Array(n).fill(1);
+// let rDp = Array(n).fill(1);
+
+// for (let i = 0; i < n; i++) {
+//   for (let j = 0; j < i; j++) {
+//     if (arr[j] < arr[i]) {
+//       dp[i] = Math.max(dp[i], dp[j] + 1);
+//     }
+//   }
+// }
+
+// for (let i = n - 1; i >= 0; i--) {
+//   for (let j = n - 1; j > i; j--) {
+//     if (arr[j] < arr[i]) {
+//       rDp[i] = Math.max(rDp[i], rDp[j] + 1);
+//     }
+//   }
+// }
+
+// let maxLength = 0;
+// for (let i = 0; i < n; i++) {
+//   maxLength = Math.max(maxLength, dp[i] + rDp[i] - 1);
+// }
+
+// console.log(maxLength);
+
+//9655-돌 게임
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
-let arr = input[1].split(' ').map(Number);
 
-let dp = Array(n).fill(1);
-let rDp = Array(n).fill(1);
-
-for (let i = 0; i < n; i++) {
-  for (let j = 0; j < i; j++) {
-    if (arr[j] < arr[i]) {
-      dp[i] = Math.max(dp[i], dp[j] + 1);
-    }
-  }
+if (n % 2 === 1) {
+  console.log('SK');
+} else {
+  console.log('CY');
 }
-
-for (let i = n - 1; i >= 0; i--) {
-  for (let j = n - 1; j > i; j--) {
-    if (arr[j] < arr[i]) {
-      rDp[i] = Math.max(rDp[i], rDp[j] + 1);
-    }
-  }
-}
-
-let maxLength = 0;
-for (let i = 0; i < n; i++) {
-  maxLength = Math.max(maxLength, dp[i] + rDp[i] - 1);
-}
-
-console.log(maxLength);
