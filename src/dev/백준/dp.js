@@ -457,20 +457,48 @@
 // }
 
 //11722-가장 긴 감소하는 부분 수열
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+
+// let dp = Array(n).fill(1);
+// for (let i = n - 1; i >= 0; i--) {
+//   for (let j = n - 1; j > i; j--) {
+//     if (arr[j] < arr[i]) {
+//       dp[i] = Math.max(dp[i], dp[j] + 1);
+//     }
+//   }
+// }
+
+// console.log(Math.max(...dp));
+
+//11047-이동하기
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-let arr = input[1].split(' ').map(Number);
+let [n, m] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
 
-let dp = Array(n).fill(1);
-for (let i = n - 1; i >= 0; i--) {
-  for (let j = n - 1; j > i; j--) {
-    if (arr[j] < arr[i]) {
-      dp[i] = Math.max(dp[i], dp[j] + 1);
-    }
+let dp = Array.from({ length: n }, () => Array(m).fill(0));
+
+dp[0][0] = arr[0][0];
+
+for (let i = 1; i < n; i++) {
+  dp[i][0] = dp[i - 1][0] + arr[i][0];
+}
+
+for (let j = 1; j < m; j++) {
+  dp[0][j] = dp[0][j - 1] + arr[0][j];
+}
+
+for (let i = 1; i < n; i++) {
+  for (let j = 1; j < m; j++) {
+    dp[i][j] = arr[i][j] + Math.max(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
   }
 }
 
-console.log(Math.max(...dp));
+console.log(dp[n - 1][m - 1]);
