@@ -476,29 +476,63 @@
 // console.log(Math.max(...dp));
 
 //11047-이동하기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+
+// let dp = Array.from({ length: n }, () => Array(m).fill(0));
+
+// dp[0][0] = arr[0][0];
+
+// for (let i = 1; i < n; i++) {
+//   dp[i][0] = dp[i - 1][0] + arr[i][0];
+// }
+
+// for (let j = 1; j < m; j++) {
+//   dp[0][j] = dp[0][j - 1] + arr[0][j];
+// }
+
+// for (let i = 1; i < n; i++) {
+//   for (let j = 1; j < m; j++) {
+//     dp[i][j] = arr[i][j] + Math.max(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+//   }
+// }
+
+// console.log(dp[n - 1][m - 1]);
+
+//24416-알고리즘 수업 - 피보나치 수 1
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [n, m] = input[0].split(' ').map(Number);
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let n = +input[0];
 
-let dp = Array.from({ length: n }, () => Array(m).fill(0));
+let fibCount = 0;
+let fibonacciCount = 0;
 
-dp[0][0] = arr[0][0];
-
-for (let i = 1; i < n; i++) {
-  dp[i][0] = dp[i - 1][0] + arr[i][0];
-}
-
-for (let j = 1; j < m; j++) {
-  dp[0][j] = dp[0][j - 1] + arr[0][j];
-}
-
-for (let i = 1; i < n; i++) {
-  for (let j = 1; j < m; j++) {
-    dp[i][j] = arr[i][j] + Math.max(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+function fib(n) {
+  if (n === 1 || n === 2) {
+    fibCount++;
+    return 1;
   }
+  return fib(n - 1) + fib(n - 2);
 }
 
-console.log(dp[n - 1][m - 1]);
+function fibonacci(n) {
+  let f = Array(n + 1).fill(0);
+  f[1] = f[2] = 1;
+  for (let i = 3; i <= n; i++) {
+    f[i] = f[i - 1] + f[i - 2];
+    fibonacciCount++;
+  }
+  return f[n];
+}
+
+fib(n);
+fibonacci(n);
+
+console.log(fibCount);
+console.log(fibonacciCount);
