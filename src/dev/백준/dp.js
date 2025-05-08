@@ -444,14 +444,33 @@
 // console.log(maxLength);
 
 //9655-돌 게임
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+
+// if (n % 2 === 1) {
+//   console.log('SK');
+// } else {
+//   console.log('CY');
+// }
+
+//11722-가장 긴 감소하는 부분 수열
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
+let arr = input[1].split(' ').map(Number);
 
-if (n % 2 === 1) {
-  console.log('SK');
-} else {
-  console.log('CY');
+let dp = Array(n).fill(1);
+for (let i = n - 1; i >= 0; i--) {
+  for (let j = n - 1; j > i; j--) {
+    if (arr[j] < arr[i]) {
+      dp[i] = Math.max(dp[i], dp[j] + 1);
+    }
+  }
 }
+
+console.log(Math.max(...dp));
