@@ -504,35 +504,70 @@
 // console.log(dp[n - 1][m - 1]);
 
 //24416-알고리즘 수업 - 피보나치 수 1
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+
+// let fibCount = 0;
+// let fibonacciCount = 0;
+
+// function fib(n) {
+//   if (n === 1 || n === 2) {
+//     fibCount++;
+//     return 1;
+//   }
+//   return fib(n - 1) + fib(n - 2);
+// }
+
+// function fibonacci(n) {
+//   let f = Array(n + 1).fill(0);
+//   f[1] = f[2] = 1;
+//   for (let i = 3; i <= n; i++) {
+//     f[i] = f[i - 1] + f[i - 2];
+//     fibonacciCount++;
+//   }
+//   return f[n];
+// }
+
+// fib(n);
+// fibonacci(n);
+
+// console.log(fibCount);
+// console.log(fibonacciCount);
+
+//12852-1로 만들기 2
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
 
-let fibCount = 0;
-let fibonacciCount = 0;
+const dp = Array(n + 1).fill(0);
+const path = Array(n + 1).fill(0);
 
-function fib(n) {
-  if (n === 1 || n === 2) {
-    fibCount++;
-    return 1;
+dp[1] = 0;
+path[1] = -1;
+
+for (let i = 2; i <= n; i++) {
+  dp[i] = dp[i - 1] + 1;
+  path[i] = i - 1;
+
+  if (i % 2 === 0 && dp[i] > dp[i / 2] + 1) {
+    dp[i] = dp[i / 2] + 1;
+    path[i] = i / 2;
   }
-  return fib(n - 1) + fib(n - 2);
+
+  if (i % 3 === 0 && dp[i] > dp[i / 3] + 1) {
+    dp[i] = dp[i / 3] + 1;
+    path[i] = i / 3;
+  }
 }
 
-function fibonacci(n) {
-  let f = Array(n + 1).fill(0);
-  f[1] = f[2] = 1;
-  for (let i = 3; i <= n; i++) {
-    f[i] = f[i - 1] + f[i - 2];
-    fibonacciCount++;
-  }
-  return f[n];
+console.log(dp[n]);
+let result = [];
+for (let i = n; i !== -1; i = path[i]) {
+  result.push(i);
 }
-
-fib(n);
-fibonacci(n);
-
-console.log(fibCount);
-console.log(fibonacciCount);
+console.log(result.join(' '));
