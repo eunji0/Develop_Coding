@@ -538,36 +538,66 @@
 // console.log(fibonacciCount);
 
 //12852-1로 만들기 2
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+
+// const dp = Array(n + 1).fill(0);
+// const path = Array(n + 1).fill(0);
+
+// dp[1] = 0;
+// path[1] = -1;
+
+// for (let i = 2; i <= n; i++) {
+//   dp[i] = dp[i - 1] + 1;
+//   path[i] = i - 1;
+
+//   if (i % 2 === 0 && dp[i] > dp[i / 2] + 1) {
+//     dp[i] = dp[i / 2] + 1;
+//     path[i] = i / 2;
+//   }
+
+//   if (i % 3 === 0 && dp[i] > dp[i / 3] + 1) {
+//     dp[i] = dp[i / 3] + 1;
+//     path[i] = i / 3;
+//   }
+// }
+
+// console.log(dp[n]);
+// let result = [];
+// for (let i = n; i !== -1; i = path[i]) {
+//   result.push(i);
+// }
+// console.log(result.join(' '));
+
+//17404-RGB거리 2
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
 
-const dp = Array(n + 1).fill(0);
-const path = Array(n + 1).fill(0);
+let result = Infinity;
 
-dp[1] = 0;
-path[1] = -1;
+for (let first = 0; first < 3; first++) {
+  let dp = Array.from({ length: n }, () => [Infinity, Infinity, Infinity]);
 
-for (let i = 2; i <= n; i++) {
-  dp[i] = dp[i - 1] + 1;
-  path[i] = i - 1;
+  dp[0][first] = arr[0][first];
 
-  if (i % 2 === 0 && dp[i] > dp[i / 2] + 1) {
-    dp[i] = dp[i / 2] + 1;
-    path[i] = i / 2;
+  for (let i = 1; i < n; i++) {
+    dp[i][0] = Math.min(dp[i - 1][1], dp[i - 1][2]) + arr[i][0];
+    dp[i][1] = Math.min(dp[i - 1][0], dp[i - 1][2]) + arr[i][1];
+    dp[i][2] = Math.min(dp[i - 1][1], dp[i - 1][0]) + arr[i][2];
   }
 
-  if (i % 3 === 0 && dp[i] > dp[i / 3] + 1) {
-    dp[i] = dp[i / 3] + 1;
-    path[i] = i / 3;
+  for (let last = 0; last < 3; last++) {
+    if (last !== first) {
+      result = Math.min(result, dp[n - 1][last]);
+    }
   }
 }
 
-console.log(dp[n]);
-let result = [];
-for (let i = n; i !== -1; i = path[i]) {
-  result.push(i);
-}
-console.log(result.join(' '));
+console.log(result);
