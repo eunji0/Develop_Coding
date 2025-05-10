@@ -603,29 +603,47 @@
 // console.log(result);
 
 //15989-1,2,3 더하기 4
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let tc = Number(input.shift());
+
+// let dp = Array.from(Array(10001), () => Array(4).fill(0));
+
+// dp[1][1] = 1;
+// dp[2][1] = 1;
+// dp[2][2] = 1;
+// dp[3][1] = 1;
+// dp[3][2] = 1;
+// dp[3][3] = 1;
+
+// for (let i = 4; i <= 10000; i++) {
+//   dp[i][1] = dp[i - 1][1];
+//   dp[i][2] = dp[i - 2][1] + dp[i - 2][2];
+//   dp[i][3] = dp[i - 3][1] + dp[i - 3][2] + dp[i - 3][3];
+// }
+
+// for (let t = 0; t < tc; t++) {
+//   let n = Number(input.shift());
+
+//   console.log(dp[n][1] + dp[n][2] + dp[n][3]);
+// }
+
+//13301-타일 장식물
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let tc = Number(input.shift());
+let n = +input[0];
 
-let dp = Array.from(Array(10001), () => Array(4).fill(0));
+let dp = Array(n + 2).fill(0);
 
-dp[1][1] = 1;
-dp[2][1] = 1;
-dp[2][2] = 1;
-dp[3][1] = 1;
-dp[3][2] = 1;
-dp[3][3] = 1;
+dp[1] = 1;
+dp[2] = 1;
 
-for (let i = 4; i <= 10000; i++) {
-  dp[i][1] = dp[i - 1][1];
-  dp[i][2] = dp[i - 2][1] + dp[i - 2][2];
-  dp[i][3] = dp[i - 3][1] + dp[i - 3][2] + dp[i - 3][3];
+for (let i = 3; i <= n + 2; i++) {
+  dp[i] = dp[i - 1] + dp[i - 2];
 }
 
-for (let t = 0; t < tc; t++) {
-  let n = Number(input.shift());
-
-  console.log(dp[n][1] + dp[n][2] + dp[n][3]);
-}
+console.log(2 * (dp[n + 1] + dp[n]));
