@@ -573,31 +573,59 @@
 // console.log(result.join(' '));
 
 //17404-RGB거리 2
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+
+// let result = Infinity;
+
+// for (let first = 0; first < 3; first++) {
+//   let dp = Array.from({ length: n }, () => [Infinity, Infinity, Infinity]);
+
+//   dp[0][first] = arr[0][first];
+
+//   for (let i = 1; i < n; i++) {
+//     dp[i][0] = Math.min(dp[i - 1][1], dp[i - 1][2]) + arr[i][0];
+//     dp[i][1] = Math.min(dp[i - 1][0], dp[i - 1][2]) + arr[i][1];
+//     dp[i][2] = Math.min(dp[i - 1][1], dp[i - 1][0]) + arr[i][2];
+//   }
+
+//   for (let last = 0; last < 3; last++) {
+//     if (last !== first) {
+//       result = Math.min(result, dp[n - 1][last]);
+//     }
+//   }
+// }
+
+// console.log(result);
+
+//15989-1,2,3 더하기 4
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let tc = Number(input.shift());
 
-let result = Infinity;
+let dp = Array.from(Array(10001), () => Array(4).fill(0));
 
-for (let first = 0; first < 3; first++) {
-  let dp = Array.from({ length: n }, () => [Infinity, Infinity, Infinity]);
+dp[1][1] = 1;
+dp[2][1] = 1;
+dp[2][2] = 1;
+dp[3][1] = 1;
+dp[3][2] = 1;
+dp[3][3] = 1;
 
-  dp[0][first] = arr[0][first];
-
-  for (let i = 1; i < n; i++) {
-    dp[i][0] = Math.min(dp[i - 1][1], dp[i - 1][2]) + arr[i][0];
-    dp[i][1] = Math.min(dp[i - 1][0], dp[i - 1][2]) + arr[i][1];
-    dp[i][2] = Math.min(dp[i - 1][1], dp[i - 1][0]) + arr[i][2];
-  }
-
-  for (let last = 0; last < 3; last++) {
-    if (last !== first) {
-      result = Math.min(result, dp[n - 1][last]);
-    }
-  }
+for (let i = 4; i <= 10000; i++) {
+  dp[i][1] = dp[i - 1][1];
+  dp[i][2] = dp[i - 2][1] + dp[i - 2][2];
+  dp[i][3] = dp[i - 3][1] + dp[i - 3][2] + dp[i - 3][3];
 }
 
-console.log(result);
+for (let t = 0; t < tc; t++) {
+  let n = Number(input.shift());
+
+  console.log(dp[n][1] + dp[n][2] + dp[n][3]);
+}
