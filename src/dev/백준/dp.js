@@ -631,19 +631,47 @@
 // }
 
 //13301-타일 장식물
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+
+// let dp = Array(n + 2).fill(0);
+
+// dp[1] = 1;
+// dp[2] = 1;
+
+// for (let i = 3; i <= n + 2; i++) {
+//   dp[i] = dp[i - 1] + dp[i - 2];
+// }
+
+// console.log(2 * (dp[n + 1] + dp[n]));
+
+//1562-계단수
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
+const mod = 1000000000;
+const memo = Array.from(Array(n + 1), () => Array.from(Array(10), () => Array(1 << 10).fill(-1)));
 
-let dp = Array(n + 2).fill(0);
+function solution(len, num, state) {
+  if (len == n) return state == (1 << 10) - 1 ? 1 : 0;
+  if (memo[len][num][state] > -1) return memo[len][num][state];
 
-dp[1] = 1;
-dp[2] = 1;
+  let cnt = 0;
+  if (num - 1 >= 0) cnt += solution(len + 1, num - 1, state | (1 << (num - 1)));
+  if (num + 1 < 10) cnt += solution(len + 1, num + 1, state | (1 << (num + 1)));
 
-for (let i = 3; i <= n + 2; i++) {
-  dp[i] = dp[i - 1] + dp[i - 2];
+  return (memo[len][num][state] = cnt % mod);
 }
 
-console.log(2 * (dp[n + 1] + dp[n]));
+let result = 0;
+for (let i = 1; i < 10; i++) {
+  result += solution(1, i, 1 << i);
+  result %= mod;
+}
+
+console.log(result);
