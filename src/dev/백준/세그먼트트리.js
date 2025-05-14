@@ -65,52 +65,97 @@
 // console.log(result.join('\n'));
 
 //2357-최솟값과 최댓값
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const [n, m] = input[0].split(' ').map(Number);
+// const arr = input.slice(1, n + 1).map(Number);
+// const queries = input.slice(n + 1).map((line) => line.split(' ').map(Number));
+
+// class SegmentTree {
+//   constructor(arr) {
+//     this.n = arr.length;
+//     this.tree = Array(this.n * 4).fill([Infinity, -Infinity]);
+//     this.init(arr, 0, this.n - 1, 1);
+//   }
+
+//   init(arr, start, end, node) {
+//     if (start === end) {
+//       return (this.tree[node] = [arr[start], arr[start]]);
+//     }
+
+//     const mid = Math.floor((start + end) / 2);
+//     const left = this.init(arr, start, mid, node * 2);
+//     const right = this.init(arr, mid + 1, end, node * 2 + 1);
+
+//     this.tree[node] = [Math.min(left[0], right[0]), Math.max(left[1], right[1])];
+//     return this.tree[node];
+//   }
+
+//   query(left, right, node, start, end) {
+//     if (right < start || left > end) return [Infinity, -Infinity];
+//     if (left <= start && end <= right) return this.tree[node];
+
+//     const mid = Math.floor((start + end) / 2);
+//     const lResult = this.query(left, right, node * 2, start, mid);
+//     const rResult = this.query(left, right, node * 2 + 1, mid + 1, end);
+
+//     return [Math.min(lResult[0], rResult[0]), Math.max(lResult[1], rResult[1])];
+//   }
+// }
+
+// const tree = new SegmentTree(arr);
+// const result = [];
+
+// for (const [a, b] of queries) {
+//   const [minVal, maxVal] = tree.query(a - 1, b - 1, 1, 0, n - 1);
+//   result.push(`${minVal} ${maxVal}`);
+// }
+
+// console.log(result.join('\n'));
+
+//10868-최솟값
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const [n, m] = input[0].split(' ').map(Number);
-const arr = input.slice(1, n + 1).map(Number);
-const queries = input.slice(n + 1).map((line) => line.split(' ').map(Number));
+let [n, m] = input[0].split(' ').map(Number);
+let arr = input.slice(1, n + 1).map(Number);
+let ab = input.slice(n + 1).map((v) => v.split(' ').map(Number));
 
 class SegmentTree {
   constructor(arr) {
     this.n = arr.length;
-    this.tree = Array(this.n * 4).fill([Infinity, -Infinity]);
+    this.tree = Array(this.n * 4).fill(Infinity);
     this.init(arr, 0, this.n - 1, 1);
   }
 
   init(arr, start, end, node) {
-    if (start === end) {
-      return (this.tree[node] = [arr[start], arr[start]]);
-    }
+    if (start === end) return (this.tree[node] = arr[start]);
 
     const mid = Math.floor((start + end) / 2);
     const left = this.init(arr, start, mid, node * 2);
     const right = this.init(arr, mid + 1, end, node * 2 + 1);
 
-    this.tree[node] = [Math.min(left[0], right[0]), Math.max(left[1], right[1])];
-    return this.tree[node];
+    return (this.tree[node] = Math.min(left, right));
   }
 
   query(left, right, node, start, end) {
-    if (right < start || left > end) return [Infinity, -Infinity];
+    if (right < start || left > end) return Infinity;
     if (left <= start && end <= right) return this.tree[node];
 
     const mid = Math.floor((start + end) / 2);
-    const lResult = this.query(left, right, node * 2, start, mid);
-    const rResult = this.query(left, right, node * 2 + 1, mid + 1, end);
-
-    return [Math.min(lResult[0], rResult[0]), Math.max(lResult[1], rResult[1])];
+    return Math.min(this.query(left, right, node * 2, start, mid), this.query(left, right, node * 2 + 1, mid + 1, end));
   }
 }
 
-const tree = new SegmentTree(arr);
-const result = [];
+let tree = new SegmentTree(arr);
 
-for (const [a, b] of queries) {
-  const [minVal, maxVal] = tree.query(a - 1, b - 1, 1, 0, n - 1);
-  result.push(`${minVal} ${maxVal}`);
+let result = [];
+
+for (let [a, b] of ab) {
+  result.push(tree.query(a - 1, b - 1, 1, 0, n - 1));
 }
 
 console.log(result.join('\n'));
