@@ -116,13 +116,59 @@
 // console.log(result.join('\n'));
 
 //10868-최솟값
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input.slice(1, n + 1).map(Number);
+// let ab = input.slice(n + 1).map((v) => v.split(' ').map(Number));
+
+// class SegmentTree {
+//   constructor(arr) {
+//     this.n = arr.length;
+//     this.tree = Array(this.n * 4).fill(Infinity);
+//     this.init(arr, 0, this.n - 1, 1);
+//   }
+
+//   init(arr, start, end, node) {
+//     if (start === end) return (this.tree[node] = arr[start]);
+
+//     const mid = Math.floor((start + end) / 2);
+//     const left = this.init(arr, start, mid, node * 2);
+//     const right = this.init(arr, mid + 1, end, node * 2 + 1);
+
+//     return (this.tree[node] = Math.min(left, right));
+//   }
+
+//   query(left, right, node, start, end) {
+//     if (right < start || left > end) return Infinity;
+//     if (left <= start && end <= right) return this.tree[node];
+
+//     const mid = Math.floor((start + end) / 2);
+//     return Math.min(this.query(left, right, node * 2, start, mid), this.query(left, right, node * 2 + 1, mid + 1, end));
+//   }
+// }
+
+// let tree = new SegmentTree(arr);
+
+// let result = [];
+
+// for (let [a, b] of ab) {
+//   result.push(tree.query(a - 1, b - 1, 1, 0, n - 1));
+// }
+
+// console.log(result.join('\n'));
+
+//14438-수열과 쿼리 17
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [n, m] = input[0].split(' ').map(Number);
-let arr = input.slice(1, n + 1).map(Number);
-let ab = input.slice(n + 1).map((v) => v.split(' ').map(Number));
+let n = +input[0];
+let arr = input[1].split(' ').map(Number);
+let m = +input[2];
+let q = input.slice(3).map((v) => v.split(' ').map(Number));
 
 class SegmentTree {
   constructor(arr) {
@@ -142,20 +188,34 @@ class SegmentTree {
   }
 
   query(left, right, node, start, end) {
-    if (right < start || left > end) return Infinity;
+    if (right < start || end < left) return Infinity;
     if (left <= start && end <= right) return this.tree[node];
 
     const mid = Math.floor((start + end) / 2);
     return Math.min(this.query(left, right, node * 2, start, mid), this.query(left, right, node * 2 + 1, mid + 1, end));
   }
+
+  update(index, newValue, node, start, end) {
+    if (index < start || index > end) return this.tree[node];
+    if (start === end) return (this.tree[node] = newValue);
+
+    const mid = Math.floor((start + end) / 2);
+    return (this.tree[node] = Math.min(
+      this.update(index, newValue, node * 2, start, mid),
+      this.update(index, newValue, node * 2 + 1, mid + 1, end),
+    ));
+  }
 }
 
 let tree = new SegmentTree(arr);
-
 let result = [];
 
-for (let [a, b] of ab) {
-  result.push(tree.query(a - 1, b - 1, 1, 0, n - 1));
+for (let [type, a, b] of q) {
+  if (type === 1) {
+    tree.update(a - 1, b, 1, 0, n - 1);
+  } else if (type === 2) {
+    result.push(tree.query(a - 1, b - 1, 1, 0, n - 1));
+  }
 }
 
 console.log(result.join('\n'));
