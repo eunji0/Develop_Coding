@@ -302,6 +302,79 @@
 // console.log(result.join('\n'));
 
 //14427-수열과 쿼리 15
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+// let m = +input[2];
+// let q = input.slice(3);
+
+// class SegmentTree {
+//   constructor(arr) {
+//     this.n = arr.length;
+//     this.tree = Array(this.n * 4).fill([Infinity, Infinity]);
+//     this.init(arr, 1, 0, this.n - 1);
+//   }
+
+//   init(arr, node, start, end) {
+//     if (start === end) return (this.tree[node] = [arr[start], start]);
+
+//     const mid = Math.floor((start + end) / 2);
+//     const left = this.init(arr, node * 2, start, mid);
+//     const right = this.init(arr, node * 2 + 1, mid + 1, end);
+
+//     return (this.tree[node] = this._compare(left, right));
+//   }
+
+//   _compare(a, b) {
+//     if (a[0] < b[0]) return a;
+//     if (a[0] > b[0]) return b;
+
+//     return a[1] < b[1] ? a : b;
+//   }
+
+//   query(node, left, right, start, end) {
+//     if (right < start || end < left) return [Infinity, Infinity];
+//     if (left <= start && end <= right) return this.tree[node];
+
+//     const mid = Math.floor((start + end) / 2);
+//     const leftMin = this.query(node * 2, start, mid, left, right);
+//     const rightMin = this.query(node * 2 + 1, mid + 1, end, left, right);
+
+//     return this._compare(leftMin, rightMin);
+//   }
+
+//   update(index, newValue, node, start, end) {
+//     if (index < start || index > end) return this.tree[node];
+//     if (start === end) return (this.tree[node] = [newValue, start]);
+
+//     const mid = Math.floor((start + end) / 2);
+//     const left = this.update(index, newValue, node * 2, start, mid);
+//     const right = this.update(index, newValue, node * 2 + 1, mid + 1, end);
+
+//     return (this.tree[node] = this._compare(left, right));
+//   }
+// }
+
+// const tree = new SegmentTree(arr);
+// let result = [];
+
+// for (let query of q) {
+//   let [type, a, b] = query.split(' ').map(Number);
+
+//   if (type === 1) {
+//     tree.update(a - 1, b, 1, 0, n - 1);
+//   } else if (type === 2) {
+//     let [minValue, minIndex] = tree.query(1, 0, n - 1, 0, n - 1);
+//     result.push(minIndex + 1);
+//   }
+// }
+
+// console.log(result.join('\n'));
+
+//18436-수열과 쿼리 37
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
@@ -309,66 +382,69 @@ const input = fs.readFileSync(filePath).toString().trim().split('\n');
 let n = +input[0];
 let arr = input[1].split(' ').map(Number);
 let m = +input[2];
-let q = input.slice(3);
+let q = input.slice(3).map((v) => v.split(' ').map(Number));
 
 class SegmentTree {
   constructor(arr) {
     this.n = arr.length;
-    this.tree = Array(this.n * 4).fill([Infinity, Infinity]);
+    this.tree = Array(this.n * 4).fill([0, 0]);
     this.init(arr, 1, 0, this.n - 1);
   }
 
   init(arr, node, start, end) {
-    if (start === end) return (this.tree[node] = [arr[start], start]);
+    if (start === end) {
+      const isEven = arr[start] % 2 === 0 ? 1 : 0;
+      const isOdd = 1 - isEven;
+      return (this.tree[node] = [isEven, isOdd]);
+    }
 
     const mid = Math.floor((start + end) / 2);
     const left = this.init(arr, node * 2, start, mid);
     const right = this.init(arr, node * 2 + 1, mid + 1, end);
 
-    return (this.tree[node] = this._compare(left, right));
+    return (this.tree[node] = [left[0] + right[0], left[1] + right[1]]);
   }
 
-  _compare(a, b) {
-    if (a[0] < b[0]) return a;
-    if (a[0] > b[0]) return b;
-
-    return a[1] < b[1] ? a : b;
-  }
-
-  query(node, left, right, start, end) {
-    if (right < start || end < left) return [Infinity, Infinity];
-    if (left <= start && end <= right) return this.tree[node];
+  query(node, start, end, left, right, type) {
+    if (right < start || end < left) return 0;
+    if (left <= start && end <= right) return this.tree[node][type];
 
     const mid = Math.floor((start + end) / 2);
-    const leftMin = this.query(node * 2, start, mid, left, right);
-    const rightMin = this.query(node * 2 + 1, mid + 1, end, left, right);
+    const leftCount = this.query(node * 2, start, mid, left, right, type);
+    const rightCount = this.query(node * 2 + 1, mid + 1, end, left, right, type);
 
-    return this._compare(leftMin, rightMin);
+    return leftCount + rightCount;
   }
 
   update(index, newValue, node, start, end) {
     if (index < start || index > end) return this.tree[node];
-    if (start === end) return (this.tree[node] = [newValue, start]);
+    if (start === end) {
+      const isEven = newValue % 2 === 0 ? 1 : 0;
+      const isOdd = 1 - isEven;
+      return (this.tree[node] = [isEven, isOdd]);
+    }
 
     const mid = Math.floor((start + end) / 2);
     const left = this.update(index, newValue, node * 2, start, mid);
     const right = this.update(index, newValue, node * 2 + 1, mid + 1, end);
 
-    return (this.tree[node] = this._compare(left, right));
+    return (this.tree[node] = [left[0] + right[0], left[1] + right[1]]);
   }
 }
 
 const tree = new SegmentTree(arr);
 let result = [];
 
-for (let query of q) {
-  let [type, a, b] = query.split(' ').map(Number);
-
+for (let [type, a, b] of q) {
   if (type === 1) {
+    // 인덱스 업데이트 (1-based -> 0-based)
     tree.update(a - 1, b, 1, 0, n - 1);
   } else if (type === 2) {
-    let [minValue, minIndex] = tree.query(1, 0, n - 1, 0, n - 1);
-    result.push(minIndex + 1);
+    // 짝수 개수 쿼리
+    result.push(tree.query(1, 0, n - 1, a - 1, b - 1, 0));
+  } else if (type === 3) {
+    // 홀수 개수 쿼리
+    result.push(tree.query(1, 0, n - 1, a - 1, b - 1, 1));
   }
 }
 
