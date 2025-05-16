@@ -626,69 +626,117 @@
 // console.log(result.join('\n'));
 
 //2042-구간 합 구하기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [n, m, k] = input[0].split(' ').map(BigInt);
+// let arr = input.slice(1, Number(n) + 1).map(BigInt);
+// let abc = input.slice(Number(n) + 1).map((v) => v.split(' ').map(BigInt));
+
+// class SegmentTree {
+//   constructor(arr) {
+//     this.n = arr.length;
+//     this.tree = Array(this.n * 4).fill(0n);
+//     this.arr = arr;
+//     this.init(arr, 1n, 0n, BigInt(this.n - 1));
+//   }
+
+//   init(arr, node, start, end) {
+//     if (start === end) return (this.tree[node] = arr[Number(start)]);
+
+//     const mid = (start + end) / 2n;
+//     const left = this.init(arr, node * 2n, start, mid);
+//     const right = this.init(arr, node * 2n + 1n, mid + 1n, end);
+//     return (this.tree[node] = left + right);
+//   }
+
+//   query(left, right, node, start, end) {
+//     if (right < start || end < left) return 0n;
+//     if (left <= start && end <= right) return this.tree[node];
+
+//     const mid = (start + end) / 2n;
+//     const leftSum = this.query(left, right, node * 2n, start, mid);
+//     const rightSum = this.query(left, right, node * 2n + 1n, mid + 1n, end);
+
+//     return leftSum + rightSum;
+//   }
+
+//   update(index, newValue, node, start, end) {
+//     if (index < start || index > end) return this.tree[node];
+
+//     const diff = newValue - this.arr[Number(index)];
+//     this.tree[node] += diff;
+
+//     if (start === end) {
+//       this.arr[Number(index)] = newValue;
+//       return this.tree[node];
+//     }
+
+//     const mid = (start + end) / 2n;
+//     this.update(index, newValue, node * 2n, start, mid);
+//     this.update(index, newValue, node * 2n + 1n, mid + 1n, end);
+//     return this.tree[node];
+//   }
+// }
+
+// const tree = new SegmentTree(arr);
+// let result = [];
+
+// for (let [a, b, c] of abc) {
+//   if (a === 1n) {
+//     tree.update(b - 1n, c, 1n, 0n, n - 1n);
+//   } else {
+//     result.push(tree.query(b - 1n, c - 1n, 1n, 0n, n - 1n).toString());
+//   }
+// }
+
+// console.log(result.join('\n'));
+
+//2357-최솟값과 최댓값
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [n, m, k] = input[0].split(' ').map(BigInt);
-let arr = input.slice(1, Number(n) + 1).map(BigInt);
-let abc = input.slice(Number(n) + 1).map((v) => v.split(' ').map(BigInt));
+let [n, m] = input[0].split(' ').map(Number);
+let arr = input.slice(1, n + 1).map(Number);
+let q = input.slice(n + 1).map((v) => v.split(' ').map(Number));
 
 class SegmentTree {
   constructor(arr) {
     this.n = arr.length;
-    this.tree = Array(this.n * 4).fill(0n);
-    this.arr = arr;
-    this.init(arr, 1n, 0n, BigInt(this.n - 1));
+    this.tree = Array(this.n * 4).fill([Infinity, -Infinity]);
+    this.init(arr, 1, 0, this.n - 1);
   }
 
   init(arr, node, start, end) {
-    if (start === end) return (this.tree[node] = arr[Number(start)]);
+    if (start === end) return (this.tree[node] = [arr[start], arr[start]]);
 
-    const mid = (start + end) / 2n;
-    const left = this.init(arr, node * 2n, start, mid);
-    const right = this.init(arr, node * 2n + 1n, mid + 1n, end);
-    return (this.tree[node] = left + right);
+    const mid = Math.floor((start + end) / 2);
+    const left = this.init(arr, node * 2, start, mid);
+    const right = this.init(arr, node * 2 + 1, mid + 1, end);
+
+    return (this.tree[node] = [Math.min(left[0], right[0]), Math.max(left[1], right[1])]);
   }
 
   query(left, right, node, start, end) {
-    if (right < start || end < left) return 0n;
+    if (left > end || start > right) return [Infinity, -Infinity];
     if (left <= start && end <= right) return this.tree[node];
 
-    const mid = (start + end) / 2n;
-    const leftSum = this.query(left, right, node * 2n, start, mid);
-    const rightSum = this.query(left, right, node * 2n + 1n, mid + 1n, end);
+    const mid = Math.floor((start + end) / 2);
+    const leftArr = this.query(left, right, node * 2, start, mid);
+    const rightArr = this.query(left, right, node * 2 + 1, mid + 1, end);
 
-    return leftSum + rightSum;
-  }
-
-  update(index, newValue, node, start, end) {
-    if (index < start || index > end) return this.tree[node];
-
-    const diff = newValue - this.arr[Number(index)];
-    this.tree[node] += diff;
-
-    if (start === end) {
-      this.arr[Number(index)] = newValue;
-      return this.tree[node];
-    }
-
-    const mid = (start + end) / 2n;
-    this.update(index, newValue, node * 2n, start, mid);
-    this.update(index, newValue, node * 2n + 1n, mid + 1n, end);
-    return this.tree[node];
+    return [Math.min(leftArr[0], rightArr[0]), Math.max(leftArr[1], rightArr[1])];
   }
 }
 
 const tree = new SegmentTree(arr);
 let result = [];
 
-for (let [a, b, c] of abc) {
-  if (a === 1n) {
-    tree.update(b - 1n, c, 1n, 0n, n - 1n);
-  } else {
-    result.push(tree.query(b - 1n, c - 1n, 1n, 0n, n - 1n).toString());
-  }
+for (let [a, b] of q) {
+  const [minVal, maxVal] = tree.query(a - 1, b - 1, 1, 0, n - 1);
+  result.push(`${minVal} ${maxVal}`);
 }
 
 console.log(result.join('\n'));
