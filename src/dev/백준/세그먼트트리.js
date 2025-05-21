@@ -1019,6 +1019,78 @@
 // console.log(result.join('\n'));
 
 //18436-수열과 쿼리 37
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+// let m = +input[2];
+// let q = input.slice(3).map((v) => v.split(' ').map(Number));
+
+// class SegmentTree {
+//   constructor(arr) {
+//     this.n = arr.length;
+//     this.tree = Array(this.n * 4).fill([0, 0]);
+//     this.init(arr, 1, 0, this.n - 1);
+//   }
+
+//   init(arr, node, start, end) {
+//     if (start === end) {
+//       const isEven = arr[start] % 2 === 0 ? 1 : 0;
+//       const isOdd = 1 - isEven;
+//       return (this.tree[node] = [isEven, isOdd]);
+//     }
+
+//     const mid = Math.floor((start + end) / 2);
+//     const left = this.init(arr, node * 2, start, mid);
+//     const right = this.init(arr, node * 2 + 1, mid + 1, end);
+
+//     return (this.tree[node] = [left[0] + right[0], left[1] + right[1]]);
+//   }
+
+//   query(node, start, end, left, right, type) {
+//     if (right < start || end < left) return 0;
+//     if (left <= start && end <= right) return this.tree[node][type];
+//     const mid = Math.floor((start + end) / 2);
+//     const leftCount = this.query(node * 2, start, mid, left, right, type);
+//     const rightCount = this.query(node * 2 + 1, mid + 1, end, left, right, type);
+
+//     return leftCount + rightCount;
+//   }
+
+//   update(index, newValue, node, start, end) {
+//     if (index < start || end < index) return this.tree[node];
+//     if (start === end) {
+//       const isEven = newValue % 2 === 0 ? 1 : 0;
+//       const isOdd = 1 - isEven;
+//       return (this.tree[node] = [isEven, isOdd]);
+//     }
+
+//     const mid = Math.floor((start + end) / 2);
+//     const left = this.update(index, newValue, node * 2, start, mid);
+//     const right = this.update(index, newValue, node * 2 + 1, mid + 1, end);
+
+//     return (this.tree[node] = [left[0] + right[0], left[1] + right[1]]);
+//   }
+// }
+
+// const tree = new SegmentTree(arr);
+// let result = [];
+
+// for (let [type, a, b] of q) {
+//   if (type === 1) {
+//     tree.update(a - 1, b, 1, 0, n - 1);
+//   } else if (type === 2) {
+//     result.push(tree.query(1, 0, n - 1, a - 1, b - 1, 0));
+//   } else if (type === 3) {
+//     result.push(tree.query(1, 0, n - 1, a - 1, b - 1, 1));
+//   }
+// }
+
+// console.log(result.join('\n'));
+
+//13544-수열과 쿼리 3
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
@@ -1031,61 +1103,81 @@ let q = input.slice(3).map((v) => v.split(' ').map(Number));
 class SegmentTree {
   constructor(arr) {
     this.n = arr.length;
-    this.tree = Array(this.n * 4).fill([0, 0]);
+    this.tree = Array(this.n * 4)
+      .fill(null)
+      .map(() => []);
     this.init(arr, 1, 0, this.n - 1);
   }
 
   init(arr, node, start, end) {
     if (start === end) {
-      const isEven = arr[start] % 2 === 0 ? 1 : 0;
-      const isOdd = 1 - isEven;
-      return (this.tree[node] = [isEven, isOdd]);
+      this.tree[node] = [arr[start]];
+      return this.tree[node];
     }
 
     const mid = Math.floor((start + end) / 2);
     const left = this.init(arr, node * 2, start, mid);
     const right = this.init(arr, node * 2 + 1, mid + 1, end);
 
-    return (this.tree[node] = [left[0] + right[0], left[1] + right[1]]);
+    this.tree[node] = this._merge(left, right);
+    return this.tree[node];
   }
 
-  query(node, start, end, left, right, type) {
+  _merge(left, right) {
+    let merged = [];
+    let l = 0,
+      r = 0;
+
+    while (l < left.length && r < right.length) {
+      if (left[l] < right[r]) merged.push(left[l++]);
+      else merged.push(right[r++]);
+    }
+
+    while (l < left.length) merged.push(left[l++]);
+    while (r < right.length) merged.push(right[r++]);
+
+    return merged;
+  }
+  query(node, start, end, left, right, k) {
     if (right < start || end < left) return 0;
-    if (left <= start && end <= right) return this.tree[node][type];
+    if (left <= start && end <= right) {
+      const count = this.tree[node].length - this._upperBound(this.tree[node], k);
+      return count;
+    }
+
     const mid = Math.floor((start + end) / 2);
-    const leftCount = this.query(node * 2, start, mid, left, right, type);
-    const rightCount = this.query(node * 2 + 1, mid + 1, end, left, right, type);
+    const leftCount = this.query(node * 2, start, mid, left, right, k);
+    const rightCount = this.query(node * 2 + 1, mid + 1, end, left, right, k);
 
     return leftCount + rightCount;
   }
 
-  update(index, newValue, node, start, end) {
-    if (index < start || end < index) return this.tree[node];
-    if (start === end) {
-      const isEven = newValue % 2 === 0 ? 1 : 0;
-      const isOdd = 1 - isEven;
-      return (this.tree[node] = [isEven, isOdd]);
+  _upperBound(arr, k) {
+    let low = 0,
+      high = arr.length;
+    while (low < high) {
+      const mid = Math.floor((low + high) / 2);
+      if (arr[mid] > k) high = mid;
+      else low = mid + 1;
     }
-
-    const mid = Math.floor((start + end) / 2);
-    const left = this.update(index, newValue, node * 2, start, mid);
-    const right = this.update(index, newValue, node * 2 + 1, mid + 1, end);
-
-    return (this.tree[node] = [left[0] + right[0], left[1] + right[1]]);
+    return low;
   }
 }
 
 const tree = new SegmentTree(arr);
+let lastAns = 0;
 let result = [];
 
-for (let [type, a, b] of q) {
-  if (type === 1) {
-    tree.update(a - 1, b, 1, 0, n - 1);
-  } else if (type === 2) {
-    result.push(tree.query(1, 0, n - 1, a - 1, b - 1, 0));
-  } else if (type === 3) {
-    result.push(tree.query(1, 0, n - 1, a - 1, b - 1, 1));
-  }
+for (let [a, b, c] of q) {
+  let i = (a ^ lastAns) - 1;
+  let j = (b ^ lastAns) - 1;
+  let k = c ^ lastAns;
+
+  if (i > j) [i, j] = [j, i];
+
+  const count = tree.query(1, 0, n - 1, i, j, k);
+  result.push(count);
+  lastAns = count;
 }
 
 console.log(result.join('\n'));
