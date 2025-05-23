@@ -675,3 +675,26 @@
 // }
 
 // console.log(result);
+
+//2839-설탕 배달
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+let n = +input[0];
+
+let dp = Array(5001).fill(-1);
+
+dp[3] = 1;
+dp[5] = 1;
+
+for (let i = 6; i <= n; i++) {
+  if (dp[i - 3] !== -1) dp[i] = dp[i - 3] + 1;
+  if (dp[i - 5] !== -1) {
+    if (dp[i] === -1 || dp[i] > dp[i - 5] + 1) {
+      dp[i] = dp[i - 5] + 1;
+    }
+  }
+}
+
+console.log(dp[n]);
