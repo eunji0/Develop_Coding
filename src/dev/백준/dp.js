@@ -700,24 +700,46 @@
 // console.log(dp[n]);
 
 //1463-1로 만들기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+
+// let dp = Array(1000001).fill(0);
+
+// for (let i = 2; i <= n; i++) {
+//   dp[i] = dp[i - 1] + 1;
+
+//   if (i % 2 === 0) {
+//     dp[i] = Math.min(dp[i], dp[i / 2] + 1);
+//   }
+
+//   if (i % 3 === 0) {
+//     dp[i] = Math.min(dp[i], dp[i / 3] + 1);
+//   }
+// }
+
+// console.log(dp[n]);
+
+//9095-1, 2, 3 더하기
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
+let t = +input[0];
+let arr = input.slice(1).map(Number);
 
-let dp = Array(1000001).fill(0);
+let dp = Array(11).fill(0);
 
-for (let i = 2; i <= n; i++) {
-  dp[i] = dp[i - 1] + 1;
+dp[0] = 1;
+dp[1] = 1;
+dp[2] = 2;
+dp[3] = 4;
 
-  if (i % 2 === 0) {
-    dp[i] = Math.min(dp[i], dp[i / 2] + 1);
+for (let n of arr) {
+  for (let i = 4; i < 11; i++) {
+    dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
   }
-
-  if (i % 3 === 0) {
-    dp[i] = Math.min(dp[i], dp[i / 3] + 1);
-  }
+  console.log(dp[n]);
 }
-
-console.log(dp[n]);
