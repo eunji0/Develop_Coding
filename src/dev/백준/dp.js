@@ -805,33 +805,57 @@
 // console.log(dp[n - 1]);
 
 //2775-부녀회장이 될테야
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let t = +input[0];
+// let idx = 1;
+
+// //dp[a][b] = dp[a-1][0]+...+dp[a-1][b]
+// while (t--) {
+//   let k = +input[idx++];
+//   let n = +input[idx++];
+
+//   //k층에 n호에는 몇 명이 살고 있는지
+
+//   let dp = Array.from({ length: k + 1 }, () => Array(n + 1).fill(0));
+
+//   for (let j = 1; j <= n; j++) {
+//     dp[0][j] = j;
+//   }
+
+//   for (let i = 1; i <= k; i++) {
+//     for (let j = 1; j <= n; j++) {
+//       for (let m = 1; m <= j; m++) {
+//         dp[i][j] += dp[i - 1][m];
+//       }
+//     }
+//   }
+
+//   console.log(dp[k][n]);
+// }
+
+//1149-RGB거리
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let t = +input[0];
-let idx = 1;
+let n = +input[0];
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
 
-//dp[a][b] = dp[a-1][0]+...+dp[a-1][b]
-while (t--) {
-  let k = +input[idx++];
-  let n = +input[idx++];
+let dp = Array.from({ length: n }, () => Array(3).fill(0));
 
-  //k층에 n호에는 몇 명이 살고 있는지
+dp[0][0] = arr[0][0];
+dp[0][1] = arr[0][1];
+dp[0][2] = arr[0][2];
 
-  let dp = Array.from({ length: k + 1 }, () => Array(n + 1).fill(0));
-
-  for (let j = 1; j <= n; j++) {
-    dp[0][j] = j;
+for (let i = 1; i < n; i++) {
+  for (let j = 0; j < 3; j++) {
+    dp[i][0] = Math.min(dp[i - 1][1], dp[i - 1][2]) + arr[i][0];
+    dp[i][1] = Math.min(dp[i - 1][0], dp[i - 1][2]) + arr[i][1];
+    dp[i][2] = Math.min(dp[i - 1][1], dp[i - 1][0]) + arr[i][2];
   }
-
-  for (let i = 1; i <= k; i++) {
-    for (let j = 1; j <= n; j++) {
-      for (let m = 1; m <= j; m++) {
-        dp[i][j] += dp[i - 1][m];
-      }
-    }
-  }
-
-  console.log(dp[k][n]);
 }
+
+console.log(Math.min(...dp[n - 1]));
