@@ -861,21 +861,45 @@
 // console.log(Math.min(...dp[n - 1]));
 
 //11053-가장 긴 증가하는 부분 수열
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+
+// let dp = Array(n).fill(1);
+
+// for (let i = 1; i < n; i++) {
+//   for (let j = 0; j < i; j++) {
+//     if (arr[j] < arr[i]) {
+//       dp[i] = Math.max(dp[i], dp[j] + 1);
+//     }
+//   }
+// }
+
+// console.log(Math.max(...dp));
+
+//1932-정수 삼각형
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
-let arr = input[1].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let dp = Array.from({ length: n }, (_, i) => Array(i + 1).fill(0));
 
-let dp = Array(n).fill(1);
+dp[0][0] = arr[0][0];
 
 for (let i = 1; i < n; i++) {
-  for (let j = 0; j < i; j++) {
-    if (arr[j] < arr[i]) {
-      dp[i] = Math.max(dp[i], dp[j] + 1);
+  for (let j = 0; j <= i; j++) {
+    if (j === 0) {
+      dp[i][j] += dp[i - 1][j] + arr[i][j];
+    } else if (j === i) {
+      dp[i][j] += dp[i - 1][j - 1] + arr[i][j];
+    } else {
+      dp[i][j] += Math.max(dp[i - 1][j], dp[i - 1][j - 1]) + arr[i][j];
     }
   }
 }
-
-console.log(Math.max(...dp));
+console.log(Math.max(...dp[n - 1]));
