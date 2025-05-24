@@ -837,25 +837,45 @@
 // }
 
 //1149-RGB거리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+
+// let dp = Array.from({ length: n }, () => Array(3).fill(0));
+
+// dp[0][0] = arr[0][0];
+// dp[0][1] = arr[0][1];
+// dp[0][2] = arr[0][2];
+
+// for (let i = 1; i < n; i++) {
+//   for (let j = 0; j < 3; j++) {
+//     dp[i][0] = Math.min(dp[i - 1][1], dp[i - 1][2]) + arr[i][0];
+//     dp[i][1] = Math.min(dp[i - 1][0], dp[i - 1][2]) + arr[i][1];
+//     dp[i][2] = Math.min(dp[i - 1][1], dp[i - 1][0]) + arr[i][2];
+//   }
+// }
+
+// console.log(Math.min(...dp[n - 1]));
+
+//11053-가장 긴 증가하는 부분 수열
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let arr = input[1].split(' ').map(Number);
 
-let dp = Array.from({ length: n }, () => Array(3).fill(0));
-
-dp[0][0] = arr[0][0];
-dp[0][1] = arr[0][1];
-dp[0][2] = arr[0][2];
+let dp = Array(n).fill(1);
 
 for (let i = 1; i < n; i++) {
-  for (let j = 0; j < 3; j++) {
-    dp[i][0] = Math.min(dp[i - 1][1], dp[i - 1][2]) + arr[i][0];
-    dp[i][1] = Math.min(dp[i - 1][0], dp[i - 1][2]) + arr[i][1];
-    dp[i][2] = Math.min(dp[i - 1][1], dp[i - 1][0]) + arr[i][2];
+  for (let j = 0; j < i; j++) {
+    if (arr[j] < arr[i]) {
+      dp[i] = Math.max(dp[i], dp[j] + 1);
+    }
   }
 }
 
-console.log(Math.min(...dp[n - 1]));
+console.log(Math.max(...dp));
