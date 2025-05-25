@@ -881,25 +881,48 @@
 // console.log(Math.max(...dp));
 
 //1932-정수 삼각형
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let dp = Array.from({ length: n }, (_, i) => Array(i + 1).fill(0));
+
+// dp[0][0] = arr[0][0];
+
+// for (let i = 1; i < n; i++) {
+//   for (let j = 0; j <= i; j++) {
+//     if (j === 0) {
+//       dp[i][j] += dp[i - 1][j] + arr[i][j];
+//     } else if (j === i) {
+//       dp[i][j] += dp[i - 1][j - 1] + arr[i][j];
+//     } else {
+//       dp[i][j] += Math.max(dp[i - 1][j], dp[i - 1][j - 1]) + arr[i][j];
+//     }
+//   }
+// }
+// console.log(Math.max(...dp[n - 1]));
+
+//1010-다리놓기
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let dp = Array.from({ length: n }, (_, i) => Array(i + 1).fill(0));
+let MAX = 30;
+let dp = Array.from({ length: MAX + 1 }, () => Array(MAX + 1).fill(0));
 
-dp[0][0] = arr[0][0];
-
-for (let i = 1; i < n; i++) {
-  for (let j = 0; j <= i; j++) {
-    if (j === 0) {
-      dp[i][j] += dp[i - 1][j] + arr[i][j];
-    } else if (j === i) {
-      dp[i][j] += dp[i - 1][j - 1] + arr[i][j];
-    } else {
-      dp[i][j] += Math.max(dp[i - 1][j], dp[i - 1][j - 1]) + arr[i][j];
-    }
+for (let n = 0; n <= MAX; n++) {
+  for (let r = 0; r <= n; r++) {
+    if (r === 0 || r === n) dp[n][r] = 1;
+    else dp[n][r] = dp[n - 1][r - 1] + dp[n - 1][r];
   }
 }
-console.log(Math.max(...dp[n - 1]));
+
+let t = +input[0];
+let idx = 1;
+
+while (t--) {
+  let [n, m] = input[idx++].split(' ').map(Number);
+  console.log(dp[m][n]); //m개중 n개 고르기
+}
