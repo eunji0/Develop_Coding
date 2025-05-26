@@ -905,24 +905,49 @@
 // console.log(Math.max(...dp[n - 1]));
 
 //1010-다리놓기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let MAX = 30;
+// let dp = Array.from({ length: MAX + 1 }, () => Array(MAX + 1).fill(0));
+
+// for (let n = 0; n <= MAX; n++) {
+//   for (let r = 0; r <= n; r++) {
+//     if (r === 0 || r === n) dp[n][r] = 1;
+//     else dp[n][r] = dp[n - 1][r - 1] + dp[n - 1][r];
+//   }
+// }
+
+// let t = +input[0];
+// let idx = 1;
+
+// while (t--) {
+//   let [n, m] = input[idx++].split(' ').map(Number);
+//   console.log(dp[m][n]); //m개중 n개 고르기
+// }
+
+//9461-파도반 수열
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let MAX = 30;
-let dp = Array.from({ length: MAX + 1 }, () => Array(MAX + 1).fill(0));
+let MAX = 100;
+let dp = Array(MAX + 1).fill(0);
 
-for (let n = 0; n <= MAX; n++) {
-  for (let r = 0; r <= n; r++) {
-    if (r === 0 || r === n) dp[n][r] = 1;
-    else dp[n][r] = dp[n - 1][r - 1] + dp[n - 1][r];
-  }
+dp[1] = 1;
+dp[2] = 1;
+dp[3] = 1;
+dp[4] = 2;
+dp[5] = 2;
+
+for (let i = 6; i <= MAX; i++) {
+  dp[i] = dp[i - 2] + dp[i - 3];
 }
 
 let t = +input[0];
 let idx = 1;
-
 while (t--) {
-  let [n, m] = input[idx++].split(' ').map(Number);
-  console.log(dp[m][n]); //m개중 n개 고르기
+  let n = +input[idx++];
+  console.log(dp[n]);
 }
