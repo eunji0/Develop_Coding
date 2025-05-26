@@ -1030,21 +1030,44 @@
 // console.log(dp[n]);
 
 //12865-평범한 배낭
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [n, k] = input[0].split(' ').map(Number); //n개의 물건, 버틸 수 있는 무게 K
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+
+// let dp = Array(k + 1).fill(0);
+
+// for (let i = 0; i < n; i++) {
+//   let [w, v] = arr[i];
+
+//   for (let j = k; j >= w; j--) {
+//     dp[j] = Math.max(dp[j], dp[j - w] + v);
+//   }
+// }
+
+// console.log(dp[k]);
+
+//10844-쉬운 계단 수
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [n, k] = input[0].split(' ').map(Number); //n개의 물건, 버틸 수 있는 무게 K
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let n = +input[0];
 
-let dp = Array(k + 1).fill(0);
+let DIV = 1000000000;
+let dp = Array.from({ length: n + 1 }, () => Array(10).fill(0));
+for (let i = 1; i <= 9; i++) {
+  dp[1][i] = 1;
+}
 
-for (let i = 0; i < n; i++) {
-  let [w, v] = arr[i];
-
-  for (let j = k; j >= w; j--) {
-    dp[j] = Math.max(dp[j], dp[j - w] + v);
+for (let i = 2; i <= n; i++) {
+  for (let j = 0; j < 10; j++) {
+    if (j > 0) dp[i][j] += dp[i - 1][j - 1];
+    if (j < 9) dp[i][j] += dp[i - 1][j + 1];
+    dp[i][j] %= DIV;
   }
 }
 
-console.log(dp[k]);
+console.log(dp[n].reduce((a, c) => a + c, 0) % DIV);
