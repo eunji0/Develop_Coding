@@ -928,26 +928,47 @@
 // }
 
 //9461-파도반 수열
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let MAX = 100;
+// let dp = Array(MAX + 1).fill(0);
+
+// dp[1] = 1;
+// dp[2] = 1;
+// dp[3] = 1;
+// dp[4] = 2;
+// dp[5] = 2;
+
+// for (let i = 6; i <= MAX; i++) {
+//   dp[i] = dp[i - 2] + dp[i - 3];
+// }
+
+// let t = +input[0];
+// let idx = 1;
+// while (t--) {
+//   let n = +input[idx++];
+//   console.log(dp[n]);
+// }
+
+//1912-연속합
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let MAX = 100;
+let MAX = 100000;
 let dp = Array(MAX + 1).fill(0);
 
-dp[1] = 1;
-dp[2] = 1;
-dp[3] = 1;
-dp[4] = 2;
-dp[5] = 2;
+let n = +input[0];
+let arr = input[1].split(' ').map(Number);
 
-for (let i = 6; i <= MAX; i++) {
-  dp[i] = dp[i - 2] + dp[i - 3];
+dp[0] = arr[0];
+let maxSum = dp[0];
+
+for (let i = 1; i < n; i++) {
+  dp[i] = Math.max(arr[i], dp[i - 1] + arr[i]);
+  maxSum = Math.max(maxSum, dp[i]);
 }
 
-let t = +input[0];
-let idx = 1;
-while (t--) {
-  let n = +input[idx++];
-  console.log(dp[n]);
-}
+console.log(maxSum);
