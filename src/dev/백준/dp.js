@@ -1007,24 +1007,44 @@
 // console.log(dp[n].toString());
 
 //2156-포도주 시식
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// const wine = [0, ...input.slice(1).map(Number)];
+
+// let dp = Array(n + 1).fill(0);
+
+// dp[1] = wine[1];
+// if (n >= 2) dp[2] = wine[1] + wine[2];
+
+// for (let i = 3; i <= n; i++) {
+//   dp[i] = Math.max(
+//     dp[i - 1], // i번째 잔을 안 마심
+//     dp[i - 2] + wine[i], // i번째 잔 마시고, i-1 잔은 안 마심
+//     dp[i - 3] + wine[i - 1] + wine[i], // i, i-1 잔 연속으로 마시고, i-2 잔은 안 마심
+//   );
+// }
+
+// console.log(dp[n]);
+
+//12865-평범한 배낭
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-const wine = [0, ...input.slice(1).map(Number)];
+let [n, k] = input[0].split(' ').map(Number); //n개의 물건, 버틸 수 있는 무게 K
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
 
-let dp = Array(n + 1).fill(0);
+let dp = Array(k + 1).fill(0);
 
-dp[1] = wine[1];
-if (n >= 2) dp[2] = wine[1] + wine[2];
+for (let i = 0; i < n; i++) {
+  let [w, v] = arr[i];
 
-for (let i = 3; i <= n; i++) {
-  dp[i] = Math.max(
-    dp[i - 1], // i번째 잔을 안 마심
-    dp[i - 2] + wine[i], // i번째 잔 마시고, i-1 잔은 안 마심
-    dp[i - 3] + wine[i - 1] + wine[i], // i, i-1 잔 연속으로 마시고, i-2 잔은 안 마심
-  );
+  for (let j = k; j >= w; j--) {
+    dp[j] = Math.max(dp[j], dp[j - w] + v);
+  }
 }
 
-console.log(dp[n]);
+console.log(dp[k]);
