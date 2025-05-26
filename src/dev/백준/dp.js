@@ -989,19 +989,42 @@
 // console.log(dp[n]);
 
 //2748-피보나치 수2
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let MAX = 90;
+// let dp = Array(MAX + 1).fill(0n);
+
+// dp[0] = 0n;
+// dp[1] = 1n;
+
+// for (let i = 2; i <= MAX; i++) {
+//   dp[i] = dp[i - 1] + dp[i - 2];
+// }
+
+// console.log(dp[n].toString());
+
+//2156-포도주 시식
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
-let MAX = 90;
-let dp = Array(MAX + 1).fill(0n);
+const wine = [0, ...input.slice(1).map(Number)];
 
-dp[0] = 0n;
-dp[1] = 1n;
+let dp = Array(n + 1).fill(0);
 
-for (let i = 2; i <= MAX; i++) {
-  dp[i] = dp[i - 1] + dp[i - 2];
+dp[1] = wine[1];
+if (n >= 2) dp[2] = wine[1] + wine[2];
+
+for (let i = 3; i <= n; i++) {
+  dp[i] = Math.max(
+    dp[i - 1], // i번째 잔을 안 마심
+    dp[i - 2] + wine[i], // i번째 잔 마시고, i-1 잔은 안 마심
+    dp[i - 3] + wine[i - 1] + wine[i], // i, i-1 잔 연속으로 마시고, i-2 잔은 안 마심
+  );
 }
 
-console.log(dp[n].toString());
+console.log(dp[n]);
