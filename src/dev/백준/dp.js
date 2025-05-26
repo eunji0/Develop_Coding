@@ -953,22 +953,37 @@
 // }
 
 //1912-연속합
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let dp = Array(MAX + 1).fill(0);
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+
+// dp[0] = arr[0];
+// let maxSum = dp[0];
+
+// for (let i = 1; i < n; i++) {
+//   dp[i] = Math.max(arr[i], dp[i - 1] + arr[i]);
+//   maxSum = Math.max(maxSum, dp[i]);
+// }
+
+// console.log(maxSum);
+
+//11727-2×n 타일링 2
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let MAX = 100000;
-let dp = Array(MAX + 1).fill(0);
-
 let n = +input[0];
-let arr = input[1].split(' ').map(Number);
+const dp = Array(n + 1).fill(0);
+dp[1] = 1;
+dp[2] = 3;
 
-dp[0] = arr[0];
-let maxSum = dp[0];
-
-for (let i = 1; i < n; i++) {
-  dp[i] = Math.max(arr[i], dp[i - 1] + arr[i]);
-  maxSum = Math.max(maxSum, dp[i]);
+for (let i = 3; i <= n; i++) {
+  dp[i] = (dp[i - 1] + 2 * dp[i - 2]) % 10007;
 }
 
-console.log(maxSum);
+console.log(dp[n]);
