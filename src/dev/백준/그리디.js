@@ -20,19 +20,37 @@
 // console.log(-1);
 
 //11399-ATM
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input[1].split(' ').map(Number);
+
+// arr = arr.map((v, i) => (v = [i + 1, v]));
+
+// arr.sort((a, b) => a[1] - b[1]);
+
+// let count = 0;
+// let result = [];
+
+// arr.map((v) => result.push((count += v[1])));
+// console.log(result.reduce((a, c) => a + c, 0));
+
+//11047-동전 0
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-let arr = input[1].split(' ').map(Number);
-
-arr = arr.map((v, i) => (v = [i + 1, v]));
-
-arr.sort((a, b) => a[1] - b[1]);
+let [n, k] = input[0].split(' ').map(Number);
+let coins = input.slice(1).map(Number).reverse(); //내림차순으로 정렬하는게 핵심
 
 let count = 0;
-let result = [];
+for (let coin of coins) {
+  if (k >= coin) {
+    count += Math.floor(k / coin);
+    k %= coin;
+  }
+}
 
-arr.map((v) => result.push((count += v[1])));
-console.log(result.reduce((a, c) => a + c, 0));
+console.log(count);
