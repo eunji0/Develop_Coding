@@ -1050,24 +1050,49 @@
 // console.log(dp[k]);
 
 //10844-쉬운 계단 수
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+
+// let DIV = 1000000000;
+// let dp = Array.from({ length: n + 1 }, () => Array(10).fill(0));
+// for (let i = 1; i <= 9; i++) {
+//   dp[1][i] = 1;
+// }
+
+// for (let i = 2; i <= n; i++) {
+//   for (let j = 0; j < 10; j++) {
+//     if (j > 0) dp[i][j] += dp[i - 1][j - 1];
+//     if (j < 9) dp[i][j] += dp[i - 1][j + 1];
+//     dp[i][j] %= DIV;
+//   }
+// }
+
+// console.log(dp[n].reduce((a, c) => a + c, 0) % DIV);
+
+//14501-퇴사
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
+let days = input.slice(1).map((v) => v.split(' ').map(Number));
+let dp = Array(n + 2).fill(0);
 
-let DIV = 1000000000;
-let dp = Array.from({ length: n + 1 }, () => Array(10).fill(0));
-for (let i = 1; i <= 9; i++) {
-  dp[1][i] = 1;
-}
+let t = [0, ...days.map((v) => v[0])];
+let p = [0, ...days.map((v) => v[1])];
 
-for (let i = 2; i <= n; i++) {
-  for (let j = 0; j < 10; j++) {
-    if (j > 0) dp[i][j] += dp[i - 1][j - 1];
-    if (j < 9) dp[i][j] += dp[i - 1][j + 1];
-    dp[i][j] %= DIV;
+for (let i = 1; i <= n; i++) {
+  // 1. 상담을 하지 않는 경우 → 수익 유지
+  dp[i + 1] = Math.max(dp[i + 1], dp[i]);
+
+  // 2. 상담을 하는 경우 → 수익 반영
+  let nextDay = i + t[i];
+  if (nextDay <= n + 1) {
+    dp[nextDay] = Math.max(dp[nextDay], dp[i] + p[i]);
   }
 }
 
-console.log(dp[n].reduce((a, c) => a + c, 0) % DIV);
+console.log(Math.max(...dp));
