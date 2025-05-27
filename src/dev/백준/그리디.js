@@ -100,24 +100,44 @@
 // console.log(front - end.reduce((a, c) => a + c, 0));
 
 //1026-보물
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let aArr = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => a - b);
+// let bArr = input[2]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => b - a);
+
+// let sum = 0;
+
+// for (let i = 0; i < n; i++) {
+//   sum += aArr[i] * bArr[i];
+// }
+
+// console.log(sum);
+
+//2720-세탁소 사장 동혁
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
-let aArr = input[1]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => a - b);
-let bArr = input[2]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => b - a);
+let arr = input.slice(1).map(Number);
+const prices = [25, 10, 5, 1];
 
-let sum = 0;
+arr.forEach((v) => {
+  let result = [0, 0, 0, 0];
 
-for (let i = 0; i < n; i++) {
-  sum += aArr[i] * bArr[i];
-}
+  for (let i = 0; i < 4; i++) {
+    result[i] = Math.floor(v / prices[i]);
+    v %= prices[i];
+  }
 
-console.log(sum);
+  console.log(result.join(' '));
+});
