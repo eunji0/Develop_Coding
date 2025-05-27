@@ -81,20 +81,43 @@
 // console.log(count);
 
 //1541-잃어버린 괄호
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let div = input[0].split('-');
+// let front = div[0]
+//   .split('+')
+//   .map(Number)
+//   .reduce((a, c) => a + c, 0);
+// let end = div.slice(1).map((v) =>
+//   v
+//     .split('+')
+//     .map(Number)
+//     .reduce((a, c) => a + c, 0),
+// );
+
+// console.log(front - end.reduce((a, c) => a + c, 0));
+
+//1026-보물
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let div = input[0].split('-');
-let front = div[0]
-  .split('+')
+let n = +input[0];
+let aArr = input[1]
+  .split(' ')
   .map(Number)
-  .reduce((a, c) => a + c, 0);
-let end = div.slice(1).map((v) =>
-  v
-    .split('+')
-    .map(Number)
-    .reduce((a, c) => a + c, 0),
-);
+  .sort((a, b) => a - b);
+let bArr = input[2]
+  .split(' ')
+  .map(Number)
+  .sort((a, b) => b - a);
 
-console.log(front - end.reduce((a, c) => a + c, 0));
+let sum = 0;
+
+for (let i = 0; i < n; i++) {
+  sum += aArr[i] * bArr[i];
+}
+
+console.log(sum);
