@@ -164,19 +164,35 @@
 // console.log(count);
 
 //2217-로프
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let arr = input
+//   .slice(1)
+//   .map(Number)
+//   .sort((a, b) => b - a);
+
+// let max = 0;
+// for (let i = 0; i < n; i++) {
+//   max = Math.max(max, (i + 1) * arr[i]);
+// }
+
+// console.log(max);
+
+//1789-수들의 합
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-let arr = input
-  .slice(1)
-  .map(Number)
-  .sort((a, b) => b - a);
+let s = +input[0];
+let sum = 0;
+let n = 0;
 
-let max = 0;
-for (let i = 0; i < n; i++) {
-  max = Math.max(max, (i + 1) * arr[i]);
+while (sum <= s) {
+  n++;
+  sum += n;
 }
 
-console.log(max);
+console.log(n - 1);
