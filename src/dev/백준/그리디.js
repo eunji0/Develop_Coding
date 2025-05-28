@@ -182,17 +182,38 @@
 // console.log(max);
 
 //1789-수들의 합
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let s = +input[0];
+// let sum = 0;
+// let n = 0;
+
+// while (sum <= s) {
+//   n++;
+//   sum += n;
+// }
+
+// console.log(n - 1);
+
+//13305-주유소
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let s = +input[0];
-let sum = 0;
-let n = 0;
+let n = +input[0];
+let roads = input[1].split(' ').map(Number);
+let prices = input[2].split(' ').map(Number);
 
-while (sum <= s) {
-  n++;
-  sum += n;
+let nowNum = prices[0];
+let sum = nowNum * roads[0];
+
+for (let i = 1; i < n - 1; i++) {
+  if (nowNum > prices[i]) {
+    nowNum = prices[i];
+  }
+  sum += nowNum * roads[i];
 }
 
-console.log(n - 1);
+console.log(sum);
