@@ -143,22 +143,40 @@
 // });
 
 //5585-거스름돈
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let n = +input[0];
+// let prices = [500, 100, 50, 10, 5, 1];
+
+// let num = 1000 - n;
+
+// let count = 0;
+
+// for (let i = 0; i < 6; i++) {
+//   if (num >= prices[i]) {
+//     count += Math.floor(num / prices[i]);
+//     num %= prices[i];
+//   }
+// }
+
+// console.log(count);
+
+//2217-로프
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 let n = +input[0];
-let prices = [500, 100, 50, 10, 5, 1];
+let arr = input
+  .slice(1)
+  .map(Number)
+  .sort((a, b) => b - a);
 
-let num = 1000 - n;
-
-let count = 0;
-
-for (let i = 0; i < 6; i++) {
-  if (num >= prices[i]) {
-    count += Math.floor(num / prices[i]);
-    num %= prices[i];
-  }
+let max = 0;
+for (let i = 0; i < n; i++) {
+  max = Math.max(max, (i + 1) * arr[i]);
 }
 
-console.log(count);
+console.log(max);
