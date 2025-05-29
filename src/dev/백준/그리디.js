@@ -198,22 +198,22 @@
 // console.log(n - 1);
 
 //13305-주유소
-const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let n = +input[0];
-let roads = input[1].split(' ').map(Number);
-let prices = input[2].split(' ').map(Number);
+// let n = +input[0];
+// let roads = input[1].split(' ').map(Number);
+// let prices = input[2].split(' ').map(Number);
 
-let nowNum = prices[0];
-let sum = nowNum * roads[0];
+// let nowNum = prices[0];
+// let sum = nowNum * roads[0];
 
-for (let i = 1; i < n - 1; i++) {
-  if (nowNum > prices[i]) {
-    nowNum = prices[i];
-  }
-  sum += nowNum * roads[i];
-}
+// for (let i = 1; i < n - 1; i++) {
+//   if (nowNum > prices[i]) {
+//     nowNum = prices[i];
+//   }
+//   sum += nowNum * roads[i];
+// }
 
-console.log(sum);
+// console.log(sum);
