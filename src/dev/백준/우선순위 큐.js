@@ -295,11 +295,91 @@
 // console.log(result.join('\n'));
 
 //11279-최대힙
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// class maxHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   push(v) {
+//     this.heap.push(v);
+//     this.bubbleUp();
+//   }
+
+//   bubbleUp() {
+//     let index = this.heap.length - 1;
+//     let last = this.heap[index];
+
+//     while (index > 0) {
+//       let parentIndex = Math.floor((index - 1) / 2);
+//       if (last <= this.heap[parentIndex]) break;
+//       this.heap[index] = this.heap[parentIndex];
+//       index = parentIndex;
+//     }
+
+//     this.heap[index] = last;
+//   }
+
+//   pop() {
+//     if (this.heap.length === 0) return 0;
+//     if (this.heap.length === 1) return this.heap.pop();
+
+//     let top = this.heap[0];
+//     let last = this.heap.pop();
+//     this.heap[0] = last;
+//     this.bubbleDown();
+//     return top;
+//   }
+
+//   bubbleDown() {
+//     let index = 0;
+//     let length = this.heap.length;
+//     let element = this.heap[0];
+
+//     while (true) {
+//       let left = index * 2 + 1;
+//       let right = index * 2 + 2;
+//       let largest = index;
+
+//       if (left < length && this.heap[left] > this.heap[largest]) {
+//         largest = left;
+//       }
+//       if (right < length && this.heap[right] > this.heap[largest]) {
+//         largest = right;
+//       }
+
+//       if (largest === index) break;
+
+//       [this.heap[index], this.heap[largest]] = [this.heap[largest], this.heap[index]];
+//       index = largest;
+//     }
+//   }
+// }
+
+// let heap = new maxHeap();
+// let result = [];
+// let n = +input[0];
+// let arr = input.slice(1).map(Number);
+
+// for (let a of arr) {
+//   if (a === 0) {
+//     result.push(heap.pop());
+//   } else {
+//     heap.push(a);
+//   }
+// }
+
+// console.log(result.join('\n'));
+
+//11286-절댓값 힙
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-class maxHeap {
+class MinHeap {
   constructor() {
     this.heap = [];
   }
@@ -309,13 +389,22 @@ class maxHeap {
     this.bubbleUp();
   }
 
+  compare(a, b) {
+    // 절댓값이 작으면 우선
+    if (Math.abs(a) < Math.abs(b)) return true;
+    if (Math.abs(a) > Math.abs(b)) return false;
+    // 절댓값 같으면 실제 값이 작은 게 우선
+    return a < b;
+  }
+
   bubbleUp() {
     let index = this.heap.length - 1;
     let last = this.heap[index];
 
     while (index > 0) {
       let parentIndex = Math.floor((index - 1) / 2);
-      if (last <= this.heap[parentIndex]) break;
+
+      if (last >= this.heap[parentIndex]) break;
       this.heap[index] = this.heap[parentIndex];
       index = parentIndex;
     }
@@ -335,41 +424,36 @@ class maxHeap {
   }
 
   bubbleDown() {
-    let index = 0;
     let length = this.heap.length;
-    let element = this.heap[0];
+    let index = 0;
 
     while (true) {
       let left = index * 2 + 1;
       let right = index * 2 + 2;
-      let largest = index;
+      let smallest = index;
 
-      if (left < length && this.heap[left] > this.heap[largest]) {
-        largest = left;
+      if (left < length && this.heap[left] < this.heap[smallest]) {
+        smallest = left;
       }
-      if (right < length && this.heap[right] > this.heap[largest]) {
-        largest = right;
+      if (right < length && this.heap[right] < this.heap[smallest]) {
+        smallest = right;
       }
-
-      if (largest === index) break;
-
-      [this.heap[index], this.heap[largest]] = [this.heap[largest], this.heap[index]];
-      index = largest;
+      if (smallest === index) break;
+      [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+      index = smallest;
     }
   }
 }
 
-let heap = new maxHeap();
-let result = [];
 let n = +input[0];
 let arr = input.slice(1).map(Number);
+let result = [];
+let heap = new MinHeap();
 
 for (let a of arr) {
-  if (a === 0) {
-    result.push(heap.pop());
-  } else {
+  if (a != 0) {
     heap.push(a);
+  } else {
+    re;
   }
 }
-
-console.log(result.join('\n'));
