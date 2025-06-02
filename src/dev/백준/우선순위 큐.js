@@ -375,21 +375,115 @@
 // console.log(result.join('\n'));
 
 //11286-절댓값 힙
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// class AbsMinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   compare(a, b) {
+//     // 절댓값이 작으면 우선
+//     if (Math.abs(a) < Math.abs(b)) return true;
+//     if (Math.abs(a) > Math.abs(b)) return false;
+//     // 절댓값 같으면 실제 값이 작은 게 우선
+//     return a < b;
+//   }
+
+//   push(v) {
+//     this.heap.push(v);
+//     this.bubbleUp();
+//   }
+
+//   bubbleUp() {
+//     let index = this.heap.length - 1;
+//     const element = this.heap[index];
+
+//     while (index > 0) {
+//       const parentIndex = Math.floor((index - 1) / 2);
+//       const parent = this.heap[parentIndex];
+
+//       if (this.compare(element, parent)) {
+//         this.heap[index] = parent;
+//         index = parentIndex;
+//       } else {
+//         break;
+//       }
+//     }
+
+//     this.heap[index] = element;
+//   }
+
+//   pop() {
+//     if (this.heap.length === 0) return 0;
+//     if (this.heap.length === 1) return this.heap.pop();
+
+//     const top = this.heap[0];
+//     const end = this.heap.pop();
+//     this.heap[0] = end;
+//     this.bubbleDown();
+//     return top;
+//   }
+
+//   bubbleDown() {
+//     let index = 0;
+//     const length = this.heap.length;
+//     const element = this.heap[0];
+
+//     while (true) {
+//       let left = 2 * index + 1;
+//       let right = 2 * index + 2;
+//       let swap = null;
+
+//       if (left < length) {
+//         if (this.compare(this.heap[left], element)) {
+//           swap = left;
+//         }
+//       }
+
+//       if (right < length) {
+//         if (
+//           (swap === null && this.compare(this.heap[right], element)) ||
+//           (swap !== null && this.compare(this.heap[right], this.heap[left]))
+//         ) {
+//           swap = right;
+//         }
+//       }
+
+//       if (swap === null) break;
+//       this.heap[index] = this.heap[swap];
+//       index = swap;
+//     }
+
+//     this.heap[index] = element;
+//   }
+// }
+
+// const heap = new AbsMinHeap();
+// const result = [];
+// const n = +input[0];
+// const arr = input.slice(1).map(Number);
+
+// for (let a of arr) {
+//   if (a !== 0) {
+//     heap.push(a);
+//   } else {
+//     result.push(heap.pop());
+//   }
+// }
+
+// console.log(result.join('\n'));
+
+//1715-카드 정렬하기
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-class AbsMinHeap {
+class MinHeap {
   constructor() {
     this.heap = [];
-  }
-
-  compare(a, b) {
-    // 절댓값이 작으면 우선
-    if (Math.abs(a) < Math.abs(b)) return true;
-    if (Math.abs(a) > Math.abs(b)) return false;
-    // 절댓값 같으면 실제 값이 작은 게 우선
-    return a < b;
   }
 
   push(v) {
@@ -399,79 +493,66 @@ class AbsMinHeap {
 
   bubbleUp() {
     let index = this.heap.length - 1;
-    const element = this.heap[index];
+    let last = this.heap[index];
 
     while (index > 0) {
-      const parentIndex = Math.floor((index - 1) / 2);
-      const parent = this.heap[parentIndex];
-
-      if (this.compare(element, parent)) {
-        this.heap[index] = parent;
-        index = parentIndex;
-      } else {
-        break;
-      }
+      let parentIndex = Math.floor((index - 1) / 2);
+      if (last >= this.heap[parentIndex]) break;
+      this.heap[index] = this.heap[parentIndex];
+      index = parentIndex;
     }
 
-    this.heap[index] = element;
+    this.heap[index] = last;
   }
 
   pop() {
     if (this.heap.length === 0) return 0;
     if (this.heap.length === 1) return this.heap.pop();
 
-    const top = this.heap[0];
-    const end = this.heap.pop();
-    this.heap[0] = end;
+    let top = this.heap[0];
+    let last = this.heap.pop();
+    this.heap[0] = last;
     this.bubbleDown();
     return top;
   }
 
   bubbleDown() {
     let index = 0;
-    const length = this.heap.length;
-    const element = this.heap[0];
-
+    let length = this.heap.length;
     while (true) {
-      let left = 2 * index + 1;
-      let right = 2 * index + 2;
-      let swap = null;
+      let left = index * 2 + 1;
+      let right = index * 2 + 2;
+      let smallest = index;
 
-      if (left < length) {
-        if (this.compare(this.heap[left], element)) {
-          swap = left;
-        }
+      if (left < length && this.heap[left] < this.heap[smallest]) {
+        smallest = left;
+      }
+      if (right < length && this.heap[right] < this.heap[smallest]) {
+        smallest = right;
       }
 
-      if (right < length) {
-        if (
-          (swap === null && this.compare(this.heap[right], element)) ||
-          (swap !== null && this.compare(this.heap[right], this.heap[left]))
-        ) {
-          swap = right;
-        }
-      }
+      if (smallest === index) break;
 
-      if (swap === null) break;
-      this.heap[index] = this.heap[swap];
-      index = swap;
+      [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+      index = smallest;
     }
-
-    this.heap[index] = element;
   }
 }
 
-const heap = new AbsMinHeap();
-const result = [];
-const n = +input[0];
-const arr = input.slice(1).map(Number);
+let n = +input[0];
+let arr = input.slice(1).map(Number);
 
-for (let a of arr) {
-  if (a !== 0) {
-    heap.push(a);
-  } else {
-    result.push(heap.pop());
-  }
+let heap = new MinHeap();
+let result = 0;
+
+arr.forEach((v) => heap.push(v));
+
+while (heap.heap.length > 1) {
+  let first = heap.pop();
+  let second = heap.pop();
+  const total = first + second;
+  result += total;
+  heap.push(total);
 }
 
-console.log(result.join('\n'));
+console.log(result);
