@@ -477,6 +477,87 @@
 // console.log(result.join('\n'));
 
 //1715-카드 정렬하기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   push(v) {
+//     this.heap.push(v);
+//     this.bubbleUp();
+//   }
+
+//   bubbleUp() {
+//     let index = this.heap.length - 1;
+//     let last = this.heap[index];
+
+//     while (index > 0) {
+//       let parentIndex = Math.floor((index - 1) / 2);
+//       if (last >= this.heap[parentIndex]) break;
+//       this.heap[index] = this.heap[parentIndex];
+//       index = parentIndex;
+//     }
+
+//     this.heap[index] = last;
+//   }
+
+//   pop() {
+//     if (this.heap.length === 0) return 0;
+//     if (this.heap.length === 1) return this.heap.pop();
+
+//     let top = this.heap[0];
+//     let last = this.heap.pop();
+//     this.heap[0] = last;
+//     this.bubbleDown();
+//     return top;
+//   }
+
+//   bubbleDown() {
+//     let index = 0;
+//     let length = this.heap.length;
+//     while (true) {
+//       let left = index * 2 + 1;
+//       let right = index * 2 + 2;
+//       let smallest = index;
+
+//       if (left < length && this.heap[left] < this.heap[smallest]) {
+//         smallest = left;
+//       }
+//       if (right < length && this.heap[right] < this.heap[smallest]) {
+//         smallest = right;
+//       }
+
+//       if (smallest === index) break;
+
+//       [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+//       index = smallest;
+//     }
+//   }
+// }
+
+// let n = +input[0];
+// let arr = input.slice(1).map(Number);
+
+// let heap = new MinHeap();
+// let result = 0;
+
+// arr.forEach((v) => heap.push(v));
+
+// while (heap.heap.length > 1) {
+//   let first = heap.pop();
+//   let second = heap.pop();
+//   const total = first + second;
+//   result += total;
+//   heap.push(total);
+// }
+
+// console.log(result);
+
+//1655-가운데를 말해요
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
@@ -518,7 +599,8 @@ class MinHeap {
 
   bubbleDown() {
     let index = 0;
-    let length = this.heap.length;
+    let length = this.heap.length - 1;
+
     while (true) {
       let left = index * 2 + 1;
       let right = index * 2 + 2;
@@ -527,6 +609,7 @@ class MinHeap {
       if (left < length && this.heap[left] < this.heap[smallest]) {
         smallest = left;
       }
+
       if (right < length && this.heap[right] < this.heap[smallest]) {
         smallest = right;
       }
@@ -537,22 +620,53 @@ class MinHeap {
       index = smallest;
     }
   }
+
+  peek() {
+    return this.heap[0];
+  }
+
+  size() {
+    return this.heap.length;
+  }
+}
+
+class MaxHeap extends MinHeap {
+  push(val) {
+    super.push(-val);
+  }
+
+  pop() {
+    return -super.pop();
+  }
+
+  peek() {
+    return -super.peek();
+  }
 }
 
 let n = +input[0];
 let arr = input.slice(1).map(Number);
+let left = new MaxHeap(); // 중간값 이하
+let right = new MinHeap(); // 중간값 초과
+let result = [];
 
-let heap = new MinHeap();
-let result = 0;
+for (let i = 0; i < n; i++) {
+  let num = arr[i];
 
-arr.forEach((v) => heap.push(v));
+  if (left.size() === 0 || num <= left.peek()) {
+    left.push(num);
+  } else {
+    right.push(num);
+  }
 
-while (heap.heap.length > 1) {
-  let first = heap.pop();
-  let second = heap.pop();
-  const total = first + second;
-  result += total;
-  heap.push(total);
+  // 균형 맞추기
+  if (left.size() > right.size() + 1) {
+    right.push(left.pop());
+  } else if (right.size() > left.size()) {
+    left.push(right.pop());
+  }
+
+  result.push(left.peek());
 }
 
-console.log(result);
+console.log(result.join('\n'));
