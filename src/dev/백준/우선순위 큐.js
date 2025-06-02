@@ -671,7 +671,102 @@
 
 // console.log(result.join('\n'));
 
-//
+//1202-보석 도둑
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+class MaxHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  push(val) {
+    this.heap.push(val);
+    this.bubbleUp();
+  }
+
+  bubbleUp() {
+    let index = this.heap.length - 1;
+    const element = this.heap[index];
+    while (index > 0) {
+      let parentIndex = Math.floor((index - 1) / 2);
+      if (element <= this.heap[parentIndex]) break;
+      this.heap[index] = this.heap[parentIndex];
+      index = parentIndex;
+    }
+    this.heap[index] = element;
+  }
+
+  pop() {
+    if (this.heap.length === 0) return null;
+    if (this.heap.length === 1) return this.heap.pop();
+    const top = this.heap[0];
+    const end = this.heap.pop();
+    this.heap[0] = end;
+    this.bubbleDown();
+    return top;
+  }
+
+  bubbleDown() {
+    let index = 0;
+    const length = this.heap.length;
+    const element = this.heap[0];
+
+    while (true) {
+      let left = index * 2 + 1;
+      let right = index * 2 + 2;
+      let swap = null;
+
+      if (left < length) {
+        if (this.heap[left] > element) {
+          swap = left;
+        }
+      }
+
+      if (right < length) {
+        if ((swap === null && this.heap[right] > element) || (swap !== null && this.heap[right] > this.heap[left])) {
+          swap = right;
+        }
+      }
+
+      if (swap === null) break;
+      this.heap[index] = this.heap[swap];
+      index = swap;
+    }
+
+    this.heap[index] = element;
+  }
+
+  size() {
+    return this.heap.length;
+  }
+}
+
+let [n, k] = input[0].split(' ').map(Number);
+let jewels = input.slice(1, n + 1).map((v) => v.split(' ').map(Number));
+let bags = input.slice(n + 1).map(Number);
+
+// 보석 무게 오름차순, 무게 같으면 가격 높은 순 정렬
+jewels.sort((a, b) => a[0] - b[0]);
+bags.sort((a, b) => a - b);
+
+let result = 0;
+let heap = new MaxHeap();
+let j = 0;
+
+for (let i = 0; i < k; i++) {
+  let capacity = bags[i];
+
+  // 현재 가방보다 작거나 같은 무게의 보석을 heap에 가격 기준으로 넣음
+  while (j < n && jewels[j][0] <= capacity) {
+    heap.push(jewels[j][1]); // 가격만 힙에 넣기
+    j++;
+  }
+
+  if (heap.size() > 0) {
+    result += heap.pop(); // 가장 비싼 보석 꺼냄
+  }
+}
+
+console.log(result);
