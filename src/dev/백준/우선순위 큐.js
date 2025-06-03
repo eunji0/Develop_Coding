@@ -681,61 +681,58 @@ class MaxHeap {
     this.heap = [];
   }
 
-  push(val) {
-    this.heap.push(val);
+  push(v) {
+    this.heap.push(v);
     this.bubbleUp();
   }
 
   bubbleUp() {
     let index = this.heap.length - 1;
-    const element = this.heap[index];
+    let last = this.heap[index];
+
     while (index > 0) {
       let parentIndex = Math.floor((index - 1) / 2);
-      if (element <= this.heap[parentIndex]) break;
+      if (last <= this.heap[parentIndex]) break;
       this.heap[index] = this.heap[parentIndex];
       index = parentIndex;
     }
-    this.heap[index] = element;
+
+    this.heap[index] = last;
   }
 
   pop() {
-    if (this.heap.length === 0) return null;
+    if (this.heap.length === 0) return 0;
     if (this.heap.length === 1) return this.heap.pop();
-    const top = this.heap[0];
-    const end = this.heap.pop();
-    this.heap[0] = end;
+
+    let top = this.heap[0];
+    let last = this.heap.pop();
+    this.heap[0] = last;
     this.bubbleDown();
     return top;
   }
 
   bubbleDown() {
     let index = 0;
-    const length = this.heap.length;
-    const element = this.heap[0];
+    let length = this.heap.length;
+    let element = this.heap[0];
 
     while (true) {
       let left = index * 2 + 1;
       let right = index * 2 + 2;
-      let swap = null;
+      let largest = index;
 
-      if (left < length) {
-        if (this.heap[left] > element) {
-          swap = left;
-        }
+      if (left < length && this.heap[left] > this.heap[largest]) {
+        largest = left;
+      }
+      if (right < length && this.heap[right] > this.heap[largest]) {
+        largest = right;
       }
 
-      if (right < length) {
-        if ((swap === null && this.heap[right] > element) || (swap !== null && this.heap[right] > this.heap[left])) {
-          swap = right;
-        }
-      }
+      if (largest === index) break;
 
-      if (swap === null) break;
-      this.heap[index] = this.heap[swap];
-      index = swap;
+      [this.heap[index], this.heap[largest]] = [this.heap[largest], this.heap[index]];
+      index = largest;
     }
-
-    this.heap[index] = element;
   }
 
   size() {
@@ -753,7 +750,7 @@ bags.sort((a, b) => a - b);
 
 let result = 0;
 let heap = new MaxHeap();
-let j = 0;
+let j = 0; //개수 체크용
 
 for (let i = 0; i < k; i++) {
   let capacity = bags[i];
