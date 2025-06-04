@@ -672,66 +672,150 @@
 // console.log(result.join('\n'));
 
 //1202-보석 도둑
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// class MaxHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   push(v) {
+//     this.heap.push(v);
+//     this.bubbleUp();
+//   }
+
+//   bubbleUp() {
+//     let index = this.heap.length - 1;
+//     let last = this.heap[index];
+
+//     while (index > 0) {
+//       let parentIndex = Math.floor((index - 1) / 2);
+//       if (last <= this.heap[parentIndex]) break;
+//       this.heap[index] = this.heap[parentIndex];
+//       index = parentIndex;
+//     }
+
+//     this.heap[index] = last;
+//   }
+
+//   pop() {
+//     if (this.heap.length === 0) return 0;
+//     if (this.heap.length === 1) return this.heap.pop();
+
+//     let top = this.heap[0];
+//     let last = this.heap.pop();
+//     this.heap[0] = last;
+//     this.bubbleDown();
+//     return top;
+//   }
+
+//   bubbleDown() {
+//     let index = 0;
+//     let length = this.heap.length;
+//     let element = this.heap[0];
+
+//     while (true) {
+//       let left = index * 2 + 1;
+//       let right = index * 2 + 2;
+//       let largest = index;
+
+//       if (left < length && this.heap[left] > this.heap[largest]) {
+//         largest = left;
+//       }
+//       if (right < length && this.heap[right] > this.heap[largest]) {
+//         largest = right;
+//       }
+
+//       if (largest === index) break;
+
+//       [this.heap[index], this.heap[largest]] = [this.heap[largest], this.heap[index]];
+//       index = largest;
+//     }
+//   }
+
+//   size() {
+//     return this.heap.length;
+//   }
+// }
+
+// let [n, k] = input[0].split(' ').map(Number);
+// let jewels = input.slice(1, n + 1).map((v) => v.split(' ').map(Number));
+// let bags = input.slice(n + 1).map(Number);
+
+// // 보석 무게 오름차순, 무게 같으면 가격 높은 순 정렬
+// jewels.sort((a, b) => a[0] - b[0]);
+// bags.sort((a, b) => a - b);
+
+// let result = 0;
+// let heap = new MaxHeap();
+// let j = 0; //개수 체크용
+
+// for (let i = 0; i < k; i++) {
+//   let capacity = bags[i];
+
+//   // 현재 가방보다 작거나 같은 무게의 보석을 heap에 가격 기준으로 넣음
+//   while (j < n && jewels[j][0] <= capacity) {
+//     heap.push(jewels[j][1]); // 가격만 힙에 넣기
+//     j++;
+//   }
+
+//   if (heap.size() > 0) {
+//     result += heap.pop(); // 가장 비싼 보석 꺼냄
+//   }
+// }
+
+// console.log(result);
+
+//1766-문제집
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-class MaxHeap {
+class MinHeap {
   constructor() {
     this.heap = [];
   }
 
-  push(v) {
-    this.heap.push(v);
-    this.bubbleUp();
-  }
-
-  bubbleUp() {
-    let index = this.heap.length - 1;
-    let last = this.heap[index];
-
-    while (index > 0) {
-      let parentIndex = Math.floor((index - 1) / 2);
-      if (last <= this.heap[parentIndex]) break;
-      this.heap[index] = this.heap[parentIndex];
-      index = parentIndex;
-    }
-
-    this.heap[index] = last;
+  push(value) {
+    this.heap.push(value);
+    this._heapifyUp();
   }
 
   pop() {
-    if (this.heap.length === 0) return 0;
     if (this.heap.length === 1) return this.heap.pop();
-
-    let top = this.heap[0];
-    let last = this.heap.pop();
-    this.heap[0] = last;
-    this.bubbleDown();
+    const top = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this._heapifyDown();
     return top;
   }
 
-  bubbleDown() {
+  _heapifyUp() {
+    let index = this.heap.length - 1;
+    while (index > 0) {
+      let parent = Math.floor((index - 1) / 2);
+      if (this.heap[parent] <= this.heap[index]) break;
+      [this.heap[parent], this.heap[index]] = [this.heap[index], this.heap[parent]];
+      index = parent;
+    }
+  }
+
+  _heapifyDown() {
     let index = 0;
-    let length = this.heap.length;
-    let element = this.heap[0];
+    const length = this.heap.length;
 
     while (true) {
       let left = index * 2 + 1;
       let right = index * 2 + 2;
-      let largest = index;
+      let smallest = index;
 
-      if (left < length && this.heap[left] > this.heap[largest]) {
-        largest = left;
-      }
-      if (right < length && this.heap[right] > this.heap[largest]) {
-        largest = right;
-      }
+      if (left < length && this.heap[left] < this.heap[smallest]) smallest = left;
+      if (right < length && this.heap[right] < this.heap[smallest]) smallest = right;
+      if (smallest === index) break;
 
-      if (largest === index) break;
-
-      [this.heap[index], this.heap[largest]] = [this.heap[largest], this.heap[index]];
-      index = largest;
+      [this.heap[smallest], this.heap[index]] = [this.heap[index], this.heap[smallest]];
+      index = smallest;
     }
   }
 
@@ -740,30 +824,36 @@ class MaxHeap {
   }
 }
 
-let [n, k] = input[0].split(' ').map(Number);
-let jewels = input.slice(1, n + 1).map((v) => v.split(' ').map(Number));
-let bags = input.slice(n + 1).map(Number);
+let [n, m] = input[0].split(' ').map(Number);
+let graph = Array.from({ length: n + 1 }, () => []);
+let inDegree = Array(n + 1).fill(0);
 
-// 보석 무게 오름차순, 무게 같으면 가격 높은 순 정렬
-jewels.sort((a, b) => a[0] - b[0]);
-bags.sort((a, b) => a - b);
+const heap = new MinHeap();
 
-let result = 0;
-let heap = new MaxHeap();
-let j = 0; //개수 체크용
+for (let i = 1; i <= m; i++) {
+  let [a, b] = input[i].split(' ').map(Number);
+  graph[a].push(b);
+  inDegree[b]++;
+}
 
-for (let i = 0; i < k; i++) {
-  let capacity = bags[i];
-
-  // 현재 가방보다 작거나 같은 무게의 보석을 heap에 가격 기준으로 넣음
-  while (j < n && jewels[j][0] <= capacity) {
-    heap.push(jewels[j][1]); // 가격만 힙에 넣기
-    j++;
-  }
-
-  if (heap.size() > 0) {
-    result += heap.pop(); // 가장 비싼 보석 꺼냄
+for (let i = 1; i <= n; i++) {
+  if (inDegree[i] === 0) {
+    heap.push(i);
   }
 }
 
-console.log(result);
+const result = [];
+
+while (heap.size() > 0) {
+  const cur = heap.pop();
+  result.push(cur);
+
+  for (const next of graph[cur]) {
+    inDegree[next]--;
+    if (inDegree[next] === 0) {
+      heap.push(next);
+    }
+  }
+}
+
+console.log(result.join(' '));
