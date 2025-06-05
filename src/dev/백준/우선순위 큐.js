@@ -769,6 +769,96 @@
 // console.log(result);
 
 //1766-문제집
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   push(value) {
+//     this.heap.push(value);
+//     this._heapifyUp();
+//   }
+
+//   pop() {
+//     if (this.heap.length === 1) return this.heap.pop();
+//     const top = this.heap[0];
+//     this.heap[0] = this.heap.pop();
+//     this._heapifyDown();
+//     return top;
+//   }
+
+//   _heapifyUp() {
+//     let index = this.heap.length - 1;
+//     while (index > 0) {
+//       let parent = Math.floor((index - 1) / 2);
+//       if (this.heap[parent] <= this.heap[index]) break;
+//       [this.heap[parent], this.heap[index]] = [this.heap[index], this.heap[parent]];
+//       index = parent;
+//     }
+//   }
+
+//   _heapifyDown() {
+//     let index = 0;
+//     const length = this.heap.length;
+
+//     while (true) {
+//       let left = index * 2 + 1;
+//       let right = index * 2 + 2;
+//       let smallest = index;
+
+//       if (left < length && this.heap[left] < this.heap[smallest]) smallest = left;
+//       if (right < length && this.heap[right] < this.heap[smallest]) smallest = right;
+//       if (smallest === index) break;
+
+//       [this.heap[smallest], this.heap[index]] = [this.heap[index], this.heap[smallest]];
+//       index = smallest;
+//     }
+//   }
+
+//   size() {
+//     return this.heap.length;
+//   }
+// }
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let graph = Array.from({ length: n + 1 }, () => []);
+// let inDegree = Array(n + 1).fill(0);
+
+// const heap = new MinHeap();
+
+// for (let i = 1; i <= m; i++) {
+//   let [a, b] = input[i].split(' ').map(Number);
+//   graph[a].push(b);
+//   inDegree[b]++;
+// }
+
+// for (let i = 1; i <= n; i++) {
+//   if (inDegree[i] === 0) {
+//     heap.push(i);
+//   }
+// }
+
+// const result = [];
+
+// while (heap.size() > 0) {
+//   const cur = heap.pop();
+//   result.push(cur);
+
+//   for (const next of graph[cur]) {
+//     inDegree[next]--;
+//     if (inDegree[next] === 0) {
+//       heap.push(next);
+//     }
+//   }
+// }
+
+// console.log(result.join(' '));
+
+//13904-과제
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
@@ -780,43 +870,59 @@ class MinHeap {
 
   push(value) {
     this.heap.push(value);
-    this._heapifyUp();
+    this.bubbleUp();
+  }
+
+  bubbleUp() {
+    let index = this.heap.length - 1;
+    let last = this.heap[index];
+
+    while (index > 0) {
+      let parentIndex = Math.floor((index - 1) / 2);
+
+      if (last >= this.heap[parentIndex]) break;
+      this.heap[index] = this.heap[parentIndex];
+      index = parentIndex;
+    }
+
+    this.heap[index] = last;
   }
 
   pop() {
+    if (this.heap.length === 0) return 0;
     if (this.heap.length === 1) return this.heap.pop();
-    const top = this.heap[0];
-    this.heap[0] = this.heap.pop();
-    this._heapifyDown();
+
+    let top = this.heap[0];
+    let last = this.heap.pop();
+    this.heap[0] = last;
+    this.bubbleDown();
     return top;
   }
 
-  _heapifyUp() {
-    let index = this.heap.length - 1;
-    while (index > 0) {
-      let parent = Math.floor((index - 1) / 2);
-      if (this.heap[parent] <= this.heap[index]) break;
-      [this.heap[parent], this.heap[index]] = [this.heap[index], this.heap[parent]];
-      index = parent;
-    }
-  }
-
-  _heapifyDown() {
+  bubbleDown() {
     let index = 0;
-    const length = this.heap.length;
+    let length = this.heap.length;
 
     while (true) {
       let left = index * 2 + 1;
       let right = index * 2 + 2;
-      let smallest = index;
+      let biggest = index;
 
-      if (left < length && this.heap[left] < this.heap[smallest]) smallest = left;
-      if (right < length && this.heap[right] < this.heap[smallest]) smallest = right;
-      if (smallest === index) break;
+      if (left < length && this.heap[left] < this.heap[biggest]) {
+        biggest = left;
+      }
+      if (right < length && this.heap[right] < this.heap[biggest]) {
+        biggest = right;
+      }
 
-      [this.heap[smallest], this.heap[index]] = [this.heap[index], this.heap[smallest]];
-      index = smallest;
+      if (biggest === index) break;
+      [this.heap[index], this.heap[biggest]] = [this.heap[biggest], this.heap[index]];
+      index = biggest;
     }
+  }
+
+  top() {
+    return this.heap[0];
   }
 
   size() {
@@ -824,36 +930,19 @@ class MinHeap {
   }
 }
 
-let [n, m] = input[0].split(' ').map(Number);
-let graph = Array.from({ length: n + 1 }, () => []);
-let inDegree = Array(n + 1).fill(0);
+let n = +input[0];
+let dw = input.slice(1).map((v) => v.split(' ').map(Number));
+dw.sort((a, b) => a[0] - b[0]);
 
-const heap = new MinHeap();
+let heap = new MinHeap();
 
-for (let i = 1; i <= m; i++) {
-  let [a, b] = input[i].split(' ').map(Number);
-  graph[a].push(b);
-  inDegree[b]++;
-}
-
-for (let i = 1; i <= n; i++) {
-  if (inDegree[i] === 0) {
-    heap.push(i);
+for (let [d, w] of dw) {
+  if (heap.size() < d) {
+    heap.push(w);
+  } else if (heap.top() < w) {
+    heap.pop();
+    heap.push(w);
   }
 }
 
-const result = [];
-
-while (heap.size() > 0) {
-  const cur = heap.pop();
-  result.push(cur);
-
-  for (const next of graph[cur]) {
-    inDegree[next]--;
-    if (inDegree[next] === 0) {
-      heap.push(next);
-    }
-  }
-}
-
-console.log(result.join(' '));
+console.log(heap.heap.reduce((a, c) => a + c, 0));
