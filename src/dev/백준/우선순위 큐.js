@@ -863,13 +863,17 @@ const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
+//d는 배열의 길이를 제한하는 키
+//d의 길이를 넘게 되면 제일 작은 수를 뺌
+//제일 작은 수를 빼야 하기 때문에 최소힙을 사용
+
 class MinHeap {
   constructor() {
     this.heap = [];
   }
 
-  push(value) {
-    this.heap.push(value);
+  push(v) {
+    this.heap.push(v);
     this.bubbleUp();
   }
 
@@ -906,18 +910,18 @@ class MinHeap {
     while (true) {
       let left = index * 2 + 1;
       let right = index * 2 + 2;
-      let biggest = index;
+      let smallest = index;
 
-      if (left < length && this.heap[left] < this.heap[biggest]) {
-        biggest = left;
+      if (left < length && this.heap[left] < this.heap[smallest]) {
+        smallest = left;
       }
-      if (right < length && this.heap[right] < this.heap[biggest]) {
-        biggest = right;
+      if (right < length && this.heap[right] < this.heap[smallest]) {
+        smallest = right;
       }
 
-      if (biggest === index) break;
-      [this.heap[index], this.heap[biggest]] = [this.heap[biggest], this.heap[index]];
-      index = biggest;
+      if (index === smallest) break;
+      [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+      index = smallest;
     }
   }
 
@@ -933,7 +937,6 @@ class MinHeap {
 let n = +input[0];
 let dw = input.slice(1).map((v) => v.split(' ').map(Number));
 dw.sort((a, b) => a[0] - b[0]);
-
 let heap = new MinHeap();
 
 for (let [d, w] of dw) {
