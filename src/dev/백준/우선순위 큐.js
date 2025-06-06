@@ -859,70 +859,125 @@
 // console.log(result.join(' '));
 
 //13904-과제
-const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
 //d는 배열의 길이를 제한하는 키
 //d의 길이를 넘게 되면 제일 작은 수를 뺌
 //제일 작은 수를 빼야 하기 때문에 최소힙을 사용
+
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   push(v) {
+//     this.heap.push(v);
+//     this.bubbleUp();
+//   }
+
+//   bubbleUp() {
+//     let index = this.heap.length - 1;
+//     let last = this.heap[index];
+
+//     while (index > 0) {
+//       let parentIndex = Math.floor((index - 1) / 2);
+
+//       if (last >= this.heap[parentIndex]) break;
+//       this.heap[index] = this.heap[parentIndex];
+//       index = parentIndex;
+//     }
+
+//     this.heap[index] = last;
+//   }
+
+//   pop() {
+//     if (this.heap.length === 0) return 0;
+//     if (this.heap.length === 1) return this.heap.pop();
+
+//     let top = this.heap[0];
+//     let last = this.heap.pop();
+//     this.heap[0] = last;
+//     this.bubbleDown();
+//     return top;
+//   }
+
+//   bubbleDown() {
+//     let index = 0;
+//     let length = this.heap.length;
+
+//     while (true) {
+//       let left = index * 2 + 1;
+//       let right = index * 2 + 2;
+//       let smallest = index;
+
+//       if (left < length && this.heap[left] < this.heap[smallest]) {
+//         smallest = left;
+//       }
+//       if (right < length && this.heap[right] < this.heap[smallest]) {
+//         smallest = right;
+//       }
+
+//       if (index === smallest) break;
+//       [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+//       index = smallest;
+//     }
+//   }
+
+//   top() {
+//     return this.heap[0];
+//   }
+
+//   size() {
+//     return this.heap.length;
+//   }
+// }
+
+// let n = +input[0];
+// let dw = input.slice(1).map((v) => v.split(' ').map(Number));
+// dw.sort((a, b) => a[0] - b[0]);
+// let heap = new MinHeap();
+
+// for (let [d, w] of dw) {
+//   if (heap.size() < d) {
+//     heap.push(w);
+//   } else if (heap.top() < w) {
+//     heap.pop();
+//     heap.push(w);
+//   }
+// }
+
+// console.log(heap.heap.reduce((a, c) => a + c, 0));
+
+//2696-중앙값 구하기
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+//홀수이면 sort() 오름차순 정렬 후 중앙값 출력
+//짝수이면 push()
+//출력은 Math.floor(m/2)+1
+//중앙값 출력
 
 class MinHeap {
   constructor() {
     this.heap = [];
   }
 
-  push(v) {
-    this.heap.push(v);
-    this.bubbleUp();
-  }
-
-  bubbleUp() {
-    let index = this.heap.length - 1;
-    let last = this.heap[index];
-
-    while (index > 0) {
-      let parentIndex = Math.floor((index - 1) / 2);
-
-      if (last >= this.heap[parentIndex]) break;
-      this.heap[index] = this.heap[parentIndex];
-      index = parentIndex;
-    }
-
-    this.heap[index] = last;
+  push(val) {
+    this.heap.push(val);
+    this._bubbleUp();
   }
 
   pop() {
-    if (this.heap.length === 0) return 0;
-    if (this.heap.length === 1) return this.heap.pop();
-
-    let top = this.heap[0];
-    let last = this.heap.pop();
-    this.heap[0] = last;
-    this.bubbleDown();
-    return top;
-  }
-
-  bubbleDown() {
-    let index = 0;
-    let length = this.heap.length;
-
-    while (true) {
-      let left = index * 2 + 1;
-      let right = index * 2 + 2;
-      let smallest = index;
-
-      if (left < length && this.heap[left] < this.heap[smallest]) {
-        smallest = left;
-      }
-      if (right < length && this.heap[right] < this.heap[smallest]) {
-        smallest = right;
-      }
-
-      if (index === smallest) break;
-      [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
-      index = smallest;
+    const top = this.heap[0];
+    const end = this.heap.pop();
+    if (this.heap.length) {
+      this.heap[0] = end;
+      this._bubbleDown();
     }
+    return top;
   }
 
   top() {
@@ -932,20 +987,100 @@ class MinHeap {
   size() {
     return this.heap.length;
   }
-}
 
-let n = +input[0];
-let dw = input.slice(1).map((v) => v.split(' ').map(Number));
-dw.sort((a, b) => a[0] - b[0]);
-let heap = new MinHeap();
+  _bubbleUp() {
+    let idx = this.heap.length - 1;
+    const el = this.heap[idx];
+    while (idx > 0) {
+      const parentIdx = Math.floor((idx - 1) / 2);
+      if (this.heap[parentIdx] <= el) break;
+      this.heap[idx] = this.heap[parentIdx];
+      idx = parentIdx;
+    }
+    this.heap[idx] = el;
+  }
 
-for (let [d, w] of dw) {
-  if (heap.size() < d) {
-    heap.push(w);
-  } else if (heap.top() < w) {
-    heap.pop();
-    heap.push(w);
+  _bubbleDown() {
+    let idx = 0;
+    const length = this.heap.length;
+    const el = this.heap[0];
+    while (true) {
+      let leftIdx = 2 * idx + 1;
+      let rightIdx = 2 * idx + 2;
+      let smallest = idx;
+
+      if (leftIdx < length && this.heap[leftIdx] < this.heap[smallest]) {
+        smallest = leftIdx;
+      }
+      if (rightIdx < length && this.heap[rightIdx] < this.heap[smallest]) {
+        smallest = rightIdx;
+      }
+
+      if (smallest === idx) break;
+
+      this.heap[idx] = this.heap[smallest];
+      idx = smallest;
+    }
+    this.heap[idx] = el;
   }
 }
 
-console.log(heap.heap.reduce((a, c) => a + c, 0));
+class MaxHeap extends MinHeap {
+  push(val) {
+    super.push(-val);
+  }
+
+  pop() {
+    return -super.pop();
+  }
+
+  top() {
+    return -super.top();
+  }
+}
+
+let idx = 0;
+let t = +input[idx++];
+let output = [];
+
+while (t--) {
+  let m = +input[idx++];
+  let arr = [];
+
+  while (arr.length < m) {
+    arr = arr.concat(input[idx++].split(' ').map(Number));
+  }
+
+  let left = new MaxHeap(); // 작은 값 (왼쪽)
+  let right = new MinHeap(); // 큰 값 (오른쪽)
+  let medians = [];
+
+  for (let i = 0; i < m; i++) {
+    const num = arr[i];
+
+    if (left.size() === right.size()) {
+      left.push(num);
+    } else {
+      right.push(num);
+    }
+
+    // 균형 유지
+    if (right.size() && left.top() > right.top()) {
+      const l = left.pop();
+      const r = right.pop();
+      left.push(r);
+      right.push(l);
+    }
+
+    if (i % 2 === 0) {
+      medians.push(left.top());
+    }
+  }
+
+  output.push(medians.length.toString());
+  for (let i = 0; i < medians.length; i += 10) {
+    output.push(medians.slice(i, i + 10).join(' '));
+  }
+}
+
+console.log(output.join('\n'));
