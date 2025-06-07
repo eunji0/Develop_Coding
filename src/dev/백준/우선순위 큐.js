@@ -960,126 +960,96 @@ const input = fs.readFileSync(filePath).toString().trim().split('\n');
 //출력은 Math.floor(m/2)+1
 //중앙값 출력
 
-class MinHeap {
-  constructor() {
-    this.heap = [];
-  }
+let idx = 0;
+const T = parseInt(input[idx++]);
 
+class Heap {
+  constructor(compare) {
+    this.data = [];
+    this.compare = compare;
+  }
+  size() {
+    return this.data.length;
+  }
+  peek() {
+    return this.data[0];
+  }
   push(val) {
-    this.heap.push(val);
-    this._bubbleUp();
+    this.data.push(val);
+    this._heapifyUp();
   }
-
   pop() {
-    const top = this.heap[0];
-    const end = this.heap.pop();
-    if (this.heap.length) {
-      this.heap[0] = end;
-      this._bubbleDown();
+    const top = this.data[0];
+    const last = this.data.pop();
+    if (this.data.length > 0) {
+      this.data[0] = last;
+      this._heapifyDown();
     }
     return top;
   }
-
-  top() {
-    return this.heap[0];
-  }
-
-  size() {
-    return this.heap.length;
-  }
-
-  _bubbleUp() {
-    let idx = this.heap.length - 1;
-    const el = this.heap[idx];
-    while (idx > 0) {
-      const parentIdx = Math.floor((idx - 1) / 2);
-      if (this.heap[parentIdx] <= el) break;
-      this.heap[idx] = this.heap[parentIdx];
-      idx = parentIdx;
+  _heapifyUp() {
+    let i = this.data.length - 1;
+    while (i > 0) {
+      let parent = Math.floor((i - 1) / 2);
+      if (this.compare(this.data[i], this.data[parent])) {
+        [this.data[i], this.data[parent]] = [this.data[parent], this.data[i]];
+        i = parent;
+      } else break;
     }
-    this.heap[idx] = el;
   }
-
-  _bubbleDown() {
-    let idx = 0;
-    const length = this.heap.length;
-    const el = this.heap[0];
-    while (true) {
-      let leftIdx = 2 * idx + 1;
-      let rightIdx = 2 * idx + 2;
-      let smallest = idx;
-
-      if (leftIdx < length && this.heap[leftIdx] < this.heap[smallest]) {
-        smallest = leftIdx;
+  _heapifyDown() {
+    let i = 0;
+    while (2 * i + 1 < this.data.length) {
+      let left = 2 * i + 1;
+      let right = 2 * i + 2;
+      let best = left;
+      if (right < this.data.length && this.compare(this.data[right], this.data[left])) {
+        best = right;
       }
-      if (rightIdx < length && this.heap[rightIdx] < this.heap[smallest]) {
-        smallest = rightIdx;
-      }
-
-      if (smallest === idx) break;
-
-      this.heap[idx] = this.heap[smallest];
-      idx = smallest;
+      if (this.compare(this.data[best], this.data[i])) {
+        [this.data[i], this.data[best]] = [this.data[best], this.data[i]];
+        i = best;
+      } else break;
     }
-    this.heap[idx] = el;
   }
 }
 
-class MaxHeap extends MinHeap {
-  push(val) {
-    super.push(-val);
-  }
+const output = [];
 
-  pop() {
-    return -super.pop();
-  }
+for (let t = 0; t < T; t++) {
+  const M = parseInt(input[idx++]);
+  const numbers = input.slice(idx, idx + M).map(Number);
+  idx += M;
 
-  top() {
-    return -super.top();
-  }
-}
+  const maxHeap = new Heap((a, b) => a > b); // left
+  const minHeap = new Heap((a, b) => a < b); // right
 
-let idx = 0;
-let t = +input[idx++];
-let output = [];
+  const result = [];
 
-while (t--) {
-  let m = +input[idx++];
-  let arr = [];
+  for (let i = 0; i < M; i++) {
+    const num = numbers[i];
 
-  while (arr.length < m) {
-    arr = arr.concat(input[idx++].split(' ').map(Number));
-  }
-
-  let left = new MaxHeap(); // 작은 값 (왼쪽)
-  let right = new MinHeap(); // 큰 값 (오른쪽)
-  let medians = [];
-
-  for (let i = 0; i < m; i++) {
-    const num = arr[i];
-
-    if (left.size() === right.size()) {
-      left.push(num);
+    if (maxHeap.size() === minHeap.size()) {
+      maxHeap.push(num);
     } else {
-      right.push(num);
+      minHeap.push(num);
     }
 
-    // 균형 유지
-    if (right.size() && left.top() > right.top()) {
-      const l = left.pop();
-      const r = right.pop();
-      left.push(r);
-      right.push(l);
+    if (minHeap.size() > 0 && maxHeap.peek() > minHeap.peek()) {
+      const maxTop = maxHeap.pop();
+      const minTop = minHeap.pop();
+      maxHeap.push(minTop);
+      minHeap.push(maxTop);
     }
 
     if (i % 2 === 0) {
-      medians.push(left.top());
+      result.push(maxHeap.peek());
     }
   }
 
-  output.push(medians.length.toString());
-  for (let i = 0; i < medians.length; i += 10) {
-    output.push(medians.slice(i, i + 10).join(' '));
+  output.push(`${result.length}`);
+  for (let i = 0; i < result.length; i += 10) {
+    output.push(result.slice(i, i + 10).join(' '));
   }
 }
 
