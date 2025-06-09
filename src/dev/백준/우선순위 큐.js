@@ -950,107 +950,90 @@
 
 // console.log(heap.heap.reduce((a, c) => a + c, 0));
 
-//2696-중앙값 구하기
+//14235-크리스마스 선물
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-//홀수이면 sort() 오름차순 정렬 후 중앙값 출력
-//짝수이면 push()
-//출력은 Math.floor(m/2)+1
-//중앙값 출력
+class MaxHeap {
+  constructor() {
+    this.heap = [];
+  }
 
-let idx = 0;
-const T = parseInt(input[idx++]);
+  push(v) {
+    this.heap.push(v);
+    this.bubbleUp();
+  }
 
-class Heap {
-  constructor(compare) {
-    this.data = [];
-    this.compare = compare;
-  }
-  size() {
-    return this.data.length;
-  }
-  peek() {
-    return this.data[0];
-  }
-  push(val) {
-    this.data.push(val);
-    this._heapifyUp();
-  }
-  pop() {
-    const top = this.data[0];
-    const last = this.data.pop();
-    if (this.data.length > 0) {
-      this.data[0] = last;
-      this._heapifyDown();
+  bubbleUp() {
+    let index = this.heap.length - 1;
+    let last = this.heap[index];
+
+    while (index > 0) {
+      let parentIndex = Math.floor((index - 1) / 2);
+      if (last <= this.heap[parentIndex]) break;
+
+      this.heap[index] = this.heap[parentIndex];
+      index = parentIndex;
     }
+
+    this.heap[index] = last;
+  }
+
+  pop() {
+    if (this.heap.length === 0) return -1;
+    if (this.heap.length === 1) return this.heap.pop();
+
+    let top = this.heap[0];
+    let last = this.heap.pop();
+    this.heap[0] = last;
+    this.bubbleDown();
     return top;
   }
-  _heapifyUp() {
-    let i = this.data.length - 1;
-    while (i > 0) {
-      let parent = Math.floor((i - 1) / 2);
-      if (this.compare(this.data[i], this.data[parent])) {
-        [this.data[i], this.data[parent]] = [this.data[parent], this.data[i]];
-        i = parent;
-      } else break;
-    }
-  }
-  _heapifyDown() {
-    let i = 0;
-    while (2 * i + 1 < this.data.length) {
-      let left = 2 * i + 1;
-      let right = 2 * i + 2;
-      let best = left;
-      if (right < this.data.length && this.compare(this.data[right], this.data[left])) {
-        best = right;
+
+  bubbleDown() {
+    let index = 0;
+    let length = this.heap.length;
+
+    while (true) {
+      let left = index * 2 + 1;
+      let right = index * 2 + 2;
+      let biggest = index;
+
+      if (left < length && this.heap[left] > this.heap[biggest]) {
+        biggest = left;
       }
-      if (this.compare(this.data[best], this.data[i])) {
-        [this.data[i], this.data[best]] = [this.data[best], this.data[i]];
-        i = best;
-      } else break;
+      if (right < length && this.heap[right] > this.heap[biggest]) {
+        biggest = right;
+      }
+
+      if (biggest === index) break;
+
+      [this.heap[index], this.heap[biggest]] = [this.heap[biggest], this.heap[index]];
+      index = biggest;
     }
+  }
+
+  top() {
+    return this.heap[0];
   }
 }
 
-const output = [];
+let n = +input[0];
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let result = [];
+let heap = new MaxHeap();
 
-for (let t = 0; t < T; t++) {
-  const M = parseInt(input[idx++]);
-  const numbers = input.slice(idx, idx + M).map(Number);
-  idx += M;
+arr.forEach((v) => {
+  let a = v[0];
 
-  const maxHeap = new Heap((a, b) => a > b); // left
-  const minHeap = new Heap((a, b) => a < b); // right
-
-  const result = [];
-
-  for (let i = 0; i < M; i++) {
-    const num = numbers[i];
-
-    if (maxHeap.size() === minHeap.size()) {
-      maxHeap.push(num);
-    } else {
-      minHeap.push(num);
-    }
-
-    if (minHeap.size() > 0 && maxHeap.peek() > minHeap.peek()) {
-      const maxTop = maxHeap.pop();
-      const minTop = minHeap.pop();
-      maxHeap.push(minTop);
-      minHeap.push(maxTop);
-    }
-
-    if (i % 2 === 0) {
-      result.push(maxHeap.peek());
+  if (a === 0) {
+    result.push(heap.pop());
+  } else {
+    for (let i = 1; i <= a; i++) {
+      heap.push(v[i]);
     }
   }
+});
 
-  output.push(`${result.length}`);
-  for (let i = 0; i < result.length; i += 10) {
-    output.push(result.slice(i, i + 10).join(' '));
-  }
-}
-
-console.log(output.join('\n'));
+console.log(result.join('\n'));
