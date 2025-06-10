@@ -1039,6 +1039,124 @@
 // console.log(result.join('\n'));
 
 //238432-콘센트
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   push(v) {
+//     this.heap.push(v);
+//     this.bubbleUp();
+//   }
+
+//   bubbleUp() {
+//     let index = this.heap.length - 1;
+//     let last = this.heap[index];
+
+//     while (index > 0) {
+//       let parentIndex = Math.floor((index - 1) / 2);
+
+//       if (last >= this.heap[parentIndex]) break;
+//       this.heap[index] = this.heap[parentIndex];
+//       index = parentIndex;
+//     }
+
+//     this.heap[index] = last;
+//   }
+
+//   pop() {
+//     if (this.heap.length === 0) return 0;
+//     if (this.heap.length === 1) return this.heap.pop();
+
+//     let top = this.heap[0];
+//     let last = this.heap.pop();
+//     this.heap[0] = last;
+//     this.bubbleDown();
+//     return top;
+//   }
+
+//   bubbleDown() {
+//     let index = 0;
+//     let length = this.heap.length;
+
+//     while (true) {
+//       let left = index * 2 + 1;
+//       let right = index * 2 + 2;
+//       let smallest = index;
+
+//       if (left < length && this.heap[left] < this.heap[smallest]) {
+//         smallest = left;
+//       }
+//       if (right < length && this.heap[right] < this.heap[smallest]) {
+//         smallest = right;
+//       }
+
+//       if (index === smallest) break;
+//       [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+//       index = smallest;
+//     }
+//   }
+
+//   getMax() {
+//     return Math.max(...this.heap);
+//   }
+// }
+
+// const [N, M] = input[0].split(' ').map(Number);
+// const times = input[1]
+//   .split(' ')
+//   .map(Number)
+//   .sort((a, b) => b - a);
+
+// const heap = new MinHeap();
+// for (let i = 0; i < M; i++) heap.push(0);
+
+// for (let t of times) {
+//   let minTime = heap.pop();
+//   heap.push(minTime + t);
+// }
+
+// console.log(heap.getMax());
+
+//5464-주차장
+//비어있는 공간이 있는지 확인
+//비어있지않다면 빈공간이 생길때까지 웨이팅
+//차량이 나가 비어있다면 번호가 가장 작은 주차 공간에 주차
+//대기장소는 큐, 먼저 대기한 차량부터 주차
+//주차료는 차랑의 무게에다 주차 공간마다 따로 책정된 단위 무게당 요금을 곱한 가격
+
+// 예제 1
+// 1:200 2:100 3:300 4:800 차량 무게
+// 1:2 2:3 3:5 주차자리 단위 무게
+
+// 3이들어간다 빈자리2 2(1번자리)*300
+// 2가들어간다 빈자리 1 2(1번자리)*300+3(2번자리)*100
+// -3이 나온다 빈자리 2
+// 1이 들어간다 빈자리 1 번호가 작은 자리에 넣기 위해 +2(1번자리)*200
+// 4가 들어간다 빈자리 0 +5(3번자리)*800
+// 4가 나온다 빈자리 1
+// 2가 나온다 빈자리 2
+// 1이 나온다 빈자리 3
+
+// 예제2
+// 1:100 2:500 3:1000 4:2000 차량 무게
+// 1:5 2:2 주차자리 단위 무게
+
+// 3이 들어간다. 1번자리 5*1000 1:5:true 2:2:false
+// 1이 들어간다. 2번자리 +2*100 1:5:true 2:2:true
+// 2 자리가 없어 큐에 삽입
+// 4 큐에 삽입
+// 1이 나온다 1:5:false 2:2:true
+// 큐가 비어있지 않아 2가 들어간다. 2번자리 +2*500 1:5:true 2:2:true
+// 3이 나온다. 1:5:false 2:2:true
+// 4가 들어간다. 1:5:true 2:2:true 1번 자리 5*2000
+// 2가 나온다
+// 4가 나온다
+
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
@@ -1100,24 +1218,52 @@ class MinHeap {
       index = smallest;
     }
   }
-
-  getMax() {
-    return Math.max(...this.heap);
+  size() {
+    return this.heap.length;
   }
 }
 
-const [N, M] = input[0].split(' ').map(Number);
-const times = input[1]
-  .split(' ')
-  .map(Number)
-  .sort((a, b) => b - a);
+let [n, m] = input[0].split(' ').map(Number);
+let prices = input.slice(1, n + 1).map(Number);
+let weights = input.slice(n + 1, n + m + 1).map(Number);
+let orders = input.slice(n + m + 1).map(Number);
 
-const heap = new MinHeap();
-for (let i = 0; i < M; i++) heap.push(0);
+let parking = Array(n).fill(null); // n개의 주차 공간을 null로 초기화 (빈자리 표시)
+let carToParking = Array(m + 1).fill(null); // 각 차량의 주차 위치를 기록할 배열 (1번 차량부터 시작하므로 m+1 크기)
+let heap = new MinHeap();
+let queue = [];
+for (let i = 0; i < n; i++) heap.push(i); //처음엔 모두가 빈자리
+let total = 0;
 
-for (let t of times) {
-  let minTime = heap.pop();
-  heap.push(minTime + t);
+for (let ord of orders) {
+  if (ord > 0) {
+    //차량이 들어가야 한다면
+    if (heap.size() > 0) {
+      //빈자리가 있다면
+      let spot = heap.pop(); //제일 번호가 작은 자리를 꺼냄
+      parking[spot] = ord; // 해당 공간에 차량 번호를 기록
+      carToParking[ord] = spot; // 차량 번호에 해당하는 주차 위치 저장
+      total += prices[spot] * weights[ord - 1]; //해당 자리 가격*차량 무게
+    } else {
+      //빈자리가 없다면 대기 큐에 넣기
+      queue.push(ord);
+    }
+  } else {
+    //차량이 나와야 한다면
+    let car = -ord; //차량번호 양수화
+    let spot = carToParking[car]; //해당 자리 가져오기
+    parking[spot] = null; //빈자리로 표시
+    heap.push(spot); //빈자리 힙에 넣기기
+
+    if (queue.length > 0) {
+      //대기하는 차가 있다면
+      let waitingCar = queue.shift(); //제일 앞에 있는 차 꺼냄
+      let newSpot = heap.pop(); //빈자리 꺼냄
+      parking[spot] = waitingCar;
+      carToParking[waitingCar] = newSpot;
+      total += prices[newSpot] * weights[waitingCar - 1];
+    }
+  }
 }
 
-console.log(heap.getMax());
+console.log(total);
