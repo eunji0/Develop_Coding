@@ -64,3 +64,89 @@ function solution(friends, gifts) {
 
   return Math.max(...result);
 }
+
+//도넛과 막대 그래프
+//출력: [생성한 정점의 번호, 도넛 모양 그래프의 수, 막대 모양 그래프의 수, 8자 모양 그래프의 수]
+//생성한 정점의 번호 -> 들어오는 게 없고 나가는 화살표가 있는 것
+//그 정점이 생성되기전 그래프들의 수
+//그래프를 정점의 개수만큼 생성
+//for (let [from, to] of edges)로 그래프 정리
+//bfs로 해당 정점 별 연결 횟수 return
+//해당 연결횟수가 n-1,n,2n+2에 해당하는 인덱스 answer[]++
+
+const bfs = (n) => {
+  visited[n] = true;
+  let queue = [n];
+  let count = 1;
+
+  while (queue.length) {
+    let start = queue.shift();
+
+    for (let next of graph[start]) {
+      if (!visited[next]) {
+        visited[next] = true;
+        queue.push(next);
+      }
+    }
+  }
+
+  return count;
+};
+
+function solution(edges) {
+  var answer = [];
+  let n = Math.max(...edges.flat());
+  let inDegree = Array(n + 1).fill(0);
+  let outDegree = Array(n + 1).fill(0);
+  let graph = Array.from({ length: n + 1 }, () => []);
+
+  for (let [from, to] of edges) {
+    graph[from].push(to);
+    outDegree[from]++;
+    inDegree[to]++;
+  }
+
+  //생성된 쟁점
+  let point = -1;
+
+  for (let i = 1; i <= n; i++) {
+    if (inDegree[i] === 0 && outDegree[i] > 1) {
+      point = i;
+      break;
+    }
+  }
+
+  const visited = Array(n + 1).fill(false);
+  const result = [point, 0, 0, 0]; // [생성된 정점, 도넛, 막대, 8자]
+
+  // 그래프 탐색 및 분류
+  for (let next of graph[point]) {
+    if (visited[next]) continue;
+
+    const queue = [next];
+    const localVisited = new Set();
+    let cycleCount = 0;
+    let edgeCount = 0;
+
+    while (queue.length) {
+      const cur = queue.pop();
+      if (visited[cur]) continue;
+      visited[cur] = true;
+      localVisited.add(cur);
+
+      for (let nxt of graph[cur]) {
+        edgeCount++;
+        if (localVisited.has(nxt)) cycleCount++;
+        if (!visited[nxt]) queue.push(nxt);
+      }
+    }
+
+    if (cycleCount === 0)
+      result[2]++; // 막대
+    else if (cycleCount === 2)
+      result[3]++; // 8자
+    else result[1]++; // 도넛
+  }
+
+  return result;
+}
