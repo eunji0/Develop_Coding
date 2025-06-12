@@ -150,3 +150,34 @@ function solution(edges) {
 
   return result;
 }
+
+//산 모양 타일링
+
+//문제 정리
+// 정삼각형 2n+1개를 이어붙여 윗변의 길이가 n, 아랫변의 길이가 n+1인 사다리꼴
+// 정삼각형타일과 마름모타일(정삼각형타일 2개)로 빈 곳이 없도록 채움
+// 사다리꼴의 윗변의 길이를 나타내는 정수 n
+// 사다리꼴 윗변에 붙인 정삼각형을 나타내는 1차원 정수 배열 tops
+// return 10007(DIV)로 나눈 나머지
+
+function solution(n, tops) {
+  // n번째 삼각형이 case 0 ~ 2일 때, n번째까지의 누적 경우의 수 배열
+  const case0to2 = Array(n).fill(1);
+  // n번째 삼각형이 case 3일 때, n번째까지의 누적 경우의 수 배열
+  const case3 = Array(n).fill(1);
+  let DIV = 10007;
+
+  // 첫 번째 삼각형에서 가능한 case의 개수
+  case0to2[0] = tops[0] ? 3 : 2;
+  for (let i = 1; i < n; i++) {
+    if (tops[i]) {
+      case0to2[i] = (case0to2[i - 1] * 3 + case3[i - 1] * 2) % DIV;
+    } else {
+      case0to2[i] = (case0to2[i - 1] * 2 + case3[i - 1]) % DIV;
+    }
+    // case 3의 경우, 삼각형 존재여부와 관계없이 동일
+    case3[i] = (case0to2[i - 1] + case3[i - 1]) % DIV;
+  }
+  //  현재 삼각형이 case 0 ~ 2인 누적 경우의 수 + case 3인 누적 경우의 수
+  return (case0to2[n - 1] + case3[n - 1]) % DIV;
+}
