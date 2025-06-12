@@ -181,3 +181,104 @@ function solution(n, tops) {
   //  현재 삼각형이 case 0 ~ 2인 누적 경우의 수 + case 3인 누적 경우의 수
   return (case0to2[n - 1] + case3[n - 1]) % DIV;
 }
+
+//주사위 고르기
+
+//문제정리
+//6개 면의 주사위에 1-n까지의 수가 적혀있는dice배열들
+//a와 b 반반씩 가져감
+//a의 선택에 의해 나머지를 b가 가지게 됨
+//a가 승리할 확률이 높아지도록 주사위 선택
+
+//풀이 접근
+// 먼저 A가 어떤 주사위를 선택할 건지, A의 가능한 조합을 모두 구한다. 그에 맞춰 나머지로 B가 선택한 주사위 들의 조합을 구한다.
+// 그다음 선택한 주사위들로 구할 수 있는 A와 B의 합들을 구한다.
+// 그 다음 그 둘의 합을 비교해 A가 이길 확률들을 계산해야한다
+
+//a의 가능한 조합들 생성
+const getSums = (dice, dices, diceSize) => {
+  const sums = [];
+
+  const calSums = (count, sum) => {
+    if (count === diceSize) {
+      sums.push(sum);
+      return;
+    }
+
+    for (let i = 0; i < 6; i++) {
+      calSums(count + 1, sum + dice[dices[count]][i]);
+    }
+  };
+
+  calSums(0, 0);
+
+  return sums.sort((a, b) => a - b);
+};
+
+const getCombinations = (diceNums, diceSize) => {
+  let results = [];
+
+  //크기가 1이라면 배열로 만들어서 그냥 return
+  if (diceSize === 1) {
+    return diceNums.map((v) => [v]);
+  }
+  diceNums.forEach((one, index, arr) => {
+    let rest = arr.slice(index + 1);
+    let combination = getCombinations(rest, diceSize - 1);
+    let merge = combination.map((v) => [one, ...v]);
+    results.push(...merge);
+  });
+
+  return results;
+};
+
+const countWins = (aSums, bSums) => {
+  let winCount = 0;
+  let bLen = bSums.length;
+
+  // bSums는 정렬되어 있으므로 이분 탐색으로 aSum보다 작은 값의 개수 찾기
+  for (let a of aSums) {
+    let left = 0;
+    let right = bLen;
+    while (left < right) {
+      let mid = Math.floor((left + right) / 2);
+      if (bSums[mid] < a) {
+        left = mid + 1;
+      } else {
+        right = mid;
+      }
+    }
+    winCount += left; // a가 이기는 경우의 수
+  }
+
+  return winCount;
+};
+
+function solution(dice) {
+  const n = dice.length;
+  const diceNums = Array(n)
+    .fill(0)
+    .map((_, i) => i);
+
+  const half = n / 2;
+  const aDicesList = getCombinations(diceNums, half);
+  const bDicesList = aDicesList.map((aCombo) => diceNums.filter((i) => !aCombo.includes(i)));
+
+  let maxWin = -1;
+  let bestA = [];
+
+  aDicesList.forEach((aCombo, i) => {
+    const bCombo = bDicesList[i];
+    const aSums = getSums(dice, aCombo, half);
+    const bSums = getSums(dice, bCombo, half);
+    const wins = countWins(aSums, bSums);
+
+    if (wins > maxWin) {
+      maxWin = wins;
+      bestA = aCombo;
+    }
+  });
+
+  // 주사위 번호를 1부터 시작하므로 +1
+  return bestA.map((i) => i + 1).sort((a, b) => a - b);
+}
