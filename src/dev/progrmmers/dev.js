@@ -6079,3 +6079,26 @@ function solution(friends, gifts) {
 
   return Math.max(...nextMonth);
 }
+
+//달리기 경주
+function solution(players, callings) {
+  const nameToIndex = new Map();
+  players.forEach((name, idx) => {
+    nameToIndex.set(name, idx);
+  });
+
+  callings.forEach((name) => {
+    const currentIndex = nameToIndex.get(name);
+    const frontIndex = currentIndex - 1;
+    const frontPlayer = players[frontIndex];
+
+    // 자리 바꾸기
+    [players[frontIndex], players[currentIndex]] = [players[currentIndex], players[frontIndex]];
+
+    // Map도 갱신
+    nameToIndex.set(name, frontIndex);
+    nameToIndex.set(frontPlayer, currentIndex);
+  });
+
+  return players;
+}
