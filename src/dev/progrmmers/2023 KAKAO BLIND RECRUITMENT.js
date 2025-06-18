@@ -99,3 +99,66 @@ function solution(users, emoticons) {
   dfs(0, []);
   return [maxJoin, Math.floor(maxProfit)];
 }
+
+//미로 탈출 명령어
+
+//문제정리
+//미로탈출조건
+//격자의 바깥으로 나갈 수 없음
+//(x, y)에서 (r, c)까지 이동하는 거리가 총 k
+//- 같은 격자를 두 번 이상 방문해도 된다
+// //문자열이 사전 순으로 가장 빠른 경로로 탈출
+// l: 왼쪽으로 한 칸 이동
+// r: 오른쪽으로 한 칸 이동
+// u: 위쪽으로 한 칸 이동
+// d: 아래쪽으로 한 칸 이동
+//.은 빈 공간, S는 출발 지점, E는 탈출 지점
+//사전 순으로 빠른 경로 return
+//단, 위 조건대로 미로를 탈출할 수 없는 경우 "impossible"을 return
+
+//풀이접근
+//최단거리를 구해야 하는것이 아닌 k만큼의 거리로 경로 설정
+//입력들로 map 만들기(출발지점, 도착지점 표시)
+//dfs 거리를 start부터 end까지 삽입channels.length = k이면 result삽입
+//k만큼 거리의 모든 경로를 모음 kOutput = []
+//kOutput이 빈배열이라면 'impossilbe' return
+//사전순으로 정렬 .sort((a, b)=>a-b)
+
+function solution(n, m, x, y, r, c, k) {
+  const dir = [
+    [1, 0, 'd'], // 아래
+    [0, -1, 'l'], // 왼쪽
+    [0, 1, 'r'], // 오른쪽
+    [-1, 0, 'u'], // 위
+  ];
+
+  let answer = 'impossible';
+  let found = false;
+
+  const isValid = (nx, ny) => nx >= 1 && nx <= n && ny >= 1 && ny <= m;
+
+  const dfs = (cx, cy, path, depth) => {
+    if (found) return;
+    let dist = Math.abs(cx - r) + Math.abs(cy - c);
+    let remain = k - depth;
+
+    if (dist > remain || (remain - dist) % 2 !== 0) return;
+
+    if (depth === k && cx === r && cy === c) {
+      answer = path;
+      found = true;
+      return;
+    }
+
+    for (let [dx, dy, dChar] of dir) {
+      const nx = cx + dx;
+      const ny = cy + dy;
+      if (isValid(nx, ny)) {
+        dfs(nx, ny, path + dChar, depth + 1);
+      }
+    }
+  };
+
+  dfs(x, y, '', 0);
+  return answer;
+}
