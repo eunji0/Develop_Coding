@@ -204,3 +204,68 @@ function solution(cap, n, deliveries, pickups) {
 
   return answer;
 }
+
+//표 병합
+
+//문제 정리
+//"UPDATE r c value"
+// ->(r, c) 위치의 값을 value로 바꿈
+//"UPDATE value1 value2"
+//->value1을 값으로 가지고 있는 모든 셀을 value2로
+//"MERGE r1 c1 r2 c2"
+//->(r1, c1) 위치의 셀과 (r2, c2) 위치의 셀을 선택하여 병합
+// 두 셀 중 한 셀이 값을 가지고 있을 경우 병합된 셀은 그 값을 갖게 됨
+// 두 셀 모두 값을 가지고 있을 경우 병합된 셀은 (r1, c1) 위치의 셀 값을 갖게 됨
+// 이후 (r1, c1) 와 (r2, c2) 중 어느 위치를 선택하여도 병합된 셀로 접근.
+//"UNMERGE r c"
+//->해당 셀의 모든 병합을 해제
+//->병합을 해제하기 전 셀이 값을 가지고 있었을 경우 (r, c) 위치의 셀이 그 값을 갖게 됨
+//"PRINT r c"
+//->(r, c) 위치의 셀을 선택하여 셀의 값을 출력
+//->  비어있을 경우 "EMPTY"
+
+//풀이 접근
+//map을 만들어야 함
+//update 중 maxR과 maxC를 찾아 map 만들기
+//forEach로 update r c에 value값 넣기
+//나머지도 조건에 맞춰 입출력
+
+function solution(commands) {
+  commands = commands.map((v) => v.split(' '));
+  let maxR = 0,
+    maxC = 0;
+  commands.forEach((v) => {
+    if (v[0] === 'UPDATE' && v.length === 4) {
+      let [command, r, c, val] = v;
+      maxR = Math.max(maxR, +r);
+      maxC = Math.max(maxC, +c);
+    }
+  });
+
+  let map = Array.from({ length: maxR + 1 }, () => Array(maxC + 1).fill(0));
+  //병합 위치 확인용
+  let cnt = 0;
+  let mergeMap = Array.from({ length: maxR + 1 }, () => Array.from({ length: maxC + 1 }, () => cnt++));
+
+  commands.forEach((v) => {
+    if (v[0] === 'UPDATE' && v.length === 4) {
+      let [command, r, c, val] = v;
+      map[r][c] = val;
+    } else if (v[0] === 'UPDATE' && v.length === 3) {
+      let [command, v1, v2] = v;
+      map.forEach((a) => {
+        if (a === v1) v1 = v2;
+      });
+    } else if (v[0] === 'MERGE') {
+      let [command, r1, c1, r2, c2] = v;
+      mergeMap[r2][c2] = mergeMap[r1][c1];
+      if (map[r1][c1] > 0 && map[r2][c2] === 0) {
+        map[r2][c2] = map[r1][c1];
+      } else if (map[r1][c1] === 0 && map[r2][c2] > 0) {
+        map[r1][c1] = map[r2][c2];
+      }
+    }
+  });
+  console.log(mergeMap);
+  console.log(map);
+}
