@@ -308,3 +308,43 @@ function solution(commands) {
 
   return answer;
 }
+
+//포화 가능한 이진 트리
+function solution(numbers) {
+  const answer = [];
+
+  for (let num of numbers) {
+    let bin = num.toString(2);
+
+    // 최소 포화 이진트리 크기 구하기
+    let len = 1;
+    while ((1 << len) - 1 < bin.length) {
+      len++;
+    }
+
+    const fullLen = (1 << len) - 1;
+    const padded = bin.padStart(fullLen, '0');
+
+    answer.push(isValidTree(padded) ? 1 : 0);
+  }
+
+  return answer;
+}
+
+function isValidTree(str) {
+  const check = (s) => {
+    if (s.length === 1) return true;
+    const mid = Math.floor(s.length / 2);
+    const root = s[mid];
+    const left = s.slice(0, mid);
+    const right = s.slice(mid + 1);
+
+    if (root === '0' && (left.includes('1') || right.includes('1'))) {
+      return false;
+    }
+
+    return check(left) && check(right);
+  };
+
+  return check(str);
+}
