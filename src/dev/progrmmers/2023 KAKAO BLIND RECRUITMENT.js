@@ -224,48 +224,87 @@ function solution(cap, n, deliveries, pickups) {
 //->(r, c) 위치의 셀을 선택하여 셀의 값을 출력
 //->  비어있을 경우 "EMPTY"
 
-//풀이 접근
-//map을 만들어야 함
-//update 중 maxR과 maxC를 찾아 map 만들기
-//forEach로 update r c에 value값 넣기
-//나머지도 조건에 맞춰 입출력
-
 function solution(commands) {
-  commands = commands.map((v) => v.split(' '));
-  let maxR = 0,
-    maxC = 0;
-  commands.forEach((v) => {
-    if (v[0] === 'UPDATE' && v.length === 4) {
-      let [command, r, c, val] = v;
-      maxR = Math.max(maxR, +r);
-      maxC = Math.max(maxC, +c);
+  const SIZE = 51;
+  const map = Array.from({ length: SIZE }, () => Array(SIZE).fill(''));
+  const parent = Array.from({ length: SIZE }, (_, r) => Array.from({ length: SIZE }, (_, c) => [r, c]));
+
+  const find = ([r, c]) => {
+    const [pr, pc] = parent[r][c];
+    if (pr === r && pc === c) return [r, c];
+    return (parent[r][c] = find(parent[pr][pc]));
+  };
+
+  const union = ([r1, c1], [r2, c2]) => {
+    const p1 = find([r1, c1]);
+    const p2 = find([r2, c2]);
+    if (p1[0] === p2[0] && p1[1] === p2[1]) return;
+
+    // 병합 시 p1을 대표로
+    parent[p2[0]][p2[1]] = p1;
+    const val1 = map[p1[0]][p1[1]];
+    const val2 = map[p2[0]][p2[1]];
+
+    if (!val1 && val2) {
+      map[p1[0]][p1[1]] = val2;
     }
-  });
+    map[p2[0]][p2[1]] = '';
+  };
 
-  let map = Array.from({ length: maxR + 1 }, () => Array(maxC + 1).fill(0));
-  //병합 위치 확인용
-  let cnt = 0;
-  let mergeMap = Array.from({ length: maxR + 1 }, () => Array.from({ length: maxC + 1 }, () => cnt++));
+  const unmerge = ([r, c]) => {
+    const root = find([r, c]);
+    const saved = map[root[0]][root[1]];
+    const group = [];
 
-  commands.forEach((v) => {
-    if (v[0] === 'UPDATE' && v.length === 4) {
-      let [command, r, c, val] = v;
-      map[r][c] = val;
-    } else if (v[0] === 'UPDATE' && v.length === 3) {
-      let [command, v1, v2] = v;
-      map.forEach((a) => {
-        if (a === v1) v1 = v2;
-      });
-    } else if (v[0] === 'MERGE') {
-      let [command, r1, c1, r2, c2] = v;
-      mergeMap[r2][c2] = mergeMap[r1][c1];
-      if (map[r1][c1] > 0 && map[r2][c2] === 0) {
-        map[r2][c2] = map[r1][c1];
-      } else if (map[r1][c1] === 0 && map[r2][c2] > 0) {
-        map[r1][c1] = map[r2][c2];
+    for (let i = 0; i < SIZE; i++) {
+      for (let j = 0; j < SIZE; j++) {
+        if (find([i, j])[0] === root[0] && find([i, j])[1] === root[1]) {
+          parent[i][j] = [i, j];
+          map[i][j] = '';
+        }
       }
     }
-  });
-  console.log(mergeMap);
-  console.log(map);
+
+    map[r][c] = saved;
+  };
+
+  const updateAll = (v1, v2) => {
+    for (let i = 0; i < SIZE; i++) {
+      for (let j = 0; j < SIZE; j++) {
+        const [pi, pj] = find([i, j]);
+        if (map[pi][pj] === v1) {
+          map[pi][pj] = v2;
+        }
+      }
+    }
+  };
+
+  const answer = [];
+
+  for (let line of commands) {
+    const v = line.split(' ');
+    if (v[0] === 'UPDATE') {
+      if (v.length === 4) {
+        const [_, r, c, val] = v;
+        const [pr, pc] = find([+r, +c]);
+        map[pr][pc] = val;
+      } else {
+        const [_, v1, v2] = v;
+        updateAll(v1, v2);
+      }
+    } else if (v[0] === 'MERGE') {
+      const [_, r1, c1, r2, c2] = v.map(Number);
+      union([r1, c1], [r2, c2]);
+    } else if (v[0] === 'UNMERGE') {
+      const [_, r, c] = v.map(Number);
+      unmerge([r, c]);
+    } else if (v[0] === 'PRINT') {
+      const [_, r, c] = v.map(Number);
+      const [pr, pc] = find([r, c]);
+      const val = map[pr][pc];
+      answer.push(val ? val : 'EMPTY');
+    }
+  }
+
+  return answer;
 }
