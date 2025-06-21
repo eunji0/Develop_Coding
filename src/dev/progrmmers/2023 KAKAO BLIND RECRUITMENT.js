@@ -348,3 +348,91 @@ function isValidTree(str) {
 
   return check(str);
 }
+
+//표 병합
+function solution(commands) {
+  const n = 50;
+  const size = n * n;
+  const parent = Array.from({ length: size }, (_, i) => i);
+  const values = Array(size).fill('');
+
+  const answer = [];
+
+  const getIndex = (r, c) => (r - 1) * n + (c - 1);
+
+  function find(x) {
+    if (parent[x] !== x) {
+      parent[x] = find(parent[x]); // path compression
+    }
+    return parent[x];
+  }
+
+  function union(a, b) {
+    const rootA = find(a);
+    const rootB = find(b);
+    if (rootA === rootB) return;
+
+    // 병합 시 rootB -> rootA
+    const newVal = values[rootA] !== '' ? values[rootA] : values[rootB];
+
+    for (let i = 0; i < size; i++) {
+      if (find(i) === rootB) {
+        parent[i] = rootA;
+      }
+    }
+
+    values[rootA] = newVal;
+    values[rootB] = '';
+  }
+
+  function unmerge(r, c) {
+    const idx = getIndex(r, c);
+    const root = find(idx);
+    const originalVal = values[root];
+
+    const targets = [];
+    for (let i = 0; i < size; i++) {
+      if (find(i) === root) {
+        targets.push(i);
+      }
+    }
+
+    for (let i of targets) {
+      parent[i] = i;
+      values[i] = '';
+    }
+
+    values[idx] = originalVal;
+  }
+
+  for (let cmd of commands) {
+    const parts = cmd.split(' ');
+
+    if (parts[0] === 'UPDATE') {
+      if (parts.length === 4) {
+        const [_, r, c, val] = parts;
+        const idx = find(getIndex(+r, +c));
+        values[idx] = val;
+      } else {
+        const [_, val1, val2] = parts;
+        for (let i = 0; i < size; i++) {
+          if (values[i] === val1) values[i] = val2;
+        }
+      }
+    } else if (parts[0] === 'MERGE') {
+      const [_, r1, c1, r2, c2] = parts.map(Number);
+      const idx1 = getIndex(r1, c1);
+      const idx2 = getIndex(r2, c2);
+      union(idx1, idx2);
+    } else if (parts[0] === 'UNMERGE') {
+      const [_, r, c] = parts.map(Number);
+      unmerge(r, c);
+    } else if (parts[0] === 'PRINT') {
+      const [_, r, c] = parts.map(Number);
+      const idx = find(getIndex(r, c));
+      answer.push(values[idx] || 'EMPTY');
+    }
+  }
+
+  return answer;
+}
