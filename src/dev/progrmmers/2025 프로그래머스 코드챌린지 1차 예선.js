@@ -164,3 +164,53 @@ function solution(storage, requests) {
 
   return count;
 }
+
+//비밀 코드 해독
+//문제 정리
+//1부터 n까지의 서로 다른 정수 5개가 오름차순으로 정렬된 비밀 코드
+//m번의 시도
+//서로 다른 5개의 정수를 입력하면
+//시스템은 그 중 몇 개가 비밀 코드에 포함되어 있는지
+// m번의 시도 후, 비밀 코드로 가능한 정수 조합의 개수
+
+function solution(n, q, ans) {
+  let result = [];
+  const nums = Array.from({ length: n + 1 }, (_, i) => i + 1);
+
+  const getCombinations = (arr, selectNum) => {
+    let box = [];
+
+    const dfs = (start, path) => {
+      if (path.length === selectNum) {
+        box.push([...path]);
+        return;
+      }
+
+      for (let i = start; i < arr.length; i++) {
+        path.push(arr[i]);
+        dfs(i + 1, path);
+        path.pop();
+      }
+    };
+    dfs(0, []);
+    return box;
+  };
+
+  const combination = getCombinations(nums, 5);
+
+  for (let comb of combination) {
+    let valid = true;
+    const set = new Set(comb);
+
+    for (let i = 0; i < q.length; i++) {
+      let match = q[i].filter((v) => set.has(v)).length;
+      if (match !== ans[i]) {
+        valid = false;
+        break;
+      }
+    }
+
+    if (valid) result++;
+  }
+  return result;
+}
