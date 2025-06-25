@@ -175,7 +175,7 @@ function solution(storage, requests) {
 
 function solution(n, q, ans) {
   let result = [];
-  const nums = Array.from({ length: n + 1 }, (_, i) => i + 1);
+  const nums = Array.from({ length: n }, (_, i) => i + 1);
 
   const getCombinations = (arr, selectNum) => {
     let box = [];

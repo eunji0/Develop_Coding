@@ -153,7 +153,6 @@
 // }
 // console.log(result.join('\n'));
 
-
 //최단 경로 문제 => 최소힙+다익스트라 알고리즘
 
 //먼저 최소힙 이해하기
@@ -220,7 +219,7 @@
 //       [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]]
 //       index = smallest
 //     }
-    
+
 //   }
 // }
 
@@ -292,7 +291,7 @@
 //   visited[0] = true;
 
 //   /*
-// 			현재 방문한 노드는 거리 테이블 상에서 가장 거리가 짧은 값을 가진 노드. 
+// 			현재 방문한 노드는 거리 테이블 상에서 가장 거리가 짧은 값을 가진 노드.
 // 			다음에 방문할 노드에 저장된 값이
 // 			"현재 방문한 노드까지 누적 이동 거리 + 다음 노드까지 거리"보다 크다면
 // 			"현재 방문한 노드까지 누적 이동 거리 + 다음 노드까지 거리"를 거리 테이블의 다음 방문할 노드에 저장
@@ -314,7 +313,7 @@
 // };
 
 // // 순차 탐색 방식은 ‘방문하지 않은 노드 중 거리값이 가장 작은 노드’를 다음 탐색 노드로 선택한다.
-// // 그 노드를 찾는 방식은 거리 테이블의 앞에서부터 찾아내야 하기 때문에 
+// // 그 노드를 찾는 방식은 거리 테이블의 앞에서부터 찾아내야 하기 때문에
 // // 시간 복잡도는 O(N2)이 된다.
 
 // //우선순위 큐
@@ -386,7 +385,7 @@
 //   for (let [a, b, c] of road) {
 //     graph[a].push([b, c]);5
 //   }
- 
+
 //   queue.push([1, 0]);
 //   distance[1] = 0;
 //   while (queue.length) {
@@ -434,7 +433,6 @@
 // let visited = Array.from({ length: N + 1 }).fill(false);
 
 // 순차 탐색을 하는 경우 노드의 개수 만큼 순차 탐색을 수행해야 하기 때문에 O(N²)의 시간이 걸린다.
-
 
 //우선 순위 큐 방식 사용하기
 // const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
@@ -577,7 +575,6 @@
 
 // findMin(K, 0, 1);
 // console.log(answer);
-
 
 //1719-택배
 // const filePath = process.platform === 'linux' ? '/dev/stdin' : './Javascript/input.txt';
@@ -725,7 +722,7 @@
 //   q.push([sx, sy]);
 //   //시작 위치를 방문처리
 //   visited[sx][sy]=true;
-  
+
 //   //큐가 빌 때까지 반복
 //   while(q.length!==0){
 //     //맨 앞 위치 꺼내기
@@ -787,7 +784,6 @@
 //   '11111',
 //   '00000'
 // ].map(line => line.split(''));  // 그래프를 문자열 배열로 입력받아 각 문자를 분리합니다.
-
 
 //dfs
 // const dir = [[0,1], [0,-1], [1,0], [-1, 0]];
@@ -853,7 +849,6 @@
 //         if (nx < 0 || nx >= n || ny < 0 || ny >= m)
 //           continue;
 
-        
 //         if(!visited[nx][ny]&&graph[nx][ny]!=='X'){
 //           if(graph[nx][ny]===target){
 //             return time+1;
@@ -884,7 +879,7 @@
 //       if(maps[x][y]==='L'){
 //         lCord = [x, y];
 //       }
-      
+
 //     }
 //   }
 
@@ -902,7 +897,6 @@
 
 //   return a+b
 // }
-
 
 // // 예시 실행
 // const maps = [
@@ -967,7 +961,6 @@
 // graph.forEach(v=>v.sort((a, b)=>b-a));
 // console.log(bfs(V))
 
-
 //bfs적용해보기
 //2178-미로탐색
 // // 파일 시스템 모듈을 불러와서 입력 데이터를 읽음
@@ -982,7 +975,7 @@
 //     [1, 0],   // 아래
 //     [-1, 0]   // 위
 //   ];
-  
+
 //   // 탐색을 위한 큐를 초기화하고 시작점 (0, 0)을 큐에 삽입
 //   const queue = [[0, 0]];
 //   // 방문한 위치를 기록하기 위한 배열을 초기화, 처음 위치를 방문 처리
@@ -1085,7 +1078,7 @@
 //   const stack = [start];
 //   visited[start] = true;
 //   let count = 0;
-  
+
 //   while(stack.length){
 //     const node = stack.pop();
 
@@ -1165,10 +1158,10 @@
 
 //   // M*N 크기의 0으로 채워진 2차원 배열 maps를 생성
 //   let maps = Array.from({ length: N }, () => Array(M).fill(0));
-  
+
 //   // M*N 크기의 false로 채워진 2차원 배열 visited를 생성
 //   let visited = Array.from({ length: N }, () => Array(M).fill(false));
-  
+
 //   // 배추의 위치를 담을 배열을 초기화
 //   let cabbage = [];
 
@@ -1176,7 +1169,7 @@
 //   for (let i = 0; i < K; i++) {
 //     // 현재 배추의 x, y 좌표를 읽어옴
 //     const [x, y] = input[index + i].split(' ').map(Number);
-    
+
 //     // 배추의 위치를 2차원 배열 maps에 기록 (배추가 있는 위치를 1로 표시)
 //     maps[y][x] = 1;
 
@@ -1224,15 +1217,15 @@
 //   for (let i = 0; i < cabbage.length; i++) {
 //     // 현재 배추의 위치를 가져옴
 //     const [y, x] = cabbage[i];
-    
+
 //     // 만약 해당 위치가 방문되지 않았고 배추가 있는 경우
 //     if (!visited[y][x] && maps[y][x] === 1) {
 //       // 방문 처리
 //       visited[y][x] = true;
-      
+
 //       // BFS를 통해 연결된 모든 배추를 방문 처리
 //       bfs(y, x);
-      
+
 //       // 지렁이 수를 증가시킴
 //       answer++;
 //     }
@@ -1516,7 +1509,7 @@
 //       if(nx>=0&&ny>=0&&nx<n&&ny<n&&map[nx][ny]){
 //         map[nx][ny]=0;
 //         queue.push([nx, ny])
-        
+
 //       }
 //     }
 //   }
@@ -1560,7 +1553,7 @@
 //         graph[nx][ny]=0;
 //         queue.push([nx, ny]);
 //         count++;
-        
+
 //       }
 //     }
 //   }
@@ -1577,7 +1570,6 @@
 //   arr.map(([x, y])=>{
 //     graph[x][y]=1
 //   })
-
 
 //   let result = [];
 //   for(let i=0; i<n; i++){
@@ -1641,7 +1633,7 @@
 
 //       days = Math.max(days, box[i][j]);
 //     }
-//   }  
+//   }
 //   return days-1;
 // }
 
@@ -1707,7 +1699,7 @@
 // for(let i=1; i<=n; i++){
 //   if(!visited[i]){
 //     bfs(i);
-//     count++;    
+//     count++;
 //   }
 // }
 
@@ -1921,7 +1913,6 @@
 // bfs(arr, queue);
 // console.log(cal(arr));
 
-
 //11725-트리의 부모 찾기
 // const fs = require('fs');
 // const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
@@ -1988,7 +1979,6 @@
 //   let status = Array.from({length: n}, (_, i)=>arr[i].map(v=>v>h));
 
 //   let count = 0;
-
 
 //   for(let i=0; i<n; i++){
 //     for(let j=0; j<n; j++){
@@ -2060,7 +2050,7 @@
 // const bfs = (h, start, goal)=>{
 //   const [startX, startY] = start;
 //   const [goalX, goalY] = goal;
-  
+
 //   const queue = [[startX, startY]];
 
 //   const visited = Array.from({length: h}, ()=>Array(h).fill(false));
@@ -2083,7 +2073,7 @@
 //         visited[nx][ny] = true;
 //         dis[nx][ny] = dis[x][y]+1;
 //         queue.push([nx, ny])
-//       } 
+//       }
 //     }
 //   }
 
@@ -2096,7 +2086,6 @@
 
 //   console.log(bfs(h, map[0], map[1]));
 // }
-
 
 //2206-벽 부수고 이동하기
 // const fs = require('fs');
@@ -2416,7 +2405,6 @@
 //     return result
 // };
 
-
 // console.log(dfs(v).join(' '))
 // console.log(bfs(v).join(' '))
 
@@ -2554,7 +2542,7 @@
 //         graph[nx][ny]=0;
 //         queue.push([nx, ny]);
 //         count++;
-        
+
 //       }
 //     }
 //   }
@@ -2571,7 +2559,6 @@
 //   arr.map(([x, y])=>{
 //     graph[x][y]=1
 //   })
-
 
 //   let result = [];
 //   for(let i=0; i<n; i++){
@@ -2640,7 +2627,6 @@
 
 // bfs(box, queue);
 // console.log(cal(box))
-
 
 //1697-숨바꼭질
 // const input = require('fs').readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
@@ -2966,7 +2952,6 @@
 // bfs(1)
 // console.log(parent.slice(2).join('\n'))
 
-
 //2468-안전 영역
 // const fs = require('fs');
 // const input = fs.readFileSync(process.platform === "linux" ? "dev/stdin" : "input.txt").toString().trim().split('\n');
@@ -3010,7 +2995,7 @@
 //       }
 //     }
 //   }
-  
+
 //   maxSafeArea=Math.max(maxSafeArea, count)
 // }
 
@@ -3128,7 +3113,6 @@
 //         const nx = x+dx;
 //         const ny = y+dy;
 
-
 // 	  // 해당 위치 그래프 범위를 벗어나지 않았다면
 //       if (nx >= 0 && nx < N && ny >= 0 && ny < M) {
 
@@ -3137,8 +3121,8 @@
 // 		  // 이동 칸 수 = 이전까지 이동해온 칸 수에 +1하여 누적 증가
 //           visited[nx][ny][isBreak] = visited[x][y][isBreak] + 1;
 //           queue.push([nx, ny, isBreak]);
-				
-// 		// 해당 위치에 벽이 있고, 벽을 한 번도 부순적이 없다면(벽 부수는 기회를 아직 사용한적 없으면) 
+
+// 		// 해당 위치에 벽이 있고, 벽을 한 번도 부순적이 없다면(벽 부수는 기회를 아직 사용한적 없으면)
 //         } else if (graph[nx][ny] && !isBreak) {
 //           visited[nx][ny][isBreak + 1] = visited[x][y][isBreak] + 1;
 //           queue.push([nx, ny, isBreak + 1]); // 벽 부수기 1회권 사용
@@ -3400,7 +3384,7 @@
 //   const queue = [[start, 0]];
 //   let visited = Array(n+1).fill(false);
 //   visited[start]=true;
-  
+
 //   while(queue.length){
 //     const [cur, sec] = queue.shift();
 
@@ -3421,7 +3405,7 @@
 
 //   let result = [];
 //   for(let j=1; j<=n; j++){
-//     result.push(bfs(i, j))    
+//     result.push(bfs(i, j))
 //   }
 
 //   answer.push([i, result.reduce((a, c)=>a+c, 0)])
@@ -3499,7 +3483,6 @@
 // }
 
 // console.log(days)
-
 
 //1707-이분 그래프
 // const fs = require('fs');
@@ -3684,7 +3667,7 @@
 //         answer=cnt;
 //         break
 //       }
-      
+
 //       if (checkStop([rx, ry], reds) && checkStop([bx, by], blues)) continue;
 //       if(cnt===maxCnt) continue
 
@@ -3696,7 +3679,6 @@
 // }
 
 // sol(input)
-
 
 //2573-빙산
 
@@ -3856,7 +3838,6 @@
 
 // console.log(bfs(S))
 
-
 //1926-그림
 // const fs = require('fs');
 // const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
@@ -3964,24 +3945,22 @@
 //   console.log(bfs(a, b));
 // }
 
-
 //3055-탈출
 
 //비어있는 곳은 '.'
 //물이 차있는 지역은 '*'
-//돌은 'X' 
+//돌은 'X'
 //비버의 굴은 'D'
 //고슴도치의 위치는 'S'
 
 //물이 있는 칸과 인접해있는 비어있는 칸(적어도 한 변을 공유)은 물이 차게 된다.
 //물과 고슴도치는 돌을 통과할 수 없다.
-//고슴도치는 물로 차있는 구역으로 이동할 수 없다 
+//고슴도치는 물로 차있는 구역으로 이동할 수 없다
 //물도 비버의 소굴로 이동할 수 없다.
 //고슴도치가 안전하게 비버의 굴로 이동하기 위해 필요한 최소 시간
 
 //고슴도치는 물이 찰 예정인 칸으로 이동할 수 없다
 //다음 시간에 물이 찰 예정인 칸으로 고슴도치는 이동할 수 없다.
-
 
 //비버의 굴 위치, 고슴도치의 위치 삽입
 //고슴 도치가 이동한 후 고슴도치 위치를 빈칸으로 만들어줘야 함.
@@ -4063,7 +4042,6 @@
 // fillWater();
 // console.log(moveHedgehog());
 
-
 //2636-치즈
 
 //출력해야하는 부분
@@ -4139,7 +4117,6 @@
 // console.log(a);
 // console.log(b)
 
-
 //2589-보물섬
 // const fs = require('fs');
 // const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
@@ -4184,7 +4161,6 @@
 
 // console.log(max)
 
-
 //뱀과 사다리 게임
 // const fs = require('fs');
 // const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
@@ -4201,16 +4177,16 @@
 //     const [now, count] = queue.shift();
 //     const move = [now+1, now+2, now+3, now+4, now+5, now+6];
 //     const inClude = [...ladders, ...snakes];
-  
+
 //     if(now===100) return count
-  
+
 //     for(let m of move){
 //       if(!visited[m]&&m<101){
-//         visited[m]=true 
+//         visited[m]=true
 //         inClude.forEach(([from, to])=>{
 //           if(m===from) m=to;
 //         })
-        
+
 //         queue.push([m, count+1])
 //       }
 //     }
@@ -4218,7 +4194,6 @@
 // }
 
 // console.log(bfs())
-
 
 //18352-특정 거리의 도시 찾기
 // const fs = require('fs');
@@ -4370,7 +4345,7 @@
 //     for(const [dx, dy] of dir){
 //       const nx = x+dx;
 //       const ny=y+dy;
-  
+
 //       if(nx>=0&&ny>=0&&nx<n&&ny<n&&!visited[nx][ny]&&arr[nx][ny]===1){
 //         visited[nx][ny]=true;
 //         queue.push([nx, ny]);
@@ -4504,7 +4479,6 @@
 //   console.log(check ? "happy" : "sad"); // 결과 출력
 // }
 
-
 //2638-치즈
 
 //치즈가 모두 녹아 없어지는데 걸리는 정확한 시간
@@ -4598,7 +4572,6 @@
 
 // console.log(meltCheese())
 
-
 //14940-쉬운 최단거리
 
 //문제 풀이 과정
@@ -4610,8 +4583,7 @@
 //출력: 모든 지점에 대해서 목표지점까지의 거리
 
 //2인 구간 목표지점으로 설정
-//bfs(출발지점, 목표지점)으로 거리 구하기 
-
+//bfs(출발지점, 목표지점)으로 거리 구하기
 
 // const fs = require('fs');
 // const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
@@ -4647,7 +4619,7 @@
 //     for(const [dx, dy] of dir){
 //       const nx =x+dx;
 //       const ny =y+dy;
-      
+
 //       if(nx >= 0 && nx < n && ny >= 0 && ny < m&&arr[nx][ny]!=0&&distance[nx][ny]===-1){
 //         distance[nx][ny]=distance[x][y]+1;
 //         queue.push([nx, ny])
@@ -4672,7 +4644,6 @@
 
 //   console.log(r.join(' '))
 // }
-
 
 //1325-효율적인 해킹
 // const fs = require("fs");
@@ -4732,7 +4703,6 @@
 //0은 이동 가능한 곳(평지)을 나타내며, 1은 이동할 수 없는 장애물
 //도착할 수 없을 경우 -1
 
-
 // const fs = require('fs');
 // const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 // let input = fs.readFileSync(filePath).toString().trim().split('\n');
@@ -4785,7 +4755,6 @@
 
 // console.log(bfs());
 
-
 //4179-불!
 
 // #: 벽
@@ -4795,7 +4764,6 @@
 
 //불이 도달하기 전에 미로를 탈출 할 수 없는 경우 IMPOSSIBLE
 //미로를 탈출할 수 있는 경우에는 가장 빠른 탈출시간
-
 
 //그래프 0으로 두르기
 //bfs로 탈출하는 시간 반환(0에 닿으면 탈출)
@@ -4958,3 +4926,209 @@
 //   }
 // }
 
+//21736-헌내기는 친구가 필요해
+// const fs = require('fs');
+// let [n, ...info] = fs.readFileSync(0, 'utf-8').toString().trim().split('\n');
+
+// let N = Number(n.trim().split(' ')[0]);
+// let M = Number(n.trim().split(' ')[1]);
+
+// let doyeon = [0, 0];
+// let person = [];
+// for (let i = 0; i < N; i++) {
+//   let dFind = info[i].indexOf('I');
+//   let pFind = info[i].indexOf('P');
+//   if (dFind !== -1) doyeon = [i, dFind];
+//   else if (pFind !== -1) person.push([i, pFind]);
+//   info[i] = info[i].trim().split('');
+// }
+
+// const directions = [
+//   [1, 0],
+//   [-1, 0],
+//   [0, 1],
+//   [0, -1],
+// ];
+
+// function BFS(start) {
+//   let queue = [start];
+//   let visited = Array.from({ length: N }, () => Array(M).fill(false));
+//   visited[start[0]][start[1]] = true;
+//   let count = 0;
+
+//   while (queue.length > 0) {
+//     let [x, y] = queue.shift();
+
+//     for (let [dx, dy] of directions) {
+//       let nx = x + dx;
+//       let ny = y + dy;
+
+//       if (nx >= 0 && nx < N && ny >= 0 && ny < M && !visited[nx][ny]) {
+//         if (info[nx][ny] !== 'X') {
+//           visited[nx][ny] = true;
+//           if (info[nx][ny] === 'P') {
+//             count++;
+//           }
+//           queue.push([nx, ny]);
+//         }
+//       }
+//     }
+//   }
+
+//   return count;
+// }
+
+// let result = BFS(doyeon);
+// console.log(result === 0 ? 'TT' : result);
+
+//17471-게리맨더링
+
+// let input = require('fs').readFileSync(0, 'utf-8').toString().trim().split('\n');
+// let idx = 0;
+// const N = parseInt(input[idx++]);
+// const POPULATION = input[idx++].split(' ').map(Number);
+// let lines = Array.from({ length: 6 }, (_) => []);
+// // A팀 B팀 나눠서 저장.
+// let teamA = [];
+// let teamB = [];
+// let min = Number.MAX_SAFE_INTEGER;
+// // 연결 관계 저장.
+// for (let i = 0; i < N; i++) {
+//   lines[i] = input[idx++]
+//     .split(' ')
+//     .slice(1)
+//     .map(Number)
+//     .map((v) => v - 1);
+// }
+
+// // BFS를 이용해서 연결되어 있는지 확인.
+// const BFS = (now, total, team) => {
+//   let queue = [now];
+
+//   let index = 0;
+//   let visited = Array.from({ length: N }, (_) => false);
+//   visited[now] = true;
+
+//   while (queue.length > index) {
+//     const NOW = queue[index];
+//     for (let i = 0; i < lines[NOW].length; i++) {
+//       const NEXT = lines[NOW][i];
+//       if (!visited[NEXT] && team.includes(NEXT)) {
+//         queue.push(NEXT);
+//         visited[NEXT] = true;
+//       }
+//     }
+//     index++;
+//   }
+//   return visited.filter((v) => v === true).length === total;
+// };
+
+// // A 구역의 갯수를 주면 그 갯수만큼의 조합을 만들어줌.
+// const Combination = (A, arr, last) => {
+//   if (arr.length === A) {
+//     teamA = arr;
+//     let tmp = [];
+//     // B팀 갱신.
+//     for (let i = 0; i < N; i++) {
+//       if (arr.includes(i)) continue;
+//       tmp.push(i);
+//     }
+//     teamB = tmp;
+//     // B팀 수
+//     const B = N - A;
+
+//     // 두 팀이 조건에 맞게 연결된다면.
+//     if (BFS(teamA[0], A, teamA) && BFS(teamB[0], B, teamB)) {
+//       let sumA = 0;
+//       let sumB = 0;
+//       // 인구 계산.
+//       POPULATION.forEach((value, index) => {
+//         if (teamA.includes(index)) {
+//           sumA += value;
+//         } else {
+//           sumB += value;
+//         }
+//       });
+//       min = Math.min(min, Math.abs(sumB - sumA));
+//     }
+//     return;
+//   }
+
+//   // 재귀를 이용해 조합.
+//   for (let i = last; i < N; i++) {
+//     Combination(A, [...arr, i], i + 1);
+//   }
+// };
+// for (let i = 1; i < N; i++) {
+//   Combination(i, [0], 1);
+// }
+// min = min === Number.MAX_SAFE_INTEGER ? -1 : min;
+// console.log(min);
+
+//12851-숨바꼭질2
+class Node {
+  constructor(item) {
+    this.item = item;
+    this.next = null;
+  }
+}
+
+class Queue {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+
+  push(item) {
+    const node = new Node(item);
+    if (this.head == null) {
+      this.head = node;
+    } else {
+      this.tail.next = node;
+    }
+
+    this.tail = node;
+    this.length += 1;
+  }
+
+  pop() {
+    const popItem = this.head;
+    this.head = this.head.next;
+    this.length -= 1;
+    return popItem.item;
+  }
+}
+const fs = require('fs');
+const [S, E] = fs.readFileSync('./dev/stdin').toString().trim().split(' ').map(Number);
+
+function solve(start, end) {
+  let dist = Array.from(Array(100001), () => 0);
+  let cnt = Array.from(Array(100001), () => 0);
+  if (start == end) {
+    return [0, 1];
+  } else {
+    let q = new Queue();
+    q.push(S);
+    cnt[S] = 1;
+    while (q.length > 0) {
+      //큐에 뭐가 들어 있으면
+      const now = q.pop(); //꺼내서
+      const next = [now + 1, now - 1, now * 2].filter((v) => v >= 0 && v <= 100000);
+      next.forEach((v) => {
+        if (dist[v] == 0) {
+          q.push(v);
+          dist[v] = dist[now] + 1;
+          cnt[v] += cnt[now];
+        } else if (dist[v] == dist[now] + 1) {
+          cnt[v] += cnt[now];
+        }
+      });
+    }
+    return [dist[end], cnt[end]];
+  }
+}
+
+const [v, c] = solve(S, E);
+console.log(v);
+console.log(c);
