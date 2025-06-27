@@ -5066,69 +5066,123 @@
 // console.log(min);
 
 //12851-숨바꼭질2
-class Node {
-  constructor(item) {
-    this.item = item;
-    this.next = null;
-  }
-}
+// class Node {
+//   constructor(item) {
+//     this.item = item;
+//     this.next = null;
+//   }
+// }
 
-class Queue {
-  constructor() {
-    this.head = null;
-    this.tail = null;
-    this.length = 0;
-  }
+// class Queue {
+//   constructor() {
+//     this.head = null;
+//     this.tail = null;
+//     this.length = 0;
+//   }
 
-  push(item) {
-    const node = new Node(item);
-    if (this.head == null) {
-      this.head = node;
-    } else {
-      this.tail.next = node;
-    }
+//   push(item) {
+//     const node = new Node(item);
+//     if (this.head == null) {
+//       this.head = node;
+//     } else {
+//       this.tail.next = node;
+//     }
 
-    this.tail = node;
-    this.length += 1;
-  }
+//     this.tail = node;
+//     this.length += 1;
+//   }
 
-  pop() {
-    const popItem = this.head;
-    this.head = this.head.next;
-    this.length -= 1;
-    return popItem.item;
-  }
-}
+//   pop() {
+//     const popItem = this.head;
+//     this.head = this.head.next;
+//     this.length -= 1;
+//     return popItem.item;
+//   }
+// }
+// const fs = require('fs');
+// const [S, E] = fs.readFileSync('./dev/stdin').toString().trim().split(' ').map(Number);
+
+// function solve(start, end) {
+//   let dist = Array.from(Array(100001), () => 0);
+//   let cnt = Array.from(Array(100001), () => 0);
+//   if (start == end) {
+//     return [0, 1];
+//   } else {
+//     let q = new Queue();
+//     q.push(S);
+//     cnt[S] = 1;
+//     while (q.length > 0) {
+//       //큐에 뭐가 들어 있으면
+//       const now = q.pop(); //꺼내서
+//       const next = [now + 1, now - 1, now * 2].filter((v) => v >= 0 && v <= 100000);
+//       next.forEach((v) => {
+//         if (dist[v] == 0) {
+//           q.push(v);
+//           dist[v] = dist[now] + 1;
+//           cnt[v] += cnt[now];
+//         } else if (dist[v] == dist[now] + 1) {
+//           cnt[v] += cnt[now];
+//         }
+//       });
+//     }
+//     return [dist[end], cnt[end]];
+//   }
+// }
+
+// const [v, c] = solve(S, E);
+// console.log(v);
+// console.log(c);
+
+//1743-음식물 피하기
 const fs = require('fs');
-const [S, E] = fs.readFileSync('./dev/stdin').toString().trim().split(' ').map(Number);
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const [n, m, k] = input.shift().split(' ').map(Number);
+const arr = input.map((v) => v.split(' ').map(Number));
+const dir = [
+  [0, 1],
+  [0, -1],
+  [1, 0],
+  [-1, 0],
+];
+const graph = Array.from({ length: n }, () => Array(m).fill(0));
+let visited = Array.from({ length: n }, () => Array(m).fill(false));
 
-function solve(start, end) {
-  let dist = Array.from(Array(100001), () => 0);
-  let cnt = Array.from(Array(100001), () => 0);
-  if (start == end) {
-    return [0, 1];
-  } else {
-    let q = new Queue();
-    q.push(S);
-    cnt[S] = 1;
-    while (q.length > 0) {
-      //큐에 뭐가 들어 있으면
-      const now = q.pop(); //꺼내서
-      const next = [now + 1, now - 1, now * 2].filter((v) => v >= 0 && v <= 100000);
-      next.forEach((v) => {
-        if (dist[v] == 0) {
-          q.push(v);
-          dist[v] = dist[now] + 1;
-          cnt[v] += cnt[now];
-        } else if (dist[v] == dist[now] + 1) {
-          cnt[v] += cnt[now];
-        }
-      });
+arr.map(([x, y]) => {
+  graph[x - 1][y - 1] = 1;
+});
+
+const bfs = (i, j) => {
+  const queue = [[i, j]];
+  visited[i][j] = true;
+  let count = 1;
+
+  while (queue.length) {
+    const [x, y] = queue.shift();
+
+    for (const [dx, dy] of dir) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && graph[nx][ny] === 1) {
+        visited[nx][ny] = true;
+        queue.push([nx, ny]);
+        count++;
+      }
     }
-    return [dist[end], cnt[end]];
+  }
+
+  return count;
+};
+
+let result = [];
+
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < m; j++) {
+    if (graph[i][j] === 1 && !visited[i][j]) {
+      result.push(bfs(i, j));
+    }
   }
 }
 
-const [v, c] = solve(S, E);
-console.log(v);
-console.log(c);
+console.log(Math.max(...result));
