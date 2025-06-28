@@ -5134,55 +5134,104 @@
 // console.log(c);
 
 //1743-음식물 피하기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [n, m, k] = input.shift().split(' ').map(Number);
+// const arr = input.map((v) => v.split(' ').map(Number));
+// const dir = [
+//   [0, 1],
+//   [0, -1],
+//   [1, 0],
+//   [-1, 0],
+// ];
+// const graph = Array.from({ length: n }, () => Array(m).fill(0));
+// let visited = Array.from({ length: n }, () => Array(m).fill(false));
+
+// arr.map(([x, y]) => {
+//   graph[x - 1][y - 1] = 1;
+// });
+
+// const bfs = (i, j) => {
+//   const queue = [[i, j]];
+//   visited[i][j] = true;
+//   let count = 1;
+
+//   while (queue.length) {
+//     const [x, y] = queue.shift();
+
+//     for (const [dx, dy] of dir) {
+//       const nx = x + dx;
+//       const ny = y + dy;
+
+//       if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && graph[nx][ny] === 1) {
+//         visited[nx][ny] = true;
+//         queue.push([nx, ny]);
+//         count++;
+//       }
+//     }
+//   }
+
+//   return count;
+// };
+
+// let result = [];
+
+// for (let i = 0; i < n; i++) {
+//   for (let j = 0; j < m; j++) {
+//     if (graph[i][j] === 1 && !visited[i][j]) {
+//       result.push(bfs(i, j));
+//     }
+//   }
+// }
+
+// console.log(Math.max(...result));
+
+//2589-보물섬
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [n, m, k] = input.shift().split(' ').map(Number);
-const arr = input.map((v) => v.split(' ').map(Number));
+const [n, m] = input[0].split(' ').map(Number);
+const arr = input.slice(1).map((v) => v.trim().split(''));
 const dir = [
   [0, 1],
   [0, -1],
   [1, 0],
   [-1, 0],
 ];
-const graph = Array.from({ length: n }, () => Array(m).fill(0));
-let visited = Array.from({ length: n }, () => Array(m).fill(false));
-
-arr.map(([x, y]) => {
-  graph[x - 1][y - 1] = 1;
-});
 
 const bfs = (i, j) => {
-  const queue = [[i, j]];
+  const queue = [[i, j, 0]];
+  let visited = Array.from({ length: n }, () => Array(m).fill(false));
   visited[i][j] = true;
-  let count = 1;
+  let maxD = 0;
 
   while (queue.length) {
-    const [x, y] = queue.shift();
+    const [x, y, dist] = queue.shift();
+    maxD = Math.max(dist, maxD);
 
     for (const [dx, dy] of dir) {
       const nx = x + dx;
       const ny = y + dy;
 
-      if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && graph[nx][ny] === 1) {
+      if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && arr[nx][ny] === 'L') {
+        queue.push([nx, ny, dist + 1]);
         visited[nx][ny] = true;
-        queue.push([nx, ny]);
-        count++;
       }
     }
   }
 
-  return count;
+  return maxD;
 };
 
-let result = [];
+let max = 0;
 
 for (let i = 0; i < n; i++) {
   for (let j = 0; j < m; j++) {
-    if (graph[i][j] === 1 && !visited[i][j]) {
-      result.push(bfs(i, j));
+    if (arr[i][j] === 'L') {
+      max = Math.max(max, bfs(i, j));
     }
   }
 }
 
-console.log(Math.max(...result));
+console.log(max);
