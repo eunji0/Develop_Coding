@@ -5188,50 +5188,92 @@
 // console.log(Math.max(...result));
 
 //2589-보물섬
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// const arr = input.slice(1).map((v) => v.trim().split(''));
+// const dir = [
+//   [0, 1],
+//   [0, -1],
+//   [1, 0],
+//   [-1, 0],
+// ];
+
+// const bfs = (i, j) => {
+//   const queue = [[i, j, 0]];
+//   let visited = Array.from({ length: n }, () => Array(m).fill(false));
+//   visited[i][j] = true;
+//   let maxD = 0;
+
+//   while (queue.length) {
+//     const [x, y, dist] = queue.shift();
+//     maxD = Math.max(dist, maxD);
+
+//     for (const [dx, dy] of dir) {
+//       const nx = x + dx;
+//       const ny = y + dy;
+
+//       if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && arr[nx][ny] === 'L') {
+//         queue.push([nx, ny, dist + 1]);
+//         visited[nx][ny] = true;
+//       }
+//     }
+//   }
+
+//   return maxD;
+// };
+
+// let max = 0;
+
+// for (let i = 0; i < n; i++) {
+//   for (let j = 0; j < m; j++) {
+//     if (arr[i][j] === 'L') {
+//       max = Math.max(max, bfs(i, j));
+//     }
+//   }
+// }
+
+// console.log(max);
+
+//13913-숨바꼭질4
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
 const [n, m] = input[0].split(' ').map(Number);
-const arr = input.slice(1).map((v) => v.trim().split(''));
-const dir = [
-  [0, 1],
-  [0, -1],
-  [1, 0],
-  [-1, 0],
-];
+let visited = Array(100001).fill(false);
+let from = Array(100001).fill(-1);
 
-const bfs = (i, j) => {
-  const queue = [[i, j, 0]];
-  let visited = Array.from({ length: n }, () => Array(m).fill(false));
-  visited[i][j] = true;
-  let maxD = 0;
+const bfs = (start, goal) => {
+  const queue = [[start, 0]];
+  visited[start] = true;
 
   while (queue.length) {
-    const [x, y, dist] = queue.shift();
-    maxD = Math.max(dist, maxD);
+    const [now, count] = queue.shift();
+    const move = [now - 1, now + 1, now * 2];
 
-    for (const [dx, dy] of dir) {
-      const nx = x + dx;
-      const ny = y + dy;
+    if (now === goal) {
+      console.log(count);
 
-      if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && arr[nx][ny] === 'L') {
-        queue.push([nx, ny, dist + 1]);
-        visited[nx][ny] = true;
+      const path = [];
+      let cur = goal;
+      while (cur != -1) {
+        path.push(cur);
+        cur = from[cur];
+      }
+
+      console.log(path.reverse().join(' '));
+      return;
+    }
+
+    for (const next of move) {
+      if (next >= 0 && next <= 100000 && !visited[next]) {
+        visited[next] = true;
+        queue.push([next, count + 1]);
+        from[next] = now;
       }
     }
   }
-
-  return maxD;
 };
 
-let max = 0;
-
-for (let i = 0; i < n; i++) {
-  for (let j = 0; j < m; j++) {
-    if (arr[i][j] === 'L') {
-      max = Math.max(max, bfs(i, j));
-    }
-  }
-}
-
-console.log(max);
+bfs(n, m);
