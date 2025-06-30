@@ -5359,3 +5359,38 @@ const meltCheese = () => {
 };
 
 console.log(meltCheese());
+
+//5014-스타트링크
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+let input = fs.readFileSync(filePath).toString().trim();
+const [F, S, G, U, D] = input.split(' ').map(Number);
+
+// BFS를 사용하여 최소 버튼 수를 구하는 함수
+const bfs = (start) => {
+  const queue = [[start, 0]];
+  let visited = Array(F + 1).fill(false);
+  visited[start] = true;
+
+  while (queue.length) {
+    const [now, count] = queue.shift();
+
+    if (now === G) return count;
+
+    // U 버튼을 눌렀을 때
+    if (U > 0 && now + U <= F && !visited[now + U]) {
+      visited[now + U] = true;
+      queue.push([now + U, count + 1]);
+    }
+
+    // D 버튼을 눌렀을 때
+    if (D > 0 && now - D >= 1 && !visited[now - D]) {
+      visited[now - D] = true;
+      queue.push([now - D, count + 1]);
+    }
+  }
+
+  return 'use the stairs';
+};
+
+console.log(bfs(S));
