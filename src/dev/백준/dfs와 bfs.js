@@ -5237,43 +5237,125 @@
 // console.log(max);
 
 //13913-숨바꼭질4
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// let visited = Array(100001).fill(false);
+// let from = Array(100001).fill(-1);
+
+// const bfs = (start, goal) => {
+//   const queue = [[start, 0]];
+//   visited[start] = true;
+
+//   while (queue.length) {
+//     const [now, count] = queue.shift();
+//     const move = [now - 1, now + 1, now * 2];
+
+//     if (now === goal) {
+//       console.log(count);
+
+//       const path = [];
+//       let cur = goal;
+//       while (cur != -1) {
+//         path.push(cur);
+//         cur = from[cur];
+//       }
+
+//       console.log(path.reverse().join(' '));
+//       return;
+//     }
+
+//     for (const next of move) {
+//       if (next >= 0 && next <= 100000 && !visited[next]) {
+//         visited[next] = true;
+//         queue.push([next, count + 1]);
+//         from[next] = now;
+//       }
+//     }
+//   }
+// };
+
+// bfs(n, m);
+
+//2638-치즈
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [n, m] = input[0].split(' ').map(Number);
-let visited = Array(100001).fill(false);
-let from = Array(100001).fill(-1);
 
-const bfs = (start, goal) => {
-  const queue = [[start, 0]];
-  visited[start] = true;
+const [N, M] = input.shift().split(' ').map(Number);
+const grid = input.map((line) => line.split(' ').map(Number));
 
-  while (queue.length) {
-    const [now, count] = queue.shift();
-    const move = [now - 1, now + 1, now * 2];
+const directions = [
+  [0, 1],
+  [1, 0],
+  [0, -1],
+  [-1, 0],
+];
 
-    if (now === goal) {
-      console.log(count);
+// BFS를 통해 치즈 외부의 공기를 탐색
+const bfs = (grid) => {
+  const queue = [[0, 0]];
+  const visited = Array.from(Array(N), () => Array(M).fill(false));
+  visited[0][0] = true;
 
-      const path = [];
-      let cur = goal;
-      while (cur != -1) {
-        path.push(cur);
-        cur = from[cur];
-      }
+  while (queue.length > 0) {
+    const [x, y] = queue.shift();
 
-      console.log(path.reverse().join(' '));
-      return;
-    }
+    for (let [dx, dy] of directions) {
+      const nx = x + dx;
+      const ny = y + dy;
 
-    for (const next of move) {
-      if (next >= 0 && next <= 100000 && !visited[next]) {
-        visited[next] = true;
-        queue.push([next, count + 1]);
-        from[next] = now;
+      if (nx >= 0 && nx < N && ny >= 0 && ny < M && !visited[nx][ny] && grid[nx][ny] === 0) {
+        visited[nx][ny] = true;
+        queue.push([nx, ny]);
       }
     }
   }
+  return visited;
 };
 
-bfs(n, m);
+// 치즈 녹이기
+const meltCheese = () => {
+  let time = 0;
+
+  while (true) {
+    const airContact = bfs(grid);
+    const melt = [];
+
+    for (let i = 0; i < N; i++) {
+      for (let j = 0; j < M; j++) {
+        if (grid[i][j] === 1) {
+          let airCount = 0;
+
+          for (let [dx, dy] of directions) {
+            const nx = i + dx;
+            const ny = j + dy;
+
+            if (nx >= 0 && nx < N && ny >= 0 && ny < M && airContact[nx][ny]) {
+              airCount++;
+            }
+          }
+
+          if (airCount >= 2) {
+            melt.push([i, j]);
+          }
+        }
+      }
+    }
+
+    if (melt.length === 0) {
+      break;
+    }
+
+    melt.forEach(([x, y]) => {
+      grid[x][y] = 0;
+    });
+
+    time++;
+  }
+
+  return time;
+};
+
+console.log(meltCheese());
