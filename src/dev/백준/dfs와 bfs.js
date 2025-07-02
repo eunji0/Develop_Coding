@@ -5279,118 +5279,154 @@
 // bfs(n, m);
 
 //2638-치즈
-const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-const [N, M] = input.shift().split(' ').map(Number);
-const grid = input.map((line) => line.split(' ').map(Number));
+// const [N, M] = input.shift().split(' ').map(Number);
+// const grid = input.map((line) => line.split(' ').map(Number));
 
-const directions = [
-  [0, 1],
-  [1, 0],
-  [0, -1],
-  [-1, 0],
-];
+// const directions = [
+//   [0, 1],
+//   [1, 0],
+//   [0, -1],
+//   [-1, 0],
+// ];
 
-// BFS를 통해 치즈 외부의 공기를 탐색
-const bfs = (grid) => {
-  const queue = [[0, 0]];
-  const visited = Array.from(Array(N), () => Array(M).fill(false));
-  visited[0][0] = true;
+// // BFS를 통해 치즈 외부의 공기를 탐색
+// const bfs = (grid) => {
+//   const queue = [[0, 0]];
+//   const visited = Array.from(Array(N), () => Array(M).fill(false));
+//   visited[0][0] = true;
 
-  while (queue.length > 0) {
-    const [x, y] = queue.shift();
+//   while (queue.length > 0) {
+//     const [x, y] = queue.shift();
 
-    for (let [dx, dy] of directions) {
-      const nx = x + dx;
-      const ny = y + dy;
+//     for (let [dx, dy] of directions) {
+//       const nx = x + dx;
+//       const ny = y + dy;
 
-      if (nx >= 0 && nx < N && ny >= 0 && ny < M && !visited[nx][ny] && grid[nx][ny] === 0) {
-        visited[nx][ny] = true;
-        queue.push([nx, ny]);
-      }
-    }
-  }
-  return visited;
-};
+//       if (nx >= 0 && nx < N && ny >= 0 && ny < M && !visited[nx][ny] && grid[nx][ny] === 0) {
+//         visited[nx][ny] = true;
+//         queue.push([nx, ny]);
+//       }
+//     }
+//   }
+//   return visited;
+// };
 
-// 치즈 녹이기
-const meltCheese = () => {
-  let time = 0;
+// // 치즈 녹이기
+// const meltCheese = () => {
+//   let time = 0;
 
-  while (true) {
-    const airContact = bfs(grid);
-    const melt = [];
+//   while (true) {
+//     const airContact = bfs(grid);
+//     const melt = [];
 
-    for (let i = 0; i < N; i++) {
-      for (let j = 0; j < M; j++) {
-        if (grid[i][j] === 1) {
-          let airCount = 0;
+//     for (let i = 0; i < N; i++) {
+//       for (let j = 0; j < M; j++) {
+//         if (grid[i][j] === 1) {
+//           let airCount = 0;
 
-          for (let [dx, dy] of directions) {
-            const nx = i + dx;
-            const ny = j + dy;
+//           for (let [dx, dy] of directions) {
+//             const nx = i + dx;
+//             const ny = j + dy;
 
-            if (nx >= 0 && nx < N && ny >= 0 && ny < M && airContact[nx][ny]) {
-              airCount++;
-            }
-          }
+//             if (nx >= 0 && nx < N && ny >= 0 && ny < M && airContact[nx][ny]) {
+//               airCount++;
+//             }
+//           }
 
-          if (airCount >= 2) {
-            melt.push([i, j]);
-          }
-        }
-      }
-    }
+//           if (airCount >= 2) {
+//             melt.push([i, j]);
+//           }
+//         }
+//       }
+//     }
 
-    if (melt.length === 0) {
-      break;
-    }
+//     if (melt.length === 0) {
+//       break;
+//     }
 
-    melt.forEach(([x, y]) => {
-      grid[x][y] = 0;
-    });
+//     melt.forEach(([x, y]) => {
+//       grid[x][y] = 0;
+//     });
 
-    time++;
-  }
+//     time++;
+//   }
 
-  return time;
-};
+//   return time;
+// };
 
-console.log(meltCheese());
+// console.log(meltCheese());
 
 //5014-스타트링크
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim();
+// const [F, S, G, U, D] = input.split(' ').map(Number);
+
+// // BFS를 사용하여 최소 버튼 수를 구하는 함수
+// const bfs = (start) => {
+//   const queue = [[start, 0]];
+//   let visited = Array(F + 1).fill(false);
+//   visited[start] = true;
+
+//   while (queue.length) {
+//     const [now, count] = queue.shift();
+
+//     if (now === G) return count;
+
+//     // U 버튼을 눌렀을 때
+//     if (U > 0 && now + U <= F && !visited[now + U]) {
+//       visited[now + U] = true;
+//       queue.push([now + U, count + 1]);
+//     }
+
+//     // D 버튼을 눌렀을 때
+//     if (D > 0 && now - D >= 1 && !visited[now - D]) {
+//       visited[now - D] = true;
+//       queue.push([now - D, count + 1]);
+//     }
+//   }
+
+//   return 'use the stairs';
+// };
+
+// console.log(bfs(S));
+
+//15681-트리와 쿼리
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim();
-const [F, S, G, U, D] = input.split(' ').map(Number);
+const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-// BFS를 사용하여 최소 버튼 수를 구하는 함수
-const bfs = (start) => {
-  const queue = [[start, 0]];
-  let visited = Array(F + 1).fill(false);
-  visited[start] = true;
+let [n, r, q] = input[0].split(' ').map(Number);
+let uv = input.slice(1, n).map((v) => v.split(' ').map(Number));
+let us = input.slice(n).map(Number);
 
-  while (queue.length) {
-    const [now, count] = queue.shift();
+let graph = Array.from({ length: n + 1 }, () => []);
+let visited = Array(n + 1).fill(false);
+let subtree = Array(n + 1).fill(0);
 
-    if (now === G) return count;
+for (let [u, v] of uv) {
+  graph[u].push(v);
+  graph[v].push(u);
+}
 
-    // U 버튼을 눌렀을 때
-    if (U > 0 && now + U <= F && !visited[now + U]) {
-      visited[now + U] = true;
-      queue.push([now + U, count + 1]);
-    }
+function dfs(node) {
+  visited[node] = true;
+  subtree[node] = 1;
 
-    // D 버튼을 눌렀을 때
-    if (D > 0 && now - D >= 1 && !visited[now - D]) {
-      visited[now - D] = true;
-      queue.push([now - D, count + 1]);
+  for (let next of graph[node]) {
+    if (!visited[next]) {
+      subtree[node] += dfs(next);
     }
   }
 
-  return 'use the stairs';
-};
+  return subtree[node];
+}
 
-console.log(bfs(S));
+dfs(r);
+for (let v of us) {
+  console.log(subtree[v]);
+}
