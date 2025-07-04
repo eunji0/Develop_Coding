@@ -5396,71 +5396,158 @@
 // console.log(bfs(S));
 
 //15681-트리와 쿼리
-const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [n, r, q] = input[0].split(' ').map(Number);
-let uv = input.slice(1, n).map((v) => v.split(' ').map(Number));
-let us = input.slice(n).map(Number);
+// let [n, r, q] = input[0].split(' ').map(Number);
+// let uv = input.slice(1, n).map((v) => v.split(' ').map(Number));
+// let us = input.slice(n).map(Number);
 
-let graph = Array.from({ length: n + 1 }, () => []);
-let visited = Array(n + 1).fill(false);
-let subtree = Array(n + 1).fill(0);
+// let graph = Array.from({ length: n + 1 }, () => []);
+// let visited = Array(n + 1).fill(false);
+// let subtree = Array(n + 1).fill(0);
 
-for (let [u, v] of uv) {
-  graph[u].push(v);
-  graph[v].push(u);
-}
+// for (let [u, v] of uv) {
+//   graph[u].push(v);
+//   graph[v].push(u);
+// }
 
-function dfs(node) {
-  visited[node] = true;
-  subtree[node] = 1;
+// function dfs(node) {
+//   visited[node] = true;
+//   subtree[node] = 1;
 
-  for (let next of graph[node]) {
-    if (!visited[next]) {
-      subtree[node] += dfs(next);
-    }
-  }
+//   for (let next of graph[node]) {
+//     if (!visited[next]) {
+//       subtree[node] += dfs(next);
+//     }
+//   }
 
-  return subtree[node];
-}
+//   return subtree[node];
+// }
 
-dfs(r);
-for (let v of us) {
-  console.log(subtree[v]);
-}
+// dfs(r);
+// for (let v of us) {
+//   console.log(subtree[v]);
+// }
 
 //1240-노드사이의 거리
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input.slice(1, n).map((v) => v.split(' ').map(Number));
+// let queries = input.slice(n).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// for (let [a, b, c] of arr) {
+//   graph[a].push([b, c]);
+//   graph[b].push([a, c]);
+// }
+
+// function dfs(start, target, sum, visited) {
+//   if (start === target) return sum;
+//   visited[start] = true;
+
+//   for (let [next, dist] of graph[start]) {
+//     if (!visited[next]) {
+//       let result = dfs(next, target, sum + dist, visited);
+//       if (result !== -1) return result;
+//     }
+//   }
+
+//   return -1;
+// }
+
+// for (let [q, w] of queries) {
+//   let visited = Array(n + 1).fill(false);
+//   console.log(dfs(q, w, 0, visited));
+// }
+
+//16236-아기상어
 const fs = require('fs');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n');
+let input = fs
+  .readFileSync(process.platform === 'linux' ? 'dev/stdin' : 'input.txt')
+  .toString()
+  .trim()
+  .split('\n');
+const N = parseInt(input[0]);
+const space = input.slice(1).map((line) => line.split(' ').map(Number));
+const directions = [
+  [-1, 0], // 위
+  [1, 0], // 아래
+  [0, -1], // 왼쪽
+  [0, 1], // 오른쪽
+];
 
-let [n, m] = input[0].split(' ').map(Number);
-let arr = input.slice(1, n).map((v) => v.split(' ').map(Number));
-let queries = input.slice(n).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
+let shark = { size: 2, x: 0, y: 0, eaten: 0 };
 
-for (let [a, b, c] of arr) {
-  graph[a].push([b, c]);
-  graph[b].push([a, c]);
+for (let i = 0; i < N; i++) {
+  for (let j = 0; j < N; j++) {
+    if (space[i][j] === 9) {
+      shark.x = i;
+      shark.y = j;
+      space[i][j] = 0;
+    }
+  }
 }
 
-function dfs(start, target, sum, visited) {
-  if (start === target) return sum;
-  visited[start] = true;
+const bfs = (startx, starty, size) => {
+  const queue = [[startx, starty, 0]];
+  const visited = Array.from({ length: N }, () => Array(N).fill(false));
+  visited[startx][starty] = true;
+  let edi = [];
 
-  for (let [next, dist] of graph[start]) {
-    if (!visited[next]) {
-      let result = dfs(next, target, sum + dist, visited);
-      if (result !== -1) return result;
+  while (queue.length) {
+    const [x, y, dis] = queue.shift();
+
+    for (const [dx, dy] of directions) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < N && ny < N && !visited[nx][ny] && space[nx][ny] <= size) {
+        visited[nx][ny] = true;
+        if (space[nx][ny] > 0 && space[nx][ny] < size) {
+          edi.push([nx, ny, dis + 1]);
+        } else {
+          queue.push([nx, ny, dis + 1]);
+        }
+      }
     }
   }
 
-  return -1;
+  if (edi.length) {
+    edi.sort((a, b) => {
+      if (a[2] === b[2]) {
+        if (a[0] === b[0]) return a[1] - b[1];
+        return a[0] - b[0];
+      }
+      return a[2] - b[2];
+    });
+    return edi[0];
+  }
+
+  return null;
+};
+
+let total = 0;
+while (true) {
+  const fish = bfs(shark.x, shark.y, shark.size);
+  if (!fish) break;
+
+  const [fx, fy, dis] = fish;
+  total += dis;
+  shark.x = fx;
+  shark.y = fy;
+  shark.eaten++;
+
+  if (shark.eaten === shark.size) {
+    shark.size++;
+    shark.eaten = 0;
+  }
+
+  space[fx][fy] = 0;
 }
 
-for (let [q, w] of queries) {
-  let visited = Array(n + 1).fill(false);
-  console.log(dfs(q, w, 0, visited));
-}
+console.log(total);
