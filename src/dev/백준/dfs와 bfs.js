@@ -5601,50 +5601,84 @@
 // }
 
 //2589-보물섬
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+// const [n, m] = input[0].split(' ').map(Number);
+// const arr = input.slice(1).map((v) => v.trim().split(''));
+// const dir = [
+//   [0, 1],
+//   [0, -1],
+//   [1, 0],
+//   [-1, 0],
+// ];
+
+// const bfs = (i, j) => {
+//   const queue = [[i, j, 0]];
+//   let visited = Array.from({ length: n }, () => Array(m).fill(false));
+//   visited[i][j] = true;
+//   let maxD = 0;
+
+//   while (queue.length) {
+//     const [x, y, dist] = queue.shift();
+//     maxD = Math.max(dist, maxD);
+
+//     for (const [dx, dy] of dir) {
+//       const nx = x + dx;
+//       const ny = y + dy;
+
+//       if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && arr[nx][ny] === 'L') {
+//         queue.push([nx, ny, dist + 1]);
+//         visited[nx][ny] = true;
+//       }
+//     }
+//   }
+
+//   return maxD;
+// };
+
+// let max = 0;
+
+// for (let i = 0; i < n; i++) {
+//   for (let j = 0; j < m; j++) {
+//     if (arr[i][j] === 'L') {
+//       max = Math.max(max, bfs(i, j));
+//     }
+//   }
+// }
+
+// console.log(max);
+
+//16928-뱀과 사다리 게임
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
 const [n, m] = input[0].split(' ').map(Number);
-const arr = input.slice(1).map((v) => v.trim().split(''));
-const dir = [
-  [0, 1],
-  [0, -1],
-  [1, 0],
-  [-1, 0],
-];
+const ladders = input.slice(1, n + 1).map((v) => v.split(' ').map(Number));
+const snakes = input.slice(n + 1).map((v) => v.split(' ').map(Number));
+let visited = Array(101).fill(false);
 
-const bfs = (i, j) => {
-  const queue = [[i, j, 0]];
-  let visited = Array.from({ length: n }, () => Array(m).fill(false));
-  visited[i][j] = true;
-  let maxD = 0;
+const bfs = () => {
+  let queue = [[1, 0]]; //현재 위치와 이동횟수
 
   while (queue.length) {
-    const [x, y, dist] = queue.shift();
-    maxD = Math.max(dist, maxD);
+    const [now, count] = queue.shift();
+    const move = [now + 1, now + 2, now + 3, now + 4, now + 5, now + 6];
+    const inClude = [...ladders, ...snakes];
 
-    for (const [dx, dy] of dir) {
-      const nx = x + dx;
-      const ny = y + dy;
+    if (now === 100) return count;
 
-      if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && arr[nx][ny] === 'L') {
-        queue.push([nx, ny, dist + 1]);
-        visited[nx][ny] = true;
+    for (let m of move) {
+      if (!visited[m] && m < 101) {
+        visited[m] = true;
+        inClude.forEach(([from, to]) => {
+          if (m === from) m = to;
+        });
+
+        queue.push([m, count + 1]);
       }
     }
   }
-
-  return maxD;
 };
 
-let max = 0;
-
-for (let i = 0; i < n; i++) {
-  for (let j = 0; j < m; j++) {
-    if (arr[i][j] === 'L') {
-      max = Math.max(max, bfs(i, j));
-    }
-  }
-}
-
-console.log(max);
+console.log(bfs());
