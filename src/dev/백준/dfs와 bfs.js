@@ -5553,49 +5553,98 @@
 // console.log(total);
 
 //9205-맥주 마시면서 걸어가기
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// const T = +input[0];
+// let idx = 1;
+
+// for (let i = 0; i < T; i++) {
+//   const bfs = (X, Y) => {
+//     const deque = [[X, Y]];
+//     while (deque.length) {
+//       const [x, y] = deque[0];
+//       deque.shift();
+//       if (Math.abs(x - festival[0]) + Math.abs(y - festival[1]) <= 1000) {
+//         check = true;
+//         return;
+//       }
+//       for (let k = 0; k < N; k++) {
+//         if (!visited[k]) {
+//           if (Math.abs(x - place[k][0]) + Math.abs(y - place[k][1]) <= 1000) {
+//             visited[k] = true;
+//             deque.push([place[k][0], place[k][1]]);
+//           }
+//         }
+//       }
+//     }
+//     return;
+//   };
+
+//   const N = +input[idx];
+//   idx += 1;
+//   const visited = Array.from({ length: N }).fill(false);
+//   const start = input[idx].split(' ').map(Number);
+//   let place = [];
+//   let check = false;
+//   for (let j = 1; j <= N; j++) {
+//     place.push(input[idx + j].split(' ').map(Number));
+//   }
+//   idx += N + 1;
+//   const festival = input[idx].split(' ').map(Number);
+//   idx += 1;
+
+//   bfs(...start);
+
+//   console.log(check ? 'happy' : 'sad');
+// }
+
+//2589-보물섬
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
+const [n, m] = input[0].split(' ').map(Number);
+const arr = input.slice(1).map((v) => v.trim().split(''));
+const dir = [
+  [0, 1],
+  [0, -1],
+  [1, 0],
+  [-1, 0],
+];
 
-const T = +input[0];
-let idx = 1;
+const bfs = (i, j) => {
+  const queue = [[i, j, 0]];
+  let visited = Array.from({ length: n }, () => Array(m).fill(false));
+  visited[i][j] = true;
+  let maxD = 0;
 
-for (let i = 0; i < T; i++) {
-  const bfs = (X, Y) => {
-    const deque = [[X, Y]];
-    while (deque.length) {
-      const [x, y] = deque[0];
-      deque.shift();
-      if (Math.abs(x - festival[0]) + Math.abs(y - festival[1]) <= 1000) {
-        check = true;
-        return;
-      }
-      for (let k = 0; k < N; k++) {
-        if (!visited[k]) {
-          if (Math.abs(x - place[k][0]) + Math.abs(y - place[k][1]) <= 1000) {
-            visited[k] = true;
-            deque.push([place[k][0], place[k][1]]);
-          }
-        }
+  while (queue.length) {
+    const [x, y, dist] = queue.shift();
+    maxD = Math.max(dist, maxD);
+
+    for (const [dx, dy] of dir) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (nx >= 0 && ny >= 0 && nx < n && ny < m && !visited[nx][ny] && arr[nx][ny] === 'L') {
+        queue.push([nx, ny, dist + 1]);
+        visited[nx][ny] = true;
       }
     }
-    return;
-  };
-
-  const N = +input[idx];
-  idx += 1;
-  const visited = Array.from({ length: N }).fill(false);
-  const start = input[idx].split(' ').map(Number);
-  let place = [];
-  let check = false;
-  for (let j = 1; j <= N; j++) {
-    place.push(input[idx + j].split(' ').map(Number));
   }
-  idx += N + 1;
-  const festival = input[idx].split(' ').map(Number);
-  idx += 1;
 
-  bfs(...start);
+  return maxD;
+};
 
-  console.log(check ? 'happy' : 'sad');
+let max = 0;
+
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < m; j++) {
+    if (arr[i][j] === 'L') {
+      max = Math.max(max, bfs(i, j));
+    }
+  }
 }
+
+console.log(max);
