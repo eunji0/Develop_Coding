@@ -14,7 +14,7 @@ const { escape } = require('querystring');
 //     let init = new Node('init');
 //     this.head = init;
 //     this.tail = init;
-  
+
 //     this.현재노드 = undefined;
 //     this.데이터수 =0;
 //   }
@@ -101,7 +101,7 @@ const { escape } = require('querystring');
 // arr.forEach(v=>{
 //   const [command, val] = v.split(' ');
 
-//   //LStack의 길이가 0이 아닐 경우만, 왼쪽으로 커서 이동(L) 
+//   //LStack의 길이가 0이 아닐 경우만, 왼쪽으로 커서 이동(L)
 //   //커서가 왼쪽으로 이동하기 때문에 RStack에 쌓는다.
 //   if (command === "L" && LStack.length) RStack.push(LStack.pop());
 //   //RStack의 길이가 0이 아닐 경우만, 오른쪽으로 커서 이동(D)
@@ -113,7 +113,7 @@ const { escape } = require('querystring');
 //   else if (command === "P") LStack.push(val);
 // })
 
-//   //왼쪽(LStack)부터 오른쪽(RStack) 값을 출력한다. 
+//   //왼쪽(LStack)부터 오른쪽(RStack) 값을 출력한다.
 //   console.log([...LStack, ...RStack.reverse()].join(""));
 
 //5397-키로거
@@ -286,24 +286,24 @@ const { escape } = require('querystring');
 
 //     class Node{ // 1
 //         constructor(val){
-//             this.val = val; 
+//             this.val = val;
 //             this.next = null;
 //         }
 //     }
-    
+
 //     class LinkedList{ // 2
 //         constructor(){
 //             this.head = null;
 //             this.tail = null;
 //             this.length = 0;
 //         }
-        
+
 //         push(val){ // 3
 //             let newNode = new Node(val);
-            
+
 //             if(!this.head){
 //                 this.head = newNode
-                
+
 //             }else{
 //                 this.tail.next = newNode
 //             }
@@ -312,26 +312,26 @@ const { escape } = require('querystring');
 
 //             return newNode;
 //         }
-        
+
 //         getHead(){ // 4
 //           return this.head.val;
 //         }
-        
+
 //         removeHead(){ // 5
 //             this.head = this.head.next;
 //             this.length--;
 //         }
-        
+
 //         getLength(){ // 6
 //             return this.length;
 //         }
 //     }
-    
+
 //     const cards = new LinkedList(); // 7
-    
+
 //     for(let i = 1; i<=N; i++){ // 8
 //         cards.push(i)
-        
+
 //     }
 
 //       while(cards.getLength() != 1){ // 9
@@ -339,9 +339,8 @@ const { escape } = require('querystring');
 //         cards.push(cards.getHead())
 //         cards.removeHead()
 //     }
-    
-//     console.log(cards.getHead()) // 10
 
+//     console.log(cards.getHead()) // 10
 
 // 연결리스트 시간 복잡도
 // 삽입 (Insertion)
@@ -453,7 +452,6 @@ const { escape } = require('querystring');
 //             //그런 다음, this.head를 새 노드로 업데이트한다.
 //             this.head = newNode;
 
-
 //             //인덱스가 0이 아닌 경우
 //             //리스트의 중간 또는 끝 부분에 삽입
 //         } else {
@@ -463,7 +461,6 @@ const { escape } = require('querystring');
 //             let current = this.head;  // 현재 노드를 헤드 노드로 설정
 //             let previous;             // 이전 노드를 추적하기 위한 변수
 //             let count = 0;            // 현재 노드의 인덱스를 추적하기 위한 변수
-            
 
 //             //count가 index보다 작을 때까지 루프를 반복한다
 //             while (count < index) {
@@ -472,8 +469,8 @@ const { escape } = require('querystring');
 //                 //count를 1씩 증가시켜 현재 인덱스를 추적한다.
 //                 count++;
 //             }
-//             //루프가 종료되면 
-//             //current는 삽입하려는 위치의 노드를 가리키고, 
+//             //루프가 종료되면
+//             //current는 삽입하려는 위치의 노드를 가리키고,
 //             //previous는 그 이전 노드를 가리킨다.
 
 //             //새 노드의 next 포인터를 current로 설정한다.
@@ -550,7 +547,7 @@ const { escape } = require('querystring');
 //     }
 // }
 
-//1406-에디터
+// //1406-에디터
 // const filePath = process.platform === 'linux' ? '/dev/stdin' : './input.txt';
 // const fs = require('fs');
 // const input = fs.readFileSync(filePath).toString().split('\n');

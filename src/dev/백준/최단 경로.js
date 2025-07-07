@@ -2007,18 +2007,19 @@
 
 //13549-숨바꼭질3
 const fs = require('fs');
+const { grep } = require('jquery');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
 
-let [n, k] = input[0].split(' ').map(Number)
+let [n, k] = input[0].split(' ').map(Number);
 
-class MinHeap{
-  constructor(){
-    this.heap=[]
+class MinHeap {
+  constructor() {
+    this.heap = [];
   }
 
-  push([node, dist]){
-    this.heap.push([node, dist])
-    this.bubble
+  push([node, dist]) {
+    this.heap.push([node, dist]);
+    this.bubble;
   }
 }
