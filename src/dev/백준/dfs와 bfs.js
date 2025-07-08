@@ -5650,35 +5650,43 @@
 // console.log(max);
 
 //16928-뱀과 사다리 게임
+
+//21736-헌내기는 친구가 필요해
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 let input = fs.readFileSync(filePath).toString().trim().split('\n');
-const [n, m] = input[0].split(' ').map(Number);
-const ladders = input.slice(1, n + 1).map((v) => v.split(' ').map(Number));
-const snakes = input.slice(n + 1).map((v) => v.split(' ').map(Number));
-let visited = Array(101).fill(false);
 
-const bfs = () => {
-  let queue = [[1, 0]]; //현재 위치와 이동횟수
+let [n, m] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(''));
 
-  while (queue.length) {
-    const [now, count] = queue.shift();
-    const move = [now + 1, now + 2, now + 3, now + 4, now + 5, now + 6];
-    const inClude = [...ladders, ...snakes];
+const dx = [1, -1, 0, 0];
+const dy = [0, 0, 1, -1];
 
-    if (now === 100) return count;
+let visited = Array.from({ length: n }, () => Array(m).fill(false));
 
-    for (let m of move) {
-      if (!visited[m] && m < 101) {
-        visited[m] = true;
-        inClude.forEach(([from, to]) => {
-          if (m === from) m = to;
-        });
+let cnt = 0;
 
-        queue.push([m, count + 1]);
-      }
+function dfs(x, y) {
+  visited[x][y] = true;
+
+  for (let d = 0; d < 4; d++) {
+    let nx = x + dx[d];
+    let ny = y + dy[d];
+
+    if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue; // 범위 밖
+    if (visited[nx][ny] || arr[nx][ny] === 'X') continue; // 방문했거나 벽
+
+    if (arr[nx][ny] === 'P') cnt++;
+    dfs(nx, ny);
+  }
+}
+
+for (let i = 0; i < n; i++) {
+  for (let j = 0; j < m; j++) {
+    if (arr[i][j] === 'I') {
+      dfs(i, j);
     }
   }
-};
+}
 
-console.log(bfs());
+console.log(cnt === 0 ? 'TT' : cnt);
