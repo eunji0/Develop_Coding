@@ -2005,21 +2005,36 @@
 //   console.log(m)
 // }
 
-//13549-숨바꼭질3
-const fs = require('fs');
-const { grep } = require('jquery');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-const input = fs.readFileSync(filePath).toString().trim().split('\n');
+//1446-지름길
+const input = require('fs')
+  .readFileSync(process.platform === 'linux' ? 'dev/stdin' : 'input.txt')
+  .toString()
+  .trim()
+  .split('\n');
 
-let [n, k] = input[0].split(' ').map(Number);
+let [n, d] = input[0].split(' ').map(Number);
+let shortcuts = input.slice(1).map((v) => v.split(' ').map(Number));
 
-class MinHeap {
-  constructor() {
-    this.heap = [];
+let dists = Array(d + 1).fill(Infinity);
+dists[0] = 0;
+
+let graph = Array.from({ length: d + 1 }, () => []);
+shortcuts.forEach(([s, e, l]) => {
+  if (e > d) return; // 도착점이 범위를 초과
+  if (e - s <= l) return; // 지름길이 더 비효율적
+  graph[s].push([e, l]);
+});
+
+for (let i = 0; i <= d; i++) {
+  if (i > 0) {
+    dists[i] = Math.min(dists[i], dists[i - 1] + 1);
   }
 
-  push([node, dist]) {
-    this.heap.push([node, dist]);
-    this.bubble;
+  for (let [e, l] of graph[i]) {
+    if (e <= d && dists[e] > dists[i] + l) {
+      dists[e] = dists[i] + l;
+    }
   }
 }
+
+console.log(dists[d]);
