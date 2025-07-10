@@ -2006,35 +2006,153 @@
 // }
 
 //1446-지름길
-const input = require('fs')
-  .readFileSync(process.platform === 'linux' ? 'dev/stdin' : 'input.txt')
-  .toString()
-  .trim()
-  .split('\n');
+// const input = require('fs')
+//   .readFileSync(process.platform === 'linux' ? 'dev/stdin' : 'input.txt')
+//   .toString()
+//   .trim()
+//   .split('\n');
 
-let [n, d] = input[0].split(' ').map(Number);
-let shortcuts = input.slice(1).map((v) => v.split(' ').map(Number));
+// let [n, d] = input[0].split(' ').map(Number);
+// let shortcuts = input.slice(1).map((v) => v.split(' ').map(Number));
 
-let dists = Array(d + 1).fill(Infinity);
-dists[0] = 0;
+// let dists = Array(d + 1).fill(Infinity);
+// dists[0] = 0;
 
-let graph = Array.from({ length: d + 1 }, () => []);
-shortcuts.forEach(([s, e, l]) => {
-  if (e > d) return; // 도착점이 범위를 초과
-  if (e - s <= l) return; // 지름길이 더 비효율적
-  graph[s].push([e, l]);
+// let graph = Array.from({ length: d + 1 }, () => []);
+// shortcuts.forEach(([s, e, l]) => {
+//   if (e > d) return; // 도착점이 범위를 초과
+//   if (e - s <= l) return; // 지름길이 더 비효율적
+//   graph[s].push([e, l]);
+// });
+
+// for (let i = 0; i <= d; i++) {
+//   if (i > 0) {
+//     dists[i] = Math.min(dists[i], dists[i - 1] + 1);
+//   }
+
+//   for (let [e, l] of graph[i]) {
+//     if (e <= d && dists[e] > dists[i] + l) {
+//       dists[e] = dists[i] + l;
+//     }
+//   }
+// }
+
+// console.log(dists[d]);
+
+//1238-파티
+const fs = require('fs');
+const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+const input = fs.readFileSync(filePath).toString().trim().split('\n');
+let [n, m, x] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let graph = Array.from({ length: n + 1 }, () => []);
+
+arr.forEach((a) => {
+  let [u, v, w] = a;
+  graph[u].push([v, w]);
 });
 
-for (let i = 0; i <= d; i++) {
-  if (i > 0) {
-    dists[i] = Math.min(dists[i], dists[i - 1] + 1);
+class MinHeap {
+  constructor() {
+    this.heap = [];
   }
 
-  for (let [e, l] of graph[i]) {
-    if (e <= d && dists[e] > dists[i] + l) {
-      dists[e] = dists[i] + l;
+  push([node, dist]) {
+    this.heap.push([node, dist]);
+    this.bubbleUp();
+  }
+
+  bubbleUp() {
+    let index = this.heap.length - 1;
+    let last = this.heap[index];
+
+    while (index > 0) {
+      let parentIndex = Math.floor((index - 1) / 2);
+      if (this.heap[parentIndex][1] <= last[1]) break;
+      this.heap[index] = this.heap[parentIndex];
+      index = parentIndex;
     }
+    this.heap[index] = last;
+  }
+
+  pop() {
+    if (this.heap.length === 1) {
+      return this.heap.pop();
+    }
+    let top = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.bubbleDown();
+    return top;
+  }
+
+  bubbleDown() {
+    let index = 0;
+    let top = this.heap[index];
+    let length = this.heap.length;
+
+    while (true) {
+      let leftChildIndex = index * 2 + 1;
+      let rightChildIndex = index * 2 + 2;
+      let smallest = index;
+
+      if (leftChildIndex < length && this.heap[leftChildIndex][1] < this.heap[smallest][1]) {
+        smallest = leftChildIndex;
+      }
+      if (rightChildIndex < length && this.heap[rightChildIndex][1] < this.heap[smallest][1]) {
+        smallest = rightChildIndex;
+      }
+
+      if (smallest === index) break;
+      this.heap[index] = this.heap[smallest];
+      index = smallest;
+    }
+    this.heap[index] = top;
+  }
+
+  isEmpty() {
+    return this.heap.length == 0;
   }
 }
 
-console.log(dists[d]);
+const d = (start, graph) => {
+  let dist = Array(n + 1).fill(Infinity);
+  dist[start] = 0;
+  let pq = new MinHeap();
+  pq.push([start, 0]);
+
+  while (!pq.isEmpty()) {
+    let [curNode, curDist] = pq.pop();
+
+    if (dist[curNode] < curDist) continue;
+
+    for (let [nextNode, nextDist] of graph[curNode]) {
+      let totalDist = curDist + nextDist;
+
+      if (totalDist < dist[nextNode]) {
+        dist[nextNode] = totalDist;
+        pq.push([nextNode, totalDist]);
+      }
+    }
+  }
+
+  return dist;
+};
+
+let rx = d(x, graph);
+let reverseGraph = Array.from({ length: n + 1 }, () => []);
+
+for (let i = 1; i <= n; i++) {
+  for (let [to, time] of graph[i]) {
+    reverseGraph[to].push([i, time]);
+  }
+}
+
+let ry = d(x, reverseGraph);
+
+let max = 0;
+for (let i = 1; i <= n; i++) {
+  if (max < rx[i] + ry[i]) {
+    max = rx[i] + ry[i];
+  }
+}
+console.log(max);
