@@ -2040,119 +2040,164 @@
 // console.log(dists[d]);
 
 //1238-파티
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// const input = fs.readFileSync(filePath).toString().trim().split('\n');
+// let [n, m, x] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+// let graph = Array.from({ length: n + 1 }, () => []);
+
+// arr.forEach((a) => {
+//   let [u, v, w] = a;
+//   graph[u].push([v, w]);
+// });
+
+// class MinHeap {
+//   constructor() {
+//     this.heap = [];
+//   }
+
+//   push([node, dist]) {
+//     this.heap.push([node, dist]);
+//     this.bubbleUp();
+//   }
+
+//   bubbleUp() {
+//     let index = this.heap.length - 1;
+//     let last = this.heap[index];
+
+//     while (index > 0) {
+//       let parentIndex = Math.floor((index - 1) / 2);
+//       if (this.heap[parentIndex][1] <= last[1]) break;
+//       this.heap[index] = this.heap[parentIndex];
+//       index = parentIndex;
+//     }
+//     this.heap[index] = last;
+//   }
+
+//   pop() {
+//     if (this.heap.length === 1) {
+//       return this.heap.pop();
+//     }
+//     let top = this.heap[0];
+//     this.heap[0] = this.heap.pop();
+//     this.bubbleDown();
+//     return top;
+//   }
+
+//   bubbleDown() {
+//     let index = 0;
+//     let top = this.heap[index];
+//     let length = this.heap.length;
+
+//     while (true) {
+//       let leftChildIndex = index * 2 + 1;
+//       let rightChildIndex = index * 2 + 2;
+//       let smallest = index;
+
+//       if (leftChildIndex < length && this.heap[leftChildIndex][1] < this.heap[smallest][1]) {
+//         smallest = leftChildIndex;
+//       }
+//       if (rightChildIndex < length && this.heap[rightChildIndex][1] < this.heap[smallest][1]) {
+//         smallest = rightChildIndex;
+//       }
+
+//       if (smallest === index) break;
+//       this.heap[index] = this.heap[smallest];
+//       index = smallest;
+//     }
+//     this.heap[index] = top;
+//   }
+
+//   isEmpty() {
+//     return this.heap.length == 0;
+//   }
+// }
+
+// const d = (start, graph) => {
+//   let dist = Array(n + 1).fill(Infinity);
+//   dist[start] = 0;
+//   let pq = new MinHeap();
+//   pq.push([start, 0]);
+
+//   while (!pq.isEmpty()) {
+//     let [curNode, curDist] = pq.pop();
+
+//     if (dist[curNode] < curDist) continue;
+
+//     for (let [nextNode, nextDist] of graph[curNode]) {
+//       let totalDist = curDist + nextDist;
+
+//       if (totalDist < dist[nextNode]) {
+//         dist[nextNode] = totalDist;
+//         pq.push([nextNode, totalDist]);
+//       }
+//     }
+//   }
+
+//   return dist;
+// };
+
+// let rx = d(x, graph);
+// let reverseGraph = Array.from({ length: n + 1 }, () => []);
+
+// for (let i = 1; i <= n; i++) {
+//   for (let [to, time] of graph[i]) {
+//     reverseGraph[to].push([i, time]);
+//   }
+// }
+
+// let ry = d(x, reverseGraph);
+
+// let max = 0;
+// for (let i = 1; i <= n; i++) {
+//   if (max < rx[i] + ry[i]) {
+//     max = rx[i] + ry[i];
+//   }
+// }
+// console.log(max);
+
+//1261-알고스팟
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
 const input = fs.readFileSync(filePath).toString().trim().split('\n');
-let [n, m, x] = input[0].split(' ').map(Number);
-let arr = input.slice(1).map((v) => v.split(' ').map(Number));
-let graph = Array.from({ length: n + 1 }, () => []);
 
-arr.forEach((a) => {
-  let [u, v, w] = a;
-  graph[u].push([v, w]);
-});
+const dir = [
+  [0, 1],
+  [0, -1],
+  [1, 0],
+  [-1, 0],
+];
+const [m, n] = input[0].split(' ').map(Number);
+const maze = input.slice(1).map((v) => v.split('').map(Number));
 
-class MinHeap {
-  constructor() {
-    this.heap = [];
-  }
+const bfs = () => {
+  const deq = [[0, 0]];
+  const dist = Array.from({ length: n }, () => Array(m).fill(Infinity));
+  dist[0][0] = 0;
 
-  push([node, dist]) {
-    this.heap.push([node, dist]);
-    this.bubbleUp();
-  }
+  while (deq.length) {
+    const [x, y] = deq.shift();
 
-  bubbleUp() {
-    let index = this.heap.length - 1;
-    let last = this.heap[index];
+    for (const [dx, dy] of dir) {
+      const nx = x + dx;
+      const ny = y + dy;
 
-    while (index > 0) {
-      let parentIndex = Math.floor((index - 1) / 2);
-      if (this.heap[parentIndex][1] <= last[1]) break;
-      this.heap[index] = this.heap[parentIndex];
-      index = parentIndex;
-    }
-    this.heap[index] = last;
-  }
-
-  pop() {
-    if (this.heap.length === 1) {
-      return this.heap.pop();
-    }
-    let top = this.heap[0];
-    this.heap[0] = this.heap.pop();
-    this.bubbleDown();
-    return top;
-  }
-
-  bubbleDown() {
-    let index = 0;
-    let top = this.heap[index];
-    let length = this.heap.length;
-
-    while (true) {
-      let leftChildIndex = index * 2 + 1;
-      let rightChildIndex = index * 2 + 2;
-      let smallest = index;
-
-      if (leftChildIndex < length && this.heap[leftChildIndex][1] < this.heap[smallest][1]) {
-        smallest = leftChildIndex;
-      }
-      if (rightChildIndex < length && this.heap[rightChildIndex][1] < this.heap[smallest][1]) {
-        smallest = rightChildIndex;
-      }
-
-      if (smallest === index) break;
-      this.heap[index] = this.heap[smallest];
-      index = smallest;
-    }
-    this.heap[index] = top;
-  }
-
-  isEmpty() {
-    return this.heap.length == 0;
-  }
-}
-
-const d = (start, graph) => {
-  let dist = Array(n + 1).fill(Infinity);
-  dist[start] = 0;
-  let pq = new MinHeap();
-  pq.push([start, 0]);
-
-  while (!pq.isEmpty()) {
-    let [curNode, curDist] = pq.pop();
-
-    if (dist[curNode] < curDist) continue;
-
-    for (let [nextNode, nextDist] of graph[curNode]) {
-      let totalDist = curDist + nextDist;
-
-      if (totalDist < dist[nextNode]) {
-        dist[nextNode] = totalDist;
-        pq.push([nextNode, totalDist]);
+      if (nx >= 0 && ny >= 0 && nx < n && ny < m) {
+        const next = dist[x][y] + maze[nx][ny];
+        if (next < dist[nx][ny]) {
+          dist[nx][ny] = next;
+          if (maze[nx][ny] === 1) {
+            deq.push([nx, ny]);
+          } else {
+            deq.unshift([nx, ny]);
+          }
+        }
       }
     }
   }
 
-  return dist;
+  return dist[n - 1][m - 1];
 };
 
-let rx = d(x, graph);
-let reverseGraph = Array.from({ length: n + 1 }, () => []);
-
-for (let i = 1; i <= n; i++) {
-  for (let [to, time] of graph[i]) {
-    reverseGraph[to].push([i, time]);
-  }
-}
-
-let ry = d(x, reverseGraph);
-
-let max = 0;
-for (let i = 1; i <= n; i++) {
-  if (max < rx[i] + ry[i]) {
-    max = rx[i] + ry[i];
-  }
-}
-console.log(max);
+console.log(bfs());
