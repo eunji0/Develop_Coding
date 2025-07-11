@@ -5652,41 +5652,143 @@
 //16928-뱀과 사다리 게임
 
 //21736-헌내기는 친구가 필요해
+// const fs = require('fs');
+// const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
+// let input = fs.readFileSync(filePath).toString().trim().split('\n');
+
+// let [n, m] = input[0].split(' ').map(Number);
+// let arr = input.slice(1).map((v) => v.split(''));
+
+// const dx = [1, -1, 0, 0];
+// const dy = [0, 0, 1, -1];
+
+// let visited = Array.from({ length: n }, () => Array(m).fill(false));
+
+// let cnt = 0;
+
+// function dfs(x, y) {
+//   visited[x][y] = true;
+
+//   for (let d = 0; d < 4; d++) {
+//     let nx = x + dx[d];
+//     let ny = y + dy[d];
+
+//     if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue; // 범위 밖
+//     if (visited[nx][ny] || arr[nx][ny] === 'X') continue; // 방문했거나 벽
+
+//     if (arr[nx][ny] === 'P') cnt++;
+//     dfs(nx, ny);
+//   }
+// }
+
+// for (let i = 0; i < n; i++) {
+//   for (let j = 0; j < m; j++) {
+//     if (arr[i][j] === 'I') {
+//       dfs(i, j);
+//     }
+//   }
+// }
+
+// console.log(cnt === 0 ? 'TT' : cnt);
+
+//1573-빙산
 const fs = require('fs');
 const filePath = process.platform === 'linux' ? '/dev/stdin' : 'input.txt';
-let input = fs.readFileSync(filePath).toString().trim().split('\n');
+let input = fs
+  .readFileSync(filePath)
+  .toString()
+  .trim()
+  .split('\n')
+  .map((v) => v.trim());
+const [n, m] = input[0].split(' ').map(Number);
+let arr = input.slice(1).map((v) => v.split(' ').map(Number));
+let dir = [
+  [0, 1],
+  [0, -1],
+  [1, 0],
+  [-1, 0],
+];
+const isValidPosition = (x, y) => x >= 0 && y >= 0 && x < n && y < m;
 
-let [n, m] = input[0].split(' ').map(Number);
-let arr = input.slice(1).map((v) => v.split(''));
+//빙산을 녹이는 함수
+//해당 부분이 0보다 커야 함
+//주변이 0이 몇개인지 count
+//그만큼 뺴서 0과 비교 Math.max
+//큰 값을 적용 후 반환
+const reduceHeight = () => {
+  let newArr = JSON.parse(JSON.stringify(arr));
 
-const dx = [1, -1, 0, 0];
-const dy = [0, 0, 1, -1];
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      if (arr[i][j] > 0) {
+        let reduceCount = 0;
+        for (let [dx, dy] of dir) {
+          const nx = i + dx;
+          const ny = j + dy;
 
-let visited = Array.from({ length: n }, () => Array(m).fill(false));
-
-let cnt = 0;
-
-function dfs(x, y) {
-  visited[x][y] = true;
-
-  for (let d = 0; d < 4; d++) {
-    let nx = x + dx[d];
-    let ny = y + dy[d];
-
-    if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue; // 범위 밖
-    if (visited[nx][ny] || arr[nx][ny] === 'X') continue; // 방문했거나 벽
-
-    if (arr[nx][ny] === 'P') cnt++;
-    dfs(nx, ny);
-  }
-}
-
-for (let i = 0; i < n; i++) {
-  for (let j = 0; j < m; j++) {
-    if (arr[i][j] === 'I') {
-      dfs(i, j);
+          if (isValidPosition(nx, ny) && arr[nx][ny] === 0) {
+            reduceCount++;
+          }
+        }
+        newArr[i][j] = Math.max(0, arr[i][j] - reduceCount);
+      }
     }
   }
-}
 
-console.log(cnt === 0 ? 'TT' : cnt);
+  return newArr;
+};
+
+//분리된 섬이 몇개인 세는 함수
+const countIland = (arr, visited) => {
+  let count = 0;
+
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      if (arr[i][j] > 0 && !visited[i][j]) {
+        bfs(arr, visited, i, j);
+        count++;
+      }
+    }
+  }
+
+  return count;
+};
+
+const bfs = (arr, visited, i, j) => {
+  const queue = [[i, j]];
+  visited[i][j] = true;
+
+  while (queue.length) {
+    const [x, y] = queue.shift();
+
+    for (const [dx, dy] of dir) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (isValidPosition(nx, ny) && !visited[nx][ny] && arr[nx][ny] > 0) {
+        visited[nx][ny] = true;
+        queue.push([nx, ny]);
+      }
+    }
+  }
+};
+
+let years = 0;
+
+while (true) {
+  let visited = Array.from({ length: n }, () => Array(m).fill(false));
+  let ilands = countIland(arr, visited);
+
+  if (ilands > 1) {
+    console.log(years);
+    break;
+  }
+
+  if (ilands === 0) {
+    console.log(0);
+    break;
+  }
+
+  arr = reduceHeight();
+  years++;
+}
