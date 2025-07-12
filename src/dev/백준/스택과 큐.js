@@ -1,5 +1,5 @@
 // 스택 - (Last In First Out)LIFO
-// 큐 - (First In First Out)FIFO 
+// 큐 - (First In First Out)FIFO
 
 // class Stack {
 //   constructor(){
@@ -503,32 +503,118 @@
 // console.log(solution(input_N, input_blocks));
 
 //3015-오아시스 재결합
+// const fs = require('fs');
+// const input = fs.readFileSync("./dev/stdin").toString().trim().split('\n').map(Number);
+// const N = input.shift();
+// let answer = 0;
+// let s = [];
+// for (let i = 0; i < N; i++) {
+//   const now = input[i]
+
+//   // console.log("========value: ", now,"==============")
+//   let same = 1;
+//   while (s.length > 0 && s[s.length - 1].value <= now) {
+//     answer += s[s.length - 1].same;
+
+//     if (s[s.length - 1].value == now) {
+//       same = s[s.length - 1].same + 1;
+//     } else {
+//       same = 1;
+//     }
+//     s.pop();
+//   }
+//   if (s.length > 0) {
+//     answer++;
+//   }
+//   s.push({ value: now, same })
+// }
+
+// console.log(answer)
+
+//19598-최소 회의실 개수
 const fs = require('fs');
-const input = fs.readFileSync("./dev/stdin").toString().trim().split('\n').map(Number);
-const N = input.shift();
-let answer = 0;
-let s = [];
-for (let i = 0; i < N; i++) {
-  const now = input[i]
+let input = fs
+  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : 'input.txt')
+  .toString()
+  .trim()
+  .split('\n');
+const N = parseInt(input[0]);
+const meetings = [];
 
-  // console.log("========value: ", now,"==============")
-  let same = 1;
-  while (s.length > 0 && s[s.length - 1].value <= now) {
-    answer += s[s.length - 1].same;
-
-    if (s[s.length - 1].value == now) {
-      same = s[s.length - 1].same + 1;
-    } else {
-      same = 1;
-    }
-    s.pop();
-  }
-  if (s.length > 0) {
-    answer++;
-  }
-  s.push({ value: now, same })
+for (let i = 1; i <= N; i++) {
+  const [start, end] = input[i].split(' ').map(Number);
+  meetings.push([start, end]);
 }
 
-console.log(answer)
+meetings.sort((a, b) => a[0] - b[0]);
 
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
 
+  peek() {
+    return this.heap.length ? this.heap[0] : null;
+  }
+
+  size() {
+    return this.heap.length;
+  }
+
+  push(value) {
+    this.heap.push(value);
+    this.heapifyUp();
+  }
+
+  heapifyUp() {
+    let index = this.heap.length - 1;
+
+    while (index > 0) {
+      let parentIndex = Math.floor((index - 1) / 2);
+      if (this.heap[parentIndex] <= this.heap[index]) break;
+      [this.heap[parentIndex], this.heap[index]] = [this.heap[index], this.heap[parentIndex]];
+      index = parentIndex;
+    }
+  }
+
+  pop() {
+    if (this.heap.length === 1) return this.heap.pop();
+    let min = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.heapifyDown();
+    return min;
+  }
+
+  heapifyDown() {
+    let index = 0;
+    let length = this.heap.length;
+
+    while (true) {
+      let leftChild = index * 2 + 1;
+      let rightChild = index * 2 + 2;
+      let smallest = index;
+
+      if (leftChild < length && this.heap[leftChild] < this.heap[smallest]) {
+        smallest = leftChild;
+      }
+      if (rightChild < length && this.heap[rightChild] < this.heap[smallest]) {
+        smallest = rightChild;
+      }
+      if (smallest === index) break;
+
+      [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+      index = smallest;
+    }
+  }
+}
+
+let pq = new MinHeap();
+
+for (const [s, e] of meetings) {
+  if (pq.size() && pq.peek() <= s) {
+    pq.pop();
+  }
+  pq.push(e);
+}
+
+console.log(pq.size());
